@@ -15,9 +15,6 @@ const Login: React.FC = () => {
                         <button id="Microsoft" name="login_method" value="MicrosoftOAuth" className="card login_button microsoft_button">
                             <span>Microsoft OAuth</span>
                         </button>
-                        <button id="SAML" name="login_method" value="saml" className="card login_button saml_button mb-0">
-                            <span>Enterprise SAML</span>
-                        </button>
                     </div>
                 </form>
             </div>
