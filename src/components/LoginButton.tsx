@@ -1,8 +1,7 @@
+
 import React from 'react';
-import '../App.css';
+import { Button, Avatar, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-
 import type { User } from '../types';
 
 interface LoginButtonProps {
@@ -10,7 +9,6 @@ interface LoginButtonProps {
   user?: User | null;
   loading?: boolean;
 }
-
 
 const LoginButton: React.FC<LoginButtonProps> = ({ className, user, loading }) => {
   const navigate = useNavigate();
@@ -22,27 +20,28 @@ const LoginButton: React.FC<LoginButtonProps> = ({ className, user, loading }) =
 
   if (user) {
     return (
-      <div className="Sidebar-user">
-        {user.profile.raw_attributes.picture ? (
-          <img
-            src={user.profile.raw_attributes.picture}
-            alt="Profile"
-            className="Sidebar-user-pic"
-          />
-        ) : (
-          <div className="Sidebar-user-pic Sidebar-user-initial">
-            {user.first_name.charAt(0)}
-          </div>
-        )}
-        <span className="Sidebar-user-name">Welcome {user.first_name}</span>
-      </div>
+      <Box display="flex" alignItems="center" mb={2}>
+        <Avatar src={user.profile.raw_attributes.picture} alt={user.first_name} sx={{ width: 44, height: 44, bgcolor: '#eebbc3', color: '#232946', fontWeight: 700, fontSize: 24, mr: 1 }}>
+          {!user.profile.raw_attributes.picture && user.first_name.charAt(0)}
+        </Avatar>
+        <Typography variant="subtitle1" color="white" fontWeight={500}>
+          Welcome {user.first_name}
+        </Typography>
+      </Box>
     );
   }
 
   return (
-    <button className={className ? className : 'Login-button'} onClick={handleLogin}>
+    <Button
+      variant="contained"
+      color="primary"
+      fullWidth
+      onClick={handleLogin}
+      className={className}
+      sx={{ mt: 1, mb: 2, borderRadius: 2, fontWeight: 500, fontSize: 16 }}
+    >
       Login
-    </button>
+    </Button>
   );
 };
 

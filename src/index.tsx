@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './pages/App';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
+import RecordPage from './pages/RecordPage';
 
 
 const root = ReactDOM.createRoot(
@@ -17,6 +18,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/record" element={<RecordPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
