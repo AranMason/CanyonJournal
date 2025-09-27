@@ -158,17 +158,22 @@
   letter-spacing: 1px;
 }
 
-
+.sidebar-hover {
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar-hover:hover {
+  background-color: #393e6e !important;
+  color: #eebbc3 !important;
+}
+.sidebar-hover:hover .MuiListItemIcon-root {
+  color: #eebbc3 !important;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
-
-
-
 
 @keyframes App-logo-spin {
   from {

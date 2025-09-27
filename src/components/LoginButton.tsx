@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button, Avatar, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -37,8 +36,13 @@ const LoginButton: React.FC<LoginButtonProps> = ({ className, user, loading }) =
       color="primary"
       fullWidth
       onClick={handleLogin}
-      className={className}
-      sx={{ mt: 1, mb: 2, borderRadius: 2, fontWeight: 500, fontSize: 16 }}
+      sx={{
+        mt: 1,
+        mb: 2,
+        borderRadius: 2,
+        fontWeight: 500,
+        fontSize: 16,
+      }}
     >
       Login
     </Button>
