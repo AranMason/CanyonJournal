@@ -6,12 +6,15 @@ import LoginButton from '../components/LoginButton';
 import { useEffect, useState } from 'react';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Toolbar } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-import ContactMailIcon from '@mui/icons-material/ContactMail';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 
-function App() {
+interface PageTemplateProps {
+  pageTitle: string;
+  children?: React.ReactNode;
+}
+
+function PageTemplate({ pageTitle, children }: PageTemplateProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -64,10 +67,11 @@ function App() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <h1 className="App-title">Canyon Journal</h1>
+        <h1 className="App-title">{pageTitle}</h1>
+        {children}
       </Box>
     </Box>
   );
 }
 
-export default App;
+export default PageTemplate;
