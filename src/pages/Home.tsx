@@ -4,6 +4,14 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { CanyonRecord } from '../types/CanyonRecord';
 import { useUser } from '../App';
 
+// Column size definitions
+const COLUMN_WIDTHS = {
+  date: 120,
+  name: 120, // auto
+  teamSize: 80,
+  comments: undefined, // auto
+};
+
 const Home: React.FC = () => {
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
@@ -35,39 +43,48 @@ const Home: React.FC = () => {
         <Typography>Loading records...</Typography>
       ) : error ? (
         <Typography color="error">{error}</Typography>
-      ) : records.length === 0 ? (
-        <Typography>No canyon records found.</Typography>
       ) : (
-        <TableContainer component={Paper} sx={{ mt: 4 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Team Size</TableCell>
-                <TableCell>Comments</TableCell>
-                <TableCell>Created</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {records.map((rec, idx) => (
-                <TableRow key={idx}>
-                  <TableCell>
-                    {rec.url ? (
-                      <a href={rec.url} target="_blank" rel="noopener noreferrer">{rec.name}</a>
-                    ) : (
-                      rec.name
-                    )}
-                  </TableCell>
-                  <TableCell>{rec.date}</TableCell>
-                  <TableCell>{rec.teamSize}</TableCell>
-                  <TableCell>{rec.comments || '-'}</TableCell>
-                  <TableCell>{rec.timestamp ? new Date(rec.timestamp).toLocaleString() : '-'}</TableCell>
+        <>
+          <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
+            Canyons Descended
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
+                  <TableCell>Canyon Name</TableCell>
+                  <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
+                  <TableCell>Comments</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {records.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No canyon records found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  records.map((rec, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>{rec.date}</TableCell>
+                      <TableCell>
+                        {rec.url ? (
+                          <a href={rec.url} target="_blank" rel="noopener noreferrer">{rec.name}</a>
+                        ) : (
+                          rec.name
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.teamSize}</TableCell>
+                      <TableCell>{rec.comments || '-'}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
       )}
     </PageTemplate>
   );

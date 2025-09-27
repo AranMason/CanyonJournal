@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
+import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
+import { useNavigate } from 'react-router-dom';
 
 const today = new Date().toISOString().split('T')[0];
 
 const RecordPage: React.FC = () => {
+  const { user, loading } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
+
   const [name, setName] = useState('');
   const [date, setDate] = useState(today);
   const [url, setUrl] = useState('');
