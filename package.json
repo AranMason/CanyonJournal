@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.ts",
+    "server": "nodemon index.ts",
     "build": "react-scripts build",
     "start": "react-scripts start",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev:all": "concurrently \"npm run start\" \"npm run dev\""
   },
-  "author": "",
+  "author": "Aran Mason",
   "license": "ISC",
   "dependencies": {
     "@emotion/react": "^11.14.0",

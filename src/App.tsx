@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import './App.css';
 import { useNavigate } from 'react-router-dom';
 
 function App() {
   const navigate = useNavigate();
+  const [user, setUser] = useState<{ first_name: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/user', { credentials: 'include' })
+      .then(async (res) => {
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleLogin = () => {
     navigate('/login');
@@ -23,9 +36,13 @@ function App() {
       </aside>
       <main className="Main-content">
         <h1 className="App-title">Canyon Journal</h1>
-        <button className="Login-button" onClick={handleLogin}>
-          Login
-        </button>
+        {loading ? null : user ? (
+          <div className="User-greeting">Welcome, {user.first_name}!</div>
+        ) : (
+          <button className="Login-button" onClick={handleLogin}>
+            Login
+          </button>
+        )}
       </main>
     </div>
   );
