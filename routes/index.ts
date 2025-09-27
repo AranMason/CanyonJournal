@@ -1,5 +1,6 @@
 import express, { Application, Request, Response, Router } from 'express'
 import { ProfileAndToken, WorkOS } from '@workos-inc/node'
+import path from 'path'
 
 const app: Application = express()
 const router: Router = express.Router()
@@ -27,21 +28,6 @@ const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.en
 const organizationID: string = ''
 const redirectURI: string = 'http://localhost:8000/callback'
 const state: string = ''
-
-router.get('/', (req: Request, res: Response) => {
-  try {
-    if (session.isloggedin) {
-      res.render('login_successful.ejs', {
-        profile: JSON.stringify(session.profile, null, 2),
-        first_name: session.first_name
-      })
-    } else {
-      return res.render('index.ejs')
-    }
-  } catch (error) {
-    return res.render('error.ejs', { error: error })
-  }
-})
 
 router.post('/login', (req: Request, res: Response) => {
   
