@@ -1,11 +1,10 @@
 {
-  "name": "typescript-sso-example-app",
+  "name": "CanyonJournal",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon index.ts",
-    "frontend": "node frontend.ts",
     "build": "react-scripts build",
     "start": "react-scripts start",
     "test": "react-scripts test",
