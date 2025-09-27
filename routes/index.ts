@@ -66,7 +66,7 @@ router.post('/login', (req: Request, res: Response) => {
 
     res.redirect(url)
   } catch (error) {
-    res.render('error.ejs', { error: error })
+    return res.redirect('/error?message=' + (error instanceof Error ? error.message : 'Unknown error'));
   }
 })
 
@@ -85,7 +85,7 @@ router.get('/callback', async (req: Request, res: Response) => {
 
     res.redirect('/')
   } catch (error) {
-    return res.render('error.ejs', { error: error })
+    return res.redirect('/error?message=' + (error instanceof Error ? error.message : 'Unknown error'));
   }
 })
 
@@ -97,7 +97,7 @@ router.get('/logout', async (req: Request, res: Response) => {
 
     return res.redirect('/')
   } catch (error) {
-    return res.render('error.ejs', { error: error })
+    return res.redirect('/error?message=' + (error instanceof Error ? error.message : 'Unknown error'));
   }
 })
 

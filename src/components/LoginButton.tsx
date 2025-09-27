@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button, Avatar, Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import type { User } from '../types';
+import type { User } from '../types/types';
 
 interface LoginButtonProps {
   className?: string;

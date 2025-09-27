@@ -1,5 +1,5 @@
 
-import type { User } from '../types';
+import type { User } from '../types/types';
 
 import '../App.css';
 import LoginButton from '../components/LoginButton';
