@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
+import App from './App';
 
 
 const root = ReactDOM.createRoot(
@@ -14,13 +15,15 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/record" element={<RecordPage />} />
-      </Routes>
-    </BrowserRouter>
+    <App>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/record" element={<RecordPage />} />
+        </Routes>
+      </BrowserRouter>
+    </App>
   </React.StrictMode>
 );
 

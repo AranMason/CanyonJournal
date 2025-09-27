@@ -26,12 +26,19 @@ recordRouter.post('/record', requireAuth, (req: Request, res: Response) => {
   if (isNaN(teamSizeNum) || teamSizeNum < 1) {
     return res.status(400).json({ error: 'Team size must be a positive number.' });
   }
-  canyonRecords.push({ name, date, url, teamSize: teamSizeNum, comments });
-  res.status(201).json({ message: 'Canyon record added!', record: { name, date, url, teamSize: teamSizeNum, comments } });
+  const timestamp = new Date().toISOString();
+  const record: CanyonRecord = { name, date, url, teamSize: teamSizeNum, comments, timestamp };
+  canyonRecords.push(record);
+  res.status(201).json({ message: 'Canyon record added!', record });
 });
 
 recordRouter.get('/record', requireAuth, (req: Request, res: Response) => {
-  res.json({ records: canyonRecords });
+  // Sort by timestamp descending (most recent first)
+  const sorted = [...canyonRecords].sort((a, b) => {
+    if (!a.timestamp || !b.timestamp) return 0;
+    return b.timestamp.localeCompare(a.timestamp);
+  });
+  res.json({ records: sorted });
 });
 
 export default recordRouter;
