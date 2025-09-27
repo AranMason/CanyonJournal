@@ -1,11 +1,113 @@
-.App {
-  text-align: center;
+/* Login Page Styles */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f5f6fa;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.login-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
+.login_button {
+  width: 100%;
+  padding: 0.75rem 0;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 500;
+}
+.google_button {
+  background: #fff;
+  color: #232946;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 2px rgba(66,133,244,0.08);
+}
+.google_button:hover {
+  background: #e8f0fe;
+}
+.microsoft_button {
+  background: #2f2f2f;
+  color: #fff;
+  border: 1px solid #2f2f2f;
+}
+.microsoft_button:hover {
+  background: #e6e6e6;
+  color: #2f2f2f;
+}
+.Login-button {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  background: #232946;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+.Login-button:hover {
+  background: #eebbc3;
+  color: #232946;
+}
+
+/* Layout for sidebar and main content */
+.App-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+.Sidebar {
+  width: 220px;
+  background: #232946;
+  color: #fff;
+  padding: 2rem 1rem;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+}
+.Sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+.Sidebar li {
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.Sidebar li:hover {
+  color: #eebbc3;
+}
+
+.Main-content {
+  flex: 1;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.App-title {
+  font-size: 2.5rem;
+  color: #232946;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -13,20 +115,9 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
 
-.App-link {
-  color: #61dafb;
-}
+
+
 
 @keyframes App-logo-spin {
   from {
