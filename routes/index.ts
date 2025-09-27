@@ -33,9 +33,11 @@ const state: string = ''
 // Route to get the current user's data if logged in
 router.get('/user', (req: Request, res: Response) => {
   if (session.isloggedin && session.profile) {
+    const profile = session.profile.profile;
     res.json({
       first_name: session.first_name,
-      profile: session.profile.profile,
+      profile,
+      picture_url: profile.raw_attributes.picture_url,
       isloggedin: true
     });
   } else {

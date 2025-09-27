@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
 
-import './App.css';
-import { useNavigate } from 'react-router-dom';
+import type { User } from '../types';
+import '../App.css';
+import LoginButton from '../components/LoginButton';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState<{ first_name: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,13 +19,12 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleLogin = () => {
-    navigate('/login');
-  };
-
   return (
     <div className="App-layout">
       <aside className="Sidebar">
+        <div className="Sidebar-top">
+          <LoginButton className="Login-button Sidebar-login-btn" user={user} loading={loading} />
+        </div>
         <nav>
           <ul>
             <li>Home</li>
@@ -36,13 +35,6 @@ function App() {
       </aside>
       <main className="Main-content">
         <h1 className="App-title">Canyon Journal</h1>
-        {loading ? null : user ? (
-          <div className="User-greeting">Welcome, {user.first_name}!</div>
-        ) : (
-          <button className="Login-button" onClick={handleLogin}>
-            Login
-          </button>
-        )}
       </main>
     </div>
   );
