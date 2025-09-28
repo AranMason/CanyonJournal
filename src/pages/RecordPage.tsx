@@ -47,6 +47,10 @@ const RecordPage: React.FC = () => {
                   gearIds: values.gearIds,
                 }),
               });
+              if (response.status === 401) {
+                navigate('/');
+                return;
+              }
               if (response.ok) {
                 resetForm();
                 setSnackbarOpen(true);

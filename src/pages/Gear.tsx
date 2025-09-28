@@ -45,35 +45,40 @@ const Gear: React.FC = () => {
   const [gearModalOpen, setGearModalOpen] = React.useState(false);
   const [ropes, setRopes] = React.useState<any[]>([]);
   const [gear, setGear] = React.useState<any[]>([]);
-  const ropeIdRef = React.useRef(1);
-  const gearIdRef = React.useRef(1);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [editRopeId, setEditRopeId] = React.useState<string | null>(null);
   const [editGearId, setEditGearId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
     if (!loading && user) {
-  axios.get('/api/equipment').then(res => {
-        setGear(res.data.gear || []);
-        setRopes(res.data.ropes || []);
-        // Set id refs to max+1 for new items
-        if (res.data.gear?.length) gearIdRef.current = Math.max(...res.data.gear.map((g: any) => g.id)) + 1;
-        if (res.data.ropes?.length) ropeIdRef.current = Math.max(...res.data.ropes.map((r: any) => r.id)) + 1;
-      });
+      axios.get('/api/equipment')
+        .then(res => {
+          setGear(res.data.gear || []);
+          setRopes(res.data.ropes || []);
+        })
+        .catch(err => {
+          if (err.response && err.response.status === 401) navigate('/');
+        });
     }
   }, [loading, user]);
 
   const handleAddRope = async (data: any) => {
-    const item = { ...data, id: ropeIdRef.current++ };
-  await axios.post('/api/equipment/rope', item);
-    setRopes(prev => [...prev, item]);
-    setSnackbarOpen(true);
+    try {
+      const response = await axios.post('/api/equipment/rope', data);
+      setRopes(prev => [...prev, response.data]);
+      setSnackbarOpen(true);
+    } catch (err: any) {
+      if (err.response && err.response.status === 401) navigate('/');
+    }
   };
   const handleAddGear = async (data: any) => {
-    const item = { ...data, id: gearIdRef.current++ };
-  await axios.post('/api/equipment/gear', item);
-    setGear(prev => [...prev, item]);
-    setSnackbarOpen(true);
+    try {
+      const response = await axios.post('/api/equipment/gear', data);
+      setGear(prev => [...prev, response.data]);
+      setSnackbarOpen(true);
+    } catch (err: any) {
+      if (err.response && err.response.status === 401) navigate('/');
+    }
   };
 
   return (
@@ -122,9 +127,13 @@ const Gear: React.FC = () => {
           onClose={() => { setRopeModalOpen(false); setEditRopeId(null); }}
           onSubmit={async data => {
             if (editRopeId !== null) {
-              await axios.put(`/api/equipment/rope/${editRopeId}`, { ...data, id: editRopeId });
-              setRopes(prev => prev.map((r) => r.id === editRopeId ? { ...data, id: editRopeId } : r));
-              setEditRopeId(null);
+              try {
+                const response = await axios.put(`/api/equipment/rope/${editRopeId}`, data);
+                setRopes(prev => prev.map((r) => r.id === editRopeId ? response.data : r));
+                setEditRopeId(null);
+              } catch (err: any) {
+                if (err.response && err.response.status === 401) navigate('/');
+              }
             } else {
               await handleAddRope(data);
             }
@@ -173,9 +182,13 @@ const Gear: React.FC = () => {
           onClose={() => { setGearModalOpen(false); setEditGearId(null); }}
           onSubmit={async data => {
             if (editGearId !== null) {
-              await axios.put(`/api/equipment/gear/${editGearId}`, { ...data, id: editGearId });
-              setGear(prev => prev.map((g) => g.id === editGearId ? { ...data, id: editGearId } : g));
-              setEditGearId(null);
+              try {
+                const response = await axios.put(`/api/equipment/gear/${editGearId}`, data);
+                setGear(prev => prev.map((g) => g.id === editGearId ? response.data : g));
+                setEditGearId(null);
+              } catch (err: any) {
+                if (err.response && err.response.status === 401) navigate('/');
+              }
             } else {
               await handleAddGear(data);
             }
