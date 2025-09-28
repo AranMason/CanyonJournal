@@ -7,6 +7,7 @@ import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import RopeIcon from '@mui/icons-material/Build'; // Placeholder for rope/gear icon
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
@@ -55,6 +56,12 @@ const Sidebar: React.FC = () => {
             label="Edit Gear"
             icon={<RopeIcon />}
             onClick={() => navigate('/gear')}
+            disabled={!user}
+          />
+          <SidebarItem
+            label="Add Canyon"
+            icon={<AddLocationAltIcon />}
+            onClick={() => navigate('/add-canyon')}
             disabled={!user}
           />
         </List>

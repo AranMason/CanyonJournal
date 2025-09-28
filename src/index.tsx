@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
 import App from './App';
 import Gear from './pages/Gear';
+import AddCanyon from './pages/AddCanyon';
 
 
 const root = ReactDOM.createRoot(
@@ -23,6 +24,7 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/record" element={<RecordPage />} />
           <Route path="/gear" element={<Gear />} />
+          <Route path="/add-canyon" element={<AddCanyon />} />
         </Routes>
       </BrowserRouter>
     </App>
