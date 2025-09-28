@@ -10,7 +10,7 @@ const canyonRecords: Array<CanyonRecord> = [];
 
 
 recordRouter.post('/', requireAuth, (req: Request, res: Response) => {
-  const { name, date, url, teamSize, comments } = req.body as CanyonRecord;
+  const { name, date, url, teamSize, comments, canyonId } = req.body as CanyonRecord;
   if (!name || !date) {
     return res.status(400).json({ error: 'Name and date are required.' });
   }
@@ -19,7 +19,7 @@ recordRouter.post('/', requireAuth, (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Team size must be a positive number.' });
   }
   const timestamp = new Date().toISOString();
-  const record: CanyonRecord = { name, date, url, teamSize: teamSizeNum, comments, timestamp };
+  const record: CanyonRecord = { name, date, url, teamSize: teamSizeNum, comments, canyonId, timestamp };
   canyonRecords.push(record);
   res.status(201).json({ message: 'Canyon record added!', record });
 });
