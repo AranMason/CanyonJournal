@@ -5,6 +5,7 @@ import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import PageTemplate from './PageTemplate';
+import CanyonRating from '../components/CanyonRating';
 
 const AddCanyon: React.FC = () => {
   const navigate = useNavigate();
@@ -18,10 +19,10 @@ const AddCanyon: React.FC = () => {
             initialValues={{
               name: '',
               url: '',
-              aquaticRating: '',
-              verticalRating: '',
-              starRating: '',
-              commitmentRating: '',
+              aquaticRating: undefined,
+              verticalRating: undefined,
+              starRating: undefined,
+              commitmentRating: undefined,
             }}
             validationSchema={Yup.object({
               name: Yup.string().required('Name is required'),
@@ -79,6 +80,7 @@ const AddCanyon: React.FC = () => {
                     error={touched.url && Boolean(errors.url)}
                     helperText={touched.url && errors.url}
                   />
+                  <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} />
                   <TextField
                     label="Aquatic Rating"
                     name="aquaticRating"

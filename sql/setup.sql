@@ -1,0 +1,62 @@
+CREATE TABLE Users (
+    Id INT IDENTITY PRIMARY KEY,
+    Guid NVARCHAR(255) NOT NULL UNIQUE, -- SSO/email unique identifier
+    FirstName NVARCHAR(100) NOT NULL,
+    ProfilePicture NVARCHAR(255) NULL
+);
+
+CREATE TABLE Canyons (
+    Id INT IDENTITY PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL,
+    Url NVARCHAR(255) NOT NULL,
+    AquaticRating INT NOT NULL,
+    VerticalRating INT NOT NULL,
+    CommitmentRating INT NOT NULL,
+    StarRating INT NOT NULL
+);
+
+CREATE TABLE GearItems (
+    Id INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL REFERENCES Users(Id),
+    Name NVARCHAR(200) NOT NULL,
+    Category NVARCHAR(100) NOT NULL,
+    Notes NVARCHAR(500) NULL,
+    Created DATETIME NOT NULL DEFAULT GETDATE(),
+    Updated DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE RopeItems (
+    Id INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL REFERENCES Users(Id),
+    Name NVARCHAR(200) NOT NULL,
+    Diameter NVARCHAR(50) NOT NULL,
+    Length NVARCHAR(50) NOT NULL,
+    Unit NVARCHAR(20) NOT NULL,
+    Notes NVARCHAR(500) NULL,
+    Created DATETIME NOT NULL DEFAULT GETDATE(),
+    Updated DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE CanyonRecords (
+    Id INT IDENTITY PRIMARY KEY,
+    UserId INT NOT NULL REFERENCES Users(Id),
+    Name NVARCHAR(200) NOT NULL,
+    Date DATE NOT NULL,
+    Url NVARCHAR(255) NOT NULL,
+    TeamSize INT NOT NULL,
+    Comments NVARCHAR(1000) NULL,
+    CanyonId INT NULL REFERENCES Canyons(Id),
+    Timestamp DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE CanyonRecordGear (
+    CanyonRecordId INT NOT NULL REFERENCES CanyonRecords(Id),
+    GearItemId INT NOT NULL REFERENCES GearItems(Id),
+    PRIMARY KEY (CanyonRecordId, GearItemId)
+);
+
+CREATE TABLE CanyonRecordRope (
+    CanyonRecordId INT NOT NULL REFERENCES CanyonRecords(Id),
+    RopeItemId INT NOT NULL REFERENCES RopeItems(Id),
+    PRIMARY KEY (CanyonRecordId, RopeItemId)
+);

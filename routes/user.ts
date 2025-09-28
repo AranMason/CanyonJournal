@@ -1,7 +1,7 @@
-
 import express, { Application, Request, Response, Router } from 'express'
 import { ProfileAndToken, WorkOS } from '@workos-inc/node'
 import type {} from '../src/types/express-session'
+import { getPool, sql } from './middleware/sqlserver';
 
 const router: Router = express.Router()
 interface Params {
@@ -20,17 +20,28 @@ const redirectURI: string = 'http://localhost:3000/api/callback'
 const state: string = ''
 
 // Route to get the current user's data if logged in
-router.get('/user', (req: Request, res: Response) => {
-  if (req.session.isloggedin && req.session.profile) {
-    const profile = req.session.profile.profile;
+router.get('/user', async (req: Request, res: Response) => {
+  if (!req.session.isloggedin || !req.session.userId) {
+    req.session.isloggedin = false;
+    req.session.userId = 0;
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('id', sql.Int, req.session.userId)
+      .query('SELECT Id, Guid, FirstName, ProfilePicture FROM Users WHERE Id = @id');
+    const user = result.recordset[0];
+    if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({
-      first_name: req.session.first_name,
-      profile,
-      picture_url: profile.raw_attributes.picture_url,
+      id: user.Id,
+      guid: user.Guid,
+      first_name: user.FirstName,
+      picture_url: user.ProfilePicture,
       isloggedin: true
     });
-  } else {
-    res.status(401).json({ error: 'Not authenticated' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to load user from DB' });
   }
 });
 
@@ -72,16 +83,36 @@ router.get('/callback', async (req: Request, res: Response) => {
     req.session.profile = profile
     req.session.isloggedin = true
 
+    // Upsert user in SQL Server
+    console.log(profile);
+    const firstName = profile.profile.first_name;
+    const pictureUrl = profile.profile.raw_attributes?.picture || null;
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('guid', sql.NVarChar(255), profile.profile.email)
+      .input('firstName', sql.NVarChar(100), firstName)
+      .input('profilePicture', sql.NVarChar(255), pictureUrl)
+      .query(`MERGE INTO Users WITH (HOLDLOCK) AS target
+              USING (SELECT @guid AS Guid) AS source
+              ON target.Guid = source.Guid
+              WHEN MATCHED THEN
+                UPDATE SET FirstName = @firstName, ProfilePicture = @profilePicture
+              WHEN NOT MATCHED THEN
+                INSERT (Guid, FirstName, ProfilePicture) VALUES (@guid, @firstName, @profilePicture)
+              OUTPUT inserted.Id;`);
+    req.session.userId = result.recordset[0].Id;
+    req.session.isloggedin = result.recordset[0].Id > 0;
+
     res.redirect('/')
   } catch (error) {
+    console.error(error);
     return res.redirect('/error?message=' + (error instanceof Error ? error.message : 'Unknown error'));
   }
 })
 
 router.get('/logout', async (req: Request, res: Response) => {
   try {
-    req.session.first_name = null
-    req.session.profile = null
+    req.session.userId = 0
     req.session.isloggedin = false
 
     return res.redirect('/')

@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, Typography, Divider, Autocomplete, CircularProgress } from '@mui/material';
+import { Box, Button, TextField, Typography, Autocomplete } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import SuccessSnackbar from '../components/SuccessSnackbar';
 import { GearRopeSelector } from '../components/GearRopeSelector';
 import { Canyon } from '../types/Canyon';
 import { apiFetch } from '../utils/api';
+import { CanyonRecord } from '../types/CanyonRecord';
+
+type OtherOption = {
+  Id: -1;
+  Name: string;
+  Url: string;
+  AquaticRating: number;
+  VerticalRating: number;
+  StarRating: number;
+}
 
 const today = new Date().toISOString().split('T')[0];
-
-const RecordSchema = Yup.object().shape({
-  name: Yup.string().required('Canyon name is required'),
-  date: Yup.string().required('Date is required'),
-  url: Yup.string().url('Must be a valid URL').nullable(),
-  teamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
-  comments: Yup.string(),
-});
 
 const RecordPage: React.FC = () => {
   const { user, loading } = useUser();
@@ -41,14 +43,16 @@ const RecordPage: React.FC = () => {
       .finally(() => setCanyonsLoading(false));
   }, []);
 
-  const customCanyonOption = { id: -1, name: 'Other', url: '', aquaticRating: 0, verticalRating: 0, starRating: 0 };
-  const canyonOptions = [...canyons, customCanyonOption];
+  const customCanyonOption: OtherOption = { Id: -1, Name: 'Other', Url: '', AquaticRating: 0, VerticalRating: 0, StarRating: 0 };
+  const canyonOptions: (Canyon | OtherOption)[] = [...canyons, customCanyonOption];
+
+  const initialValues: CanyonRecord = { Name: '', Date: today, Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined };
 
   return (
     <PageTemplate pageTitle="Record Canyon">
       <Box maxWidth={400} mx="auto" mt={4}>
         <Formik
-          initialValues={{ name: '', date: today, url: '', teamSize: null, comments: '', ropeIds: [], gearIds: [], canyonId: undefined }}
+          initialValues={initialValues}
           validationSchema={Yup.object().shape({
             name: Yup.string().when('canyonId', {
               is: (val: number | undefined) => val === -1 || !val,
@@ -71,9 +75,9 @@ const RecordPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   ...values,
-                  ropeIds: values.ropeIds,
-                  gearIds: values.gearIds,
-                  canyonId: values.canyonId || null,
+                  ropeIds: values.RopeIds,
+                  gearIds: values.GearIds,
+                  canyonId: values.CanyonId || null,
                 }),
               });
               resetForm();
@@ -90,30 +94,30 @@ const RecordPage: React.FC = () => {
         >
           {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => {
             // Find selected canyon by id
-            const selectedCanyon = canyonOptions.find(c => c.id === values.canyonId);
+            const selectedCanyon = canyonOptions.find(c => c.Id === values.Id);
             return (
               <Form>
                 <Autocomplete
                   options={canyonOptions}
-                  getOptionLabel={option => typeof option === 'string' ? option : option.name}
+                  getOptionLabel={option => typeof option === 'string' ? option : option.Name}
                   loading={canyonsLoading}
                   onChange={(_, canyon) => {
                     if (!canyon || (typeof canyon === 'string')) {
                       setFieldValue('canyonId', -1);
                       setFieldValue('name', '');
                       setFieldValue('url', '');
-                    } else if (canyon.id === -1) {
+                    } else if (canyon.Id === -1) {
                       setFieldValue('canyonId', -1);
                       setFieldValue('name', '');
                       setFieldValue('url', '');
                     } else {
-                      setFieldValue('canyonId', canyon.id);
-                      setFieldValue('name', canyon.name);
-                      setFieldValue('url', canyon.url);
+                      setFieldValue('canyonId', canyon.Id);
+                      setFieldValue('name', canyon.Name);
+                      setFieldValue('url', canyon.Url);
                     }
                   }}
                   value={
-                    typeof values.canyonId === 'undefined' ? null : canyonOptions.find(c => c.id === values.canyonId) || null
+                    typeof values.CanyonId === 'undefined' ? null : canyonOptions.find(c => c.Id === values.CanyonId) || null
                   }
                   renderInput={params => (
                     <TextField
@@ -127,80 +131,80 @@ const RecordPage: React.FC = () => {
                   )}
                   isOptionEqualToValue={(option, value) => {
                     if (typeof option === 'string' || typeof value === 'string') return option === value;
-                    return option.id === value.id;
+                    return option.Id === value.Id;
                   }}
                 />
                 <TextField
                   label="Name of the Canyon"
                   name="name"
-                  value={values.name}
+                  value={values.Name}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth
-                  required={values.canyonId === -1}
+                  required={values.CanyonId === -1}
                   margin="normal"
-                  error={touched.name && Boolean(errors.name)}
-                  helperText={touched.name && errors.name}
-                  disabled={!!selectedCanyon && selectedCanyon.id !== -1}
+                  error={touched.Name && Boolean(errors.Name)}
+                  helperText={touched.Name && errors.Name}
+                  disabled={!!selectedCanyon && selectedCanyon.Id !== -1}
                 />
                 <TextField
                   label="Canyon Link URL"
                   name="url"
-                  value={values.url}
+                  value={values.Url}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth
                   margin="normal"
-                  error={touched.url && Boolean(errors.url)}
-                  helperText={touched.url && errors.url}
-                  disabled={!!selectedCanyon && selectedCanyon.id !== -1}
+                  error={touched.Url && Boolean(errors.Url)}
+                  helperText={touched.Url && errors.Url}
+                  disabled={!!selectedCanyon && selectedCanyon.Id !== -1}
                 />
                 <TextField
                   label="Date"
                   type="date"
                   name="date"
-                  value={values.date}
+                  value={values.Date}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth
                   required
                   margin="normal"
                   InputLabelProps={{ shrink: true }}
-                  error={touched.date && Boolean(errors.date)}
-                  helperText={touched.date && errors.date}
+                  error={touched.Date && Boolean(errors.Date)}
+                  helperText={touched.Date && errors.Date}
                 />
                 <TextField
                   label="Team Size"
                   type="number"
                   name="teamSize"
-                  value={values.teamSize}
+                  value={values.TeamSize}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth
                   required
                   margin="normal"
                   inputProps={{ min: 1 }}
-                  error={touched.teamSize && Boolean(errors.teamSize)}
-                  helperText={touched.teamSize && errors.teamSize}
+                  error={touched.TeamSize && Boolean(errors.TeamSize)}
+                  helperText={touched.TeamSize && errors.TeamSize}
                 />
                 <TextField
                   label="Comments"
                   name="comments"
-                  value={values.comments}
+                  value={values.Comments}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   fullWidth
                   margin="normal"
                   multiline
                   minRows={3}
-                  error={touched.comments && Boolean(errors.comments)}
-                  helperText={touched.comments && errors.comments}
+                  error={touched.Comments && Boolean(errors.Comments)}
+                  helperText={touched.Comments && errors.Comments}
                 />
                 <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
                 <GearRopeSelector
-                  selectedRopeIds={values.ropeIds}
+                  selectedRopeIds={values.RopeIds}
                   setSelectedRopeIds={ids => setFieldValue('ropeIds', ids)}
-                  selectedGearIds={values.gearIds}
+                  selectedGearIds={values.GearIds}
                   setSelectedGearIds={ids => setFieldValue('gearIds', ids)}
                 />
                 <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>

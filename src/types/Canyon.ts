@@ -1,9 +1,9 @@
 export interface Canyon {
-  id: number;
-  name: string;
-  url: string;
-  aquaticRating: number;
-  verticalRating: number;
-  commitmentRating: number;
-  starRating: number;
+  Id: number;
+  Name: string;
+  Url: string;
+  AquaticRating: number;
+  VerticalRating: number;
+  CommitmentRating: number;
+  StarRating: number;
 }

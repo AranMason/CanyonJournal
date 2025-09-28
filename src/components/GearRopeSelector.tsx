@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Button, Chip, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Box, Chip, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import axios from 'axios';
+import { GearItem, RopeItem } from '../types/types';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -10,8 +11,8 @@ interface GearRopeSelectorProps {
 }
 
 export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRopeIds, setSelectedRopeIds, selectedGearIds, setSelectedGearIds }) => {
-  const [ropes, setRopes] = useState<any[]>([]);
-  const [gear, setGear] = useState<any[]>([]);
+  const [ropes, setRopes] = useState<RopeItem[]>([]);
+  const [gear, setGear] = useState<GearItem[]>([]);
 
   useEffect(() => {
     axios.get('/api/equipment').then(res => {
@@ -33,14 +34,14 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
-                const rope = ropes.find(r => r.id === id);
-                return rope ? <Chip key={id} label={rope.name} /> : null;
+                const rope = ropes.find(r => r.Id === id);
+                return rope ? <Chip key={id} label={rope.Name} /> : null;
               })}
             </Box>
           )}
         >
           {ropes.map((rope) => (
-            <MenuItem key={rope.id} value={rope.id}>{rope.name}</MenuItem>
+            <MenuItem key={rope.Id} value={rope.Id}>{rope.Name}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -55,14 +56,14 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
-                const g = gear.find(gg => gg.id === id);
-                return g ? <Chip key={id} label={g.name} /> : null;
+                const g = gear.find(gg => gg.Id === id);
+                return g ? <Chip key={id} label={g.Name} /> : null;
               })}
             </Box>
           )}
         >
           {gear.map((g) => (
-            <MenuItem key={g.id} value={g.id}>{g.name}</MenuItem>
+            <MenuItem key={g.Id} value={g.Id}>{g.Name}</MenuItem>
           ))}
         </Select>
       </FormControl>

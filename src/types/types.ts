@@ -4,28 +4,25 @@ export enum Unit {
 }
 export interface User {
   first_name: string;
-  profile: {
-    raw_attributes: {
-        picture?: string;
-    }
-  }
+  picture_url?: string;
+  id: Number
 }
 export interface GearItem {
-  id: number;
-  name: string;
-  category: string;
-  notes?: string;
-  created: string;
-  updated: string;
+  Id: number;
+  Name: string;
+  Category: string;
+  Notes?: string;
+  Created: string;
+  Updated: string;
 }
 
 export interface RopeItem {
-  id: number;
-  name: string;
-  diameter: string;
-  length: string;
-  unit: string;
-  notes?: string;
-  created: string;
-  updated: string;
+  Id: number;
+  Name: string;
+  Diameter: string;
+  Length: string;
+  Unit: string;
+  Notes?: string;
+  Created: string;
+  Updated: string;
 }

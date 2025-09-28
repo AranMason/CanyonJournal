@@ -9,29 +9,7 @@ import GearModal from '../components/GearModal';
 import SuccessSnackbar from '../components/SuccessSnackbar';
 import RowActions from '../components/RowActions';
 import { apiFetch } from '../utils/api';
-
-const SectionTable: React.FC<{ title: string }> = ({ title }) => (
-  <Box sx={{ mb: 4 }}>
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-      <Typography variant="h6">{title}</Typography>
-      <Button variant="outlined" color="primary">Add Gear</Button>
-    </Box>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Notes</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {/* Empty for now */}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  </Box>
-);
+import { GearItem, RopeItem } from '../types/types';
 
 const Gear: React.FC = () => {
   const { user, loading } = useUser();
@@ -43,11 +21,11 @@ const Gear: React.FC = () => {
   }, [user, loading, navigate]);
   const [ropeModalOpen, setRopeModalOpen] = React.useState(false);
   const [gearModalOpen, setGearModalOpen] = React.useState(false);
-  const [ropes, setRopes] = React.useState<any[]>([]);
-  const [gear, setGear] = React.useState<any[]>([]);
+  const [ropes, setRopes] = React.useState<RopeItem[]>([]);
+  const [gear, setGear] = React.useState<GearItem[]>([]);
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [editRopeId, setEditRopeId] = React.useState<string | null>(null);
-  const [editGearId, setEditGearId] = React.useState<string | null>(null);
+  const [editRopeId, setEditRopeId] = React.useState<Number | null>(null);
+  const [editGearId, setEditGearId] = React.useState<Number | null>(null);
 
   React.useEffect(() => {
     if (!loading && user) {
@@ -110,18 +88,18 @@ const Gear: React.FC = () => {
             </TableHead>
             <TableBody>
               {ropes.length === 0 ? null : ropes.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.diameter}</TableCell>
-                  <TableCell>{row.length}</TableCell>
-                  <TableCell>{row.unit}</TableCell>
-                  <TableCell>{row.notes}</TableCell>
+                <TableRow key={row.Id}>
+                  <TableCell>{row.Name}</TableCell>
+                  <TableCell>{row.Diameter}</TableCell>
+                  <TableCell>{row.Length}</TableCell>
+                  <TableCell>{row.Unit}</TableCell>
+                  <TableCell>{row.Notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
-                      onEdit={async () => setEditRopeId(row.id)}
+                      onEdit={async () => setEditRopeId(row.Id)}
                       onDelete={async () => {
-                        await apiFetch(`/api/equipment/rope/${row.id}`, { method: 'DELETE' });
-                        setRopes(prev => prev.filter((r) => r.id !== row.id));
+                        await apiFetch(`/api/equipment/rope/${row.Id}`, { method: 'DELETE' });
+                        setRopes(prev => prev.filter((r) => r.Id !== row.Id));
                       }}
                     />
                   </TableCell>
@@ -141,7 +119,7 @@ const Gear: React.FC = () => {
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(data),
                 });
-                setRopes(prev => prev.map((r) => r.id === editRopeId ? response : r));
+                setRopes(prev => prev.map((r) => r.Id === editRopeId ? response : r));
                 setEditRopeId(null);
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
@@ -150,7 +128,7 @@ const Gear: React.FC = () => {
               await handleAddRope(data);
             }
           }}
-          initialValues={editRopeId !== null ? ropes.find(r => r.id === editRopeId) : undefined}
+          initialValues={editRopeId !== null ? ropes.find(r => r.Id === editRopeId) : undefined}
         />
       </Box>
       <Box sx={{ mb: 4 }}>
@@ -170,17 +148,16 @@ const Gear: React.FC = () => {
             </TableHead>
             <TableBody>
               {gear.length === 0 ? null : gear.map((row) => (
-                <TableRow key={row.id}>
-                  {/* Hidden ID: <TableCell style={{ display: 'none' }}>{row.id}</TableCell> */}
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.category}</TableCell>
-                  <TableCell>{row.notes}</TableCell>
+                <TableRow key={row.Id}>
+                  <TableCell>{row.Name}</TableCell>
+                  <TableCell>{row.Category}</TableCell>
+                  <TableCell>{row.Notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
-                      onEdit={async () => setEditGearId(row.id)}
+                      onEdit={async () => setEditGearId(row.Id)}
                       onDelete={async () => {
-                        await apiFetch(`/api/equipment/gear/${row.id}`, { method: 'DELETE' });
-                        setGear(prev => prev.filter((g) => g.id !== row.id));
+                        await apiFetch(`/api/equipment/gear/${row.Id}`, { method: 'DELETE' });
+                        setGear(prev => prev.filter((g) => g.Id !== row.Id));
                       }}
                     />
                   </TableCell>
@@ -200,7 +177,7 @@ const Gear: React.FC = () => {
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(data),
                 });
-                setGear(prev => prev.map((g) => g.id === editGearId ? response : g));
+                setGear(prev => prev.map((g) => g.Id === editGearId ? response : g));
                 setEditGearId(null);
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
@@ -209,7 +186,7 @@ const Gear: React.FC = () => {
               await handleAddGear(data);
             }
           }}
-          initialValues={editGearId !== null ? gear.find(g => g.id === editGearId) : undefined}
+          initialValues={editGearId !== null ? gear.find(g => g.Id === editGearId) : undefined}
         />
       </Box>
       <SuccessSnackbar open={snackbarOpen} message="Added successfully!" onClose={() => setSnackbarOpen(false)} />

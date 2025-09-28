@@ -11,6 +11,7 @@ declare module 'express-session' {
     ropes?: RopeItem[];
     gearId?: number;
     ropeId?: number;
+    userId?: number; // Added for SQL Server user mapping
   }
 }
 

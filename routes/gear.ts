@@ -1,90 +1,136 @@
 import { Router, Response, Request } from 'express';
-import { GearItem, RopeItem } from '../src/types/types';
 import { requireAuth } from './middleware/authentication';
-
+import { getPool, sql } from './middleware/sqlserver';
 
 const router = Router();
-// Removed unused session import, using req.session instead
 
-function ensureGearSession(req: Request) {
-  if (!req.session.gear) req.session.gear = [];
-  if (!req.session.ropes) req.session.ropes = [];
-  if (!req.session.gearId) req.session.gearId = 1;
-  if (!req.session.ropeId) req.session.ropeId = 1;
-}
-
-// Get all gear and ropes
-router.get('/',  requireAuth, (req: Request, res: Response) => {
-  ensureGearSession(req);
-  res.json({ gear: req.session.gear, ropes: req.session.ropes });
+// Get all gear and ropes for the user
+router.get('/', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM GearItems WHERE UserId = @userId');
+    const ropeRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM RopeItems WHERE UserId = @userId');
+    res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch gear/ropes' });
+  }
 });
 
 // Add gear
-router.post('/gear',  requireAuth, (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const now = new Date().toISOString();
-  const id = (req.session as any).gearId++;
-  const item: GearItem = {
-    ...req.body,
-    id,
-    created: now,
-    updated: now,
-  };
-  req.session.gear!.push(item);
-  res.status(201).json(item);
+router.post('/gear', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const { name, category, notes } = req.body;
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(200), name)
+      .input('category', sql.NVarChar(100), category)
+      .input('notes', sql.NVarChar(500), notes || null)
+      .query(`INSERT INTO GearItems (UserId, Name, Category, Notes, Created, Updated)
+              OUTPUT INSERTED.*
+              VALUES (@userId, @name, @category, @notes, GETDATE(), GETDATE())`);
+    res.status(201).json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add gear' });
+  }
 });
 
 // Edit gear
-router.put('/gear/:id',  requireAuth, (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const id = Number(req.params.id);
-  const idx = req.session.gear!.findIndex((g: GearItem) => g.id === id);
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  const now = new Date().toISOString();
-  req.session.gear![idx] = { ...req.body, id, created: req.session.gear![idx].created, updated: now };
-  res.json(req.session.gear![idx]);
+router.put('/gear/:id', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const id = Number(req.params.id);
+    const { name, category, notes } = req.body;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(200), name)
+      .input('category', sql.NVarChar(100), category)
+      .input('notes', sql.NVarChar(500), notes || null)
+      .query(`UPDATE GearItems SET Name=@name, Category=@category, Notes=@notes, Updated=GETDATE()
+              OUTPUT INSERTED.*
+              WHERE Id=@id AND UserId=@userId`);
+    if (!result.recordset[0]) return res.status(404).json({ error: 'Not found' });
+    res.json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update gear' });
+  }
 });
 
 // Delete gear
-router.delete('/gear/:id',  requireAuth, (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const id = Number(req.params.id);
-  req.session.gear = req.session.gear!.filter((g: GearItem) => g.id !== id);
-  res.status(204).end();
+router.delete('/gear/:id', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const id = Number(req.params.id);
+    await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM GearItems WHERE Id=@id AND UserId=@userId');
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete gear' });
+  }
 });
 
 // Add rope
-router.post('/rope', requireAuth,  (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const now = new Date().toISOString();
-  const id = (req.session as any).ropeId++;
-  const item: RopeItem = {
-    ...req.body,
-    id,
-    created: now,
-    updated: now,
-  };
-  req.session.ropes!.push(item);
-  res.status(201).json(item);
+router.post('/rope', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const { name, diameter, length, unit, notes } = req.body;
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(200), name)
+      .input('diameter', sql.NVarChar(50), diameter)
+      .input('length', sql.NVarChar(50), length)
+      .input('unit', sql.NVarChar(20), unit)
+      .input('notes', sql.NVarChar(500), notes || null)
+      .query(`INSERT INTO RopeItems (UserId, Name, Diameter, Length, Unit, Notes, Created, Updated)
+              OUTPUT INSERTED.*
+              VALUES (@userId, @name, @diameter, @length, @unit, @notes, GETDATE(), GETDATE())`);
+    res.status(201).json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add rope' });
+  }
 });
 
 // Edit rope
-router.put('/rope/:id',  requireAuth, (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const id = Number(req.params.id);
-  const idx = req.session.ropes!.findIndex((r: RopeItem) => r.id === id);
-  if (idx === -1) return res.status(404).json({ error: 'Not found' });
-  const now = new Date().toISOString();
-  req.session.ropes![idx] = { ...req.body, id, created: req.session.ropes![idx].created, updated: now };
-  res.json(req.session.ropes![idx]);
+router.put('/rope/:id', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const id = Number(req.params.id);
+    const { name, diameter, length, unit, notes } = req.body;
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(200), name)
+      .input('diameter', sql.NVarChar(50), diameter)
+      .input('length', sql.NVarChar(50), length)
+      .input('unit', sql.NVarChar(20), unit)
+      .input('notes', sql.NVarChar(500), notes || null)
+      .query(`UPDATE RopeItems SET Name=@name, Diameter=@diameter, Length=@length, Unit=@unit, Notes=@notes, Updated=GETDATE()
+              OUTPUT INSERTED.*
+              WHERE Id=@id AND UserId=@userId`);
+    if (!result.recordset[0]) return res.status(404).json({ error: 'Not found' });
+    res.json(result.recordset[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update rope' });
+  }
 });
 
 // Delete rope
-router.delete('/rope/:id', requireAuth,  (req: Request, res: Response) => {
-  ensureGearSession(req);
-  const id = Number(req.params.id);
-  req.session.ropes = req.session.ropes!.filter((r: RopeItem) => r.id !== id);
-  res.status(204).end();
+router.delete('/rope/:id', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = req.session.userId;
+    const id = Number(req.params.id);
+    await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM RopeItems WHERE Id=@id AND UserId=@userId');
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete rope' });
+  }
 });
 
 export default router;

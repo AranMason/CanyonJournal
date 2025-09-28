@@ -1,10 +1,7 @@
 import React from 'react';
-import { useUser } from '../App';
-
 import '../App.css';
 import Sidebar from '../components/Sidebar';
-import { Box, Toolbar } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 interface PageTemplateProps {
   pageTitle: string;
@@ -12,8 +9,6 @@ interface PageTemplateProps {
 }
 
 function PageTemplate({ pageTitle, children }: PageTemplateProps) {
-  const { user, setUser, loading } = useUser();
-  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: 'flex' }}>

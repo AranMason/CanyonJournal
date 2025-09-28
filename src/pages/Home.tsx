@@ -53,7 +53,7 @@ const Home: React.FC = () => {
             </StatCard>
             <StatCard title="Canyons Completed">
               <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {Array.from(new Set(records.map(r => r.name))).length}
+                {Array.from(new Set(records.map(r => r.Name))).length}
               </Typography>
             </StatCard>
             <StatCard title="Last 6 Months">
@@ -61,7 +61,7 @@ const Home: React.FC = () => {
                 {records.filter(r => {
                   const sixMonthsAgo = new Date();
                   sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-                  return new Date(r.date) >= sixMonthsAgo;
+                  return new Date(r.Date) >= sixMonthsAgo;
                 }).length}
               </Typography>
             </StatCard>
@@ -89,16 +89,16 @@ const Home: React.FC = () => {
                 ) : (
                   records.map((rec, idx) => (
                     <TableRow key={idx}>
-                      <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>{rec.date}</TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>{rec.Date}</TableCell>
                       <TableCell>
-                        {rec.url ? (
-                          <a href={rec.url} target="_blank" rel="noopener noreferrer">{rec.name}</a>
+                        {rec.Url ? (
+                          <a href={rec.Url} target="_blank" rel="noopener noreferrer">{rec.Name}</a>
                         ) : (
-                          rec.name
+                          rec.Name
                         )}
                       </TableCell>
-                      <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.teamSize}</TableCell>
-                      <TableCell>{rec.comments || '-'}</TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
+                      <TableCell>{rec.Comments || '-'}</TableCell>
                     </TableRow>
                   ))
                 )}
