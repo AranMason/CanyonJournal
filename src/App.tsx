@@ -1,5 +1,6 @@
 import React, { useEffect, useState, createContext, useContext, ReactNode } from 'react';
 import type { User } from './types/types';
+import { registerSetUser } from './utils/user';
 
 export const UserContext = createContext<{ user: User | null; setUser: (u: User | null) => void; loading: boolean }>({ user: null, setUser: () => {}, loading: true });
 export const useUser = () => useContext(UserContext);
@@ -13,6 +14,7 @@ const App: React.FC<AppProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    registerSetUser(setUser);
     fetch('/api/user', { credentials: 'include' })
       .then(async (res) => {
         if (res.ok) {

@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { CanyonRecord } from '../types/CanyonRecord';
 import { useUser } from '../App';
 import StatCard from '../components/StatCard';
+import { apiFetch } from '../utils/api';
 
 // Column size definitions
 const COLUMN_WIDTHS = {
@@ -21,9 +22,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const res = await fetch('/api/record');
-        if (!res.ok) throw new Error('Failed to fetch records');
-        const data = await res.json();
+        const data = await apiFetch<{ records: CanyonRecord[] }>('/api/record');
         setRecords(data.records || []);
       } catch (err: any) {
         setError(err.message || 'Error fetching records');

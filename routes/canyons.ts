@@ -5,7 +5,7 @@ const router = express.Router();
 const canyons: Canyon[] = [
   {
       id: 1,
-      name: 'Timmel',
+      name: 'Tummel',
       url: 'https://canyonlog.org/map/tummel/',
       aquaticRating: 2,
       verticalRating: 3,
@@ -38,6 +38,15 @@ const canyons: Canyon[] = [
       verticalRating: 3,
       starRating: 3,
       commitmentRating: 3
+  },
+{
+      id: 5,
+      name: 'Dollar',
+      url: 'https://canyonlog.org/map/dollar-canyon/',
+      aquaticRating: 3,
+      verticalRating: 3,
+      starRating: 3,
+      commitmentRating: 2
   }
 ];
 

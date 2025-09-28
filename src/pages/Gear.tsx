@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useUser } from '../App';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import PageTemplate from './PageTemplate';
@@ -9,6 +8,7 @@ import RopeModal from '../components/RopeModal';
 import GearModal from '../components/GearModal';
 import SuccessSnackbar from '../components/SuccessSnackbar';
 import RowActions from '../components/RowActions';
+import { apiFetch } from '../utils/api';
 
 const SectionTable: React.FC<{ title: string }> = ({ title }) => (
   <Box sx={{ mb: 4 }}>
@@ -51,33 +51,41 @@ const Gear: React.FC = () => {
 
   React.useEffect(() => {
     if (!loading && user) {
-      axios.get('/api/equipment')
+      apiFetch<{ gear: any[]; ropes: any[] }>('/api/equipment')
         .then(res => {
-          setGear(res.data.gear || []);
-          setRopes(res.data.ropes || []);
+          setGear(res.gear || []);
+          setRopes(res.ropes || []);
         })
         .catch(err => {
-          if (err.response && err.response.status === 401) navigate('/');
+          if (err.message === 'Unauthorized') navigate('/');
         });
     }
   }, [loading, user]);
 
   const handleAddRope = async (data: any) => {
     try {
-      const response = await axios.post('/api/equipment/rope', data);
-      setRopes(prev => [...prev, response.data]);
+      const response = await apiFetch<any>('/api/equipment/rope', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      setRopes(prev => [...prev, response]);
       setSnackbarOpen(true);
     } catch (err: any) {
-      if (err.response && err.response.status === 401) navigate('/');
+      if (err.message === 'Unauthorized') navigate('/');
     }
   };
   const handleAddGear = async (data: any) => {
     try {
-      const response = await axios.post('/api/equipment/gear', data);
-      setGear(prev => [...prev, response.data]);
+      const response = await apiFetch<any>('/api/equipment/gear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      setGear(prev => [...prev, response]);
       setSnackbarOpen(true);
     } catch (err: any) {
-      if (err.response && err.response.status === 401) navigate('/');
+      if (err.message === 'Unauthorized') navigate('/');
     }
   };
 
@@ -110,9 +118,9 @@ const Gear: React.FC = () => {
                   <TableCell>{row.notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
-                      onEdit={() => setEditRopeId(row.id)}
-                      onDelete={() => {
-                        axios.delete(`/api/equipment/rope/${row.id}`);
+                      onEdit={async () => setEditRopeId(row.id)}
+                      onDelete={async () => {
+                        await apiFetch(`/api/equipment/rope/${row.id}`, { method: 'DELETE' });
                         setRopes(prev => prev.filter((r) => r.id !== row.id));
                       }}
                     />
@@ -128,11 +136,15 @@ const Gear: React.FC = () => {
           onSubmit={async data => {
             if (editRopeId !== null) {
               try {
-                const response = await axios.put(`/api/equipment/rope/${editRopeId}`, data);
-                setRopes(prev => prev.map((r) => r.id === editRopeId ? response.data : r));
+                const response = await apiFetch<any>(`/api/equipment/rope/${editRopeId}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(data),
+                });
+                setRopes(prev => prev.map((r) => r.id === editRopeId ? response : r));
                 setEditRopeId(null);
               } catch (err: any) {
-                if (err.response && err.response.status === 401) navigate('/');
+                if (err.message === 'Unauthorized') navigate('/');
               }
             } else {
               await handleAddRope(data);
@@ -165,9 +177,9 @@ const Gear: React.FC = () => {
                   <TableCell>{row.notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
-                      onEdit={() => setEditGearId(row.id)}
-                      onDelete={() => {
-                        axios.delete(`/api/equipment/gear/${row.id}`);
+                      onEdit={async () => setEditGearId(row.id)}
+                      onDelete={async () => {
+                        await apiFetch(`/api/equipment/gear/${row.id}`, { method: 'DELETE' });
                         setGear(prev => prev.filter((g) => g.id !== row.id));
                       }}
                     />
@@ -183,11 +195,15 @@ const Gear: React.FC = () => {
           onSubmit={async data => {
             if (editGearId !== null) {
               try {
-                const response = await axios.put(`/api/equipment/gear/${editGearId}`, data);
-                setGear(prev => prev.map((g) => g.id === editGearId ? response.data : g));
+                const response = await apiFetch<any>(`/api/equipment/gear/${editGearId}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(data),
+                });
+                setGear(prev => prev.map((g) => g.id === editGearId ? response : g));
                 setEditGearId(null);
               } catch (err: any) {
-                if (err.response && err.response.status === 401) navigate('/');
+                if (err.message === 'Unauthorized') navigate('/');
               }
             } else {
               await handleAddGear(data);

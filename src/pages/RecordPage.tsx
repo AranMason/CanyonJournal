@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import SuccessSnackbar from '../components/SuccessSnackbar';
 import { GearRopeSelector } from '../components/GearRopeSelector';
 import { Canyon } from '../types/Canyon';
+import { apiFetch } from '../utils/api';
 
 const today = new Date().toISOString().split('T')[0];
 
@@ -35,8 +36,7 @@ const RecordPage: React.FC = () => {
 
   useEffect(() => {
     setCanyonsLoading(true);
-    fetch('/api/canyons')
-      .then(res => res.json())
+    apiFetch<Canyon[]>('/api/canyons')
       .then(data => setCanyons(data))
       .finally(() => setCanyonsLoading(false));
   }, []);
@@ -48,7 +48,7 @@ const RecordPage: React.FC = () => {
     <PageTemplate pageTitle="Record Canyon">
       <Box maxWidth={400} mx="auto" mt={4}>
         <Formik
-          initialValues={{ name: '', date: today, url: '', teamSize: 1, comments: '', ropeIds: [], gearIds: [], canyonId: undefined }}
+          initialValues={{ name: '', date: today, url: '', teamSize: null, comments: '', ropeIds: [], gearIds: [], canyonId: undefined }}
           validationSchema={Yup.object().shape({
             name: Yup.string().when('canyonId', {
               is: (val: number | undefined) => val === -1 || !val,
@@ -66,7 +66,7 @@ const RecordPage: React.FC = () => {
           })}
           onSubmit={async (values, { resetForm, setSubmitting }) => {
             try {
-              const response = await fetch('/api/record', {
+              await apiFetch('/api/record', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -76,20 +76,13 @@ const RecordPage: React.FC = () => {
                   canyonId: values.canyonId || null,
                 }),
               });
-              if (response.status === 401) {
-                navigate('/');
-                return;
+              resetForm();
+              setSnackbarOpen(true);
+              navigate('/');
+            } catch (err: any) {
+              if (err.message !== 'Unauthorized') {
+                alert(err.message || 'Failed to record canyon.');
               }
-              if (response.ok) {
-                resetForm();
-                setSnackbarOpen(true);
-                navigate('/');
-              } else {
-                const error = await response.json();
-                alert(error.error || 'Failed to record canyon.');
-              }
-            } catch (err) {
-              alert('Network error.');
             } finally {
               setSubmitting(false);
             }
@@ -120,7 +113,7 @@ const RecordPage: React.FC = () => {
                     }
                   }}
                   value={
-                    canyonOptions.find(c => c.id === values.canyonId) || customCanyonOption
+                    typeof values.canyonId === 'undefined' ? null : canyonOptions.find(c => c.id === values.canyonId) || null
                   }
                   renderInput={params => (
                     <TextField
