@@ -1,16 +1,8 @@
 import express, { Request, Response, Router } from 'express';
 import { CanyonRecord } from '../src/types/CanyonRecord';
+import { requireAuth } from './middleware/authentication';
 
-const session: any = require('express-session')
 const recordRouter: Router = express.Router();
-
-// Middleware to check if user is logged in
-function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
-  if (session && session.isloggedin) {
-    return next();
-  }
-  return res.status(401).json({ error: 'Authentication required' });
-}
 
 
 // In-memory store for demonstration (replace with DB in production)
