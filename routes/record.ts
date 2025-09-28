@@ -9,7 +9,7 @@ const recordRouter: Router = express.Router();
 const canyonRecords: Array<CanyonRecord> = [];
 
 
-recordRouter.post('/record', requireAuth, (req: Request, res: Response) => {
+recordRouter.post('/', requireAuth, (req: Request, res: Response) => {
   const { name, date, url, teamSize, comments } = req.body as CanyonRecord;
   if (!name || !date) {
     return res.status(400).json({ error: 'Name and date are required.' });
@@ -24,7 +24,7 @@ recordRouter.post('/record', requireAuth, (req: Request, res: Response) => {
   res.status(201).json({ message: 'Canyon record added!', record });
 });
 
-recordRouter.get('/record', requireAuth, (req: Request, res: Response) => {
+recordRouter.get('/', requireAuth, (req: Request, res: Response) => {
   // Sort by timestamp descending (most recent first)
   const sorted = [...canyonRecords].sort((a, b) => {
     if (!a.timestamp || !b.timestamp) return 0;

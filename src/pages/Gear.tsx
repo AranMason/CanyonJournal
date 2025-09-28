@@ -81,7 +81,7 @@ const Gear: React.FC = () => {
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Rope</Typography>
-          <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>Add Gear</Button>
+          <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>Add Rope</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
@@ -98,7 +98,6 @@ const Gear: React.FC = () => {
             <TableBody>
               {ropes.length === 0 ? null : ropes.map((row) => (
                 <TableRow key={row.id}>
-                  {/* Hidden ID: <TableCell style={{ display: 'none' }}>{row.id}</TableCell> */}
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.diameter}</TableCell>
                   <TableCell>{row.length}</TableCell>

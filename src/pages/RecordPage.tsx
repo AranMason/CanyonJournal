@@ -50,6 +50,7 @@ const RecordPage: React.FC = () => {
               if (response.ok) {
                 resetForm();
                 setSnackbarOpen(true);
+                navigate('/');
               } else {
                 const error = await response.json();
                 alert(error.error || 'Failed to record canyon.');
@@ -127,9 +128,7 @@ const RecordPage: React.FC = () => {
                 error={touched.comments && Boolean(errors.comments)}
                 helperText={touched.comments && errors.comments}
               />
-
-              <Divider sx={{ my: 3 }} />
-              <Typography variant="h6" sx={{ mb: 1 }}>Gear & Rope Used</Typography>
+              <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
               <GearRopeSelector
                 selectedRopeIds={values.ropeIds}
                 setSelectedRopeIds={ids => setFieldValue('ropeIds', ids)}
