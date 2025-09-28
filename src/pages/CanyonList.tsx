@@ -34,7 +34,7 @@ const CanyonList: React.FC = () => {
   if (loading || isLoading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
 
   return (
-    <PageTemplate pageTitle="All Canyons">
+    <PageTemplate pageTitle="All Canyons" isAuthRequired>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant="contained" color="primary" onClick={() => setAddOpen(true)}>
           Add Canyon

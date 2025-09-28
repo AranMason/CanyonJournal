@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchRecords = async () => {
       try {
-        const data = await apiFetch<{ records: CanyonRecord[] }>('/api/record');
+        const data = await apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10');
         setRecords(data.records || []);
       } catch (err: any) {
         setError(err.message || 'Error fetching records');
@@ -51,7 +51,7 @@ const Home: React.FC = () => {
                 {records.length}
               </Typography>
             </StatCard>
-            <StatCard title="Canyons Completed">
+            <StatCard title="Unique Canyons Descended">
               <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
                 {Array.from(new Set(records.map(r => r.Name))).length}
               </Typography>
@@ -67,7 +67,7 @@ const Home: React.FC = () => {
             </StatCard>
           </Box>
           <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
-            Canyons Descended
+            Recent Descents
           </Typography>
           <TableContainer component={Paper}>
             <Table>

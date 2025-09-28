@@ -68,7 +68,7 @@ const Gear: React.FC = () => {
   };
 
   return (
-    <PageTemplate pageTitle="Gear">
+    <PageTemplate pageTitle="Gear" isAuthRequired>
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Rope</Typography>

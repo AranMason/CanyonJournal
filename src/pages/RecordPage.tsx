@@ -49,7 +49,7 @@ const RecordPage: React.FC = () => {
   const initialValues: CanyonRecord = { Name: '', Date: today, Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined };
 
   return (
-    <PageTemplate pageTitle="Record Descent">
+    <PageTemplate pageTitle="Record Descent" isAuthRequired>
       <Box maxWidth={400} mx="auto" mt={4}>
         <Formik
           initialValues={initialValues}

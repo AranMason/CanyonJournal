@@ -57,9 +57,14 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
 recordRouter.get('/', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
+    const max = req.query.max ? Number(req.query.max) : undefined;
+    let query = 'SELECT * FROM CanyonRecords WHERE UserId = @userId ORDER BY Timestamp DESC';
+    if (max && !isNaN(max)) {
+      query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
+    }
     const result = await pool.request()
       .input('userId', sql.Int, req.session.userId)
-      .query('SELECT * FROM CanyonRecords WHERE UserId = @userId ORDER BY Timestamp DESC');
+      .query(query);
     res.json({ records: result.recordset });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch records' });
