@@ -19,7 +19,6 @@ function PageTemplate({ pageTitle, children }: PageTemplateProps) {
     <Box sx={{ display: 'flex' }}>
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
         <h1 className="App-title">{pageTitle}</h1>
         {children}
       </Box>
