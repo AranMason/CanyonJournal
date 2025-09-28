@@ -47,21 +47,21 @@ const Sidebar: React.FC = () => {
             onClick={() => navigate('/')}
           />
           <SidebarItem
-            label="Add Record"
+            label="Record Descent"
             icon={<EditNoteIcon />}
             onClick={() => navigate('/record')}
             disabled={!user}
           />
           <SidebarItem
-            label="Edit Gear"
-            icon={<RopeIcon />}
-            onClick={() => navigate('/gear')}
+            label="Canyons"
+            icon={<AddLocationAltIcon />}
+            onClick={() => navigate('/canyons')}
             disabled={!user}
           />
           <SidebarItem
-            label="Add Canyon"
-            icon={<AddLocationAltIcon />}
-            onClick={() => navigate('/add-canyon')}
+            label="Your Gear"
+            icon={<RopeIcon />}
+            onClick={() => navigate('/gear')}
             disabled={!user}
           />
         </List>

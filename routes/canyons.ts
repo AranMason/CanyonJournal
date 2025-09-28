@@ -6,8 +6,25 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const pool = await getPool();
-    const result = await pool.request().query('SELECT * FROM Canyons');
-    res.json(result.recordset);
+    // If withDescents=1, join with CanyonRecords for user-specific count
+    if (req.query.withDescents === '1' && req.session && req.session.userId) {
+      const userId = req.session.userId;
+      const result = await pool.request()
+        .input('userId', sql.Int, userId)
+        .query(`
+          SELECT c.*, 
+            COUNT(cr.Id) AS Descents,
+            MAX(cr.Date) AS LastDescentDate
+          FROM Canyons c
+          LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating
+          ORDER BY c.Name
+        `);
+      res.json(result.recordset);
+    } else {
+      const result = await pool.request().query('SELECT * FROM Canyons');
+      res.json(result.recordset);
+    }
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch canyons' });
   }

@@ -89,7 +89,13 @@ const Home: React.FC = () => {
                 ) : (
                   records.map((rec, idx) => (
                     <TableRow key={idx}>
-                      <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>{rec.Date}</TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>
+                        {rec.Date ? (
+                          <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
+                            {new Date(rec.Date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </Box>
+                        ) : '-'}
+                      </TableCell>
                       <TableCell>
                         {rec.Url ? (
                           <a href={rec.Url} target="_blank" rel="noopener noreferrer">{rec.Name}</a>

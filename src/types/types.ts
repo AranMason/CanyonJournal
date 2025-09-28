@@ -19,8 +19,8 @@ export interface GearItem {
 export interface RopeItem {
   Id: number;
   Name: string;
-  Diameter: string;
-  Length: string;
+  Diameter: number;
+  Length: number;
   Unit: string;
   Notes?: string;
   Created: string;

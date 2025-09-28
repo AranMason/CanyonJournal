@@ -12,7 +12,8 @@ CREATE TABLE Canyons (
     AquaticRating INT NOT NULL,
     VerticalRating INT NOT NULL,
     CommitmentRating INT NOT NULL,
-    StarRating INT NOT NULL
+    StarRating INT NOT NULL,
+    CONSTRAINT UQ_Canyons_Name UNIQUE (Name)
 );
 
 CREATE TABLE GearItems (
@@ -29,8 +30,8 @@ CREATE TABLE RopeItems (
     Id INT IDENTITY PRIMARY KEY,
     UserId INT NOT NULL REFERENCES Users(Id),
     Name NVARCHAR(200) NOT NULL,
-    Diameter NVARCHAR(50) NOT NULL,
-    Length NVARCHAR(50) NOT NULL,
+    Diameter FLOAT NOT NULL,
+    Length FLOAT NOT NULL,
     Unit NVARCHAR(20) NOT NULL,
     Notes NVARCHAR(500) NULL,
     Created DATETIME NOT NULL DEFAULT GETDATE(),
