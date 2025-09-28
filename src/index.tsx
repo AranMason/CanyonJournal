@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
 import App from './App';
+import Gear from './pages/Gear';
 
 
 const root = ReactDOM.createRoot(
@@ -21,6 +22,7 @@ root.render(
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/record" element={<RecordPage />} />
+          <Route path="/gear" element={<Gear />} />
         </Routes>
       </BrowserRouter>
     </App>

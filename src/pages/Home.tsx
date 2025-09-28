@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { useUser } from '../App';
+import StatCard from '../components/StatCard';
 
 // Column size definitions
 const COLUMN_WIDTHS = {
@@ -45,6 +46,27 @@ const Home: React.FC = () => {
         <Typography color="error">{error}</Typography>
       ) : (
         <>
+          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+            <StatCard title="Total Descents">
+              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {records.length}
+              </Typography>
+            </StatCard>
+            <StatCard title="Canyons Completed">
+              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {Array.from(new Set(records.map(r => r.name))).length}
+              </Typography>
+            </StatCard>
+            <StatCard title="Last 6 Months">
+              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {records.filter(r => {
+                  const sixMonthsAgo = new Date();
+                  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+                  return new Date(r.date) >= sixMonthsAgo;
+                }).length}
+              </Typography>
+            </StatCard>
+          </Box>
           <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
             Canyons Descended
           </Typography>
