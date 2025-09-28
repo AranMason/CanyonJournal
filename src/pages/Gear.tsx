@@ -53,7 +53,7 @@ const Gear: React.FC = () => {
 
   React.useEffect(() => {
     if (!loading && user) {
-      axios.get('/api/gear').then(res => {
+  axios.get('/api/equipment').then(res => {
         setGear(res.data.gear || []);
         setRopes(res.data.ropes || []);
         // Set id refs to max+1 for new items
@@ -65,13 +65,13 @@ const Gear: React.FC = () => {
 
   const handleAddRope = async (data: any) => {
     const item = { ...data, id: ropeIdRef.current++ };
-    await axios.post('/api/gear/rope', item);
+  await axios.post('/api/equipment/rope', item);
     setRopes(prev => [...prev, item]);
     setSnackbarOpen(true);
   };
   const handleAddGear = async (data: any) => {
     const item = { ...data, id: gearIdRef.current++ };
-    await axios.post('/api/gear/gear', item);
+  await axios.post('/api/equipment/gear', item);
     setGear(prev => [...prev, item]);
     setSnackbarOpen(true);
   };
@@ -108,7 +108,7 @@ const Gear: React.FC = () => {
                     <RowActions
                       onEdit={() => setEditRopeId(row.id)}
                       onDelete={() => {
-                        axios.delete(`/api/gear/rope/${row.id}`);
+                        axios.delete(`/api/equipment/rope/${row.id}`);
                         setRopes(prev => prev.filter((r) => r.id !== row.id));
                       }}
                     />
@@ -123,7 +123,7 @@ const Gear: React.FC = () => {
           onClose={() => { setRopeModalOpen(false); setEditRopeId(null); }}
           onSubmit={async data => {
             if (editRopeId !== null) {
-              await axios.put(`/api/gear/rope/${editRopeId}`, { ...data, id: editRopeId });
+              await axios.put(`/api/equipment/rope/${editRopeId}`, { ...data, id: editRopeId });
               setRopes(prev => prev.map((r) => r.id === editRopeId ? { ...data, id: editRopeId } : r));
               setEditRopeId(null);
             } else {
@@ -159,7 +159,7 @@ const Gear: React.FC = () => {
                     <RowActions
                       onEdit={() => setEditGearId(row.id)}
                       onDelete={() => {
-                        axios.delete(`/api/gear/gear/${row.id}`);
+                        axios.delete(`/api/equipment/gear/${row.id}`);
                         setGear(prev => prev.filter((g) => g.id !== row.id));
                       }}
                     />
@@ -174,7 +174,7 @@ const Gear: React.FC = () => {
           onClose={() => { setGearModalOpen(false); setEditGearId(null); }}
           onSubmit={async data => {
             if (editGearId !== null) {
-              await axios.put(`/api/gear/gear/${editGearId}`, { ...data, id: editGearId });
+              await axios.put(`/api/equipment/gear/${editGearId}`, { ...data, id: editGearId });
               setGear(prev => prev.map((g) => g.id === editGearId ? { ...data, id: editGearId } : g));
               setEditGearId(null);
             } else {

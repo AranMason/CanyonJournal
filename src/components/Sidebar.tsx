@@ -55,6 +55,7 @@ const Sidebar: React.FC = () => {
             label="Edit Gear"
             icon={<RopeIcon />}
             onClick={() => navigate('/gear')}
+            disabled={!user}
           />
         </List>
       </Box>

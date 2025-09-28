@@ -2,15 +2,6 @@ import { Router, Response, Request } from 'express';
 import { GearItem, RopeItem } from '../src/types/types';
 import { requireAuth } from './middleware/authentication';
 
-// Extend express-session types to include custom properties
-declare module 'express-session' {
-  interface SessionData {
-    gear?: GearItem[];
-    ropes?: RopeItem[];
-    gearId?: number;
-    ropeId?: number;
-  }
-}
 
 const router = Router();
 // Removed unused session import, using req.session instead

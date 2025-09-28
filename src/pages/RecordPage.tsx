@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, Divider } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import SuccessSnackbar from '../components/SuccessSnackbar';
+import { GearRopeSelector } from '../components/GearRopeSelector';
 
 const today = new Date().toISOString().split('T')[0];
 
@@ -33,14 +34,18 @@ const RecordPage: React.FC = () => {
     <PageTemplate pageTitle="Record Canyon">
       <Box maxWidth={400} mx="auto" mt={4}>
         <Formik
-          initialValues={{ name: '', date: today, url: '', teamSize: 1, comments: '' }}
+          initialValues={{ name: '', date: today, url: '', teamSize: 1, comments: '', ropeIds: [], gearIds: [] }}
           validationSchema={RecordSchema}
           onSubmit={async (values, { resetForm, setSubmitting }) => {
             try {
               const response = await fetch('/api/record', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(values),
+                body: JSON.stringify({
+                  ...values,
+                  ropeIds: values.ropeIds,
+                  gearIds: values.gearIds,
+                }),
               });
               if (response.ok) {
                 resetForm();
@@ -56,7 +61,7 @@ const RecordPage: React.FC = () => {
             }
           }}
         >
-          {({ errors, touched, handleChange, handleBlur, values, isSubmitting }) => (
+          {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => (
             <Form>
               <TextField
                 label="Name of the Canyon"
@@ -121,6 +126,15 @@ const RecordPage: React.FC = () => {
                 minRows={3}
                 error={touched.comments && Boolean(errors.comments)}
                 helperText={touched.comments && errors.comments}
+              />
+
+              <Divider sx={{ my: 3 }} />
+              <Typography variant="h6" sx={{ mb: 1 }}>Gear & Rope Used</Typography>
+              <GearRopeSelector
+                selectedRopeIds={values.ropeIds}
+                setSelectedRopeIds={ids => setFieldValue('ropeIds', ids)}
+                selectedGearIds={values.gearIds}
+                setSelectedGearIds={ids => setFieldValue('gearIds', ids)}
               />
               <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
                 Submit

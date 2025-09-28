@@ -7,8 +7,10 @@ declare module 'express-session' {
     isloggedin: boolean;
     first_name?: string | null;
     profile?: any;
-    gear?: any[];
-    ropes?: any[];
+    gear?: GearItem[];
+    ropes?: RopeItem[];
+    gearId?: number;
+    ropeId?: number;
   }
 }
 

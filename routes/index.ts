@@ -1,11 +1,10 @@
 
 import express, { Application, Request, Response, Router } from 'express'
 import { ProfileAndToken, WorkOS } from '@workos-inc/node'
-
+import type {} from '../src/types/express-session'
 
 const app: Application = express()
 const router: Router = express.Router()
-const session: any = require('express-session')
 interface Params {
   clientID: string;
   redirectURI: string;
@@ -15,14 +14,7 @@ interface Params {
   organization?: string;
 }
 
-app.use(
-  session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' } 
-  })
-)
+
 
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
@@ -32,10 +24,10 @@ const state: string = ''
 
 // Route to get the current user's data if logged in
 router.get('/user', (req: Request, res: Response) => {
-  if (session.isloggedin && session.profile) {
-    const profile = session.profile.profile;
+  if (req.session.isloggedin && req.session.profile) {
+    const profile = req.session.profile.profile;
     res.json({
-      first_name: session.first_name,
+      first_name: req.session.first_name,
       profile,
       picture_url: profile.raw_attributes.picture_url,
       isloggedin: true
@@ -79,9 +71,9 @@ router.get('/callback', async (req: Request, res: Response) => {
       clientID,
     })
 
-    session.first_name = profile.profile.first_name
-    session.profile = profile
-    session.isloggedin = true
+    req.session.first_name = profile.profile.first_name
+    req.session.profile = profile
+    req.session.isloggedin = true
 
     res.redirect('/')
   } catch (error) {
@@ -91,9 +83,9 @@ router.get('/callback', async (req: Request, res: Response) => {
 
 router.get('/logout', async (req: Request, res: Response) => {
   try {
-    session.first_name = null
-    session.profile = null
-    session.isloggedin = null
+    req.session.first_name = null
+    req.session.profile = null
+    req.session.isloggedin = false
 
     return res.redirect('/')
   } catch (error) {
