@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Chip, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } from '@mui/material';
 import axios from 'axios';
 import { GearItem, RopeItem } from '../types/types';
 
@@ -41,7 +41,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           )}
         >
           {ropes.map((rope) => (
-            <MenuItem key={rope.Id} value={rope.Id}>{rope.Name}</MenuItem>
+            <MenuItem key={rope.Id} value={rope.Id}>{rope.Name} - {rope.Length} {rope.Unit}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -62,9 +62,18 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             </Box>
           )}
         >
-          {gear.map((g) => (
-            <MenuItem key={g.Id} value={g.Id}>{g.Name}</MenuItem>
-          ))}
+          {Object.entries(
+            gear.reduce((acc, g) => {
+              acc[g.Category] = acc[g.Category] || [];
+              acc[g.Category].push(g);
+              return acc;
+            }, {} as Record<string, GearItem[]>)
+          ).map(([category, items]) => [
+            <ListSubheader key={category}>{category}</ListSubheader>,
+            items.map(g => (
+              <MenuItem key={g.Id} value={g.Id}>{g.Name}</MenuItem>
+            ))
+          ])}
         </Select>
       </FormControl>
     </Box>

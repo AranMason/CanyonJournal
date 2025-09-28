@@ -54,19 +54,19 @@ const RecordPage: React.FC = () => {
         <Formik
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            name: Yup.string().when('canyonId', {
+            Name: Yup.string().when('CanyonId', {
               is: (val: number | undefined) => val === -1 || !val,
               then: schema => schema.required('Canyon name is required'),
               otherwise: schema => schema,
             }),
-            date: Yup.string().required('Date is required'),
-            url: Yup.string().when('canyonId', {
+            Date: Yup.string().required('Date is required'),
+            Url: Yup.string().when('CanyonId', {
               is: (val: number | undefined) => val === -1 || !val,
               then: schema => schema.url('Must be a valid URL').nullable(),
               otherwise: schema => schema,
             }),
-            teamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
-            comments: Yup.string(),
+            TeamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
+            Comments: Yup.string(),
           })}
           onSubmit={async (values, { resetForm, setSubmitting }) => {
             try {
@@ -75,9 +75,9 @@ const RecordPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   ...values,
-                  ropeIds: values.RopeIds,
-                  gearIds: values.GearIds,
-                  canyonId: values.CanyonId || null,
+                  RopeIds: values.RopeIds,
+                  GearIds: values.GearIds,
+                  CanyonId: values.CanyonId || null,
                 }),
               });
               resetForm();
@@ -94,7 +94,7 @@ const RecordPage: React.FC = () => {
         >
           {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => {
             // Find selected canyon by id
-            const selectedCanyon = canyonOptions.find(c => c.Id === values.Id);
+            const selectedCanyon = canyonOptions.find(c => c.Id === values.CanyonId);
             return (
               <Form>
                 <Autocomplete
@@ -103,17 +103,17 @@ const RecordPage: React.FC = () => {
                   loading={canyonsLoading}
                   onChange={(_, canyon) => {
                     if (!canyon || (typeof canyon === 'string')) {
-                      setFieldValue('canyonId', -1);
-                      setFieldValue('name', '');
-                      setFieldValue('url', '');
+                      setFieldValue('CanyonId', -1);
+                      setFieldValue('Name', '');
+                      setFieldValue('Url', '');
                     } else if (canyon.Id === -1) {
-                      setFieldValue('canyonId', -1);
-                      setFieldValue('name', '');
-                      setFieldValue('url', '');
+                      setFieldValue('CanyonId', -1);
+                      setFieldValue('Name', '');
+                      setFieldValue('Url', '');
                     } else {
-                      setFieldValue('canyonId', canyon.Id);
-                      setFieldValue('name', canyon.Name);
-                      setFieldValue('url', canyon.Url);
+                      setFieldValue('CanyonId', canyon.Id);
+                      setFieldValue('Name', canyon.Name);
+                      setFieldValue('Url', canyon.Url);
                     }
                   }}
                   value={
@@ -123,7 +123,7 @@ const RecordPage: React.FC = () => {
                     <TextField
                       {...params}
                       label="Canyon"
-                      name="canyon"
+                      name="Canyon"
                       onBlur={handleBlur}
                       required
                       margin="normal"
@@ -136,7 +136,7 @@ const RecordPage: React.FC = () => {
                 />
                 <TextField
                   label="Name of the Canyon"
-                  name="name"
+                  name="Name"
                   value={values.Name}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -149,7 +149,7 @@ const RecordPage: React.FC = () => {
                 />
                 <TextField
                   label="Canyon Link URL"
-                  name="url"
+                  name="Url"
                   value={values.Url}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -162,7 +162,7 @@ const RecordPage: React.FC = () => {
                 <TextField
                   label="Date"
                   type="date"
-                  name="date"
+                  name="Date"
                   value={values.Date}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -176,7 +176,7 @@ const RecordPage: React.FC = () => {
                 <TextField
                   label="Team Size"
                   type="number"
-                  name="teamSize"
+                  name="TeamSize"
                   value={values.TeamSize}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -189,7 +189,7 @@ const RecordPage: React.FC = () => {
                 />
                 <TextField
                   label="Comments"
-                  name="comments"
+                  name="Comments"
                   value={values.Comments}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -203,9 +203,9 @@ const RecordPage: React.FC = () => {
                 <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
                 <GearRopeSelector
                   selectedRopeIds={values.RopeIds}
-                  setSelectedRopeIds={ids => setFieldValue('ropeIds', ids)}
+                  setSelectedRopeIds={ids => setFieldValue('RopeIds', ids)}
                   selectedGearIds={values.GearIds}
-                  setSelectedGearIds={ids => setFieldValue('gearIds', ids)}
+                  setSelectedGearIds={ids => setFieldValue('GearIds', ids)}
                 />
                 <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
                   Submit

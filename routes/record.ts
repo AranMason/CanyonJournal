@@ -1,16 +1,17 @@
 import express, { Request, Response, Router } from 'express';
 import { requireAuth } from './middleware/authentication';
 import { getPool, sql } from './middleware/sqlserver';
+import { CanyonRecord } from '../src/types/CanyonRecord';
 
 const recordRouter: Router = express.Router();
 
 // POST /api/record - add a canyon record to SQL Server
 recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
-  const { name, date, url, teamSize, comments, canyonId, ropeIds, gearIds } = req.body;
-  if (!name || !date) {
+  const { Name, Date, Url, TeamSize, Comments, CanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
+  if (!Name || !Date) {
     return res.status(400).json({ error: 'Name and date are required.' });
   }
-  const teamSizeNum = Number(teamSize);
+  const teamSizeNum = Number(TeamSize);
   if (isNaN(teamSizeNum) || teamSizeNum < 1) {
     return res.status(400).json({ error: 'Team size must be a positive number.' });
   }
@@ -18,27 +19,27 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
     const pool = await getPool();
     const result = await pool.request()
       .input('userId', sql.Int, req.session.userId)
-      .input('name', sql.NVarChar(200), name)
-      .input('date', sql.Date, date)
-      .input('url', sql.NVarChar(255), url)
+      .input('name', sql.NVarChar(200), Name)
+      .input('date', sql.Date, Date)
+      .input('url', sql.NVarChar(255), Url)
       .input('teamSize', sql.Int, teamSizeNum)
-      .input('comments', sql.NVarChar(1000), comments || null)
-      .input('canyonId', sql.Int, canyonId || null)
+      .input('comments', sql.NVarChar(1000), Comments || null)
+      .input('canyonId', sql.Int, CanyonId || null)
       .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId)
               OUTPUT INSERTED.*
               VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId)`);
     const record = result.recordset[0];
     // Insert mapping tables if ropeIds/gearIds provided
-    if (Array.isArray(ropeIds)) {
-      for (const ropeId of ropeIds) {
+    if (Array.isArray(RopeIds)) {
+      for (const ropeId of RopeIds) {
         await pool.request()
           .input('canyonRecordId', sql.Int, record.Id)
           .input('ropeItemId', sql.Int, ropeId)
           .query('INSERT INTO CanyonRecordRope (CanyonRecordId, RopeItemId) VALUES (@canyonRecordId, @ropeItemId)');
       }
     }
-    if (Array.isArray(gearIds)) {
-      for (const gearId of gearIds) {
+    if (Array.isArray(GearIds)) {
+      for (const gearId of GearIds) {
         await pool.request()
           .input('canyonRecordId', sql.Int, record.Id)
           .input('gearItemId', sql.Int, gearId)
@@ -47,6 +48,7 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
     }
     res.status(201).json({ message: 'Canyon record added!', record });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to add canyon record' });
   }
 });

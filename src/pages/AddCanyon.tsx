@@ -108,19 +108,6 @@ const AddCanyon: React.FC = () => {
                     helperText={touched.verticalRating && errors.verticalRating}
                   />
                   <TextField
-                    label="Star Rating"
-                    name="starRating"
-                    value={values.starRating}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    required
-                    fullWidth
-                    type="number"
-                    inputProps={{ min: 1, max: 3 }}
-                    error={touched.starRating && Boolean(errors.starRating)}
-                    helperText={touched.starRating && errors.starRating}
-                  />
-                  <TextField
                     label="Commitment Rating"
                     name="commitmentRating"
                     value={values.commitmentRating}
@@ -132,6 +119,19 @@ const AddCanyon: React.FC = () => {
                     inputProps={{ min: 1, max: 3 }}
                     error={touched.commitmentRating && Boolean(errors.commitmentRating)}
                     helperText={touched.commitmentRating && errors.commitmentRating}
+                  />
+                                    <TextField
+                    label="Star Rating"
+                    name="starRating"
+                    value={values.starRating}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    required
+                    fullWidth
+                    type="number"
+                    inputProps={{ min: 1, max: 3 }}
+                    error={touched.starRating && Boolean(errors.starRating)}
+                    helperText={touched.starRating && errors.starRating}
                   />
                   {status && status.error && <Typography color="error">{status.error}</Typography>}
                   {status && status.success && <Typography color="success.main">Canyon added!</Typography>}
