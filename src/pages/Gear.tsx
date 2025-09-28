@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useUser } from '../App';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import PageTemplate from './PageTemplate';
@@ -31,6 +34,13 @@ const SectionTable: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const Gear: React.FC = () => {
+  const { user, loading } = useUser();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/');
+    }
+  }, [user, loading, navigate]);
   const [ropeModalOpen, setRopeModalOpen] = React.useState(false);
   const [gearModalOpen, setGearModalOpen] = React.useState(false);
   const [ropes, setRopes] = React.useState<any[]>([]);
@@ -41,12 +51,28 @@ const Gear: React.FC = () => {
   const [editRopeId, setEditRopeId] = React.useState<string | null>(null);
   const [editGearId, setEditGearId] = React.useState<string | null>(null);
 
-  const handleAddRope = (data: any) => {
-    setRopes(prev => [...prev, { ...data, id: ropeIdRef.current++ }]);
+  React.useEffect(() => {
+    if (!loading && user) {
+      axios.get('/api/gear').then(res => {
+        setGear(res.data.gear || []);
+        setRopes(res.data.ropes || []);
+        // Set id refs to max+1 for new items
+        if (res.data.gear?.length) gearIdRef.current = Math.max(...res.data.gear.map((g: any) => g.id)) + 1;
+        if (res.data.ropes?.length) ropeIdRef.current = Math.max(...res.data.ropes.map((r: any) => r.id)) + 1;
+      });
+    }
+  }, [loading, user]);
+
+  const handleAddRope = async (data: any) => {
+    const item = { ...data, id: ropeIdRef.current++ };
+    await axios.post('/api/gear/rope', item);
+    setRopes(prev => [...prev, item]);
     setSnackbarOpen(true);
   };
-  const handleAddGear = (data: any) => {
-    setGear(prev => [...prev, { ...data, id: gearIdRef.current++ }]);
+  const handleAddGear = async (data: any) => {
+    const item = { ...data, id: gearIdRef.current++ };
+    await axios.post('/api/gear/gear', item);
+    setGear(prev => [...prev, item]);
     setSnackbarOpen(true);
   };
 
@@ -81,7 +107,10 @@ const Gear: React.FC = () => {
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
                       onEdit={() => setEditRopeId(row.id)}
-                      onDelete={() => setRopes(prev => prev.filter((r) => r.id !== row.id))}
+                      onDelete={() => {
+                        axios.delete(`/api/gear/rope/${row.id}`);
+                        setRopes(prev => prev.filter((r) => r.id !== row.id));
+                      }}
                     />
                   </TableCell>
                 </TableRow>
@@ -92,12 +121,13 @@ const Gear: React.FC = () => {
         <RopeModal
           open={ropeModalOpen || editRopeId !== null}
           onClose={() => { setRopeModalOpen(false); setEditRopeId(null); }}
-          onSubmit={data => {
+          onSubmit={async data => {
             if (editRopeId !== null) {
+              await axios.put(`/api/gear/rope/${editRopeId}`, { ...data, id: editRopeId });
               setRopes(prev => prev.map((r) => r.id === editRopeId ? { ...data, id: editRopeId } : r));
               setEditRopeId(null);
             } else {
-              handleAddRope(data);
+              await handleAddRope(data);
             }
           }}
           initialValues={editRopeId !== null ? ropes.find(r => r.id === editRopeId) : undefined}
@@ -128,7 +158,10 @@ const Gear: React.FC = () => {
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                     <RowActions
                       onEdit={() => setEditGearId(row.id)}
-                      onDelete={() => setGear(prev => prev.filter((g) => g.id !== row.id))}
+                      onDelete={() => {
+                        axios.delete(`/api/gear/gear/${row.id}`);
+                        setGear(prev => prev.filter((g) => g.id !== row.id));
+                      }}
                     />
                   </TableCell>
                 </TableRow>
@@ -139,12 +172,13 @@ const Gear: React.FC = () => {
         <GearModal
           open={gearModalOpen || editGearId !== null}
           onClose={() => { setGearModalOpen(false); setEditGearId(null); }}
-          onSubmit={data => {
+          onSubmit={async data => {
             if (editGearId !== null) {
+              await axios.put(`/api/gear/gear/${editGearId}`, { ...data, id: editGearId });
               setGear(prev => prev.map((g) => g.id === editGearId ? { ...data, id: editGearId } : g));
               setEditGearId(null);
             } else {
-              handleAddGear(data);
+              await handleAddGear(data);
             }
           }}
           initialValues={editGearId !== null ? gear.find(g => g.id === editGearId) : undefined}

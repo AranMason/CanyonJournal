@@ -7,6 +7,8 @@ declare module 'express-session' {
     isloggedin: boolean;
     first_name?: string | null;
     profile?: any;
+    gear?: any[];
+    ropes?: any[];
   }
 }
 

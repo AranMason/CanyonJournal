@@ -10,3 +10,22 @@ export interface User {
     }
   }
 }
+export interface GearItem {
+  id: number;
+  name: string;
+  category: string;
+  notes?: string;
+  created: string;
+  updated: string;
+}
+
+export interface RopeItem {
+  id: number;
+  name: string;
+  diameter: string;
+  length: string;
+  unit: string;
+  notes?: string;
+  created: string;
+  updated: string;
+}

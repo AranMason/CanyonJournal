@@ -3,6 +3,7 @@ import 'dotenv/config'
 import morgan from 'morgan'
 import router from './routes/index'
 import recordRouter from './routes/record'
+import gearRouter from './routes/gear'
 import session from 'express-session'
 
 const app: Application = express()
@@ -25,6 +26,7 @@ app.use(express.static('build'))
 
 app.use('/api', router)
 app.use('/api', recordRouter)
+app.use('/api/equipment', gearRouter)
 
 app.listen(port, (): void => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`)
