@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.ts",
+    "start": "node index.ts",
+    "watch:server": "nodemon index.ts",
     "build": "react-scripts build",
     "dev": "react-scripts start",
     "test": "react-scripts test",
