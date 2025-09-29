@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.ts",
     "watch:server": "nodemon index.ts",
-    "build": "react-scripts build",
+    "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -1,4 +1,4 @@
-import express, { Application, Request, Response, Router } from 'express'
+import express, { Request, Response, Router } from 'express'
 import { ProfileAndToken, WorkOS } from '@workos-inc/node'
 import type {} from '../src/types/express-session'
 import { getPool, sql } from './middleware/sqlserver';
