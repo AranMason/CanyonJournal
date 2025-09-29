@@ -16,7 +16,7 @@ interface Params {
 const workos: WorkOS = new WorkOS(process.env.WORKOS_API_KEY)
 const clientID: string = process.env.WORKOS_CLIENT_ID !== undefined ? process.env.WORKOS_CLIENT_ID : ''
 const organizationID: string = ''
-const redirectURI: string = 'http://localhost:3000/api/callback'
+const redirectURI: string = process.env.WORKOS_CALLBACK_URL ?? '';
 const state: string = ''
 
 // Route to get the current user's data if logged in
