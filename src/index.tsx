@@ -21,7 +21,7 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          {/* <Route path="/login" element={<Login />} /> */}
           <Route path="/record" element={<RecordPage />} />
           <Route path="/gear" element={<Gear />} />
           <Route path="/canyons" element={<CanyonList />} />

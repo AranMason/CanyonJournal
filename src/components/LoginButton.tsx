@@ -35,7 +35,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ className, user, loading }) =
       variant="contained"
       color="primary"
       fullWidth
-      onClick={handleLogin}
+      onClick={() => window.location.href = '/login'}
       sx={{
         mt: 1,
         mb: 2,
