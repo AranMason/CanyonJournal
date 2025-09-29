@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.ts",
+    "start": "node ./build/index.js",
     "watch:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
