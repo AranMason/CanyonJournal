@@ -4,7 +4,6 @@ import morgan from 'morgan'
 import router from './routes/index'
 // import session from 'express-session'
 import { auth } from 'express-openid-connect';
-const authConfig = require('./auth0-config');
 import path from 'path'
 // import compression from 'compression'
 // import helmet from 'helmet'
@@ -37,7 +36,14 @@ app.use(express.json());
 // app.use(limiter);
 
 // Auth0 SSO middleware
-app.use(auth(authConfig));
+app.use(auth({
+  authRequired: true,
+  auth0Logout: true,
+  secret: process.env.AUTH0_SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL,
+}));
 app.use(morgan('dev'));
 
 // Protect API routes (require login)
