@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
-import { CanyonRecord } from '../types/CanyonRecord';
+import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
 import { useUser } from '../App';
 import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
@@ -11,8 +11,19 @@ const COLUMN_WIDTHS = {
   date: 120,
   name: 120, // auto
   teamSize: 80,
+  waterLevel: 80,
   comments: undefined, // auto
 };
+
+const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
+    [0]: '-',
+    [WaterLevel.VeryLow]: 'Very Low',
+    [WaterLevel.Low]: 'Low',   
+    [WaterLevel.Medium]: 'Medium',
+    [WaterLevel.High]: 'High',
+    [WaterLevel.VeryHigh]: 'Very High'
+};
+
 
 const Home: React.FC = () => {
   const { user, loading } = useUser();
@@ -76,6 +87,7 @@ const Home: React.FC = () => {
                   <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
                   <TableCell>Canyon Name</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
+                  <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
                   <TableCell>Comments</TableCell>
                 </TableRow>
               </TableHead>
@@ -104,6 +116,7 @@ const Home: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
                     </TableRow>
                   ))

@@ -25,9 +25,10 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
       .input('teamSize', sql.Int, teamSizeNum)
       .input('comments', sql.NVarChar(1000), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
-      .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId)
+      .input('waterLevel', sql.Int, req.body.WaterLevel || null)
+      .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId, WaterLevel)
               OUTPUT INSERTED.*
-              VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId)`);
+              VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId, @waterLevel)`);
     const record = result.recordset[0];
     // Insert mapping tables if ropeIds/gearIds provided
     if (Array.isArray(RopeIds)) {

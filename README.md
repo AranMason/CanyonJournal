@@ -1,8 +1,6 @@
 ## Useful Links
 
-https://dashboard.workos.com/environment_01K662SXGA6C3CA90R694YR89A/redirects
-
-## Enironment Variables to be Set
-
-WORKOS_API_KEY
-WORKOS_CLIENT_ID
+These are the various services etc that I have used to put together this app
+https://dashboard.workos.com/  - This was more out of in-the-moment wanting to get set up, not sure if I want this long term.
+https://admin.names.co.uk
+https://dashboard.heroku.com

@@ -84,7 +84,6 @@ router.get('/callback', async (req: Request, res: Response) => {
     req.session.isloggedin = true
 
     // Upsert user in SQL Server
-    console.log(profile);
     const firstName = profile.profile.first_name;
     const pictureUrl = profile.profile.raw_attributes?.picture || null;
     const pool = await getPool();

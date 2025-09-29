@@ -45,6 +45,7 @@ CREATE TABLE CanyonRecords (
     Date DATE NOT NULL,
     Url NVARCHAR(255) NOT NULL,
     TeamSize INT NOT NULL,
+    WaterLevel INT NULL,
     Comments NVARCHAR(1000) NULL,
     CanyonId INT NULL REFERENCES Canyons(Id),
     Timestamp DATETIME NOT NULL DEFAULT GETDATE()
