@@ -9,6 +9,7 @@ const app = express()
 
 const port: string = process.env.PORT || '8000'
 
+app.set('trust proxy', 1); // For deployment behind a proxy, e.g., Heroku
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 
