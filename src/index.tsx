@@ -4,7 +4,7 @@ import './index.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './pages/Login';
+import Login from './pages/LoginAuth0';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
 import App from './App';

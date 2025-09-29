@@ -72,10 +72,9 @@ const Sidebar: React.FC = () => {
             <SidebarItem
               label="Logout"
               icon={null}
-              onClick={async () => {
-                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+              onClick={() => {
+                window.location.href = '/logout';
                 setUser(null);
-                navigate('/');
               }}
             />
           </List>

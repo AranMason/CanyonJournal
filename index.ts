@@ -2,7 +2,9 @@ import express from 'express'
 import 'dotenv/config'
 import morgan from 'morgan'
 import router from './routes/index'
-import session from 'express-session'
+// import session from 'express-session'
+import { auth } from 'express-openid-connect';
+const authConfig = require('./auth0-config');
 import path from 'path'
 import compression from 'compression'
 import helmet from 'helmet'
@@ -33,17 +35,17 @@ const limiter = RateLimit({
 // Apply rate limiter to all requests
 app.use(limiter);
 
-app.use(
-  session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === 'production' } 
-  })
-)
+// Auth0 SSO middleware
+app.use(auth(authConfig));
 app.use(morgan('dev'));
 
-app.use('/api', router);
+// Protect API routes (require login)
+app.use('/api', (req, res, next) => {
+  if (!req.oidc || !req.oidc.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}, router);
 
 app.use(express.static(path.join(__dirname)));
 app.get('*', function (req, res) {
