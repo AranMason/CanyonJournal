@@ -8,7 +8,7 @@ interface GearModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
-  initialValues?: any;
+  initialValues?: GearItem;
 }
 
 const GearSchema = Yup.object().shape({

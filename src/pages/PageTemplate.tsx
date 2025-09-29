@@ -21,7 +21,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps
         if (!loading && !user) {
             navigate('/');
         }
-    }, [user, loading, navigate]);
+    }, [user, loading, navigate, isAuthRequired]);
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -38,7 +38,7 @@ const Gear: React.FC = () => {
           if (err.message === 'Unauthorized') navigate('/');
         });
     }
-  }, [loading, user]);
+  }, [loading, user, navigate]);
 
   const handleAddRope = async (data: any) => {
     try {
