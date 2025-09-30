@@ -15,13 +15,13 @@ function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps
 
     const { user, loading } = useUser();
     const navigate = useNavigate();
-    useEffect(() => {
-        if(!isAuthRequired) return;
+  useEffect(() => {
+    if(!isAuthRequired) return;
 
-        if (!loading && !user) {
-            navigate('/');
-        }
-    }, [user, loading, navigate, isAuthRequired]);
+    if (!loading && !user) {
+      navigate('/login');
+    }
+  }, [user, loading, navigate, isAuthRequired]);
 
   return (
     <Box sx={{ display: 'flex' }}>
