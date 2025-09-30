@@ -20,9 +20,15 @@ const App: React.FC<AppProviderProps> = ({ children }) => {
         if (res.ok) {
           const data = await res.json();
           setUser(data);
+        } else if (res.status === 401) {
+          // Not authenticated, do not reload or redirect
+          setUser(null);
         } else {
           setUser(null);
         }
+      })
+      .catch(() => {
+        setUser(null);
       })
       .finally(() => setLoading(false));
   }, []);
