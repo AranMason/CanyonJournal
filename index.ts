@@ -37,7 +37,7 @@ app.use(express.json());
 
 // Auth0 SSO middleware
 app.use(auth({
-  authRequired: true,
+  authRequired: false,
   auth0Logout: true,
   secret: process.env.AUTH0_SECRET,
   baseURL: process.env.BASE_URL,
