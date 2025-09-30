@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useUser } from '../App';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
@@ -12,13 +11,7 @@ import { apiFetch } from '../utils/api';
 import { GearItem, RopeItem } from '../types/types';
 
 const Gear: React.FC = () => {
-  const { user, loading } = useUser();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate('/');
-    }
-  }, [user, loading, navigate]);
   const [ropeModalOpen, setRopeModalOpen] = React.useState(false);
   const [gearModalOpen, setGearModalOpen] = React.useState(false);
   const [ropes, setRopes] = React.useState<RopeItem[]>([]);
@@ -26,19 +19,6 @@ const Gear: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [editRopeId, setEditRopeId] = React.useState<Number | null>(null);
   const [editGearId, setEditGearId] = React.useState<Number | null>(null);
-
-  React.useEffect(() => {
-    if (!loading && user) {
-      apiFetch<{ gear: any[]; ropes: any[] }>('/api/equipment')
-        .then(res => {
-          setGear(res.gear || []);
-          setRopes(res.ropes || []);
-        })
-        .catch(err => {
-          if (err.message === 'Unauthorized') navigate('/');
-        });
-    }
-  }, [loading, user, navigate]);
 
   const handleAddRope = async (data: any) => {
     try {

@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../App.css';
 import Sidebar from '../components/Sidebar';
 import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../App';
-
 interface PageTemplateProps {
   pageTitle: string;
   isAuthRequired?: boolean;
@@ -13,15 +10,15 @@ interface PageTemplateProps {
 
 function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps) {
 
-    const { user, loading } = useUser();
-    const navigate = useNavigate();
-  useEffect(() => {
-    if(!isAuthRequired) return;
+//     const { user, loading } = useUser();
+//     const navigate = useNavigate();
+//   useEffect(() => {
+//     if(!isAuthRequired) return;
 
-    if (!loading && !user) {
-      navigate('/login');
-    }
-  }, [user, loading, navigate, isAuthRequired]);
+//     if (!loading && !user) {
+//       navigate('/login');
+//     }
+//   }, [user, loading, navigate, isAuthRequired]);
 
   return (
     <Box sx={{ display: 'flex' }}>
