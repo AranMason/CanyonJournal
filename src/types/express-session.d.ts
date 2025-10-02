@@ -4,15 +4,15 @@ import 'express-session';
 
 declare module 'express-session' {
   interface SessionData {
-    isloggedin: boolean;
-    first_name?: string | null;
-    profile?: any;
-    gear?: GearItem[];
-    ropes?: RopeItem[];
-    gearId?: number;
-    ropeId?: number;
-    userId?: number; // Added for SQL Server user mapping
+    dbUser?: DbUser; // Added for storing DB user info
   }
 }
+
+type DbUser = {
+  Id: number;
+  Guid: string;
+  FirstName: string;
+  ProfilePicture: string | null;
+};  
 
 export {};

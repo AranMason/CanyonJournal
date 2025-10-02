@@ -1,6 +1,5 @@
 
 import express, { Request, Response, Router } from 'express';
-import { getPool, sql } from './middleware/sqlserver';
 
 const router: Router = express.Router();
 
@@ -11,41 +10,20 @@ router.get('/user', async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Not authenticated with SSO' });
   }
   const user = req.oidc.user;
-  console.log('OIDC user:', user);
+  console.log('OIDC user:', user, req.session.dbUser);
   if (!user || !user.email) {
     return res.status(401).json({ error: 'Not authenticated with Valid Credentials' });
   }
-  try {
-    const pool = await getPool();
-    const result = await pool.request()
-      .input('guid', sql.NVarChar(255), user.email)
-      .input('firstName', sql.NVarChar(100), user.given_name || user.name || '')
-      .input('profilePicture', sql.NVarChar(255), user.picture || null)
-      .query(`MERGE INTO Users WITH (HOLDLOCK) AS target
-              USING (SELECT @guid AS Guid) AS source
-              ON target.Guid = source.Guid
-              WHEN MATCHED THEN
-                UPDATE SET FirstName = @firstName, ProfilePicture = @profilePicture
-              WHEN NOT MATCHED THEN
-                INSERT (Guid, FirstName, ProfilePicture) VALUES (@guid, @firstName, @profilePicture)
-              OUTPUT inserted.Id, inserted.Guid, inserted.FirstName, inserted.ProfilePicture;`);
-    const dbUser = result.recordset[0];
-    console.log('Authenticated user:', dbUser);
-    res.json({
-      id: dbUser.Id,
-      guid: dbUser.Guid,
-      first_name: dbUser.FirstName,
-      picture_url: dbUser.ProfilePicture,
+
+  res.json({
+      id: req.session.dbUser?.Id,
+      guid: req.session.dbUser?.Guid,
+      first_name: req.session.dbUser?.FirstName,
+      picture_url: req.session.dbUser?.ProfilePicture,
       email: user.email,
       isloggedin: true
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to upsert user in DB' });
-  }
+
 });
-
-
-// Login/logout handled by express-openid-connect
 
 export default router

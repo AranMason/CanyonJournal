@@ -7,8 +7,8 @@ router.get('/', async (req, res) => {
   try {
     const pool = await getPool();
     // If withDescents=1, join with CanyonRecords for user-specific count
-    if (req.query.withDescents === '1' && req.session && req.session.userId) {
-      const userId = req.session.userId;
+    if (req.query.withDescents === '1' && req.session && req.session.dbUser?.Id) {
+      const userId = req.session.dbUser?.Id;
       const result = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`

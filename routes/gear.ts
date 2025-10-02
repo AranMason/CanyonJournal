@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM GearItems WHERE UserId = @userId');
     const ropeRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM RopeItems WHERE UserId = @userId');
     res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
@@ -21,7 +21,7 @@ router.get('/', requireAuth, async (req: Request, res: Response) => {
 router.post('/gear', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const { name, category, notes } = req.body;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
@@ -41,7 +41,7 @@ router.post('/gear', requireAuth, async (req: Request, res: Response) => {
 router.put('/gear/:id', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const id = Number(req.params.id);
     const { name, category, notes } = req.body;
     const result = await pool.request()
@@ -64,7 +64,7 @@ router.put('/gear/:id', requireAuth, async (req: Request, res: Response) => {
 router.delete('/gear/:id', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM GearItems WHERE Id=@id AND UserId=@userId');
     res.status(204).end();
@@ -77,7 +77,7 @@ router.delete('/gear/:id', requireAuth, async (req: Request, res: Response) => {
 router.post('/rope', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const { name, diameter, length, unit, notes } = req.body;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
@@ -99,7 +99,7 @@ router.post('/rope', requireAuth, async (req: Request, res: Response) => {
 router.put('/rope/:id', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const id = Number(req.params.id);
     const { name, diameter, length, unit, notes } = req.body;
     const result = await pool.request()
@@ -124,7 +124,7 @@ router.put('/rope/:id', requireAuth, async (req: Request, res: Response) => {
 router.delete('/rope/:id', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = req.session.userId;
+    const userId = req.session.dbUser?.Id;
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM RopeItems WHERE Id=@id AND UserId=@userId');
     res.status(204).end();

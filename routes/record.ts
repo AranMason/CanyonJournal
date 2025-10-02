@@ -18,7 +18,7 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const result = await pool.request()
-      .input('userId', sql.Int, req.session.userId)
+      .input('userId', sql.Int, req.session.dbUser?.Id)
       .input('name', sql.NVarChar(200), Name)
       .input('date', sql.Date, Date)
       .input('url', sql.NVarChar(255), Url)
@@ -64,7 +64,7 @@ recordRouter.get('/', requireAuth, async (req: Request, res: Response) => {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
     }
     const result = await pool.request()
-      .input('userId', sql.Int, req.session.userId)
+      .input('userId', sql.Int, req.session.dbUser?.Id)
       .query(query);
     res.json({ records: result.recordset });
   } catch (err) {
