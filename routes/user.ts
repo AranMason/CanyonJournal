@@ -29,7 +29,8 @@ router.get('/user', async (req: Request, res: Response) => {
                 INSERT (Guid, FirstName, ProfilePicture) VALUES (@guid, @firstName, @profilePicture)
               OUTPUT inserted.Id, inserted.Guid, inserted.FirstName, inserted.ProfilePicture;`);
     const dbUser = result.recordset[0];
-    req.session.userId = dbUser.Id;
+    console.log('Authenticated user:', dbUser);
+    req.session.userId = dbUser?.Id;
     res.json({
       id: dbUser.Id,
       guid: dbUser.Guid,
@@ -39,6 +40,7 @@ router.get('/user', async (req: Request, res: Response) => {
       isloggedin: true
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to upsert user in DB' });
   }
 });
