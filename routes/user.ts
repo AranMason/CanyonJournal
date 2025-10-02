@@ -8,11 +8,11 @@ const router: Router = express.Router();
 // Auth0: Get current user info from OIDC
 router.get('/user', async (req: Request, res: Response) => {
   if (!req.oidc || !req.oidc.isAuthenticated()) {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.status(401).json({ error: 'Not authenticated with SSO' });
   }
   const user = req.oidc.user;
   if (!user || !user.email) {
-    return res.status(401).json({ error: 'Not authenticated' });
+    return res.status(401).json({ error: 'Not authenticated with Valid Credentials' });
   }
   try {
     const pool = await getPool();
@@ -29,6 +29,7 @@ router.get('/user', async (req: Request, res: Response) => {
                 INSERT (Guid, FirstName, ProfilePicture) VALUES (@guid, @firstName, @profilePicture)
               OUTPUT inserted.Id, inserted.Guid, inserted.FirstName, inserted.ProfilePicture;`);
     const dbUser = result.recordset[0];
+    req.session.userId = dbUser.Id;
     res.json({
       id: dbUser.Id,
       guid: dbUser.Guid,
