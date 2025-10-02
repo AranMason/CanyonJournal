@@ -2,8 +2,13 @@ import { Request } from 'express';
 import { getPool, sql } from '../middleware/sqlserver';
 
 export async function getUserIdByRequest(req: Request): Promise<number | undefined> {
-  const email = req.oidc.user?.email;
-  return getUserIdByEmail(email);
+
+    if(req.session.userId) {
+        return req.session.userId;
+    }
+
+    const email = req.oidc.user?.email;
+    return getUserIdByEmail(email);
 }
 
 /**

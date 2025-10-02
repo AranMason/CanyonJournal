@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Card, CardContent, Typography, Divider, Button } from '@mui/material';
+import { useUser } from '../App';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+  const { user, loading } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard'); // Redirect to Dashboard (home page)
+    }
+  }, [user, loading, navigate]);
+
   return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#f5f5f5">
       <Card sx={{ minWidth: 340, maxWidth: 400, p: 2, boxShadow: 3 }}>

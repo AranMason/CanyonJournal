@@ -1,5 +1,6 @@
 import express, { Request, Response, Router } from 'express';
 import { getUserIdByRequest } from './helpers/sql.helper';
+import {} from '../src/types/express-session';
 
 const router: Router = express.Router();
 
@@ -13,6 +14,10 @@ router.get('/user', async (req: Request, res: Response) => {
   if (!user || !user.email) {
     return res.status(401).json({ error: 'Not authenticated with Valid Credentials' });
   }
+
+  req.session.userId = await getUserIdByRequest(req);
+  console.log('Test', req.session.userId);
+  req.session.save();
 
   res.json({
       id: await getUserIdByRequest(req),
