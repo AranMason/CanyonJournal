@@ -1,12 +1,14 @@
 import express, { Request, Response, Router } from 'express';
-import { requireAuth } from './middleware/authentication';
+import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 
 const recordRouter: Router = express.Router();
 
 // POST /api/record - add a canyon record to SQL Server
-recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
+recordRouter.post('/', requiresAuth, async (req: Request, res: Response) => {
   const { Name, Date, Url, TeamSize, Comments, CanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
   if (!Name || !Date) {
     return res.status(400).json({ error: 'Name and date are required.' });
@@ -18,7 +20,7 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const result = await pool.request()
-      .input('userId', sql.Int, req.session.dbUser?.Id)
+      .input('userId', sql.Int, getDbUserId(req))
       .input('name', sql.NVarChar(200), Name)
       .input('date', sql.Date, Date)
       .input('url', sql.NVarChar(255), Url)
@@ -55,7 +57,7 @@ recordRouter.post('/', requireAuth, async (req: Request, res: Response) => {
 });
 
 // GET /api/record - get all canyon records for the user from SQL Server
-recordRouter.get('/', requireAuth, async (req: Request, res: Response) => {
+recordRouter.get('/', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const max = req.query.max ? Number(req.query.max) : undefined;
@@ -64,7 +66,7 @@ recordRouter.get('/', requireAuth, async (req: Request, res: Response) => {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
     }
     const result = await pool.request()
-      .input('userId', sql.Int, req.session.dbUser?.Id)
+      .input('userId', sql.Int, getDbUserId(req))
       .query(query);
     res.json({ records: result.recordset });
   } catch (err) {
@@ -73,3 +75,7 @@ recordRouter.get('/', requireAuth, async (req: Request, res: Response) => {
 });
 
 export default recordRouter;
+function getDbUserId(req: express.Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): any {
+  throw new Error('Function not implemented.');
+}
+
