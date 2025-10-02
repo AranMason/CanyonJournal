@@ -44,7 +44,7 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             label="Home"
             icon={<HomeIcon />}
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/dashboard')}
           />
           <SidebarItem
             label="Record Descent"

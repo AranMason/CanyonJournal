@@ -31,14 +31,8 @@ const WaterLevelDisplay: { [key in WaterLevel]: string } = {
 const today = new Date().toISOString().split('T')[0];
 
 const RecordPage: React.FC = () => {
-    const { user, loading } = useUser();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!loading && !user) {
-            navigate('/');
-        }
-    }, [user, loading, navigate]);
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [canyons, setCanyons] = useState<Canyon[]>([]);

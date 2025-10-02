@@ -8,4 +8,28 @@ module.exports = function(app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    '/login',
+    createProxyMiddleware({
+      target: 'http://localhost:8000',
+      changeOrigin: false,
+    })
+  );
+
+  app.use(
+    '/callback',
+    createProxyMiddleware({
+      target: 'http://localhost:8000',
+      changeOrigin: false,
+    })
+  );
+
+  app.use(
+    '/logout',
+    createProxyMiddleware({
+      target: 'http://localhost:8000',
+      changeOrigin: false,
+    })
+  );
 };
