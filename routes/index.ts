@@ -6,7 +6,6 @@ import canyons from './canyons'
 
 const router: Router = express.Router()
 
-
 router.use('/', user);
 router.use('/record', record);
 router.use('/equipment', gear);

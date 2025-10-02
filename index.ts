@@ -5,10 +5,9 @@ import router from './routes/index'
 // import session from 'express-session'
 import { auth } from 'express-openid-connect';
 import path from 'path'
-import { getPool, sql } from './routes/middleware/sqlserver';
-// import compression from 'compression'
-// import helmet from 'helmet'
-// import RateLimit from 'express-rate-limit'
+import compression from 'compression'
+import helmet from 'helmet'
+import RateLimit from 'express-rate-limit'
 
 const app = express()
 
@@ -17,24 +16,23 @@ const port: string = process.env.PORT || '8000'
 app.set('trust proxy', 1); // For deployment behind a proxy, e.g., Heroku
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// TODO: Re-enable these security features later
-// app.use(compression());
-// // Add helmet to the middleware chain.
-// // Set CSP headers to allow our Bootstrap and jQuery to be served
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       "script-src": ["'self'", "cdn.jsdelivr.net"],
-//     },
-//   }),
-// );
-// // Set up rate limiter: maximum of twenty requests per minute
-// const limiter = RateLimit({
-//   windowMs: 1 * 60 * 1000, // 1 minute
-//   max: 20,
-// });
-// // Apply rate limiter to all requests
-// app.use(limiter);
+app.use(compression());
+// Add helmet to the middleware chain.
+// Set CSP headers to allow our Bootstrap and jQuery to be served
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "cdn.jsdelivr.net"],
+    },
+  }),
+);
+// Set up rate limiter: maximum of twenty requests per minute
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 
 // Auth0 SSO middleware
 app.use(auth({

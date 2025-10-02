@@ -1,9 +1,7 @@
 import { Router, Response, Request } from 'express';
 import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
-import { getDbUserId } from './middleware/auth0.helper';
+import { getUserIdByRequest } from './helpers/sql.helper';
 
 const router = Router();
 
@@ -11,7 +9,7 @@ const router = Router();
 router.get('/', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM GearItems WHERE UserId = @userId');
     const ropeRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM RopeItems WHERE UserId = @userId');
     res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
@@ -24,7 +22,7 @@ router.get('/', requiresAuth, async (req: Request, res: Response) => {
 router.post('/gear', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const { name, category, notes } = req.body;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
@@ -44,7 +42,7 @@ router.post('/gear', requiresAuth, async (req: Request, res: Response) => {
 router.put('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
     const { name, category, notes } = req.body;
     const result = await pool.request()
@@ -67,7 +65,7 @@ router.put('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
 router.delete('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM GearItems WHERE Id=@id AND UserId=@userId');
     res.status(204).end();
@@ -80,7 +78,7 @@ router.delete('/gear/:id', requiresAuth, async (req: Request, res: Response) => 
 router.post('/rope', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const { name, diameter, length, unit, notes } = req.body;
     const result = await pool.request()
       .input('userId', sql.Int, userId)
@@ -102,7 +100,7 @@ router.post('/rope', requiresAuth, async (req: Request, res: Response) => {
 router.put('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
     const { name, diameter, length, unit, notes } = req.body;
     const result = await pool.request()
@@ -127,7 +125,7 @@ router.put('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
 router.delete('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM RopeItems WHERE Id=@id AND UserId=@userId');
     res.status(204).end();

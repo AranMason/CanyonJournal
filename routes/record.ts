@@ -2,9 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
-import { getDbUserId } from './middleware/auth0.helper';
+import { getUserIdByRequest } from './helpers/sql.helper';
 
 const recordRouter: Router = express.Router();
 
@@ -21,7 +19,7 @@ recordRouter.post('/', requiresAuth, async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const result = await pool.request()
-      .input('userId', sql.Int, getDbUserId(req))
+      .input('userId', sql.Int, await getUserIdByRequest(req))
       .input('name', sql.NVarChar(200), Name)
       .input('date', sql.Date, Date)
       .input('url', sql.NVarChar(255), Url)
@@ -66,8 +64,10 @@ recordRouter.get('/', requiresAuth, async (req: Request, res: Response) => {
     if (max && !isNaN(max)) {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
     }
+    const userId = await getUserIdByRequest(req);
+    console.log('Fetching records for userId:', userId);
     const result = await pool.request()
-      .input('userId', sql.Int, getDbUserId(req))
+      .input('userId', sql.Int, userId)
       .query(query);
     res.json({ records: result.recordset });
   } catch (err) {

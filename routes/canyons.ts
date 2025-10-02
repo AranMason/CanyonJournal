@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPool, sql } from './middleware/sqlserver';
-import { getDbUserId } from './middleware/auth0.helper';
+import { getUserIdByRequest } from './helpers/sql.helper';
 
 const router = express.Router();
 
@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
   try {
     const pool = await getPool();
     // If withDescents=1, join with CanyonRecords for user-specific count
-    if (req.query.withDescents === '1' && getDbUserId(req)) {
-      const userId = getDbUserId(req);
+    const userId = await getUserIdByRequest(req);
+    if (req.query.withDescents === '1' && userId) {
       const result = await pool.request()
         .input('userId', sql.Int, userId)
         .query(`

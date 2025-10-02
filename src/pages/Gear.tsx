@@ -20,6 +20,20 @@ const Gear: React.FC = () => {
   const [editRopeId, setEditRopeId] = React.useState<Number | null>(null);
   const [editGearId, setEditGearId] = React.useState<Number | null>(null);
 
+  // Load gear and ropes on mount
+  React.useEffect(() => {
+    const fetchGearAndRopes = async () => {
+      try {
+        const data = await apiFetch<{ gear: GearItem[], ropes: RopeItem[]}>('/api/equipment');
+        setGear(data.gear || []);
+        setRopes(data.ropes || []);
+      } catch (err: any) {
+        if (err.message === 'Unauthorized') navigate('/');
+      }
+    };
+    fetchGearAndRopes();
+  }, [navigate]);
+
   const handleAddRope = async (data: any) => {
     try {
       const response = await apiFetch<any>('/api/equipment/rope', {

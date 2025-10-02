@@ -16,6 +16,7 @@ const COLUMN_WIDTHS = {
 };
 
 const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
+    // eslint-disable-next-line
     [0]: '-',
     [WaterLevel.VeryLow]: 'Very Low',
     [WaterLevel.Low]: 'Low',   
