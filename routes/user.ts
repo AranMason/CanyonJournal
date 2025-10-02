@@ -10,18 +10,18 @@ router.get('/user', async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Not authenticated with SSO' });
   }
   const user = req.oidc.user;
-  console.log('OIDC user:', user, req.session.dbUser);
+  console.log('OIDC user:', user, req.session);
   if (!user || !user.email) {
     return res.status(401).json({ error: 'Not authenticated with Valid Credentials' });
   }
 
   res.json({
-      id: req.session.dbUser?.Id,
-      guid: req.session.dbUser?.Guid,
-      first_name: req.session.dbUser?.FirstName,
-      picture_url: req.session.dbUser?.ProfilePicture,
-      email: user.email,
-      isloggedin: true
+      id: req.session?.dbUser?.Id,
+      guid: req.session?.dbUser?.Guid,
+      first_name: req.session?.dbUser?.FirstName,
+      picture_url: req.session?.dbUser?.ProfilePicture,
+      email: user?.email,
+      isloggedin: req.oidc.isAuthenticated()
     });
 
 });
