@@ -1,7 +1,5 @@
 import { Request } from 'express';
 
-export default {
-    getDbUserId: (req: Request) => {
-        return req.oidc.user?.[`${process.env.BASE_URL}/dbUserId`];
-    }
+export function getDbUserId(req: Request): number | undefined {
+    return req.oidc.user?.[`${process.env.BASE_URL}/dbUserId`];
 }

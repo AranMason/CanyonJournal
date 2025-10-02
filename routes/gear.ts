@@ -3,6 +3,7 @@ import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import { getDbUserId } from './middleware/auth0.helper';
 
 const router = Router();
 
@@ -136,7 +137,3 @@ router.delete('/rope/:id', requiresAuth, async (req: Request, res: Response) => 
 });
 
 export default router;
-function getDbUserId(req: Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>) {
-  throw new Error('Function not implemented.');
-}
-

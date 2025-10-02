@@ -4,6 +4,7 @@ import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import { getDbUserId } from './middleware/auth0.helper';
 
 const recordRouter: Router = express.Router();
 
@@ -75,7 +76,4 @@ recordRouter.get('/', requiresAuth, async (req: Request, res: Response) => {
 });
 
 export default recordRouter;
-function getDbUserId(req: express.Request<ParamsDictionary, any, any, ParsedQs, Record<string, any>>): any {
-  throw new Error('Function not implemented.');
-}
 
