@@ -4,8 +4,15 @@ import 'express-session';
 
 declare module 'express-session' {
   interface SessionData {
-    userId?: number; // User ID from our database
-    dbUser?: DbUser; // Added for storing DB user info
+    // userId?: number; // User ID from our database
+    // dbUser?: DbUser; // Added for storing DB user info
+  }
+}
+
+declare module 'express' {
+  interface Request {
+    // user?: { dbUser?: DbUser }; // Added for storing DB user info
+    user?: { dbUser?: DbUser }; // Added for storing DB user info
   }
 }
 

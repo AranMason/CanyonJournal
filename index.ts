@@ -57,8 +57,25 @@ passport.use(new Auth0Strategy({
 passport.serializeUser((user, done) => {
   done(null, user);
 });
-passport.deserializeUser((user, done) => {
-  done(null, user as any);
+import { getPool, sql } from './routes/middleware/sqlserver';
+
+passport.deserializeUser(async (user: any, done) => {
+  try {
+    // Use email from Auth0 profile
+    const email = user?.emails?.[0]?.value || user?.email;
+    if (!email) return done(null, user);
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('guid', sql.NVarChar(255), email)
+      .query('SELECT Id, Guid, FirstName, ProfilePicture FROM Users WHERE Guid = @guid');
+    if (result.recordset.length === 0) return done(null, user);
+    // Attach DB user info to session user
+    const dbUser = result.recordset[0];
+    console.log('Deserialized user:', { ...user, dbUser });
+    done(null, { ...user, dbUser });
+  } catch (err) {
+    done(err, user);
+  }
 });
 app.use(passport.initialize());
 app.use(passport.session());

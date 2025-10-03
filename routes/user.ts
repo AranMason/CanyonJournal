@@ -7,7 +7,6 @@ const router: Router = express.Router();
 
 // Auth0: Get current user info from OIDC
 router.get('/user', async (req: Request, res: Response) => {
-  res.locals
   if (!req.oidc || !req.oidc.isAuthenticated()) {
     return res.status(401).json({ error: 'Not authenticated with SSO' });
   }
@@ -16,18 +15,16 @@ router.get('/user', async (req: Request, res: Response) => {
     return res.status(401).json({ error: 'Not authenticated with Valid Credentials' });
   }
 
-  req.session.userId = await getUserIdByRequest(req);
-  console.log('Test', req.session.userId);
-  req.session.save();
+  const userId = await getUserIdByRequest(req);
 
   res.json({
-      id: await getUserIdByRequest(req),
-      guid: user.email,
-      first_name: user.given_name,
-      picture_url: user.picture,
-      email: user?.email,
-      isloggedin: req.oidc.isAuthenticated()
-    });
+    id: userId,
+    guid: user.email,
+    first_name: user.given_name,
+    picture_url: user.picture,
+    email: user.email,
+    isloggedin: req.oidc.isAuthenticated()
+  });
 });
 
 export default router

@@ -1,14 +1,17 @@
 import { Request } from 'express';
 import { getPool, sql } from '../middleware/sqlserver';
+import {} from '../../src/types/express-session';
 
 export async function getUserIdByRequest(req: Request): Promise<number | undefined> {
 
-    if(req.session?.userId) {
-        return req.session.userId;
+    console.log("Found user in req.user.dbUser.Id:", req.user);
+    
+    if (req.user?.dbUser?.Id) {
+        
+        return req.user.dbUser.Id;
     }
 
-    const email = req.oidc.user?.email;
-    return getUserIdByEmail(email);
+    return 0;
 }
 
 /**
