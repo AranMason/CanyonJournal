@@ -73,7 +73,7 @@ const Sidebar: React.FC = () => {
               label="Logout"
               icon={null}
               onClick={() => {
-                window.location.href = '/logout';
+                window.location.href = '/api/logout';
                 setUser(null);
               }}
             />

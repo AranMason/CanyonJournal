@@ -1,15 +1,16 @@
 import { Router, Response, Request } from 'express';
-import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/sql.helper';
 
 const router = Router();
 
 // Get all gear and ropes for the user
-router.get('/', requiresAuth, async (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
+  console.log("In /api/equipment route");
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    console.log("userId in /api/equipment:", userId);
     const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM GearItems WHERE UserId = @userId');
     const ropeRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM RopeItems WHERE UserId = @userId');
     res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
@@ -19,7 +20,7 @@ router.get('/', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // Add gear
-router.post('/gear', requiresAuth, async (req: Request, res: Response) => {
+router.post('/gear', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -39,7 +40,7 @@ router.post('/gear', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // Edit gear
-router.put('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
+router.put('/gear/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -62,7 +63,7 @@ router.put('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // Delete gear
-router.delete('/gear/:id', requiresAuth, async (req: Request, res: Response) => {
+router.delete('/gear/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -75,7 +76,7 @@ router.delete('/gear/:id', requiresAuth, async (req: Request, res: Response) => 
 });
 
 // Add rope
-router.post('/rope', requiresAuth, async (req: Request, res: Response) => {
+router.post('/rope', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -97,7 +98,7 @@ router.post('/rope', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // Edit rope
-router.put('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
+router.put('/rope/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -122,7 +123,7 @@ router.put('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // Delete rope
-router.delete('/rope/:id', requiresAuth, async (req: Request, res: Response) => {
+router.delete('/rope/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);

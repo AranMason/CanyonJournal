@@ -1,5 +1,4 @@
 import express, { Request, Response, Router } from 'express';
-import { requiresAuth } from 'express-openid-connect';
 import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
 import { getUserIdByRequest } from './helpers/sql.helper';
@@ -7,7 +6,7 @@ import { getUserIdByRequest } from './helpers/sql.helper';
 const recordRouter: Router = express.Router();
 
 // POST /api/record - add a canyon record to SQL Server
-recordRouter.post('/', requiresAuth, async (req: Request, res: Response) => {
+recordRouter.post('/', async (req: Request, res: Response) => {
   const { Name, Date, Url, TeamSize, Comments, CanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
   if (!Name || !Date) {
     return res.status(400).json({ error: 'Name and date are required.' });
@@ -56,7 +55,7 @@ recordRouter.post('/', requiresAuth, async (req: Request, res: Response) => {
 });
 
 // GET /api/record - get all canyon records for the user from SQL Server
-recordRouter.get('/', requiresAuth, async (req: Request, res: Response) => {
+recordRouter.get('/', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const max = req.query.max ? Number(req.query.max) : undefined;
@@ -65,7 +64,6 @@ recordRouter.get('/', requiresAuth, async (req: Request, res: Response) => {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
     }
     const userId = await getUserIdByRequest(req);
-    console.log('Fetching records for userId:', userId);
     const result = await pool.request()
       .input('userId', sql.Int, userId)
       .query(query);

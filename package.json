@@ -7,7 +7,7 @@
     "start": "node ./build/index.js",
     "watch:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
-    "dev": "set HTTPS=true && react-scripts start",
+    "dev": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

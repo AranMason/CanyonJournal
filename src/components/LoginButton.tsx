@@ -29,7 +29,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ className, user, loading }) =
       variant="contained"
       color="primary"
       fullWidth
-      onClick={() => window.location.href = '/login'}
+      onClick={() => window.location.href = '/'}
       sx={{
         mt: 1,
         mb: 2,

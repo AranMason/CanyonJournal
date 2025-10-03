@@ -18,7 +18,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps
         if (!isAuthRequired || loading) return;
 
         if (!user && isAuthRequired) {
-            window.location.href = '/login';
+            window.location.href = '/';
         }
     }, [user, loading, navigate, isAuthRequired]);
 
