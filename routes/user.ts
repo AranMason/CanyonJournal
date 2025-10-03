@@ -7,6 +7,7 @@ const router: Router = express.Router();
 
 // Auth0: Get current user info from OIDC
 router.get('/user', async (req: Request, res: Response) => {
+  res.locals
   if (!req.oidc || !req.oidc.isAuthenticated()) {
     return res.status(401).json({ error: 'Not authenticated with SSO' });
   }
@@ -27,7 +28,6 @@ router.get('/user', async (req: Request, res: Response) => {
       email: user?.email,
       isloggedin: req.oidc.isAuthenticated()
     });
-
 });
 
 export default router

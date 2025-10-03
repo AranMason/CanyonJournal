@@ -3,7 +3,7 @@ import { getPool, sql } from '../middleware/sqlserver';
 
 export async function getUserIdByRequest(req: Request): Promise<number | undefined> {
 
-    if(req.session.userId) {
+    if(req.session?.userId) {
         return req.session.userId;
     }
 

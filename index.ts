@@ -1,13 +1,14 @@
-import express from 'express'
-import 'dotenv/config'
-import morgan from 'morgan'
-import router from './routes/index'
-// import session from 'express-session'
-import { auth } from 'express-openid-connect';
-import path from 'path'
-import compression from 'compression'
-import helmet from 'helmet'
-import RateLimit from 'express-rate-limit'
+import express from 'express';
+import 'dotenv/config';
+import morgan from 'morgan';
+import router from './routes/index';
+import session from 'express-session';
+import passport from 'passport';
+import Auth0Strategy from 'passport-auth0';
+import path from 'path';
+import compression from 'compression';
+import helmet from 'helmet';
+import RateLimit from 'express-rate-limit';
 
 const app = express()
 
@@ -34,20 +35,59 @@ const limiter = RateLimit({
 // Apply rate limiter to all requests
 app.use(limiter);
 
-// Auth0 SSO middleware
-app.use(auth({
-  authRequired: false,
-  auth0Logout: true,
-  secret: process.env.AUTH0_SECRET,
-  baseURL: process.env.BASE_URL,
-  clientID: process.env.AUTH0_CLIENT_ID,
-  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
+// Session middleware
+app.use(session({
+  secret: process.env.AUTH0_SECRET || 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
+
+// Passport.js setup
+passport.use(new Auth0Strategy({
+  domain: process.env.AUTH0_DOMAIN as string,
+  clientID: process.env.AUTH0_CLIENT_ID as string,
+  clientSecret: process.env.AUTH0_SECRET as string,
+  callbackURL: process.env.AUTH0_CALLBACK_URL || `${process.env.BASE_URL}/callback`
+},
+  function(accessToken, refreshToken, extraParams, profile, done) {
+    return done(null, profile);
+  }
+));
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+passport.deserializeUser((user, done) => {
+  done(null, user as any);
+});
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(morgan('dev'));
+
+// Auth0 login route
+app.get('/login', passport.authenticate('auth0', {
+  scope: 'openid email profile'
+}), (req, res) => {
+  res.redirect('/dashboard');
+});
+
+// Auth0 callback route
+app.get('/callback', passport.authenticate('auth0', {
+  failureRedirect: '/'
+}), (req, res) => {
+  res.redirect('/');
+});
+
+// Auth0 logout route
+app.get('/logout', (req, res) => {
+  req.logout(() => {
+    res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${process.env.BASE_URL}`);
+  });
+});
 
 // Protect API routes (require login)
 app.use('/api', (req, res, next) => {
-  if (!req.oidc || !req.oidc.isAuthenticated()) {
+  if (!req.isAuthenticated || !req.isAuthenticated()) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   next();
