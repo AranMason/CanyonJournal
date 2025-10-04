@@ -68,8 +68,8 @@ const CanyonList: React.FC = () => {
                   ) : '-'}
                 </TableCell>
                 <TableCell align="center">
-                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" startIcon={<img height="16px" alt="Canyon Log" src="https://i0.wp.com/canyonlog.org/wp-content/uploads/2025/01/logo-.png?fit=192%2C192&ssl=1"></img>} >
-                    Visit
+                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
+                    Visit Canyon Log
                   </Button> : '-'}
                 </TableCell>
               </TableRow>
