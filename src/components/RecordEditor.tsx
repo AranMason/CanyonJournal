@@ -63,7 +63,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             then: schema => schema.required('Canyon name is required'),
                             otherwise: schema => schema,
                         }),
-                        Date: Yup.string().required('Date is required'),
+                        Date: Yup.string().test("maxDate", "Cannot be in the future", val => !val || Date.parse(val) < Date.now()).required('Date is required'),
                         Url: Yup.string().when('CanyonId', {
                             is: (val: number | undefined) => val === -1 || !val,
                             then: schema => schema.url('Must be a valid URL').nullable(),
