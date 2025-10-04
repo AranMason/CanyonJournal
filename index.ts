@@ -62,13 +62,21 @@ import { getPool, sql } from './routes/middleware/sqlserver';
 passport.deserializeUser(async (user: any, done) => {
   try {
     // Use email from Auth0 profile
-    const email = user?.emails?.[0]?.value || user?.email;
-    if (!email) return done(null, user);
+    const guid = user?.emails?.[0]?.value || user?.email || user?.user_id;
+    if (!guid) return done(null, user);
     const pool = await getPool();
-    const result = await pool.request()
-      .input('guid', sql.NVarChar(255), email)
+    let result = await pool.request()
+      .input('guid', sql.NVarChar(255), guid)
       .query('SELECT Id, Guid, FirstName, ProfilePicture, IsAdmin FROM Users WHERE Guid = @guid');
-    if (result.recordset.length === 0) return done(null, user);
+    
+    // If the user does not exist, create them
+    if (result.recordset.length === 0) {
+      result = await pool.request()
+        .input('guid', sql.NVarChar(255), guid)
+        .input('firstName', sql.NVarChar(100), user?.name?.givenName || 'User')
+        .input('profilePicture', sql.NVarChar(255), user?.picture || '')
+        .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0)');
+    };
     // Attach DB user info to session user
     const dbUser = result.recordset[0];
     done(null, { ...user, dbUser });

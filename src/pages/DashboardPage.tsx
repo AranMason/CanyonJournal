@@ -27,7 +27,6 @@ const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
   [WaterLevel.VeryHigh]: 'Very High'
 };
 
-
 const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading } = useUser();

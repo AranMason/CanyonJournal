@@ -16,7 +16,7 @@ type RecordEditorProps = {
 }
 
 type OtherOption = {
-    Id: -1;
+    Id: 0;
     Name: string;
     Url: string;
     AquaticRating: number;
@@ -39,7 +39,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     
     const [canyons, setCanyons] = useState<Canyon[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const customCanyonOption: OtherOption = { Id: -1, Name: 'Other', Url: '', AquaticRating: 0, VerticalRating: 0, StarRating: 0 };
+    const customCanyonOption: OtherOption = { Id: 0, Name: 'Other', Url: '', AquaticRating: 0, VerticalRating: 0, StarRating: 0 };
     const canyonOptions: (Canyon | OtherOption)[] = [...canyons, customCanyonOption];
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
 
@@ -59,13 +59,13 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     initialValues={initialFormValues}
                     validationSchema={Yup.object().shape({
                         Name: Yup.string().when('CanyonId', {
-                            is: (val: number | undefined) => val === -1 || !val,
+                            is: (val: number | undefined) => val === 0 || !val,
                             then: schema => schema.required('Canyon name is required'),
                             otherwise: schema => schema,
                         }),
                         Date: Yup.string().test("maxDate", "Cannot be in the future", val => !val || Date.parse(val) < Date.now()).required('Date is required'),
                         Url: Yup.string().when('CanyonId', {
-                            is: (val: number | undefined) => val === -1 || !val,
+                            is: (val: number | undefined) => val === 0 || !val,
                             then: schema => schema.url('Must be a valid URL').nullable(),
                             otherwise: schema => schema,
                         }),
@@ -108,11 +108,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     loading={isCanyonsLoading}
                                     onChange={(_, canyon) => {
                                         if (!canyon || (typeof canyon === 'string')) {
-                                            setFieldValue('CanyonId', -1);
+                                            setFieldValue('CanyonId', 0);
                                             setFieldValue('Name', '');
                                             setFieldValue('Url', '');
-                                        } else if (canyon.Id === -1) {
-                                            setFieldValue('CanyonId', -1);
+                                        } else if (canyon.Id === 0) {
+                                            setFieldValue('CanyonId', 0);
                                             setFieldValue('Name', '');
                                             setFieldValue('Url', '');
                                         } else {
@@ -146,14 +146,14 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     fullWidth
-                                    required={values.CanyonId === -1}
+                                    required={values.CanyonId === 0}
                                     margin="normal"
                                     error={touched.Name && Boolean(errors.Name)}
                                     helperText={touched.Name && errors.Name}
-                                    disabled={!!selectedCanyon && selectedCanyon.Id !== -1}
+                                    disabled={!!selectedCanyon && selectedCanyon.Id !== 0}
                                 />
                                 <TextField
-                                    label="Canyon Link URL"
+                                    label="Canyon Log URL"
                                     name="Url"
                                     value={values.Url}
                                     onChange={handleChange}
@@ -162,7 +162,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     margin="normal"
                                     error={touched.Url && Boolean(errors.Url)}
                                     helperText={touched.Url && errors.Url}
-                                    disabled={!!selectedCanyon && selectedCanyon.Id !== -1}
+                                    disabled={!!selectedCanyon && selectedCanyon.Id !== 0}
                                 />
                                 <TextField
                                     label="Date"

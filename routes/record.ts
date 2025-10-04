@@ -59,6 +59,7 @@ recordRouter.post('/', async (req: Request, res: Response) => {
     transaction.commit();
     res.status(201).json({ message: 'Canyon record added!', record });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: 'Failed to add canyon record' });
   }
 });
