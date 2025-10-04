@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import PageTemplate from './PageTemplate';
 import RopeModal from '../components/RopeModal';
@@ -19,10 +18,12 @@ const Gear: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
   const [editRopeId, setEditRopeId] = React.useState<Number | null>(null);
   const [editGearId, setEditGearId] = React.useState<Number | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   // Load gear and ropes on mount
   React.useEffect(() => {
     const fetchGearAndRopes = async () => {
+      setIsLoading(true);
       try {
         const data = await apiFetch<{ gear: GearItem[], ropes: RopeItem[]}>('/api/equipment');
         setGear(data.gear || []);
@@ -30,6 +31,7 @@ const Gear: React.FC = () => {
       } catch (err: any) {
         if (err.message === 'Unauthorized') navigate('/');
       }
+      finally { setIsLoading(false); }
     };
     fetchGearAndRopes();
   }, [navigate]);
@@ -62,7 +64,7 @@ const Gear: React.FC = () => {
   };
 
   return (
-    <PageTemplate pageTitle="Gear" isAuthRequired>
+    <PageTemplate pageTitle="Gear" isAuthRequired isLoading={isLoading}> 
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Rope</Typography>

@@ -5,6 +5,8 @@ import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
 import { useUser } from '../App';
 import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
+import RowActions from '../components/RowActions';
+import { useNavigate } from 'react-router-dom';
 
 // Column size definitions
 const COLUMN_WIDTHS = {
@@ -16,17 +18,18 @@ const COLUMN_WIDTHS = {
 };
 
 const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
-    // eslint-disable-next-line
-    [0]: '-',
-    [WaterLevel.VeryLow]: 'Very Low',
-    [WaterLevel.Low]: 'Low',   
-    [WaterLevel.Medium]: 'Medium',
-    [WaterLevel.High]: 'High',
-    [WaterLevel.VeryHigh]: 'Very High'
+  // eslint-disable-next-line
+  [0]: '-',
+  [WaterLevel.VeryLow]: 'Very Low',
+  [WaterLevel.Low]: 'Low',
+  [WaterLevel.Medium]: 'Medium',
+  [WaterLevel.High]: 'High',
+  [WaterLevel.VeryHigh]: 'Very High'
 };
 
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +51,7 @@ const Home: React.FC = () => {
   }, [user, loading]);
 
   return (
-    <PageTemplate pageTitle="Canyon Journal">
+    <PageTemplate pageTitle="Canyon Journal" isLoading={loading}>
       {(!user && !loading) ? (
         <Typography>Please log in to view your canyon records.</Typography>
       ) : loading ? (
@@ -90,6 +93,7 @@ const Home: React.FC = () => {
                   <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
                   <TableCell>Comments</TableCell>
+                  <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -119,6 +123,11 @@ const Home: React.FC = () => {
                       <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
+                      <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
+                        <RowActions
+                          onEdit={() => navigate(`/record/${rec.Id} `)}
+                        />
+                      </TableCell>
                     </TableRow>
                   ))
                 )}

@@ -29,7 +29,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           labelId="rope-select-label"
           label="Select Ropes"
           multiple
-          value={selectedRopeIds}
+          value={selectedRopeIds || []}
           onChange={e => setSelectedRopeIds(e.target.value as number[])}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -51,7 +51,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           labelId="gear-select-label"
           label="Select Gear"
           multiple
-          value={selectedGearIds}
+          value={selectedGearIds || []}
           onChange={e => setSelectedGearIds(e.target.value as number[])}
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

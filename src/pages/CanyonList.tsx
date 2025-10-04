@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, CircularProgress, Button } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { Canyon } from '../types/Canyon';
@@ -31,10 +31,9 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
-  if (loading || isLoading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>;
 
   return (
-    <PageTemplate pageTitle="All Canyons" isAuthRequired>
+    <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
       <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant="contained" color="primary" onClick={() => setAddOpen(true)}>
           Add Canyon

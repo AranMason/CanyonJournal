@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import '../App.css';
 import Sidebar from '../components/Sidebar';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
 interface PageTemplateProps {
     pageTitle: string;
     isAuthRequired?: boolean;
     children?: React.ReactNode;
+    isLoading?: boolean;
 }
 
-function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps) {
+function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTemplateProps) {
 
     const { user, loading } = useUser();
     const navigate = useNavigate();
@@ -22,12 +23,15 @@ function PageTemplate({ pageTitle, children, isAuthRequired }: PageTemplateProps
         }
     }, [user, loading, navigate, isAuthRequired]);
 
+    
+
     return (
         <Box sx={{ display: 'flex' }}>
             <Sidebar />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
                 <h1 className="App-title">{pageTitle}</h1>
-                {children}
+                {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>} 
+                {!isLoading && children}
             </Box>
         </Box>
     );

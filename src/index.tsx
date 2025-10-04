@@ -10,6 +10,7 @@ import App from './App';
 import Gear from './pages/Gear';
 import CanyonList from './pages/CanyonList';
 import Login from './pages/LoginAuth0';
+import EditRecordPage from './pages/EditRecordPage';
 
 
 const root = ReactDOM.createRoot(
@@ -22,6 +23,7 @@ root.render(
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Home />} />
+          <Route path="/record/:id" element={<EditRecordPage />} />
           <Route path="/record" element={<RecordPage />} />
           <Route path="/gear" element={<Gear />} />
           <Route path="/canyons" element={<CanyonList />} />

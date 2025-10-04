@@ -11,7 +11,10 @@ declare global {
 }
 
 const config: sql.config = {
- 
+        "pool": {
+            "max": 10,
+            "min": 0,
+        },
         "server": process.env.SQL_SERVER as string,
         "authentication": {
             "type": "default",

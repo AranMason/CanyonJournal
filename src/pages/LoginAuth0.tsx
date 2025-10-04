@@ -35,7 +35,7 @@ const Login: React.FC = () => {
               window.location.href = '/api/login';
             }}
           >
-            Log in
+            Get Started
           </Button>
         </CardContent>
       </Card>
