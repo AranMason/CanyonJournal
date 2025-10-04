@@ -65,7 +65,8 @@ const GearPage: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="Gear" isAuthRequired isLoading={isLoading}> 
-      <Box sx={{ mb: 4 }}>
+      Add and update your gear
+      <Box sx={{ mb: 4, mt: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Rope</Typography>
           <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>Add Rope</Button>

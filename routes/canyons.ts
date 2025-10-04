@@ -35,6 +35,30 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/verify', async (req, res) => {
+
+  // NOTE: This has to go before the :id route
+  if (await isAdmin(req) === false) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  try {
+    const pool = await getPool();
+
+    const result = await pool.request()
+      .query(`
+          SELECT c.*
+          FROM Canyons c
+          WHERE c.IsVerified = 0
+        `);
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch canyons' });
+  }
+});
+
 // GET /api/canyons/:id - return the specific canyons from SQL Server
 router.get('/:id', async (req, res) => {
   try {
@@ -60,29 +84,6 @@ router.get('/:id', async (req, res) => {
       const result = await pool.request().input('canyonId', req.params.id).query('SELECT * FROM Canyons WHERE Id = @canyonId');
       res.json(result.recordset[0]);
     }
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: 'Failed to fetch canyons' });
-  }
-});
-
-router.get('/verify', async (req, res) => {
-
-  if (await isAdmin(req) === false) {
-    return res.status(403).json({ error: 'Admin access required' });
-  }
-
-  try {
-    const pool = await getPool();
-
-    const result = await pool.request()
-      .query(`
-          SELECT c.*
-          FROM Canyons c
-          WHERE c.IsVerified = 0
-        `);
-    res.json(result.recordset);
-
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to fetch canyons' });
