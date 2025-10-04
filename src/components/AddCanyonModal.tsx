@@ -125,7 +125,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   required
                   fullWidth
                   type="number"
-                  inputProps={{ min: 1, max: 3 }}
+                  inputProps={{ min: 0, max: 5 }}
                   error={touched.commitmentRating && Boolean(errors.commitmentRating)}
                   helperText={touched.commitmentRating && errors.commitmentRating}
                 />
@@ -138,7 +138,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   required
                   fullWidth
                   type="number"
-                  inputProps={{ min: 1, max: 3 }}
+                  inputProps={{ min: 0, max: 5 }}
                   error={touched.starRating && Boolean(errors.starRating)}
                   helperText={touched.starRating && errors.starRating}
                 />
