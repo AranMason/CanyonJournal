@@ -5,7 +5,8 @@ export enum Unit {
 export interface User {
   first_name: string;
   picture_url?: string;
-  id: Number
+  id: Number,
+  isAdmin: boolean;
 }
 export interface GearItem {
   Id: number;

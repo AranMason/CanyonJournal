@@ -19,7 +19,8 @@ router.get('/user', async (req: Request, res: Response) => {
     id: user.Id,
     first_name: user.FirstName,
     picture_url: user.ProfilePicture,
-    isloggedin: req.isAuthenticated()
+    isloggedin: req.isAuthenticated(),
+    isAdmin: user.IsAdmin || false
   });
 });
 

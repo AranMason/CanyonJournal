@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
-import { getUserIdByRequest } from './helpers/sql.helper';
+import { getUserIdByRequest } from './helpers/user.helper';
 
 const recordRouter: Router = express.Router();
 

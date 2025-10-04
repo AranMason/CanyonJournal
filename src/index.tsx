@@ -11,6 +11,7 @@ import Gear from './pages/Gear';
 import CanyonList from './pages/CanyonList';
 import Login from './pages/LoginAuth0';
 import EditRecordPage from './pages/EditRecordPage';
+import AdminPage from './pages/AdminPage';
 
 
 const root = ReactDOM.createRoot(
@@ -27,6 +28,7 @@ root.render(
           <Route path="/record" element={<RecordPage />} />
           <Route path="/gear" element={<Gear />} />
           <Route path="/canyons" element={<CanyonList />} />
+          <Route path="/admin" element={<AdminPage />} />
           {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
         </Routes>
       </BrowserRouter>

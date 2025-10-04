@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import RopeIcon from '@mui/icons-material/Build'; // Placeholder for rope/gear icon
+import RopeIcon from '@mui/icons-material/Build';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const Sidebar: React.FC = () => {
@@ -64,6 +65,11 @@ const Sidebar: React.FC = () => {
             onClick={() => navigate('/gear')}
             disabled={!user}
           />
+          {user && user.isAdmin && <SidebarItem
+            label="Admin"
+            icon={<AdminPanelSettingsIcon />}
+            onClick={() => navigate('/admin')}
+          />}
         </List>
       </Box>
       {user && (

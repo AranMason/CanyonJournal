@@ -67,7 +67,7 @@ passport.deserializeUser(async (user: any, done) => {
     const pool = await getPool();
     const result = await pool.request()
       .input('guid', sql.NVarChar(255), email)
-      .query('SELECT Id, Guid, FirstName, ProfilePicture FROM Users WHERE Guid = @guid');
+      .query('SELECT Id, Guid, FirstName, ProfilePicture, IsAdmin FROM Users WHERE Guid = @guid');
     if (result.recordset.length === 0) return done(null, user);
     // Attach DB user info to session user
     const dbUser = result.recordset[0];

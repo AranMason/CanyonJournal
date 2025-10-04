@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { Canyon } from '../types/Canyon';
@@ -34,11 +34,11 @@ const CanyonList: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
-      <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
+      {/* <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant="contained" color="primary" onClick={() => setAddOpen(true)}>
           Add Canyon
         </Button>
-      </Box>
+      </Box> */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

@@ -1,6 +1,6 @@
 import { Router, Response, Request } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
-import { getUserIdByRequest } from './helpers/sql.helper';
+import { getUserIdByRequest } from './helpers/user.helper';
 
 const router = Router();
 

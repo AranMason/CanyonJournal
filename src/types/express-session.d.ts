@@ -21,6 +21,7 @@ type DbUser = {
   Guid: string;
   FirstName: string;
   ProfilePicture: string | null;
+  IsAdmin?: boolean;
 };  
 
 export {};

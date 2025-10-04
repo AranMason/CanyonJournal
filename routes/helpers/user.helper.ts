@@ -10,3 +10,7 @@ export async function getUserIdByRequest(req: Request): Promise<number | undefin
 
     return 0;
 }
+
+export async function isAdmin(req: Request): Promise<boolean> {
+    return req.user?.dbUser?.IsAdmin || false
+}

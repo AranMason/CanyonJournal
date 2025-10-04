@@ -1,37 +1,45 @@
 import React from 'react';
-import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Box, Link } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
+import { Canyon } from '../types/Canyon';
 
 interface AddCanyonModalProps {
+  canyon: Canyon | null;
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 }
 
-const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ open, onClose, onSuccess }) => {
+const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, onSuccess }) => {
+
+  const initialValues ={
+            id: canyon?.Id || undefined,
+            name: canyon?.Name || '',
+            url: canyon?.Url || '',
+            aquaticRating: canyon?.AquaticRating || undefined,
+            verticalRating: canyon?.VerticalRating || undefined,
+            starRating: canyon?.StarRating || undefined,
+            commitmentRating: canyon?.CommitmentRating || undefined,
+          }
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <Alert severity="info">Adding a Canyon adds it for everyone. Please use this power responsibly. 
+        If a Canyon is unrated, please just record it as V1 A1 for now</Alert>
       <DialogTitle>Add New Canyon</DialogTitle>
       <DialogContent>
         <Formik
-          initialValues={{
-            name: '',
-            url: '',
-            aquaticRating: undefined,
-            verticalRating: undefined,
-            starRating: undefined,
-            commitmentRating: undefined,
-          }}
+          initialValues={initialValues}
           validationSchema={Yup.object({
             name: Yup.string().required('Name is required'),
             url: Yup.string().url('Must be a valid URL').nullable(),
             aquaticRating: Yup.number().min(1, 'Min 1').max(7, 'Max 7').required('Aquatic rating is required'),
             verticalRating: Yup.number().min(1, 'Min 1').max(7, 'Max 7').required('Vertical rating is required'),
-            starRating: Yup.number().min(1, 'Min 1').max(3, 'Max 3').required('Star rating is required'),
-            commitmentRating: Yup.number().min(1, 'Min 1').max(3, 'Max 3').required('Commitment rating is required'),
+            starRating: Yup.number().min(0, 'Min 0').max(5, 'Max 5').required('Star rating is required'),
+            commitmentRating: Yup.number().min(0, 'Min 0').max(5, 'Max 5').required('Commitment rating is required'),
           })}
           onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
             setStatus(undefined);
@@ -73,7 +81,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ open, onClose, onSucces
                   helperText={touched.name && errors.name}
                 />
                 <TextField
-                  label="URL"
+                  label="URL (CanyonLog or similar)"
                   name="url"
                   value={values.url}
                   onChange={handleChange}
@@ -82,20 +90,8 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ open, onClose, onSucces
                   error={touched.url && Boolean(errors.url)}
                   helperText={touched.url && errors.url}
                 />
+                {values.url && <Box sx={{ mb: 2 }}><iframe title="CanyonLog" src={values.url} width="100%"></iframe></Box>}
                 <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} />
-                <TextField
-                  label="Aquatic Rating"
-                  name="aquaticRating"
-                  value={values.aquaticRating}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  required
-                  fullWidth
-                  type="number"
-                  inputProps={{ min: 1, max: 7 }}
-                  error={touched.aquaticRating && Boolean(errors.aquaticRating)}
-                  helperText={touched.aquaticRating && errors.aquaticRating}
-                />
                 <TextField
                   label="Vertical Rating"
                   name="verticalRating"
@@ -108,6 +104,19 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ open, onClose, onSucces
                   inputProps={{ min: 1, max: 7 }}
                   error={touched.verticalRating && Boolean(errors.verticalRating)}
                   helperText={touched.verticalRating && errors.verticalRating}
+                />
+                <TextField
+                  label="Aquatic Rating"
+                  name="aquaticRating"
+                  value={values.aquaticRating}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  required
+                  fullWidth
+                  type="number"
+                  inputProps={{ min: 1, max: 7 }}
+                  error={touched.aquaticRating && Boolean(errors.aquaticRating)}
+                  helperText={touched.aquaticRating && errors.aquaticRating}
                 />
                 <TextField
                   label="Commitment Rating"

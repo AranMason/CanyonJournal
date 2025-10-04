@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from './middleware/sqlserver';
-import { getUserIdByRequest } from './helpers/sql.helper';
+import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
+import { } from '../src/types/express-session';
 
 const router = express.Router();
 
@@ -19,15 +20,40 @@ router.get('/', async (req, res) => {
             MAX(cr.Date) AS LastDescentDate
           FROM Canyons c
           LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating
-          ORDER BY c.Name
+          WHERE c.IsVerified = 1
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified
+          ORDER BY Descents DESC, c.Name
         `);
       res.json(result.recordset);
     } else {
-      const result = await pool.request().query('SELECT * FROM Canyons');
+      const result = await pool.request().query('SELECT * FROM Canyons WHERE c.IsVerified = 1');
       res.json(result.recordset);
     }
   } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch canyons' });
+  }
+});
+
+router.get('/verify', async (req, res) => {
+
+  if (await isAdmin(req) === false) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  try {
+    const pool = await getPool();
+
+    const result = await pool.request()
+      .query(`
+          SELECT c.*
+          FROM Canyons c
+          WHERE c.IsVerified = 0
+        `);
+    res.json(result.recordset);
+
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ error: 'Failed to fetch canyons' });
   }
 });
@@ -38,20 +64,45 @@ router.post('/', async (req, res) => {
   if (!name || aquaticRating == null || verticalRating == null || starRating == null || commitmentRating == null) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+
+
+
   try {
+
     const pool = await getPool();
-    const result = await pool.request()
+    const request = await pool.request()
       .input('name', sql.NVarChar(200), name)
       .input('url', sql.NVarChar(255), url || '')
       .input('aquaticRating', sql.Int, aquaticRating)
       .input('verticalRating', sql.Int, verticalRating)
       .input('starRating', sql.Int, starRating)
       .input('commitmentRating', sql.Int, commitmentRating)
-      .query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating)
+
+    if (await isAdmin(req) && req.body.id > 0) {
+      request.input('id', sql.Int, req.body.id);
+      const result = await request.query(`UPDATE Canyons SET 
+              Name = @name,
+              Url = @url,
+              AquaticRating = @aquaticRating,
+              VerticalRating = @verticalRating,
+              StarRating = @starRating,
+              CommitmentRating = @commitmentRating,
+              IsVerified = 1
+              WHERE Id = @id`);
+      return res.status(201).json(req.body);
+    }
+
+    else {
+
+      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating)
               OUTPUT INSERTED.*
               VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating)`);
-    res.status(201).json(result.recordset[0]);
+      return res.status(201).json(result.recordset[0]);
+    }
+
+
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: 'Failed to add canyon' });
   }
 });
