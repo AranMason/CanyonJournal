@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         `);
       res.json(result.recordset);
     } else {
-      const result = await pool.request().query('SELECT * FROM Canyons WHERE IsVerified = 1');
+      const result = await pool.request().query('SELECT * FROM Canyons WHERE IsVerified = 1 ORDER BY Name');
       res.json(result.recordset);
     }
   } catch (err) {

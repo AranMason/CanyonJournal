@@ -88,7 +88,6 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   error={touched.url && Boolean(errors.url)}
                   helperText={touched.url && errors.url}
                 />
-                {values.url && <Box sx={{ mb: 2 }}><iframe title="CanyonLog" src={values.url} width="100%"></iframe></Box>}
                 <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} />
                 <TextField
                   label="Vertical Rating"
