@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Alert, Box, Link } from '@mui/material';
+import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Box } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -27,8 +27,6 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-      <Alert severity="info">Adding a Canyon adds it for everyone. Please use this power responsibly. 
-        If a Canyon is unrated, please just record it as V1 A1 for now</Alert>
       <DialogTitle>Add New Canyon</DialogTitle>
       <DialogContent>
         <Formik

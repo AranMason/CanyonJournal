@@ -9,7 +9,7 @@ import RowActions from '../components/RowActions';
 import { apiFetch } from '../utils/api';
 import { GearItem, RopeItem } from '../types/types';
 
-const Gear: React.FC = () => {
+const GearPage: React.FC = () => {
   const navigate = useNavigate();
   const [ropeModalOpen, setRopeModalOpen] = React.useState(false);
   const [gearModalOpen, setGearModalOpen] = React.useState(false);
@@ -190,4 +190,4 @@ const Gear: React.FC = () => {
   );
 };
 
-export default Gear;
+export default GearPage;

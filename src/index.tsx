@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import DashboardPage from './pages/DashboardPage';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
 import App from './App';
-import Gear from './pages/Gear';
-import CanyonList from './pages/CanyonList';
-import Login from './pages/LoginAuth0';
+import GearPage from './pages/GearPage';
+import CanyonPage from './pages/CanyonPage';
+import HomePage from './pages/HomePage';
 import EditRecordPage from './pages/EditRecordPage';
 import AdminPage from './pages/AdminPage';
 
@@ -22,12 +22,12 @@ root.render(
     <App>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/record/:id" element={<EditRecordPage />} />
           <Route path="/record" element={<RecordPage />} />
-          <Route path="/gear" element={<Gear />} />
-          <Route path="/canyons" element={<CanyonList />} />
+          <Route path="/gear" element={<GearPage />} />
+          <Route path="/canyons" element={<CanyonPage />} />
           <Route path="/admin" element={<AdminPage />} />
           {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
         </Routes>

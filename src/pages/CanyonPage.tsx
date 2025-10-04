@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { Canyon } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
-import AddCanyonModal from '../components/AddCanyonModal';
 
 interface CanyonWithDescents extends Canyon {
   Descents: number;
@@ -16,7 +15,6 @@ const CanyonList: React.FC = () => {
   const { user, loading } = useUser();
   const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [addOpen, setAddOpen] = useState(false);
 
   const refresh = () => {
     setIsLoading(true);
@@ -34,11 +32,6 @@ const CanyonList: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
-      {/* <Box sx={{ mb: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant="contained" color="primary" onClick={() => setAddOpen(true)}>
-          Add Canyon
-        </Button>
-      </Box> */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -47,6 +40,7 @@ const CanyonList: React.FC = () => {
               <TableCell>Rating</TableCell>
               <TableCell align="center">Your Descents</TableCell>
               <TableCell align="center">Last Descent</TableCell>
+              <TableCell align="center">Canyon Log</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,12 +65,16 @@ const CanyonList: React.FC = () => {
                     </Box>
                   ) : '-'}
                 </TableCell>
+                <TableCell align="center">
+                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" startIcon={<img height="16px" src="https://i0.wp.com/canyonlog.org/wp-content/uploads/2025/01/logo-.png?fit=192%2C192&ssl=1"></img>} >
+                    Visit
+                  </Button> : '-'}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <AddCanyonModal open={addOpen} onClose={() => setAddOpen(false)} onSuccess={refresh} />
     </PageTemplate>
   );
 };

@@ -28,7 +28,7 @@ const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
 };
 
 
-const Home: React.FC = () => {
+const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
@@ -89,7 +89,7 @@ const Home: React.FC = () => {
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
-                  <TableCell>Canyon Name</TableCell>
+                  <TableCell>Canyon</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
                   <TableCell>Comments</TableCell>
@@ -114,13 +114,9 @@ const Home: React.FC = () => {
                         ) : '-'}
                       </TableCell>
                       <TableCell>
-                        {rec.Url ? (
-                          <a href={rec.Url} target="_blank" rel="noopener noreferrer">{rec.Name}</a>
-                        ) : (
-                          rec.Name
-                        )}
+                        {rec.Name}
                       </TableCell>
-                      <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
+                      <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
                       <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
@@ -140,4 +136,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default DashboardPage;

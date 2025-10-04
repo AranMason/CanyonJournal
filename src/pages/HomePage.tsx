@@ -3,7 +3,7 @@ import { Box, Card, CardContent, Typography, Divider, Button, Alert } from '@mui
 import { useUser } from '../App';
 import { useNavigate } from 'react-router-dom';
 
-const Login: React.FC = () => {
+const HomePage: React.FC = () => {
   const { user, loading } = useUser();
   const navigate = useNavigate();
 
@@ -43,4 +43,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default HomePage;
