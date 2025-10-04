@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import { Canyon } from '../types/Canyon';
 import PageTemplate from './PageTemplate';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Link } from '@mui/material';
-import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
-import { useUser } from '../App';
-import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
+import CanyonRating from '../components/CanyonRating';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import RowActions from '../components/RowActions';
-import { useNavigate } from 'react-router-dom';
 
 // Column size definitions
 const COLUMN_WIDTHS = {
@@ -27,63 +27,32 @@ const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
   [WaterLevel.VeryHigh]: 'Very High'
 };
 
-const DashboardPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { user, loading } = useUser();
-  const [records, setRecords] = useState<CanyonRecord[]>([]);
-  const [error, setError] = useState<string | null>(null);
+const CanyonOverviewPage: React.FC = () => {
+    const { id } = useParams<{id?: string}>();
+    const canyonId = id ? parseInt(id, 10) : undefined;
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-      try {
-        const data = await apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10');
-        setRecords(data.records || []);
-      } catch (err: any) {
-        setError(err.message || 'Error fetching records');
-      }
-    };
-    if (user && !loading) {
-      fetchRecords();
-    } else {
-      setRecords([]);
-    }
-  }, [user, loading]);
+    const navigate = useNavigate();
 
-  return (
-    <PageTemplate pageTitle="Canyon Journal" isLoading={loading}>
-      {(!user && !loading) ? (
-        <Typography>Please log in to view your canyon records.</Typography>
-      ) : loading ? (
-        <Typography>Loading records...</Typography>
-      ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : (
-        <>
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-            <StatCard title="Total Descents">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {records.length}
-              </Typography>
-            </StatCard>
-            <StatCard title="Unique Canyons Descended">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {Array.from(new Set(records.map(r => r.Name))).length}
-              </Typography>
-            </StatCard>
-            <StatCard title="Last 6 Months">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {records.filter(r => {
-                  const sixMonthsAgo = new Date();
-                  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-                  return new Date(r.Date) >= sixMonthsAgo;
-                }).length}
-              </Typography>
-            </StatCard>
-          </Box>
-          <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
-            Recent Descents
-          </Typography>
-          <TableContainer component={Paper}>
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [canyonData, setCanyonData] = useState<Canyon>();
+    const [canyonRecords, setCanyonVisitData] = useState<CanyonRecord[]>([]);
+
+    useEffect(() => {
+        if(!isLoading) {
+            setIsLoading(true);
+            const fetchMeta = apiFetch<Canyon>(`/api/canyons/${canyonId}`).then(setCanyonData);
+            const fetchUser = apiFetch<{records: CanyonRecord[]}>(`/api/record?canyon=${canyonId}`).then((res) => setCanyonVisitData(res.records));
+
+            Promise.all([fetchMeta, fetchUser]).finally(() => setIsLoading(false))
+        }
+    }, [canyonId])
+
+    return <PageTemplate pageTitle={canyonData?.Name ?? 'Canyon'} isLoading={isLoading} isAuthRequired>
+        <span>
+            Grade <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
+        </span>
+        
+        <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
@@ -96,14 +65,14 @@ const DashboardPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {records.length === 0 ? (
+                {canyonRecords.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={4} align="center">
                       No canyon records found.
                     </TableCell>
                   </TableRow>
                 ) : (
-                  records.map((rec, idx) => (
+                  canyonRecords.map((rec, idx) => (
                     <TableRow key={idx}>
                       <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>
                         {rec.Date ? (
@@ -113,7 +82,7 @@ const DashboardPage: React.FC = () => {
                         ) : '-'}
                       </TableCell>
                       <TableCell>
-                        {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)}>{rec.Name}</Link> : rec.Name}
+                        {rec.Name}
                       </TableCell>
                       <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
@@ -129,10 +98,7 @@ const DashboardPage: React.FC = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        </>
-      )}
-    </PageTemplate>
-  );
-};
+    </PageTemplate>;
+}
 
-export default DashboardPage;
+export default CanyonOverviewPage;

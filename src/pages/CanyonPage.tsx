@@ -5,6 +5,7 @@ import { apiFetch } from '../utils/api';
 import { Canyon } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
+import { useNavigate } from 'react-router-dom';
 
 interface CanyonWithDescents extends Canyon {
   Descents: number;
@@ -12,6 +13,7 @@ interface CanyonWithDescents extends Canyon {
 }
 
 const CanyonList: React.FC = () => {
+  const navigate = useNavigate();
   const { user, loading } = useUser();
   const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -47,7 +49,7 @@ const CanyonList: React.FC = () => {
             {canyons.map(canyon => (
               <TableRow key={canyon.Id}>
                 <TableCell>
-                  <Link href={canyon.Url} target="_blank" rel="noopener noreferrer">{canyon.Name}</Link>
+                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)}>{canyon.Name}</Link>
                 </TableCell>
                 <TableCell>
                   <CanyonRating
@@ -66,7 +68,7 @@ const CanyonList: React.FC = () => {
                   ) : '-'}
                 </TableCell>
                 <TableCell align="center">
-                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" startIcon={<img height="16px" src="https://i0.wp.com/canyonlog.org/wp-content/uploads/2025/01/logo-.png?fit=192%2C192&ssl=1"></img>} >
+                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" startIcon={<img height="16px" alt="Canyon Log" src="https://i0.wp.com/canyonlog.org/wp-content/uploads/2025/01/logo-.png?fit=192%2C192&ssl=1"></img>} >
                     Visit
                   </Button> : '-'}
                 </TableCell>

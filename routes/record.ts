@@ -147,14 +147,23 @@ recordRouter.get('/', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const max = req.query.max ? Number(req.query.max) : undefined;
-    let query = 'SELECT * FROM CanyonRecords WHERE UserId = @userId ORDER BY Timestamp DESC';
+    const canyonId = req.query.canyon ? Number(req.query.canyon) : undefined;
+    const request = await pool.request()
+      .input('userId', sql.Int, await getUserIdByRequest(req))
+    let query = `SELECT * FROM CanyonRecords WHERE UserId = @userId`;
+
+    if(canyonId && !isNaN(canyonId)) {
+      query += ' AND CanyonId=@CanyonId';
+      request.input('canyonId', canyonId);
+    }
+
+    query += ' ORDER BY Date DESC'
+
     if (max && !isNaN(max)) {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
     }
-    const userId = await getUserIdByRequest(req);
-    const result = await pool.request()
-      .input('userId', sql.Int, userId)
-      .query(query);
+
+    const result = await request.query(query);
     res.json({ records: result.recordset });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch records' });

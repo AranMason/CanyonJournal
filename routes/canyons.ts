@@ -35,6 +35,37 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/canyons/:id - return the specific canyons from SQL Server
+router.get('/:id', async (req, res) => {
+  try {
+    const pool = await getPool();
+    // If withDescents=1, join with CanyonRecords for user-specific count
+    const userId = await getUserIdByRequest(req);
+    if (req.query.withDescents === '1' && userId) {
+      const result = await pool.request()
+        .input('userId', sql.Int, userId)
+        .input('canyonId', req.params.id)
+        .query(`
+          SELECT c.*, 
+            COUNT(cr.Id) AS Descents,
+            MAX(cr.Date) AS LastDescentDate
+          FROM Canyons c
+          LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+          WHERE c.Id = @canyonId
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified
+          ORDER BY Descents DESC, c.Name
+        `);
+      res.json(result.recordset[0]);
+    } else {
+      const result = await pool.request().input('canyonId', req.params.id).query('SELECT * FROM Canyons WHERE Id = @canyonId');
+      res.json(result.recordset[0]);
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch canyons' });
+  }
+});
+
 router.get('/verify', async (req, res) => {
 
   if (await isAdmin(req) === false) {

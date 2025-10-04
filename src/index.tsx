@@ -12,6 +12,7 @@ import CanyonPage from './pages/CanyonPage';
 import HomePage from './pages/HomePage';
 import EditRecordPage from './pages/EditRecordPage';
 import AdminPage from './pages/AdminPage';
+import CanyonOverviewPage from './pages/CanyonOverviewPage';
 
 
 const root = ReactDOM.createRoot(
@@ -27,6 +28,7 @@ root.render(
           <Route path="/record/:id" element={<EditRecordPage />} />
           <Route path="/record" element={<RecordPage />} />
           <Route path="/gear" element={<GearPage />} />
+          <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
           <Route path="/canyons" element={<CanyonPage />} />
           <Route path="/admin" element={<AdminPage />} />
           {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
