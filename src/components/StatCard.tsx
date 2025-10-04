@@ -1,18 +1,36 @@
-import React from 'react';
-import { Paper, Typography, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Paper, Typography, Box, CircularProgress } from '@mui/material';
 
 interface StatCardProps {
   title: string;
-  children: React.ReactNode;
+  getData: () => any,
+  children?: (data?: any) => React.ReactNode
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, children }) => (
-  <Box sx={{ flex: 1 }}>
-    <Typography variant="subtitle1" sx={{ mb: 1 }}>{title}</Typography>
-    <Paper elevation={3} sx={{ p: 3, minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      {children}
-    </Paper>
+const StatCard: React.FC<StatCardProps> = ({ title, getData, children }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [data, setData] = useState<any>(null);
+
+  function refresh() {
+setIsLoading(true);
+    getData().then(setData).finally(() => setIsLoading(false))
+  }
+
+  useEffect(() => {
+    if(isLoading) return;
+
+    refresh();
+  }, [getData])
+
+
+  return <Box sx={{ flex: 1 }}>
+    
+      <Typography variant="subtitle1" sx={{ mb: 1 }}>{title}</Typography>
+      <Paper elevation={3} sx={{ p: 3, minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {isLoading ? <CircularProgress /> : (children && children(data))}
+      </Paper>
+
   </Box>
-);
+};
 
 export default StatCard;

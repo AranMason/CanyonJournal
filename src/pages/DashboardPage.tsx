@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Link } from '@mui/material';
 import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
+import { DashboardWidget } from '../types/Widgets';
 import { useUser } from '../App';
 import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
@@ -33,6 +34,18 @@ const DashboardPage: React.FC = () => {
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  const loadTotalDescents = async (): Promise<number> => {
+    return await apiFetch<number>(`/api/dashboard/${DashboardWidget.TotalDescents}`);
+  } 
+
+  const loadUniqueDescents = async (): Promise<number> => {
+    return await apiFetch<number>(`/api/dashboard/${DashboardWidget.UniqueDescents}`);
+  } 
+
+  const loadRecentDescents = async (): Promise<number> => {
+    return await apiFetch<number>(`/api/dashboard/${DashboardWidget.RecentDescents}`);
+  } 
+
   useEffect(() => {
     const fetchRecords = async () => {
       try {
@@ -60,24 +73,20 @@ const DashboardPage: React.FC = () => {
       ) : (
         <>
           <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-            <StatCard title="Total Descents">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {records.length}
-              </Typography>
+            <StatCard title="Total Descents" getData={loadTotalDescents}>
+              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {data}
+              </Typography>}
             </StatCard>
-            <StatCard title="Unique Canyons Descended">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {Array.from(new Set(records.map(r => r.Name))).length}
-              </Typography>
+            <StatCard title="Unique Canyons Descended" getData={loadUniqueDescents}>
+              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {data}
+              </Typography>}
             </StatCard>
-            <StatCard title="Last 6 Months">
-              <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {records.filter(r => {
-                  const sixMonthsAgo = new Date();
-                  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-                  return new Date(r.Date) >= sixMonthsAgo;
-                }).length}
-              </Typography>
+            <StatCard title="Last 6 Months" getData={loadRecentDescents}>
+              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+                {data}
+              </Typography>}
             </StatCard>
           </Box>
           <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
