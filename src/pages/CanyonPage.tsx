@@ -49,7 +49,7 @@ const CanyonList: React.FC = () => {
             {canyons.map(canyon => (
               <TableRow key={canyon.Id}>
                 <TableCell>
-                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)}>{canyon.Name}</Link>
+                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{cursor: 'pointer'}}>{canyon.Name}</Link>
                 </TableCell>
                 <TableCell>
                   <CanyonRating

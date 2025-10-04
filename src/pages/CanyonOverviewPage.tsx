@@ -5,7 +5,7 @@ import { apiFetch } from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import RowActions from '../components/RowActions';
 
 // Column size definitions
@@ -48,16 +48,27 @@ const CanyonOverviewPage: React.FC = () => {
     }, [canyonId])
 
     return <PageTemplate pageTitle={canyonData?.Name ?? 'Canyon'} isLoading={isLoading} isAuthRequired>
-        <span>
-            Grade <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
-        </span>
-        
+        <Typography variant="h5">
+        <Box display="flex" alignContent="center" gap={2} py={2} justifyContent="space-between">
+    
+            <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
+ 
+
+        <div>
+            {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer" startIcon={<img height="16px" alt="Canyon Log" src="https://i0.wp.com/canyonlog.org/wp-content/uploads/2025/01/logo-.png?fit=192%2C192&ssl=1"></img>} >
+                    Visit
+                  </Button> : '-'}
+        </div>
+        </Box>
+        </Typography>
+        <Typography variant='h4' my={2}>
+            {`Your Trips (${canyonRecords.length})`}
+        </Typography>
         <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
                   <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
-                  <TableCell>Canyon</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
                   <TableCell>Comments</TableCell>
@@ -81,13 +92,10 @@ const CanyonOverviewPage: React.FC = () => {
                           </Box>
                         ) : '-'}
                       </TableCell>
-                      <TableCell>
-                        {rec.Name}
-                      </TableCell>
-                      <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
-                      <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
+                      <TableCell align="center" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                         <RowActions
                           onEdit={() => navigate(`/record/${rec.Id} `)}
                         />

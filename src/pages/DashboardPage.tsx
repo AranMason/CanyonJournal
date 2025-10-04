@@ -104,7 +104,7 @@ const DashboardPage: React.FC = () => {
                   </TableRow>
                 ) : (
                   records.map((rec, idx) => (
-                    <TableRow key={idx}>
+                    <TableRow key={idx} >
                       <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>
                         {rec.Date ? (
                           <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
@@ -113,7 +113,7 @@ const DashboardPage: React.FC = () => {
                         ) : '-'}
                       </TableCell>
                       <TableCell>
-                        {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)}>{rec.Name}</Link> : rec.Name}
+                        {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{cursor: 'pointer'}}>{rec.Name}</Link> : rec.Name}
                       </TableCell>
                       <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
                       <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
