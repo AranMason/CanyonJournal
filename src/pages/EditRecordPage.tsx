@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { CanyonRecord } from "../types/CanyonRecord";
+import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
 import RecordEditor from "../components/RecordEditor";
 import PageTemplate from "./PageTemplate";
@@ -28,11 +28,11 @@ const EditRecordPage: React.FC = () => {
                     Date: data.Date.split('T')[0], 
                     Url: data.Url, 
                     TeamSize: data.TeamSize, 
-                    Comments: data.Comments, 
+                    Comments: data.Comments || '', 
                     RopeIds: data.RopeIds, 
                     GearIds: data.GearIds, 
                     CanyonId: data.CanyonId, 
-                    WaterLevel: data.WaterLevel 
+                    WaterLevel: data.WaterLevel || WaterLevel.Unknown 
                 });
             })
             .finally(() => setRecordLoading(false));

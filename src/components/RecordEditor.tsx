@@ -25,6 +25,7 @@ type OtherOption = {
 }
 
 const WaterLevelDisplay: { [key in WaterLevel]: string } = {
+    [WaterLevel.Unknown]: 'Unknown',
     [WaterLevel.VeryLow]: 'Very Low',
     [WaterLevel.Low]: 'Low',   
     [WaterLevel.Medium]: 'Medium',
@@ -51,7 +52,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     }, []);
     
       
-    const initialFormValues: CanyonRecord = initialValues || { Name: '', Date: new Date().toISOString().split('T')[0], Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined, WaterLevel: undefined }
+    const initialFormValues: CanyonRecord = initialValues || { Name: '', Date: new Date().toISOString().split('T')[0], Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined, WaterLevel: WaterLevel.Unknown }
 
     return <>
         <Box maxWidth={400} mx="auto" mt={4}>
@@ -70,10 +71,10 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             otherwise: schema => schema,
                         }),
                         TeamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
-                        Comments: Yup.string(),
-                        WaterLevel: Yup.number().max(5, 'Invalid water level').min(1, 'Invalid water level').nullable()
+                        Comments: Yup.string().nullable(),
+                        WaterLevel: Yup.number().min(0, 'Invalid water level').max(5, 'Invalid water level')
                     })}
-                    onSubmit={async (values, { resetForm, setSubmitting }) => {
+                    onSubmit={async (values, { setSubmitting }) => {
                         try {
                             await apiFetch('/api/record', {
                                 method: isEdit ? 'PATCH' : 'POST',
@@ -85,7 +86,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     CanyonId: values.CanyonId || null,
                                 }),
                             });
-                            resetForm();
                             setSnackbarOpen(true);
                             navigate('/');
                         } catch (err: any) {
@@ -200,8 +200,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     value={values.WaterLevel}
                                     onChange={e => setFieldValue('WaterLevel', e.target.value as number)}
                                     fullWidth
+                                    error={touched.WaterLevel && Boolean(errors.WaterLevel)}
                                 >
-                                    {[WaterLevel.VeryLow, WaterLevel.Low, WaterLevel.Medium, WaterLevel.High, WaterLevel.VeryHigh].map((level) => (
+                                    {[WaterLevel.Unknown, WaterLevel.VeryLow, WaterLevel.Low, WaterLevel.Medium, WaterLevel.High, WaterLevel.VeryHigh].map((level) => (
                                         <MenuItem key={level} value={level}>{WaterLevelDisplay[level]}</MenuItem>
                                     ))}
                                 </Select></FormControl>

@@ -13,6 +13,7 @@ export interface CanyonRecord {
 }
 
 export enum WaterLevel {
+    Unknown = 0,
     VeryLow = 1,
     Low = 2,
     Medium = 3,
