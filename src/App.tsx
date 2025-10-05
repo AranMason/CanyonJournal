@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext, useContext, ReactNode } from 'react';
 import type { User } from './types/types';
 import { registerSetUser } from './utils/user';
+import Loader from './components/Loader';
 
 export const UserContext = createContext<{ user: User | null; setUser: (u: User | null) => void; loading: boolean }>({ user: null, setUser: () => {}, loading: true });
 export const useUser = () => useContext(UserContext);
@@ -35,7 +36,9 @@ const App: React.FC<AppProviderProps> = ({ children }) => {
 
   return (
     <UserContext.Provider value={{ user, setUser, loading }}>
-      {children}
+      <Loader size="screen" isLoading={loading}>
+        {children}
+      </Loader>
     </UserContext.Provider>
   );
 };
