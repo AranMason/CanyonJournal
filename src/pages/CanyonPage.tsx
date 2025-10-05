@@ -1,11 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button, Select, MenuItem, InputLabel, Typography } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { Canyon } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
+
+const minDateString: string = '1900-01-01' 
+
+enum SortOptionEnum {
+  TotalDescents = 1,
+  Name = 2,
+  LastDescent = 3
+}
+
+const SortParams: { [key in SortOptionEnum]: {
+  option: key,
+  displayName: string,
+  method: (c: CanyonWithDescents[]) => CanyonWithDescents[],
+} } = {
+  [SortOptionEnum.TotalDescents]: {
+    option: SortOptionEnum.TotalDescents,
+    displayName: 'Descents',
+    method: c => c.sort((a, b) => b.Descents - a.Descents)
+  },
+  [SortOptionEnum.Name]: {
+    option: SortOptionEnum.Name,
+    displayName: 'Name',
+    method: c => c.sort((a, b) => a.Name.localeCompare(b.Name))
+  },
+  [SortOptionEnum.LastDescent]: {
+    option: SortOptionEnum.LastDescent,
+    displayName: 'Last Descent',
+    method: c => c.sort((a, b) => {
+      // A little bit hacky, tbh we should probably parse the Date object first, so we are not doing a pile of repeat work
+      return Date.parse(b.LastDescentDate ?? minDateString) - Date.parse(a.LastDescentDate??minDateString)
+    })
+  }
+}
 
 interface CanyonWithDescents extends Canyon {
   Descents: number;
@@ -17,6 +50,7 @@ const CanyonList: React.FC = () => {
   const { user, loading } = useUser();
   const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [sort, setSort] = useState<SortOptionEnum>(SortOptionEnum.TotalDescents);
 
   const refresh = () => {
     setIsLoading(true);
@@ -31,9 +65,34 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
-
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
+      <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between">
+        <Typography component={"h2"} variant='h4'>
+          Your Canyons
+        </Typography>
+        <Box>
+          <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>
+            <InputLabel id="filter-sort-by" >Sort By</InputLabel>
+            <Select
+              size='small'
+              labelId="filter-sort-by"
+              label="Sort By"
+              value={sort}
+              onChange={e => {
+                const sortVal = e.target.value as SortOptionEnum;
+                setSort(sortVal)
+                setCanyons(SortParams[sortVal].method(canyons))
+              }}
+            >
+              {Object.values(SortParams).map(({ option, displayName }) => (
+                <MenuItem key={option} value={option}>{displayName}</MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -49,7 +108,7 @@ const CanyonList: React.FC = () => {
             {canyons.map(canyon => (
               <TableRow key={canyon.Id}>
                 <TableCell>
-                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{cursor: 'pointer'}}>{canyon.Name}</Link>
+                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{ cursor: 'pointer' }}>{canyon.Name}</Link>
                 </TableCell>
                 <TableCell>
                   <CanyonRating
