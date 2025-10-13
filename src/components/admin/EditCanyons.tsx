@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../../utils/api';
 import { Canyon } from '../../types/Canyon';
-import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Link, Icon } from '@mui/material';
+import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Link } from '@mui/material';
 import CanyonRating from '../CanyonRating';
 import AddCanyonModal from '../AddCanyonModal';
 import RowActions from '../RowActions';

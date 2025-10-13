@@ -95,10 +95,10 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   helperText={touched.url && errors.url}
                 />
                 <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  <InputLabel id="canyon-type">Canyon Type</InputLabel>
+                  <InputLabel id="canyon-region">Region</InputLabel>
                   <Select
-                    labelId="canyon-type"
-                    label="Canyon Type"
+                    labelId="canyon-region"
+                    label="Region"
                     value={values.canyonRegion}
                     onChange={e => setFieldValue('canyonRegion', e.target.value as number)}
                     fullWidth
@@ -110,10 +110,11 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   </Select>
                 </FormControl>
                 <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  <InputLabel id="canyon-region">Region</InputLabel>
+                  
+                  <InputLabel id="canyon-type">Canyon Type</InputLabel>
                   <Select
-                    labelId="canyon-region"
-                    label="Region"
+                    labelId="canyon-type"
+                    label="Canyon Type"
                     value={values.canyonType}
                     onChange={e => setFieldValue('canyonType', e.target.value as number)}
                     fullWidth
@@ -125,7 +126,10 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   </Select>
                 </FormControl>
                 <Divider />
-                <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
+                <Typography  my={2} align='center' variant='h6'>
+                    <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
+                </Typography >
+                
                 <FormControlLabel control={<Checkbox
                   checked={values.isUnrated}
                   name='isUnrated'
@@ -190,7 +194,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
               </Stack>
               <DialogActions sx={{ mt: 2 }}>
                 <Button onClick={onClose}>Cancel</Button>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>Add Canyon</Button>
+                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>Save</Button>
               </DialogActions>
             </Form>
           )}
