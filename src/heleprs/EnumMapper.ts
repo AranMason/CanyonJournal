@@ -5,7 +5,7 @@ const CanyonTypeDisplayName: {[key in CanyonTypeEnum]: string} = {
     [CanyonTypeEnum.Unknown]: "-",
     [CanyonTypeEnum.Sports]: "Sports",
     [CanyonTypeEnum.Adventure]: "Adventure",
-    [CanyonTypeEnum.GorgeWalk]: "Gorge Walk"
+    [CanyonTypeEnum.GorgeWalk]: "Gorge Scramble"
 }
 
 export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {
@@ -17,7 +17,8 @@ const CanyonRegionDisplayName: {[key in RegionType]: string} = {
     [RegionType.Scotland]: "Scotland",
     [RegionType.England]: "England",
     [RegionType.Wales]: "Wales",
-    [RegionType.NorthernIreland]: "Northern Ireland"
+    [RegionType.NorthernIreland]: "Northern Ireland",
+    [RegionType.IsleOfMan]: "Isle of Man"
 }
 
 export function GetRegionDisplayName(type: RegionType): string {
