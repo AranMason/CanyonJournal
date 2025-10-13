@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../../utils/api';
 import { Canyon } from '../../types/Canyon';
-import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Link } from '@mui/material';
+import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Link, Icon } from '@mui/material';
 import CanyonRating from '../CanyonRating';
 import AddCanyonModal from '../AddCanyonModal';
 import RowActions from '../RowActions';
+import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../../heleprs/EnumMapper';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 
 const EditCanyons: React.FC = () => {
 
@@ -33,7 +36,10 @@ const EditCanyons: React.FC = () => {
                 <TableRow>
                     <TableCell>Name</TableCell>
                     <TableCell>Rating</TableCell>
+                    <TableCell>Region</TableCell>
+                    <TableCell>Type</TableCell>
                     <TableCell>Edit</TableCell>
+                    <TableCell>Is Verified</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -48,10 +54,20 @@ const EditCanyons: React.FC = () => {
                                 verticalRating={canyon.VerticalRating}
                                 commitmentRating={canyon.CommitmentRating}
                                 starRating={canyon.StarRating}
+                                isUnrated={canyon.IsUnrated}
                             />
                         </TableCell>
                         <TableCell>
-                            <RowActions onEdit={() => setEditCanyon(canyon)} />
+                            {GetRegionDisplayName(canyon.Region)}
+                        </TableCell>
+                        <TableCell>
+                            {GetCanyonTypeDisplayName(canyon.CanyonType)}
+                        </TableCell>
+                        <TableCell>
+                            <RowActions onEdit={() => setEditCanyon(canyon)} /> 
+                        </TableCell>
+                        <TableCell style={{"display": "flex", "flexDirection": "row", alignContent: "center"}}>
+                            {canyon.IsVerified ? <CheckIcon color='success'/> : <CloseIcon color='error'/>}
                         </TableCell>
                     </TableRow>
                 ))}

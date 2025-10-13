@@ -1,10 +1,13 @@
 import React from 'react';
-import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Box } from '@mui/material';
+import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Divider, FormControl, InputLabel, Checkbox, FormControlLabel, Select, MenuItem } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
 import { Canyon } from '../types/Canyon';
+import RegionType, { RegionTypeList } from '../types/RegionEnum';
+import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
+import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
 
 interface AddCanyonModalProps {
   canyon: Canyon | null;
@@ -15,15 +18,18 @@ interface AddCanyonModalProps {
 
 const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, onSuccess }) => {
 
-  const initialValues ={
-            id: canyon?.Id || undefined,
-            name: canyon?.Name || '',
-            url: canyon?.Url || '',
-            aquaticRating: canyon?.AquaticRating || undefined,
-            verticalRating: canyon?.VerticalRating || undefined,
-            starRating: canyon?.StarRating || undefined,
-            commitmentRating: canyon?.CommitmentRating || undefined,
-          }
+  const initialValues = {
+    id: canyon?.Id || undefined,
+    name: canyon?.Name || '',
+    url: canyon?.Url || '',
+    aquaticRating: canyon?.AquaticRating || 1,
+    verticalRating: canyon?.VerticalRating || 1,
+    starRating: canyon?.StarRating || 0,
+    commitmentRating: canyon?.CommitmentRating || 0,
+    isUnrated: canyon?.IsUnrated || false,
+    canyonRegion: canyon?.Region || RegionType.Unknown,
+    canyonType: canyon?.CanyonType || CanyonTypeEnum.Unknown
+  }
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
@@ -64,7 +70,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
             }
           }}
         >
-          {({ values, errors, touched, handleChange, handleBlur, isSubmitting, status }) => (
+          {({ values, errors, touched, handleChange, handleBlur, setFieldValue, isSubmitting, status }) => (
             <Form>
               <Stack spacing={2} sx={{ mt: 1 }}>
                 <TextField
@@ -88,7 +94,45 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   error={touched.url && Boolean(errors.url)}
                   helperText={touched.url && errors.url}
                 />
-                <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} />
+                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+                  <InputLabel id="canyon-type">Canyon Type</InputLabel>
+                  <Select
+                    labelId="canyon-type"
+                    label="Canyon Type"
+                    value={values.canyonRegion}
+                    onChange={e => setFieldValue('canyonRegion', e.target.value as number)}
+                    fullWidth
+                    error={touched.canyonRegion && Boolean(errors.canyonRegion)}
+                  >
+                    {RegionTypeList.map((region) => (
+                      <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+                  <InputLabel id="canyon-region">Region</InputLabel>
+                  <Select
+                    labelId="canyon-region"
+                    label="Region"
+                    value={values.canyonType}
+                    onChange={e => setFieldValue('canyonType', e.target.value as number)}
+                    fullWidth
+                    error={touched.canyonType && Boolean(errors.canyonType)}
+                  >
+                    {CanyonTypeList.map((type) => (
+                      <MenuItem key={type} value={type}>{GetCanyonTypeDisplayName(type)}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Divider />
+                <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
+                <FormControlLabel control={<Checkbox
+                  checked={values.isUnrated}
+                  name='isUnrated'
+                  onChange={handleChange}
+                  inputProps={{ 'aria-label': 'controlled' }} />} label="Is Unrated">
+
+                </FormControlLabel>
                 <TextField
                   label="Vertical Rating"
                   name="verticalRating"
@@ -124,7 +168,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   required
                   fullWidth
                   type="number"
-                  inputProps={{ min: 0, max: 5 }}
+                  inputProps={{ min: 0, max: 6 }}
                   error={touched.commitmentRating && Boolean(errors.commitmentRating)}
                   helperText={touched.commitmentRating && errors.commitmentRating}
                 />

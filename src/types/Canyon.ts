@@ -1,3 +1,6 @@
+import { CanyonTypeEnum } from "./CanyonTypeEnum";
+import RegionType from "./RegionEnum";
+
 export interface Canyon {
   Id: number;
   Name: string;
@@ -6,4 +9,9 @@ export interface Canyon {
   VerticalRating: number;
   CommitmentRating: number;
   StarRating: number;
+  IsUnrated: boolean;
+  Region: RegionType;
+  CanyonType: CanyonTypeEnum;
+  IsDeleted: boolean;
+  IsVerified: boolean;
 }

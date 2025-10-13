@@ -6,6 +6,7 @@ import { Canyon } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
+import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
 
 const minDateString: string = '1900-01-01' 
 
@@ -99,6 +100,8 @@ const CanyonList: React.FC = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Rating</TableCell>
+              <TableCell>Region</TableCell>
+              <TableCell>Type</TableCell>
               <TableCell align="center">Your Descents</TableCell>
               <TableCell align="center">Last Descent</TableCell>
               <TableCell align="center">Canyon Log</TableCell>
@@ -116,8 +119,11 @@ const CanyonList: React.FC = () => {
                     verticalRating={canyon.VerticalRating}
                     commitmentRating={canyon.CommitmentRating}
                     starRating={canyon.StarRating}
+                    isUnrated={canyon.IsUnrated}
                   />
                 </TableCell>
+                <TableCell align="center">{GetRegionDisplayName(canyon.Region)}</TableCell>
+                <TableCell align="center">{GetCanyonTypeDisplayName(canyon.CanyonType)}</TableCell>
                 <TableCell align="center">{canyon.Descents}</TableCell>
                 <TableCell align="center">
                   {canyon.LastDescentDate ? (

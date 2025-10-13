@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
           FROM Canyons c
           LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
           WHERE c.IsVerified = 1
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted
           ORDER BY Descents DESC, c.Name
         `);
       res.json(result.recordset);
@@ -49,7 +49,6 @@ router.get('/verify', async (req, res) => {
       .query(`
           SELECT c.*
           FROM Canyons c
-          WHERE c.IsVerified = 0
         `);
     res.json(result.recordset);
 
@@ -76,7 +75,7 @@ router.get('/:id', async (req, res) => {
           FROM Canyons c
           LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
           WHERE c.Id = @canyonId
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType
           ORDER BY Descents DESC, c.Name
         `);
       res.json(result.recordset[0]);
@@ -92,7 +91,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/canyons - add a new canyon to SQL Server
 router.post('/', async (req, res) => {
-  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating } = req.body;
+  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating, isUnrated, canyonRegion, canyonType } = req.body;
   if (!name || aquaticRating == null || verticalRating == null || starRating == null || commitmentRating == null) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -109,6 +108,9 @@ router.post('/', async (req, res) => {
       .input('verticalRating', sql.Int, verticalRating)
       .input('starRating', sql.Int, starRating)
       .input('commitmentRating', sql.Int, commitmentRating)
+      .input('isUnrated', sql.Bit, isUnrated || false)
+      .input('canyonRegion', sql.Int, canyonRegion)
+      .input('canyonType', sql.Int, canyonType)
 
     if (await isAdmin(req) && req.body.id > 0) {
       request.input('id', sql.Int, req.body.id);
@@ -119,7 +121,10 @@ router.post('/', async (req, res) => {
               VerticalRating = @verticalRating,
               StarRating = @starRating,
               CommitmentRating = @commitmentRating,
-              IsVerified = 1
+              IsVerified = 1,
+              IsUnrated = @isUnrated,
+              Region = @CanyonRegion,
+              CanyonType = @canyonType
               WHERE Id = @id`);
       return res.status(201).json(req.body);
     }
