@@ -3,9 +3,10 @@ enum RegionType {
     Scotland=1,
     England=2,
     Wales=3,
-    NorthernIreland=4
+    NorthernIreland=4,
+    IsleOfMan=5
 }
 
 export default RegionType;
 
-export const RegionTypeList: RegionType[] = [RegionType.Unknown, RegionType.Scotland, RegionType.England, RegionType.Wales, RegionType.NorthernIreland]
+export const RegionTypeList: RegionType[] = [RegionType.Unknown, RegionType.Scotland, RegionType.England, RegionType.Wales, RegionType.NorthernIreland, RegionType.IsleOfMan]
