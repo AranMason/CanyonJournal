@@ -66,7 +66,7 @@ const EditCanyons: React.FC = () => {
                         <TableCell>
                             <RowActions onEdit={() => setEditCanyon(canyon)} /> 
                         </TableCell>
-                        <TableCell style={{"display": "flex", "flexDirection": "row", alignContent: "center"}}>
+                        <TableCell>
                             {canyon.IsVerified ? <CheckIcon color='success'/> : <CloseIcon color='error'/>}
                         </TableCell>
                     </TableRow>
