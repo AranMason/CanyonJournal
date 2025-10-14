@@ -15,3 +15,8 @@ export interface Canyon {
   IsDeleted: boolean;
   IsVerified: boolean;
 }
+
+export interface CanyonWithDescents extends Canyon {
+  Descents: number;
+  LastDescentDate?: string | null;
+}

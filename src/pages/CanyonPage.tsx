@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button, Select, MenuItem, InputLabel, Typography } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
-import { Canyon } from '../types/Canyon';
+import { CanyonWithDescents } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
+import CanyonFilter from '../components/CanyonFilter';
 
 const minDateString: string = '1900-01-01' 
 
@@ -39,11 +40,6 @@ const SortParams: { [key in SortOptionEnum]: {
       return Date.parse(b.LastDescentDate ?? minDateString) - Date.parse(a.LastDescentDate??minDateString)
     })
   }
-}
-
-interface CanyonWithDescents extends Canyon {
-  Descents: number;
-  LastDescentDate?: string | null;
 }
 
 const CanyonList: React.FC = () => {
@@ -83,7 +79,6 @@ const CanyonList: React.FC = () => {
               onChange={e => {
                 const sortVal = e.target.value as SortOptionEnum;
                 setSort(sortVal)
-                setCanyons(SortParams[sortVal].method(canyons))
               }}
             >
               {Object.values(SortParams).map(({ option, displayName }) => (
@@ -94,54 +89,58 @@ const CanyonList: React.FC = () => {
 
         </Box>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Rating</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell align="center">Your Descents</TableCell>
-              <TableCell align="center">Last Descent</TableCell>
-              <TableCell align="center">Canyon Log</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {canyons.map(canyon => (
-              <TableRow key={canyon.Id}>
-                <TableCell>
-                  <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{ cursor: 'pointer' }}>{canyon.Name}</Link>
-                </TableCell>
-                <TableCell>
-                  <CanyonRating
-                    aquaticRating={canyon.AquaticRating}
-                    verticalRating={canyon.VerticalRating}
-                    commitmentRating={canyon.CommitmentRating}
-                    starRating={canyon.StarRating}
-                    isUnrated={canyon.IsUnrated}
-                  />
-                </TableCell>
-                <TableCell align="center">{GetRegionDisplayName(canyon.Region)}</TableCell>
-                <TableCell align="center">{GetCanyonTypeDisplayName(canyon.CanyonType)}</TableCell>
-                <TableCell align="center">{canyon.Descents}</TableCell>
-                <TableCell align="center">
-                  {canyon.LastDescentDate ? (
-                    <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
-                      {new Date(canyon.LastDescentDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </Box>
-                  ) : '-'}
-                </TableCell>
-                <TableCell align="center">
-                  {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
-                    Visit Canyon Log
-                  </Button> : '-'}
-                </TableCell>
+      <CanyonFilter canyons={canyons}>
+        {(filteredCanyons: CanyonWithDescents[]) => <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Rating</TableCell>
+                <TableCell>Region</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell align="center">Your Descents</TableCell>
+                <TableCell align="center">Last Descent</TableCell>
+                <TableCell align="center">Canyon Log</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {SortParams[sort].method(filteredCanyons).map(canyon => (
+                <TableRow key={canyon.Id}>
+                  <TableCell>
+                    <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{ cursor: 'pointer' }}>{canyon.Name}</Link>
+                  </TableCell>
+                  <TableCell>
+                    <CanyonRating
+                      aquaticRating={canyon.AquaticRating}
+                      verticalRating={canyon.VerticalRating}
+                      commitmentRating={canyon.CommitmentRating}
+                      starRating={canyon.StarRating}
+                      isUnrated={canyon.IsUnrated}
+                    />
+                  </TableCell>
+                  <TableCell align="center">{GetRegionDisplayName(canyon.Region)}</TableCell>
+                  <TableCell align="center">{GetCanyonTypeDisplayName(canyon.CanyonType)}</TableCell>
+                  <TableCell align="center">{canyon.Descents}</TableCell>
+                  <TableCell align="center">
+                    {canyon.LastDescentDate ? (
+                      <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
+                        {new Date(canyon.LastDescentDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </Box>
+                    ) : '-'}
+                  </TableCell>
+                  <TableCell align="center">
+                    {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
+                      Visit Canyon Log
+                    </Button> : '-'}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>}
+      
+        
+      </CanyonFilter>
     </PageTemplate>
   );
 };
