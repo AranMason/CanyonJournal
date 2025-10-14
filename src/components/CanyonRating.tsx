@@ -13,7 +13,7 @@ const ratings = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const CanyonRating: React.FC<CanyonRatingProps> = ({ aquaticRating, verticalRating, commitmentRating, starRating, isUnrated }) => {
 
   if(isUnrated) {
-    return "Unrated"
+    return "Ungraded"
   }
 
   return (

@@ -14,31 +14,55 @@ const minDateString: string = '1900-01-01'
 enum SortOptionEnum {
   TotalDescents = 1,
   Name = 2,
-  LastDescent = 3
+  LastDescent = 3,
+  VerticalRating = 4,
+  AquaticRating = 5,
+  CommitmentRating = 6,
+  StarRating = 7
 }
 
 const SortParams: { [key in SortOptionEnum]: {
   option: key,
   displayName: string,
-  method: (c: CanyonWithDescents[]) => CanyonWithDescents[],
+  method: (a: CanyonWithDescents, b: CanyonWithDescents) => number,
 } } = {
   [SortOptionEnum.TotalDescents]: {
     option: SortOptionEnum.TotalDescents,
     displayName: 'Descents',
-    method: c => c.sort((a, b) => b.Descents - a.Descents)
+    method: (a, b) => b.Descents - a.Descents
   },
   [SortOptionEnum.Name]: {
     option: SortOptionEnum.Name,
     displayName: 'Name',
-    method: c => c.sort((a, b) => a.Name.localeCompare(b.Name))
+    method: (a, b) => a.Name.localeCompare(b.Name)
   },
   [SortOptionEnum.LastDescent]: {
     option: SortOptionEnum.LastDescent,
     displayName: 'Last Descent',
-    method: c => c.sort((a, b) => {
+    method: (a, b) => {
       // A little bit hacky, tbh we should probably parse the Date object first, so we are not doing a pile of repeat work
-      return Date.parse(b.LastDescentDate ?? minDateString) - Date.parse(a.LastDescentDate??minDateString)
-    })
+      return Date.parse(b.LastDescentDate ?? minDateString) - Date.parse(a.LastDescentDate ?? minDateString);
+    }
+  },
+  [SortOptionEnum.VerticalRating]: {
+    option: SortOptionEnum.VerticalRating,
+    displayName: 'Vertical',
+    method: (a, b) => (b.IsUnrated ? -1 : b.VerticalRating) - (a.IsUnrated ? -1 : a.VerticalRating)
+  },
+  [SortOptionEnum.AquaticRating]: {
+    option: SortOptionEnum.AquaticRating,
+    displayName: 'Aquatic',
+    method: (a, b) => (b.IsUnrated ? -1 : b.AquaticRating) - (a.IsUnrated ? -1 : a.AquaticRating)
+  },
+  [SortOptionEnum.CommitmentRating]: {
+    option: SortOptionEnum.CommitmentRating,
+    displayName: 'Commitment',
+    method: (a, b) => (b.IsUnrated ? -1 : b.CommitmentRating) - (a.IsUnrated ? -1 : a.CommitmentRating)
+  },
+  [SortOptionEnum.StarRating]: {
+    option: SortOptionEnum.StarRating,
+    displayName: 'Star',
+    method: (a, b) => (b.IsUnrated ? -1 : b.StarRating) - (a.IsUnrated ? -1 : a.StarRating)
   }
 }
 
@@ -62,6 +86,19 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
+  function getSortedCanyons(filteredCanyons: CanyonWithDescents[]): CanyonWithDescents[] {
+
+    return filteredCanyons.sort((a, b) => {
+      var diffVal = SortParams[sort].method(a, b);
+
+      if(diffVal === 0) {
+        return SortParams[SortOptionEnum.Name].method(a, b);
+      }
+
+      return diffVal
+    })
+  }
+
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between">
@@ -75,6 +112,7 @@ const CanyonList: React.FC = () => {
               size='small'
               labelId="filter-sort-by"
               label="Sort By"
+              style={{width: "150px"}}
               value={sort}
               onChange={e => {
                 const sortVal = e.target.value as SortOptionEnum;
@@ -104,7 +142,7 @@ const CanyonList: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {SortParams[sort].method(filteredCanyons).map(canyon => (
+              {getSortedCanyons(filteredCanyons).map(canyon => (
                 <TableRow key={canyon.Id}>
                   <TableCell>
                     <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{ cursor: 'pointer' }}>{canyon.Name}</Link>
