@@ -134,18 +134,18 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         value={filterOptions.verticalRating}
                         onChange={e => setFilterOptions({
                             ...filterOptions,
-                            verticalRating: e.target.value as number[]
+                            verticalRating: (e.target.value as number[]).sort()
                         })}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((rating) => {
-                                    return <Chip size="small" key={rating} label={rating} />;
+                                    return <Chip size="small" key={rating} label={`V${rating}`} />;
                                 })}
                             </Box>
                         )}
                     >
                         {[...Array(7).keys()].map((rating) => (
-                            <MenuItem key={rating} value={rating + 1}>{rating + 1}</MenuItem>
+                            <MenuItem key={rating} value={rating + 1}>{`V${rating+1}`}</MenuItem>
                         ))}
                     </Select>
 
@@ -159,18 +159,18 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         value={filterOptions.aquaRating}
                         onChange={e => setFilterOptions({
                             ...filterOptions,
-                            aquaRating: e.target.value as number[]
+                            aquaRating: (e.target.value as number[]).sort()
                         })}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((rating) => {
-                                    return <Chip size="small" key={rating} label={rating} />;
+                                    return <Chip size="small" key={rating} label={`A${rating}`} />;
                                 })}
                             </Box>
                         )}
                     >
                         {[...Array(7).keys()].map((rating) => (
-                            <MenuItem key={rating} value={rating + 1}>{rating + 1}</MenuItem>
+                            <MenuItem key={rating} value={rating + 1}>{`A${rating+1}`}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>
@@ -184,7 +184,7 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         value={filterOptions.starRating}
                         onChange={e => setFilterOptions({
                             ...filterOptions,
-                            starRating: e.target.value as number[]
+                            starRating: (e.target.value as number[]).sort()
                         })}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
