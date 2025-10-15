@@ -43,7 +43,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
             aquaticRating: Yup.number().min(1, 'Min 1').max(7, 'Max 7').required('Aquatic rating is required'),
             verticalRating: Yup.number().min(1, 'Min 1').max(7, 'Max 7').required('Vertical rating is required'),
             starRating: Yup.number().min(0, 'Min 0').max(5, 'Max 5').required('Star rating is required'),
-            commitmentRating: Yup.number().min(0, 'Min 0').max(5, 'Max 5').required('Commitment rating is required'),
+            commitmentRating: Yup.number().min(0, 'Min 0').max(6, 'Max 6').required('Commitment rating is required'),
           })}
           onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
             setStatus(undefined);

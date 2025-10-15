@@ -101,12 +101,9 @@ const CanyonList: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
-      <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between">
-        <Typography component={"h2"} variant='h4'>
-          Your Canyons
-        </Typography>
+      <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>
-          <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>
+          <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
             <InputLabel id="filter-sort-by" >Sort By</InputLabel>
             <Select
               size='small'
