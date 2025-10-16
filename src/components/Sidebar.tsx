@@ -47,37 +47,37 @@ const Sidebar: React.FC = () => {
           <SidebarItem
             label="Home"
             icon={<HomeIcon />}
-            onClick={() => navigate('/dashboard')}
+            url='/dashboard'
           />
           <SidebarItem
             label="Your Journal"
             icon={<MenuBookIcon />}
-            onClick={() => navigate('/journal')}
+            url='/journal'
             disabled={!user}
           />
           <SidebarItem
             label="Add Entry"
             icon={<EditNoteIcon />}
-            onClick={() => navigate('/journal/record')}
+            url='/journal/record'
             disabled={!user}
           />
           <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
           <SidebarItem
             label="Canyons"
             icon={<AddLocationAltIcon />}
-            onClick={() => navigate('/canyons')}
+            url='/canyons'
             disabled={!user}
           />
           <SidebarItem
             label="Your Gear"
             icon={<RopeIcon />}
-            onClick={() => navigate('/gear')}
+            url='/gear'
             disabled={!user}
           />
           {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
             label="Admin"
             icon={<AdminPanelSettingsIcon />}
-            onClick={() => navigate('/admin')}
+            url='/admin'
           /></>}
         </List>
       </Box>
