@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import '../App.css';
 import Sidebar from '../components/Sidebar';
-import { Alert, Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
 interface PageTemplateProps {

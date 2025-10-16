@@ -2,7 +2,6 @@ import React from 'react';
 import { useUser } from '../App';
 import LoginButton from '../components/LoginButton';
 import { Drawer, List, Box, Toolbar, Divider } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -14,7 +13,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
-  const navigate = useNavigate();
 
   return (
     <Drawer
