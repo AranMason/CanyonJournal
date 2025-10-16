@@ -13,6 +13,7 @@ import HomePage from './pages/HomePage';
 import EditRecordPage from './pages/EditRecordPage';
 import AdminPage from './pages/AdminPage';
 import CanyonOverviewPage from './pages/CanyonOverviewPage';
+import RecordsOverviewPage from './pages/RecordsOverviewPage';
 
 
 const root = ReactDOM.createRoot(
@@ -25,8 +26,9 @@ root.render(
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/record/:id" element={<EditRecordPage />} />
-          <Route path="/record" element={<RecordPage />} />
+          <Route path="/journal/record/:id" element={<EditRecordPage />} />
+          <Route path="/journal/record" element={<RecordPage />} />
+          <Route path="/journal" element={<RecordsOverviewPage />} />
           <Route path="/gear" element={<GearPage />} />
           <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
           <Route path="/canyons" element={<CanyonPage />} />

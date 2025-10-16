@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUser } from '../App';
 import LoginButton from '../components/LoginButton';
-import { Drawer, List, Box, Toolbar } from '@mui/material';
+import { Drawer, List, Box, Toolbar, Divider } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
@@ -9,6 +9,8 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import RopeIcon from '@mui/icons-material/Build';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
@@ -48,11 +50,18 @@ const Sidebar: React.FC = () => {
             onClick={() => navigate('/dashboard')}
           />
           <SidebarItem
-            label="Record Descent"
-            icon={<EditNoteIcon />}
-            onClick={() => navigate('/record')}
+            label="Your Journal"
+            icon={<MenuBookIcon />}
+            onClick={() => navigate('/journal')}
             disabled={!user}
           />
+          <SidebarItem
+            label="Add Entry"
+            icon={<EditNoteIcon />}
+            onClick={() => navigate('/journal/record')}
+            disabled={!user}
+          />
+          <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
           <SidebarItem
             label="Canyons"
             icon={<AddLocationAltIcon />}
@@ -65,11 +74,11 @@ const Sidebar: React.FC = () => {
             onClick={() => navigate('/gear')}
             disabled={!user}
           />
-          {user && user.isAdmin && <SidebarItem
+          {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
             label="Admin"
             icon={<AdminPanelSettingsIcon />}
             onClick={() => navigate('/admin')}
-          />}
+          /></>}
         </List>
       </Box>
       {user && (
@@ -77,7 +86,7 @@ const Sidebar: React.FC = () => {
           <List>
             <SidebarItem
               label="Logout"
-              icon={null}
+              icon={<LogoutIcon/>}
               onClick={() => {
                 window.location.href = '/api/logout';
                 setUser(null);

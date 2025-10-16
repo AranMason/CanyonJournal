@@ -97,7 +97,7 @@ const CanyonOverviewPage: React.FC = () => {
                       <TableCell>{rec.Comments || '-'}</TableCell>
                       <TableCell align="center" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                         <RowActions
-                          onEdit={() => navigate(`/record/${rec.Id} `)}
+                          onEdit={() => navigate(`/journal/record/${rec.Id} `)}
                         />
                       </TableCell>
                     </TableRow>

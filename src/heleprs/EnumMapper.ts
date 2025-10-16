@@ -1,3 +1,4 @@
+import { WaterLevel } from "../types/CanyonRecord";
 import { CanyonTypeEnum } from "../types/CanyonTypeEnum";
 import RegionType from "../types/RegionEnum";
 
@@ -24,4 +25,19 @@ const CanyonRegionDisplayName: {[key in RegionType]: string} = {
 export function GetRegionDisplayName(type: RegionType): string {
 
     return CanyonRegionDisplayName[type ?? RegionType.Unknown];
+}
+
+const WaterLevelDisplay: { [key in WaterLevel]: string } = {
+  // eslint-disable-next-line
+  [WaterLevel.Unknown]: '-',
+  [WaterLevel.VeryLow]: 'Very Low',
+  [WaterLevel.Low]: 'Low',
+  [WaterLevel.Medium]: 'Medium',
+  [WaterLevel.High]: 'High',
+  [WaterLevel.VeryHigh]: 'Very High'
+};
+
+export function GetWaterLevelDisplayName(type: WaterLevel): string {
+
+    return WaterLevelDisplay[type ?? WaterLevel.Unknown];
 }

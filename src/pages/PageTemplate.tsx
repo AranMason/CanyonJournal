@@ -29,11 +29,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
         <Box sx={{ display: 'flex' }}>
             <Sidebar />
             <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <h1 className="App-title">{pageTitle}</h1>
-                <Box mb={1}>
-                    <Alert severity='warning'>This application is currently a work in progress. Things can and will break.</Alert>
-                </Box>
-                
+                <h1 className="App-title">{pageTitle}</h1>                
                 {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>} 
                 {!isLoading && children}
             </Box>
