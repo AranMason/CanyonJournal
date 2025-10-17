@@ -14,7 +14,7 @@ const HomePage: React.FC = () => {
   }, [user, loading, navigate]);
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#232946">
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#232946" flex={1}>
       <Card sx={{ minWidth: 340, maxWidth: 400, p: 2, boxShadow: 3 }}>
         <CardContent>
           <Typography variant="h5" align="center" gutterBottom>

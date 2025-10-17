@@ -22,6 +22,7 @@ const Sidebar: React.FC = () => {
         label="Home"
         icon={<HomeIcon />}
         url='/dashboard'
+        disabled={!user}
       />
       <SidebarItem
         isOpen={isOpen}
@@ -76,7 +77,7 @@ const Sidebar: React.FC = () => {
           label="Login"
           icon={<LoginIcon />}
           onClick={() => {
-            window.location.href = '/';
+            window.location.href = '/api/login';
           }}
         />}
       </List>
