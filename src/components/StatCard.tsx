@@ -18,14 +18,13 @@ setIsLoading(true);
 
   useEffect(() => {
     if(isLoading) return;
-
     refresh();
-  }, [getData])
+  }, [getData]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
   return <Box sx={{ flex: 1 }}>
     
-      <Typography variant="subtitle1" sx={{ mb: 1 }}>{title}</Typography>
+      <Typography variant="subtitle1" sx={{ mb: 1 }} textOverflow="ellipsis" display={'block'} whiteSpace="nowrap" flexGrow={0} flexShrink={0}>{title}</Typography>
       <Paper elevation={3} sx={{ p: 3, minHeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {isLoading ? <CircularProgress /> : (children && children(data))}
       </Paper>

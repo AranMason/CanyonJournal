@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { DashboardWidget } from '../types/Widgets';
 import { useUser } from '../App';
@@ -12,16 +12,10 @@ import DateTableCell from '../components/table/DateTableCell';
 import EditRecordTableCell from '../components/table/EditRecordTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';
 
-// Column size definitions
-const COLUMN_WIDTHS = {
-  date: 120,
-  name: 120, // auto
-  teamSize: 80,
-  waterLevel: 80,
-  comments: undefined, // auto
-};
-
 const DashboardPage: React.FC = () => {
+  const theme = useTheme();
+  const isLargeScreen: boolean = useMediaQuery(() => theme.breakpoints.up("md"));
+
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +58,7 @@ const DashboardPage: React.FC = () => {
         <Typography color="error">{error}</Typography>
       ) : (
         <>
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
+          {isLargeScreen && <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
             <StatCard title="Total Descents" getData={loadTotalDescents}>
               {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
                 {data}
@@ -80,7 +74,7 @@ const DashboardPage: React.FC = () => {
                 {data}
               </Typography>}
             </StatCard>
-          </Box>
+          </Box>}
           <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
             Recent Descents
           </Typography>
@@ -88,10 +82,10 @@ const DashboardPage: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
+                  <TableCell>Date Descended</TableCell>
                   <TableCell>Canyon</TableCell>
-                  <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
-                  <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
+                  {isLargeScreen && <TableCell>Team Size</TableCell>}
+                  {isLargeScreen && <TableCell>Water Level</TableCell>}
                   <TableCell>Comments</TableCell>
                   <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
                 </TableRow>
@@ -107,11 +101,11 @@ const DashboardPage: React.FC = () => {
                   records.map((rec, idx) => (
                     <TableRow key={idx} >
                       <DateTableCell date={rec.Date} />
-                      <CanyonNameTableCell name={rec.Name} canyonId={rec.Id}/>
-                      <TeamSizeTableCell teamSize={rec.TeamSize}/>
-                      <WaterLevelTableCell waterLevelRating={rec.WaterLevel}/>
+                      <CanyonNameTableCell name={rec.Name} canyonId={rec.Id} />
+                      {isLargeScreen && <TeamSizeTableCell teamSize={rec.TeamSize} />}
+                      {isLargeScreen && <WaterLevelTableCell waterLevelRating={rec.WaterLevel} />}
                       <TableCell>{rec.Comments || '-'}</TableCell>
-                      <EditRecordTableCell recordId={rec.Id}/>
+                      <EditRecordTableCell recordId={rec.Id} />
                     </TableRow>
                   ))
                 )}
