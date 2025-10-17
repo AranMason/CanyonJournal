@@ -11,7 +11,7 @@ const CanyonNameTableCell: React.FC<CanyonNameTableCellProps> = ({ name, canyonI
     const navigate = useNavigate();
 
     return <TableCell>
-        {canyonId ? <Link component="a" onClick={() => navigate(`/canyons/${canyonId}`)} sx={{ cursor: 'pointer' }}>{name}</Link> : name}
+        {canyonId ? <Link component="a" color="textPrimary" onClick={() => navigate(`/canyons/${canyonId}`)} sx={{ cursor: 'pointer' }} >{name}</Link> : name}
     </TableCell>
 }
 

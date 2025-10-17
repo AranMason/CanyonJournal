@@ -15,6 +15,7 @@ import EditRecordPage from './pages/EditRecordPage';
 import AdminPage from './pages/AdminPage';
 import CanyonOverviewPage from './pages/CanyonOverviewPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
+import MuiThemeProvider from './styles/MuiTheme';
 
 
 const root = ReactDOM.createRoot(
@@ -23,20 +24,22 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <App>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/journal/record/:id" element={<EditRecordPage />} />
-          <Route path="/journal/record" element={<RecordPage />} />
-          <Route path="/journal" element={<RecordsOverviewPage />} />
-          <Route path="/gear" element={<GearPage />} />
-          <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
-          <Route path="/canyons" element={<CanyonPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
-        </Routes>
-      </BrowserRouter>
+      <MuiThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/journal/record/:id" element={<EditRecordPage />} />
+            <Route path="/journal/record" element={<RecordPage />} />
+            <Route path="/journal" element={<RecordsOverviewPage />} />
+            <Route path="/gear" element={<GearPage />} />
+            <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
+            <Route path="/canyons" element={<CanyonPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
+          </Routes>
+        </BrowserRouter>
+      </MuiThemeProvider>
     </App>
   </React.StrictMode>
 );

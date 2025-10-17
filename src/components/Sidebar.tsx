@@ -1,7 +1,7 @@
 import React from 'react';
 import { useUser } from '../App';
 import LoginButton from '../components/LoginButton';
-import { Drawer, List, Box, Toolbar, Divider } from '@mui/material';
+import { Drawer, List, Box, Toolbar, Divider, styled } from '@mui/material';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
@@ -11,11 +11,18 @@ import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  "& .MuiDrawer-paper": {
+    background: theme.palette.primary.main,
+          color: '#fff',
+  }
+}));
+
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
 
   return (
-    <Drawer
+    <StyledDrawer
       variant="permanent"
       sx={{
         width: 240,
@@ -23,8 +30,6 @@ const Sidebar: React.FC = () => {
         [`& .MuiDrawer-paper`]: {
           width: 240,
           boxSizing: 'border-box',
-          background: '#232946',
-          color: '#fff',
           borderRight: 0,
           display: 'flex',
           flexDirection: 'column',
@@ -93,7 +98,7 @@ const Sidebar: React.FC = () => {
           </List>
         </Box>
       )}
-    </Drawer>
+    </StyledDrawer>
   );
 };
 
