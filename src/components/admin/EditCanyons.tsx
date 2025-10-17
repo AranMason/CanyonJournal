@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { apiFetch } from '../../utils/api';
 import { Canyon } from '../../types/Canyon';
-import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody, Link } from '@mui/material';
+import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
 import CanyonRating from '../CanyonRating';
 import AddCanyonModal from '../AddCanyonModal';
 import RowActions from '../RowActions';
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../../heleprs/EnumMapper';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import CanyonTypeTableCell from '../table/CanyonTypeCell';
@@ -28,7 +28,7 @@ const EditCanyons: React.FC = () => {
         if (!isLoading) {
             refresh();
         }
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return <>
     <AddCanyonModal canyon={editCanyon} open={editCanyon != null} onClose={() => {setEditCanyon(null)}} onSuccess={refresh} />

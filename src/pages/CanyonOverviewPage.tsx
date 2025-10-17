@@ -28,7 +28,7 @@ const CanyonOverviewPage: React.FC = () => {
 
       Promise.all([fetchMeta, fetchUser]).finally(() => setIsLoading(false))
     }
-  }, [canyonId])
+  }, [canyonId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <PageTemplate pageTitle={canyonData?.Name ?? 'Canyon'} isLoading={isLoading} isAuthRequired>
     <Typography variant="h5">

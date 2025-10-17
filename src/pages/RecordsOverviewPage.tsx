@@ -30,7 +30,7 @@ const RecordsOverviewPage: React.FC = () => {
     } else {
       setRecords([]);
     }
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
 
   return (
