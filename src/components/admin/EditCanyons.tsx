@@ -8,6 +8,8 @@ import RowActions from '../RowActions';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../../heleprs/EnumMapper';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
+import CanyonTypeTableCell from '../table/CanyonTypeCell';
+import CanyonNameTableCell from '../table/CanyonNameCell';
 
 const EditCanyons: React.FC = () => {
 
@@ -35,7 +37,7 @@ const EditCanyons: React.FC = () => {
             <TableHead>
                 <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Rating</TableCell>
+                    <TableCell>Grade</TableCell>
                     <TableCell>Region</TableCell>
                     <TableCell>Type</TableCell>
                     <TableCell>Edit</TableCell>
@@ -45,9 +47,7 @@ const EditCanyons: React.FC = () => {
             <TableBody>
                 {canyons.map(canyon => (
                     <TableRow key={canyon.Id}>
-                        <TableCell>
-                            <Link href={canyon.Url} target="_blank" rel="noopener noreferrer">{canyon.Name}</Link>
-                        </TableCell>
+                        <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id} />
                         <TableCell>
                             <CanyonRating
                                 aquaticRating={canyon.AquaticRating}
@@ -60,9 +60,7 @@ const EditCanyons: React.FC = () => {
                         <TableCell>
                             {GetRegionDisplayName(canyon.Region)}
                         </TableCell>
-                        <TableCell>
-                            {GetCanyonTypeDisplayName(canyon.CanyonType)}
-                        </TableCell>
+                        <CanyonTypeTableCell type={canyon.CanyonType} />
                         <TableCell>
                             <RowActions onEdit={() => setEditCanyon(canyon)} /> 
                         </TableCell>

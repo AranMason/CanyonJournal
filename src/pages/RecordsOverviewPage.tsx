@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
-import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
-import RowActions from '../components/RowActions';
-import GroupsIcon from '@mui/icons-material/Groups';
-import WaterLevelRating from '../components/WaterLevelRating';
-
-
-// Column size definitions
-const COLUMN_WIDTHS = {
-  date: 120,
-  name: 120, // auto
-  teamSize: 80,
-  waterLevel: 80,
-  comments: undefined, // auto
-};
-
-
-
+import { CanyonRecord } from '../types/CanyonRecord';
+import DateTableCell from '../components/table/DateTableCell';
+import TeamSizeTableCell from '../components/table/TeamSizeTableCell';
+import EditRecordTableCell from '../components/table/EditRecordTableCell';
+import CanyonNameTableCell from '../components/table/CanyonNameCell';
+import WaterLevelTableCell from '../components/table/WaterLevelTableCell';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,10 +40,10 @@ const RecordsOverviewPage: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>Date Descended</TableCell>
+              <TableCell>Date Descended</TableCell>
               <TableCell>Canyon</TableCell>
-              <TableCell sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>Team Size</TableCell>
-              <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>Water Level</TableCell>
+              <TableCell>Team Size</TableCell>
+              <TableCell>Water Level</TableCell>
               <TableCell>Comments</TableCell>
               <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
             </TableRow>
@@ -69,31 +58,12 @@ const RecordsOverviewPage: React.FC = () => {
             ) : (
               records.map((rec, idx) => (
                 <TableRow key={idx} >
-                  <TableCell sx={{ width: COLUMN_WIDTHS.date, fontSize: 13 }}>
-                    {rec.Date ? (
-                      <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
-                        {new Date(rec.Date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                      </Box>
-                    ) : '-'}
-                  </TableCell>
-                  <TableCell>
-                    {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{ cursor: 'pointer' }}>{rec.Name}</Link> : rec.Name}
-                  </TableCell>
-                  <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>
-                    <Box display="flex" flexDirection="row" alignItems={"center"} gap={1}>
-                      <GroupsIcon sx={{height: "1rem", width: "1rem"}}/>
-                      {rec.TeamSize}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>
-                    <WaterLevelRating waterLevel={rec.WaterLevel ?? WaterLevel.Unknown}/>
-                  </TableCell>
+                  <DateTableCell date={rec.Date}/>
+                  <CanyonNameTableCell name={rec.Name} canyonId={rec.Id}/>
+                  <TeamSizeTableCell teamSize={rec.TeamSize}/>
+                  <WaterLevelTableCell waterLevelRating={rec.WaterLevel}/>
                   <TableCell>{rec.Comments || '-'}</TableCell>
-                  <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
-                    <RowActions
-                      onEdit={() => navigate(`/journal/record/${rec.Id} `)}
-                    />
-                  </TableCell>
+                  <EditRecordTableCell recordId={rec.Id}/>
                 </TableRow>
               ))
             )}

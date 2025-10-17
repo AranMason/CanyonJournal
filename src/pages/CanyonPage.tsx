@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Button, Select, MenuItem, InputLabel, Typography } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { CanyonWithDescents } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
-import { useNavigate } from 'react-router-dom';
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../heleprs/EnumMapper';
 import CanyonFilter from '../components/CanyonFilter';
+import DateTableCell from '../components/table/DateTableCell';
+import CanyonNameTableCell from '../components/table/CanyonNameCell';
+import CanyonTypeTableCell from '../components/table/CanyonTypeCell';
 
 const minDateString: string = '1900-01-01' 
 
@@ -67,7 +69,6 @@ const SortParams: { [key in SortOptionEnum]: {
 }
 
 const CanyonList: React.FC = () => {
-  const navigate = useNavigate();
   const { user, loading } = useUser();
   const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -130,7 +131,7 @@ const CanyonList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Rating</TableCell>
+                <TableCell>Grade</TableCell>
                 <TableCell>Region</TableCell>
                 <TableCell>Type</TableCell>
                 <TableCell align="center">Your Descents</TableCell>
@@ -141,9 +142,7 @@ const CanyonList: React.FC = () => {
             <TableBody>
               {getSortedCanyons(filteredCanyons).map(canyon => (
                 <TableRow key={canyon.Id}>
-                  <TableCell>
-                    <Link component="a" onClick={() => navigate(`/canyons/${canyon.Id}`)} sx={{ cursor: 'pointer' }}>{canyon.Name}</Link>
-                  </TableCell>
+                  <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id}/>
                   <TableCell>
                     <CanyonRating
                       aquaticRating={canyon.AquaticRating}
@@ -153,16 +152,10 @@ const CanyonList: React.FC = () => {
                       isUnrated={canyon.IsUnrated}
                     />
                   </TableCell>
-                  <TableCell align="center">{GetRegionDisplayName(canyon.Region)}</TableCell>
-                  <TableCell align="center">{GetCanyonTypeDisplayName(canyon.CanyonType)}</TableCell>
+                  <TableCell>{GetRegionDisplayName(canyon.Region)}</TableCell>
+                  <CanyonTypeTableCell type={canyon.CanyonType}/>
                   <TableCell align="center">{canyon.Descents}</TableCell>
-                  <TableCell align="center">
-                    {canyon.LastDescentDate ? (
-                      <Box sx={{ fontWeight: 500, color: 'primary.main', letterSpacing: 1 }}>
-                        {new Date(canyon.LastDescentDate).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                      </Box>
-                    ) : '-'}
-                  </TableCell>
+                  <DateTableCell date={canyon.LastDescentDate} />
                   <TableCell align="center">
                     {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
                       Visit Canyon Log

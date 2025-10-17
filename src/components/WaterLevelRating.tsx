@@ -8,7 +8,7 @@ type WaterLevelRatingProps = {
 
 const WaterLevelRating: React.FC<WaterLevelRatingProps> = ({waterLevel}) => {
 
-    if(waterLevel == WaterLevel.Unknown) {
+    if(waterLevel === WaterLevel.Unknown) {
         return "-"
     }
 
