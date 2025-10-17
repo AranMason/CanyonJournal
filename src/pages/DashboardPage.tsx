@@ -8,6 +8,8 @@ import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
 import RowActions from '../components/RowActions';
 import { useNavigate } from 'react-router-dom';
+import WaterLevelRating from '../components/WaterLevelRating';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 // Column size definitions
 const COLUMN_WIDTHS = {
@@ -16,16 +18,6 @@ const COLUMN_WIDTHS = {
   teamSize: 80,
   waterLevel: 80,
   comments: undefined, // auto
-};
-
-const WaterLevelDisplay: { [key in WaterLevel | 0]: string } = {
-  // eslint-disable-next-line
-  [0]: '-',
-  [WaterLevel.VeryLow]: 'Very Low',
-  [WaterLevel.Low]: 'Low',
-  [WaterLevel.Medium]: 'Medium',
-  [WaterLevel.High]: 'High',
-  [WaterLevel.VeryHigh]: 'Very High'
 };
 
 const DashboardPage: React.FC = () => {
@@ -124,8 +116,15 @@ const DashboardPage: React.FC = () => {
                       <TableCell>
                         {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{cursor: 'pointer'}}>{rec.Name}</Link> : rec.Name}
                       </TableCell>
-                      <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
-                      <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>{WaterLevelDisplay[rec.WaterLevel ?? 0]}</TableCell>
+                      <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>
+                    <Box display="flex" flexDirection="row" alignItems={"center"} gap={1}>
+                      <GroupsIcon sx={{height: "1rem", width: "1rem"}}/>
+                      {rec.TeamSize}
+                    </Box>
+                  </TableCell>
+                  <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>
+                    <WaterLevelRating waterLevel={rec.WaterLevel ?? WaterLevel.Unknown}/>
+                  </TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
                       <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                         <RowActions

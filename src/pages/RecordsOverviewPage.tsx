@@ -6,7 +6,8 @@ import PageTemplate from './PageTemplate';
 import { useNavigate } from 'react-router-dom';
 import { CanyonRecord, WaterLevel } from '../types/CanyonRecord';
 import RowActions from '../components/RowActions';
-import { GetWaterLevelDisplayName } from '../heleprs/EnumMapper';
+import GroupsIcon from '@mui/icons-material/Groups';
+import WaterLevelRating from '../components/WaterLevelRating';
 
 
 // Column size definitions
@@ -78,9 +79,14 @@ const RecordsOverviewPage: React.FC = () => {
                   <TableCell>
                     {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{ cursor: 'pointer' }}>{rec.Name}</Link> : rec.Name}
                   </TableCell>
-                  <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>{rec.TeamSize}</TableCell>
+                  <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>
+                    <Box display="flex" flexDirection="row" alignItems={"center"} gap={1}>
+                      <GroupsIcon sx={{height: "1rem", width: "1rem"}}/>
+                      {rec.TeamSize}
+                    </Box>
+                  </TableCell>
                   <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>
-                    {GetWaterLevelDisplayName(rec.WaterLevel ?? WaterLevel.Unknown)}
+                    <WaterLevelRating waterLevel={rec.WaterLevel ?? WaterLevel.Unknown}/>
                   </TableCell>
                   <TableCell>{rec.Comments || '-'}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
