@@ -15,11 +15,11 @@ export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {
 
 const CanyonRegionDisplayName: {[key in RegionType]: string} = {
     [RegionType.Unknown]: "-",
-    [RegionType.Scotland]: "Scotland",
-    [RegionType.England]: "England",
-    [RegionType.Wales]: "Wales",
-    [RegionType.NorthernIreland]: "Northern Ireland",
-    [RegionType.IsleOfMan]: "Isle of Man"
+    [RegionType.Scotland]: "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland",
+    [RegionType.England]: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England",
+    [RegionType.Wales]: "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales",
+    [RegionType.NorthernIreland]: "🇬🇧 Northern Ireland",
+    [RegionType.IsleOfMan]: "🇬🇧 Isle of Man"
 }
 
 export function GetRegionDisplayName(type: RegionType): string {

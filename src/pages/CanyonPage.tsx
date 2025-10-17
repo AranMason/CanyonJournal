@@ -136,7 +136,7 @@ const CanyonList: React.FC = () => {
                 <TableCell>Type</TableCell>
                 <TableCell align="center">Your Descents</TableCell>
                 <TableCell align="center">Last Descent</TableCell>
-                <TableCell align="center">Canyon Log</TableCell>
+                <TableCell align="center">Reference</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -158,7 +158,7 @@ const CanyonList: React.FC = () => {
                   <DateTableCell date={canyon.LastDescentDate} />
                   <TableCell align="center">
                     {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
-                      Visit Canyon Log
+                      Visit
                     </Button> : '-'}
                   </TableCell>
                 </TableRow>

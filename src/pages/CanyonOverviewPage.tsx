@@ -39,7 +39,7 @@ const CanyonOverviewPage: React.FC = () => {
 
         <div>
           {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer">
-            Visit Canyon Log
+            More Details
           </Button> : '-'}
         </div>
       </Box>
