@@ -8,6 +8,10 @@ type WaterLevelRatingProps = {
 
 const WaterLevelRating: React.FC<WaterLevelRatingProps> = ({waterLevel}) => {
 
+    if(waterLevel == WaterLevel.Unknown) {
+        return "-"
+    }
+
     return <div>
         {[1, 2, 3, 4, 5].map(i => <WaterDropIcon key={i} 
         className="CanyonSummaryBar-waterdrop" 

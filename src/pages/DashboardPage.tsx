@@ -28,15 +28,15 @@ const DashboardPage: React.FC = () => {
 
   const loadTotalDescents = async (): Promise<number> => {
     return await apiFetch<number>(`/api/dashboard/${DashboardWidget.TotalDescents}`);
-  } 
+  }
 
   const loadUniqueDescents = async (): Promise<number> => {
     return await apiFetch<number>(`/api/dashboard/${DashboardWidget.UniqueDescents}`);
-  } 
+  }
 
   const loadRecentDescents = async (): Promise<number> => {
     return await apiFetch<number>(`/api/dashboard/${DashboardWidget.RecentDescents}`);
-  } 
+  }
 
   useEffect(() => {
     const fetchRecords = async () => {
@@ -114,17 +114,17 @@ const DashboardPage: React.FC = () => {
                         ) : '-'}
                       </TableCell>
                       <TableCell>
-                        {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{cursor: 'pointer'}}>{rec.Name}</Link> : rec.Name}
+                        {rec.CanyonId ? <Link onClick={() => navigate(`/canyons/${rec.CanyonId}`)} sx={{ cursor: 'pointer' }}>{rec.Name}</Link> : rec.Name}
                       </TableCell>
                       <TableCell align="center" sx={{ width: COLUMN_WIDTHS.teamSize, fontSize: 13 }}>
-                    <Box display="flex" flexDirection="row" alignItems={"center"} gap={1}>
-                      <GroupsIcon sx={{height: "1rem", width: "1rem"}}/>
-                      {rec.TeamSize}
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>
-                    <WaterLevelRating waterLevel={rec.WaterLevel ?? WaterLevel.Unknown}/>
-                  </TableCell>
+                        <Box display="flex" flexDirection="row" alignItems={"center"} gap={1}>
+                          <GroupsIcon sx={{ height: "1rem", width: "1rem" }} />
+                          {rec.TeamSize}
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ width: COLUMN_WIDTHS.waterLevel, fontSize: 13 }}>
+                        <WaterLevelRating waterLevel={rec.WaterLevel ?? WaterLevel.Unknown} />
+                      </TableCell>
                       <TableCell>{rec.Comments || '-'}</TableCell>
                       <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
                         <RowActions
