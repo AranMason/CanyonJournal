@@ -5,11 +5,11 @@ const canyoningTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#232946', // Moss Green
+      main: '#232946', 
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#3C91A6', // River Blue
+      main: '#eebbc3',
       contrastText: '#FFFFFF',
     },
     // background: {

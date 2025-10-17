@@ -16,6 +16,8 @@ import AdminPage from './pages/AdminPage';
 import CanyonOverviewPage from './pages/CanyonOverviewPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
 import MuiThemeProvider from './styles/MuiTheme';
+import Sidebar from './components/Sidebar';
+import { Box } from '@mui/material';
 
 
 const root = ReactDOM.createRoot(
@@ -26,6 +28,8 @@ root.render(
     <App>
       <MuiThemeProvider>
         <BrowserRouter>
+          <Box display={'flex'}>
+          <Sidebar />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
@@ -38,6 +42,7 @@ root.render(
             <Route path="/admin" element={<AdminPage />} />
             {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
           </Routes>
+          </Box>
         </BrowserRouter>
       </MuiThemeProvider>
     </App>

@@ -1,105 +1,91 @@
 import React from 'react';
 import { useUser } from '../App';
-import LoginButton from '../components/LoginButton';
-import { Drawer, List, Box, Toolbar, Divider, styled } from '@mui/material';
+import { List, Box,  Divider } from '@mui/material';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import RopeIcon from '@mui/icons-material/Build';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LogoutIcon from '@mui/icons-material/Logout';
-
-const StyledDrawer = styled(Drawer)(({ theme }) => ({
-  "& .MuiDrawer-paper": {
-    background: theme.palette.primary.main,
-          color: '#fff',
-  }
-}));
+import SidebarDrawer from './SidebarDrawer';
+import LoginIcon from '@mui/icons-material/Login';
+import LocationPinIcon from '@mui/icons-material/LocationPin';
 
 const Sidebar: React.FC = () => {
-  const { user, setUser, loading } = useUser();
+  const { user, setUser } = useUser();
 
-  return (
-    <StyledDrawer
-      variant="permanent"
-      sx={{
-        width: 240,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
-          width: 240,
-          boxSizing: 'border-box',
-          borderRight: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        },
-      }}
-    >
-      <Box>
-        <Toolbar />
-        <Box sx={{ p: 2 }}>
-          <LoginButton
-            className="Login-button Sidebar-login-btn"
-            user={user}
-            loading={loading}
-          />
-        </Box>
-        <List>
-          <SidebarItem
-            label="Home"
-            icon={<HomeIcon />}
-            url='/dashboard'
-          />
-          <SidebarItem
-            label="Your Journal"
-            icon={<MenuBookIcon />}
-            url='/journal'
-            disabled={!user}
-          />
-          <SidebarItem
-            label="Add Entry"
-            icon={<EditNoteIcon />}
-            url='/journal/record'
-            disabled={!user}
-          />
-          <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
-          <SidebarItem
-            label="Canyons"
-            icon={<AddLocationAltIcon />}
-            url='/canyons'
-            disabled={!user}
-          />
-          <SidebarItem
-            label="Your Gear"
-            icon={<RopeIcon />}
-            url='/gear'
-            disabled={!user}
-          />
-          {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
-            label="Admin"
-            icon={<AdminPanelSettingsIcon />}
-            url='/admin'
-          /></>}
-        </List>
-      </Box>
-      {user && (
-        <Box sx={{ py: 2 }}>
-          <List>
-            <SidebarItem
-              label="Logout"
-              icon={<LogoutIcon/>}
-              onClick={() => {
-                window.location.href = '/api/logout';
-                setUser(null);
-              }}
-            />
-          </List>
-        </Box>
-      )}
-    </StyledDrawer>
-  );
+  return <SidebarDrawer>{(isOpen) => <><Box>
+    <List>
+      <SidebarItem
+        isOpen={isOpen}
+        label="Home"
+        icon={<HomeIcon />}
+        url='/dashboard'
+      />
+      <SidebarItem
+        isOpen={isOpen}
+        label="Your Journal"
+        icon={<MenuBookIcon />}
+        url='/journal'
+        disabled={!user}
+      />
+      <SidebarItem
+        isOpen={isOpen}
+        label="Add Entry"
+        icon={<EditNoteIcon />}
+        url='/journal/record'
+        disabled={!user}
+      />
+      <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
+      <SidebarItem
+        isOpen={isOpen}
+        label="Canyons"
+        icon={<LocationPinIcon />}
+        url='/canyons'
+        disabled={!user}
+      />
+      <SidebarItem
+        isOpen={isOpen}
+        label="Your Gear"
+        icon={<RopeIcon />}
+        url='/gear'
+        disabled={!user}
+      />
+      {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
+      isOpen={isOpen}
+        label="Admin"
+        icon={<AdminPanelSettingsIcon />}
+        url='/admin'
+      /></>}
+    </List>
+  </Box>    
+    <Box sx={{ py: 2, marginTop: "auto" }}>
+      <List>
+        {user  && <SidebarItem
+          isOpen={isOpen}
+          label="Logout"
+          icon={<LogoutIcon />}
+          onClick={() => {
+            setUser(null);
+            window.location.href = '/api/logout';
+          }}
+        />}
+        {!user  && <SidebarItem
+          isOpen={isOpen}
+          label="Login"
+          icon={<LoginIcon />}
+          onClick={() => {
+            window.location.href = '/';
+          }}
+        />}
+      </List>
+    </Box>
+  </>}
+
+  </SidebarDrawer>
+
+
 };
 
 export default Sidebar;

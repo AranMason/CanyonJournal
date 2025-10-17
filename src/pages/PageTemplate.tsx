@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import '../App.css';
-import Sidebar from '../components/Sidebar';
 import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
@@ -23,16 +22,15 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
         }
     }, [user, loading, navigate, isAuthRequired]);
 
-    
+    if(isAuthRequired && !user) {
+        return null;
+    }
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <Sidebar />
-            <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                <h1 className="App-title">{pageTitle}</h1>                
-                {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>} 
-                {!isLoading && children}
-            </Box>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+            <h1 className="App-title">{pageTitle}</h1>
+            {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>}
+            {!isLoading && children}
         </Box>
     );
 }
