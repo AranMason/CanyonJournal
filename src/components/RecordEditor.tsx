@@ -226,9 +226,16 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     selectedGearIds={values.GearIds}
                                     setSelectedGearIds={ids => setFieldValue('GearIds', ids)}
                                 />
-                                <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
-                                    {submitString || "Submit"}
-                                </Button>
+                                <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
+                                    {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
+                                        Cancel
+                                    </Button>}
+                                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
+                                        {submitString || "Submit"}
+                                    </Button>
+                                    
+                                </Box>
+                                
                             </Form>
                         );
                     }}
