@@ -17,9 +17,9 @@ const CanyonRating: React.FC<CanyonRatingProps> = ({ aquaticRating, verticalRati
   }
 
   return (
-    <>
+    <span>
         V{verticalRating ?? "?"} A{aquaticRating ?? "?"} {commitmentRating && ratings[commitmentRating-1]} {'★'.repeat(starRating ?? 0)}
-    </>
+    </span>
   );
 };
 

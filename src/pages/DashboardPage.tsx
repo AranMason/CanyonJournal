@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { DashboardWidget } from '../types/Widgets';
 import { useUser } from '../App';
 import StatCard from '../components/StatCard';
 import { apiFetch } from '../utils/api';
-import TeamSizeTableCell from '../components/table/TeamSizeTableCell';
-import WaterLevelTableCell from '../components/table/WaterLevelTableCell';
-import DateTableCell from '../components/table/DateTableCell';
-import EditRecordTableCell from '../components/table/EditRecordTableCell';
-import CanyonNameTableCell from '../components/table/CanyonNameCell';
+import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
+import { loadById } from '../heleprs/CanyonDataStore';
+import { Canyon } from '../types/Canyon';
 
 const DashboardPage: React.FC = () => {
-  const theme = useTheme();
-  const isLargeScreen: boolean = useMediaQuery(() => theme.breakpoints.up("md"));
 
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [sectionOpen, setSectionOpen] = useState<number | null>(null);
+  const [canyonsById, setCanyonsById] = useState<{ [key: number]: Canyon }>({})
 
   const loadTotalDescents = async (): Promise<number> => {
     return await apiFetch<number>(`/api/dashboard/${DashboardWidget.TotalDescents}`);
@@ -34,12 +31,15 @@ const DashboardPage: React.FC = () => {
 
   useEffect(() => {
     const fetchRecords = async () => {
-      try {
-        const data = await apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10');
+    
+        const [data, dataCanyonsById] = await Promise.all([
+          apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10'),
+          loadById()
+        ])
+
         setRecords(data.records || []);
-      } catch (err: any) {
-        setError(err.message || 'Error fetching records');
-      }
+        setCanyonsById(dataCanyonsById)
+      
     };
     if (user && !loading) {
       fetchRecords();
@@ -48,71 +48,47 @@ const DashboardPage: React.FC = () => {
     }
   }, [user, loading]);
 
+  function handleAccordionToggle(id: number | null) {
+
+    if (!id || sectionOpen === id) {
+      setSectionOpen(null);
+    } else {
+      setSectionOpen(id);
+    }
+  }
+
   return (
     <PageTemplate pageTitle="Canyon Journal" isLoading={loading}>
-      {(!user && !loading) ? (
-        <Typography>Please log in to view your canyon records.</Typography>
-      ) : loading ? (
-        <Typography>Loading records...</Typography>
-      ) : error ? (
-        <Typography color="error">{error}</Typography>
-      ) : (
-        <>
-          {isLargeScreen && <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-            <StatCard title="Total Descents" getData={loadTotalDescents}>
-              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {data}
-              </Typography>}
-            </StatCard>
-            <StatCard title="Unique Canyons Descended" getData={loadUniqueDescents}>
-              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {data}
-              </Typography>}
-            </StatCard>
-            <StatCard title="Last 6 Months" getData={loadRecentDescents}>
-              {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-                {data}
-              </Typography>}
-            </StatCard>
-          </Box>}
-          <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
-            Recent Descents
-          </Typography>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date Descended</TableCell>
-                  <TableCell>Canyon</TableCell>
-                  {isLargeScreen && <TableCell>Team Size</TableCell>}
-                  {isLargeScreen && <TableCell>Water Level</TableCell>}
-                  <TableCell>Comments</TableCell>
-                  <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {records.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={4} align="center">
-                      No canyon records found.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  records.map((rec, idx) => (
-                    <TableRow key={idx} >
-                      <DateTableCell date={rec.Date} />
-                      <CanyonNameTableCell name={rec.Name} canyonId={rec.Id} />
-                      {isLargeScreen && <TeamSizeTableCell teamSize={rec.TeamSize} />}
-                      {isLargeScreen && <WaterLevelTableCell waterLevelRating={rec.WaterLevel} />}
-                      <TableCell>{rec.Comments || '-'}</TableCell>
-                      <EditRecordTableCell recordId={rec.Id} />
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </>
+
+      <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
+        <StatCard title="Total Descents" getData={loadTotalDescents}>
+          {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+            {data}
+          </Typography>}
+        </StatCard>
+        <StatCard title="Unique Canyons Descended" getData={loadUniqueDescents}>
+          {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+            {data}
+          </Typography>}
+        </StatCard>
+        <StatCard title="Last 6 Months" getData={loadRecentDescents}>
+          {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
+            {data}
+          </Typography>}
+        </StatCard>
+      </Box>
+      <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
+        Recent Descents
+      </Typography>
+      {records.length === 0 ? (<div>No Records</div>) : (
+
+        records.map(rec => (
+          <CanyonRecordAccordion
+            isOpen={sectionOpen === rec.Id}
+            onChange={() => handleAccordionToggle(rec.Id ?? null)}
+            record={rec}
+            canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : undefined} />
+        ))
       )}
     </PageTemplate>
   );
