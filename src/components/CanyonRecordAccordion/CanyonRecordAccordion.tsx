@@ -24,7 +24,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
     const navigate = useNavigate();
 
 
-    return <Accordion expanded={isOpen} onChange={onChange}>
+    return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
