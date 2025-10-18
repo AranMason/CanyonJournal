@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Divider, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, Typography } from "@mui/material";
 import React from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WaterLevelRating from "../WaterLevelRating";
@@ -10,6 +10,7 @@ import CanyonRating from "../CanyonRating";
 import CanyonTypeDisplay from "../CanyonTypeDisplay";
 import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
 import { Canyon } from "../../types/Canyon";
+import LocationPinIcon from '@mui/icons-material/LocationPin';
 
 
 type CanyonRecordAccordionProps = {
@@ -47,16 +48,21 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
         </AccordionSummary>
         <AccordionDetails>
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
-                {canyon && <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                {canyon ? <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                     <CanyonTypeDisplay type={canyon?.CanyonType ?? CanyonTypeEnum.Unknown} />
                     <span>-</span>
                     <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating}/>
-                </Box>}
-                <Button variant="outlined" color="info" startIcon={<EditIcon />} size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} sx={{ml: "auto"}}>Edit</Button>
+                    
+                </Box> : <span>No Data</span>}
+                <Box sx={{ml: "auto"}}>
+                    <IconButton size="small" disabled={!record.CanyonId} onClick={() => navigate(`/canyons/${record.CanyonId}`)}><LocationPinIcon /></IconButton>
+                    <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} ><EditIcon /></IconButton>
+                </Box>
+                
             </Box>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" whiteSpace={"pre-line"} fontStyle={"italic"} pl={2}>
-                {record.Comments}
+                {record.Comments ?? "-"}
             </Typography>
         </AccordionDetails>
     </Accordion>

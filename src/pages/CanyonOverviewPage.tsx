@@ -11,6 +11,10 @@ import WaterLevelTableCell from '../components/table/WaterLevelTableCell';
 import TeamSizeTableCell from '../components/table/TeamSizeTableCell';
 import DateTableCell from '../components/table/DateTableCell';
 import EditRecordTableCell from '../components/table/EditRecordTableCell';
+import { GetRegionDisplayName } from '../heleprs/EnumMapper';
+import RegionType from '../types/RegionEnum';
+import CanyonTypeDisplay from '../components/CanyonTypeDisplay';
+import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -33,10 +37,13 @@ const CanyonOverviewPage: React.FC = () => {
   return <PageTemplate pageTitle={canyonData?.Name ?? 'Canyon'} isLoading={isLoading} isAuthRequired>
     <Typography variant="h5">
       <Box display="flex" alignContent="center" gap={2} py={2} justifyContent="space-between">
-
-        <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
-
-
+        <Box>
+          <div>
+            {GetRegionDisplayName(canyonData?.Region ?? RegionType.Unknown)}
+          </div>
+          <CanyonTypeDisplay type={canyonData?.CanyonType ?? CanyonTypeEnum.Unknown}/>
+          <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
+        </Box>
         <div>
           {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer">
             More Details
