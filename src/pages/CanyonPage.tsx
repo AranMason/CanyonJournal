@@ -122,7 +122,6 @@ const CanyonList: React.FC = () => {
               ))}
             </Select>
           </Box>
-
         </Box>
       </Box>
       <CanyonFilter canyons={canyons}>

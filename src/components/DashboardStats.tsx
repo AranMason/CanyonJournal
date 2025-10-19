@@ -18,7 +18,7 @@ const DashboardStats: React.FC = () => {
         return await apiFetch<number>(`/api/dashboard/${DashboardWidget.RecentDescents}`);
       }
 
-    return <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
+    return <Box sx={{ display: "flex", gap: 2, mb: 4 }} className="hide-md">
         <StatCard title="Total Descents" getData={loadTotalDescents}>
           {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
             {data}

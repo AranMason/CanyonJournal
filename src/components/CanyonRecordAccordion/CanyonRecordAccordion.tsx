@@ -11,6 +11,8 @@ import CanyonTypeDisplay from "../CanyonTypeDisplay";
 import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
 import { Canyon } from "../../types/Canyon";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
+import { GetRegionDisplayName } from "../../heleprs/EnumMapper";
+import RegionType from "../../types/RegionEnum";
 
 
 type CanyonRecordAccordionProps = {
@@ -23,21 +25,25 @@ type CanyonRecordAccordionProps = {
 const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, canyon, isOpen, onChange }) => {
     const navigate = useNavigate();
 
-
     return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
             id="panel1-header"
         >
-            <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent="space-between">
-                <Box >
-                    <Typography component="h3">{record.Name}</Typography>
-                    <Box sx={{ fontWeight: 400, color: 'grey.500', letterSpacing: 1 }}>
-                        {new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}
+            <Box width="100%" display="flex" flexDirection="row" mr={2} >
+                <Box display="flex" flexDirection="row" alignItems={"center"} maxWidth={"60%"} flex="1" justifyContent={"space-between"} mr={2} >
+                    <Box>
+                        <Typography component="h3">{record.Name}</Typography>
+                        <Box sx={{ fontWeight: 400, color: 'grey.500', letterSpacing: 1 }}>
+                            {new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}
+                        </Box>
+                    </Box>
+                    <Box width={80} className="hide-sm">
+                        {GetRegionDisplayName(canyon?.Region ?? RegionType.Unknown)}
                     </Box>
                 </Box>
-                <Box display="flex" flexDirection="column" alignItems="flex-end">
+                <Box display="flex" flexDirection="column" alignItems="flex-end" ml="auto" width={90}>
                     <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="center" mb={0.5}>
                         <GroupsIcon sx={{ height: "1rem", width: "1rem" }} />
                         {record.TeamSize}

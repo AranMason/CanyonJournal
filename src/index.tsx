@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import './styles/breakpoints.css';
 import './styles/mui-overrides.css';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
