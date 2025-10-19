@@ -5,11 +5,12 @@ import CanyonTypeDisplay from "../CanyonTypeDisplay";
 
 type CanyonTypeTableCellProps = {
     type: CanyonTypeEnum;
+    className?: string;
 }
 
-const CanyonTypeTableCell: React.FC<CanyonTypeTableCellProps> = ({ type }) => {
+const CanyonTypeTableCell: React.FC<CanyonTypeTableCellProps> = ({ type, className }) => {
 
-    return <TableCell align="center" width={150}>
+    return <TableCell align="center" width={150} className={className}>
         <CanyonTypeDisplay type={type}/>
         
     </TableCell>

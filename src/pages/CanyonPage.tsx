@@ -130,11 +130,11 @@ const CanyonList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Grade</TableCell>
-                <TableCell>Region</TableCell>
-                <TableCell>Type</TableCell>
+                <TableCell className='hide-md'>Grade</TableCell>
+                <TableCell className='hide-md'>Region</TableCell>
+                <TableCell className='hide-md'>Type</TableCell>
                 <TableCell align="center">Your Descents</TableCell>
-                <TableCell align="center">Last Descent</TableCell>
+                <TableCell className='hide-sm' align="center">Last Descent</TableCell>
                 <TableCell align="center">Reference</TableCell>
               </TableRow>
             </TableHead>
@@ -142,7 +142,7 @@ const CanyonList: React.FC = () => {
               {getSortedCanyons(filteredCanyons).map(canyon => (
                 <TableRow key={canyon.Id}>
                   <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id}/>
-                  <TableCell>
+                  <TableCell className='hide-md'>
                     <CanyonRating
                       aquaticRating={canyon.AquaticRating}
                       verticalRating={canyon.VerticalRating}
@@ -151,10 +151,10 @@ const CanyonList: React.FC = () => {
                       isUnrated={canyon.IsUnrated}
                     />
                   </TableCell>
-                  <TableCell>{GetRegionDisplayName(canyon.Region)}</TableCell>
-                  <CanyonTypeTableCell type={canyon.CanyonType}/>
+                  <TableCell className='hide-md'>{GetRegionDisplayName(canyon.Region)}</TableCell>
+                  <CanyonTypeTableCell type={canyon.CanyonType} className='hide-md'/>
                   <TableCell align="center">{canyon.Descents}</TableCell>
-                  <DateTableCell date={canyon.LastDescentDate} />
+                  <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />
                   <TableCell align="center">
                     {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
                       Visit
