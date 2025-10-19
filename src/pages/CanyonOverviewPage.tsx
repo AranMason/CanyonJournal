@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Canyon } from '../types/Canyon';
 import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
 import { Box, Button, Typography } from '@mui/material';
@@ -17,6 +17,8 @@ import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRec
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const canyonId = id ? parseInt(id, 10) : undefined;
+
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [canyonData, setCanyonData] = useState<Canyon>();
@@ -52,11 +54,12 @@ const CanyonOverviewPage: React.FC = () => {
           <CanyonTypeDisplay type={canyonData?.CanyonType ?? CanyonTypeEnum.Unknown} />
           <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
         </Box>
-        <div>
+        <Box display="flex" flexDirection="column" gap={1}>
+          <Button type="button" variant='contained' onClick={() => navigate(`/journal/record`)}>Add Record</Button>
           {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer">
             More Details
           </Button> : '-'}
-        </div>
+        </Box>
       </Box>
     </Typography>
     <Typography variant='h4' my={2}>
