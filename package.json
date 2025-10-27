@@ -8,6 +8,7 @@
     "watch:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
+    "docs": "http-server ./site -p 8081",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -61,6 +62,7 @@
     "@types/node": "^18.11.18",
     "@types/passport": "^1.0.17",
     "@types/passport-auth0": "^1.0.9",
+    "http-server": "^14.1.1",
     "nodemon": "^2.0.19",
     "typescript": "^4.9.4"
   },

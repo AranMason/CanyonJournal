@@ -1,0 +1,52 @@
+name: Deploy docs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node (for potential build steps)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Overwrite site config.json from workflow env (if provided)
+        run: |
+          echo "Writing site/config.json with workflow env values"
+          cat > site/config.json <<'JSON'
+          {
+            "loginUrl": "${{ env.LOGIN_URL }}"
+          }
+          JSON
+        env:
+          LOGIN_URL: ${{ secrets.DOCS_LOGIN_URL || '/login' }}
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./site
+
+  deploy-pages:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
