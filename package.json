@@ -8,7 +8,7 @@
     "watch:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
-    "docs": "http-server ./site -p 8081",
+    "docs": "http-server ./docs -p 8081",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
