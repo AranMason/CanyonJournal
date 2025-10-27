@@ -22,10 +22,10 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Overwrite site config.json from workflow env (if provided)
+      - name: Overwrite docs config.json from workflow env (if provided)
         run: |
-          echo "Writing site/config.json with workflow env values"
-          cat > site/config.json <<'JSON'
+          echo "Writing docs/config.json with workflow env values"
+          cat > docs/config.json <<'JSON'
           {
             "loginUrl": "${{ env.LOGIN_URL }}"
           }
@@ -39,7 +39,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ./site
+          path: ./docs
 
   deploy-pages:
     needs: deploy

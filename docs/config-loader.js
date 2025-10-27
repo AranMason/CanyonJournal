@@ -10,12 +10,6 @@
       if (el instanceof HTMLAnchorElement) el.href = cfg.loginUrl || '/login';
     });
 
-    // set contact email
-    const contactEmail = cfg.contactEmail || 'hello@canyonjournal.example';
-    document.querySelectorAll('[data-config="contactEmail"]').forEach(el => {
-      if (el instanceof HTMLAnchorElement) el.href = `mailto:${contactEmail}`;
-      if (el instanceof HTMLElement && ! (el instanceof HTMLAnchorElement)) el.textContent = contactEmail;
-    });
   } catch (e) {
     // silently ignore; defaults in markup will remain
     console.warn('Could not load site config', e);
