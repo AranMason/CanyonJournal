@@ -8,6 +8,8 @@ import SuccessSnackbar from "./SuccessSnackbar";
 import { useEffect, useState } from "react";
 import { Canyon } from '../types/Canyon';
 import * as Yup from 'yup';
+import AddIcon from '@mui/icons-material/Add';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -230,8 +232,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         Cancel
                                     </Button>}
-                                    <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
-                                        {submitString || "Submit"}
+                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
+                                        {submitString || "Create Record"}
                                     </Button>
                                     
                                 </Box>
