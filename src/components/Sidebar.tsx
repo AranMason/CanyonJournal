@@ -33,7 +33,7 @@ const Sidebar: React.FC = () => {
       />
       <SidebarItem
         isOpen={isOpen}
-        label="Add Entry"
+        label="Record Descent"
         icon={<EditNoteIcon />}
         url='/journal/record'
         disabled={!user}

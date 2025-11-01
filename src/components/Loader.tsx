@@ -15,7 +15,7 @@ const Loader: React.FC<LoaderProps> = ({size, isLoading, children}) => {
 
     const displaySize = size || "container"
 
-    return <Box width={displaySize == "screen" ? "100vw" : "100%"} height={displaySize == "screen" ? "100vh" : "100%"} display="flex" alignItems="center" justifyContent="center">
+    return <Box width={displaySize === "screen" ? "100vw" : "100%"} height={displaySize === "screen" ? "100vh" : "100%"} display="flex" alignItems="center" justifyContent="center">
         <CircularProgress size={80} />
     </Box>
 }

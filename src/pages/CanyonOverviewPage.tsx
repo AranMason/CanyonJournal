@@ -6,13 +6,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
 import { Box, Button, Typography } from '@mui/material';
-
-
 import { GetRegionDisplayName } from '../heleprs/EnumMapper';
 import RegionType from '../types/RegionEnum';
 import CanyonTypeDisplay from '../components/CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -55,7 +54,7 @@ const CanyonOverviewPage: React.FC = () => {
           <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
         </Box>
         <Box display="flex" flexDirection="column" gap={1}>
-          <Button type="button" variant='contained' onClick={() => navigate(`/journal/record`)}>Add Record</Button>
+          <Button type="button" variant='contained' onClick={() => navigate(`/journal/record`)} startIcon={<EditNoteIcon/>}>Record Descent</Button>
           {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer">
             More Details
           </Button> : '-'}

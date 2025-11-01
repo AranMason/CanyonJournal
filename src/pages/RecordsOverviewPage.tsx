@@ -8,6 +8,7 @@ import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { Canyon } from '../types/Canyon';
 import { loadById } from '../heleprs/CanyonDataStore';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 type CanyonDict = {[n: number]: Canyon};
 
@@ -54,7 +55,7 @@ const RecordsOverviewPage: React.FC = () => {
   return (
     <PageTemplate pageTitle="Your Journal" isAuthRequired isLoading={isLoading}>
       <Box>
-        <Button sx={{my: 2}} variant='contained' onClick={() => navigate('/journal/record')}>Add Entry</Button>
+        <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>Record Descent</Button>
 
         {records.length === 0 ? (<div>No Records</div>) : (
 
