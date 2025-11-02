@@ -1,7 +1,7 @@
 // Fetch config.json and apply values to elements with data-config attributes
 (async function(){
   try {
-    const res = await fetch('config.json');
+    const res = await fetch('src/config.json');
     if (!res.ok) return;
     const cfg = await res.json();
 
