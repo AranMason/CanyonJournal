@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useUser } from '../App';
 
 const drawerWidth = 240;
 
@@ -76,6 +77,7 @@ type SidebarDrawerProps = {
 const SidebarDrawer: React.FC<SidebarDrawerProps> = ({children}) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const theme = useTheme();
+  const { user } = useUser();
 
   const handleDrawerToggle = () => {
     setIsOpen(!isOpen);
@@ -83,9 +85,9 @@ const SidebarDrawer: React.FC<SidebarDrawerProps> = ({children}) => {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open={isOpen}>
+      <Drawer variant="permanent" open={!!user && isOpen}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerToggle}>
+          <IconButton onClick={handleDrawerToggle} disabled={!user}>
             {!isOpen ? <ChevronRightIcon sx={{color: theme.palette.primary.contrastText}} /> : <ChevronLeftIcon sx={{color: theme.palette.primary.contrastText}} />}
           </IconButton>
         </DrawerHeader>

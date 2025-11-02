@@ -16,7 +16,7 @@ const HomePage: React.FC = () => {
 
   return (
     <Loader isLoading={loading}>
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#232946" flex={1}>
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh" bgcolor="#dadadaff" flex={1}>
         <Card sx={{ minWidth: 340, maxWidth: 400, p: 2, boxShadow: 3 }}>
           <CardContent>
             <Typography variant="h5" align="center" gutterBottom>
