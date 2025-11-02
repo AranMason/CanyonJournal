@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" href="/favicon.svg" />
+  <link rel="icon" href="/assets/favicon.svg" />
   <title>Canyon Journal — Record your descents</title>
   <link rel="stylesheet" href="/styles.css">
   <meta name="description" content="Canyon Journal — record descents, track gear, discover canyons, and view historic descents." />
@@ -12,7 +12,7 @@
   <div class="container">
     <header class="header">
       <div class="brand">
-        <div class="logo">CJ</div>
+        <img src="assets/favicon.svg" width="48" height="48"/>
         <div>
           <div class="site-title">Canyon Journal</div>
           <div class="small">Record descents • Track gear • Discover canyons</div>
@@ -24,33 +24,37 @@
         <a class="small cta" data-config="loginUrl" href="/login">Login</a>
       </nav>
     </header>
-
+    <section class="hero-image">
+      <div class="hero-cta">
+      <h1>Keep your canyon descents in one place</h1>
+          <p>Quickly record descents, track rope & gear usage, view historical trips for any canyon, and find your next adventure.</p>
+          <div>
+          <a id="cta-login" class="cta" data-config="loginUrl" href="/login">Join Now</a>
+          <a id="cta-login" class="cta" style="background-color: unset;" data-config="loginUrl" href="/login">Login</a>
+          </div>
+    </div>
+    </section>
     <section class="hero">
-      <div class="hero-left">
-        <h1>Keep your canyon descents in one place</h1>
-        <p>Quickly record descents, track rope & gear usage, view historical trips for any canyon, and find your next adventure.</p>
-  <a id="cta-login" class="cta" data-config="loginUrl" href="/login">Sign Up to Canyon Journal</a>
-        <div class="features">
-          <div class="feature">
-            <h3>Record descents</h3>
-            <p>Easily log your canyon descents with date, team size, water levels and notes.</p>
-          </div>
-          <div class="feature">
-            <h3>Journal</h3>
-            <p>See all journal entries of past descents of a canyon to help plan your next trip.</p>
-          </div>
-          <div class="feature">
-            <h3>Gear tracking</h3>
-            <p>Track rope and equipment usage so you know what to service or replace.</p>
-          </div>
-          <div class="feature">
-            <h3>Discover new canyons</h3>
-            <p>Browse canyons and use filters to find new adventures that match your preferred difficulty and location.</p>
+      <div class="hero-content">
+        
+        <div class="hero-left">
+          
+          <div class="features">
+            <div class="feature">
+              <i class="fa-solid fa-pen"></i>
+              <h3>Record descents</h3>
+              <p>Easily log your canyon descents with date, team size, water levels and notes.</p>
+            </div>
+            <div class="feature">
+              <h3>Gear tracking</h3>
+              <p>Track rope and equipment usage so you know what to service or replace.</p>
+            </div>
+            <div class="feature">
+              <h3>Discover new canyons</h3>
+              <p>Browse canyons and use filters to find new adventures that match your preferred difficulty and location.</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div style="min-width:260px;display:flex;align-items:center;justify-content:center">
-        <div style="width:220px;height:220px;background:linear-gradient(135deg,#0ea5a4,#06b6d4);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700">Canyon<br>Journal</div>
       </div>
     </section>
 
