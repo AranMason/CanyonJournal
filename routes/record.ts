@@ -164,7 +164,41 @@ recordRouter.get('/', async (req: Request, res: Response) => {
     }
 
     const result = await request.query(query);
-    res.json({ records: result.recordset });
+    const records = result.recordset as any[];
+
+    // Attach GearIds and RopeIds for each record efficiently
+    if (records.length > 0) {
+      const ids = records.map(r => r.Id).filter((v: any) => v !== undefined && v !== null);
+      if (ids.length > 0) {
+        const idList = ids.join(',');
+        // TODO: Optimize
+        const ropeRows = await pool.request()
+          .query(`SELECT CanyonRecordId, RopeItemId FROM CanyonRecordRope WHERE CanyonRecordId IN (${idList})`)
+          .then(r => r.recordset as any[]);
+        const gearRows = await pool.request()
+          .query(`SELECT CanyonRecordId, GearItemId FROM CanyonRecordGear WHERE CanyonRecordId IN (${idList})`)
+          .then(r => r.recordset as any[]);
+
+        const ropesByRecord: Record<number, number[]> = {};
+        ropeRows.forEach(r => {
+          ropesByRecord[r.CanyonRecordId] = ropesByRecord[r.CanyonRecordId] || [];
+          ropesByRecord[r.CanyonRecordId].push(r.RopeItemId);
+        });
+
+        const gearByRecord: Record<number, number[]> = {};
+        gearRows.forEach(g => {
+          gearByRecord[g.CanyonRecordId] = gearByRecord[g.CanyonRecordId] || [];
+          gearByRecord[g.CanyonRecordId].push(g.GearItemId);
+        });
+
+        records.forEach(rec => {
+          rec.RopeIds = ropesByRecord[rec.Id] || [];
+          rec.GearIds = gearByRecord[rec.Id] || [];
+        });
+      }
+    }
+
+    res.json({ records });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch records' });
   }
@@ -194,7 +228,7 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
     resultRecord.GearIds = await pool.request()
       .input('Id', sql.Int, Number(req.params.id))
       .query('SELECT GearItemId FROM CanyonRecordGear WHERE CanyonRecordId = @Id')
-      .then(r => r.recordset.map((row: any) => row.GearItemId));;
+      .then(r => r.recordset.map((row: any) => row.GearItemId));
 
     res.json(resultRecord);
   } catch (err) {

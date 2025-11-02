@@ -22,9 +22,9 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   }, []);
 
   return (
-    <Box sx={{ mt: 3, mb: 2 }}>
-      <FormControl fullWidth sx={{ mb: 2 }}>
-        <InputLabel id="rope-select-label">Select Ropes</InputLabel>
+    <>
+      <FormControl sx={{ minWidth: 240, flex: 1 }}>
+        <InputLabel id="rope-select-label">Ropes</InputLabel>
         <Select
           labelId="rope-select-label"
           label="Select Ropes"
@@ -35,7 +35,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
                 const rope = ropes.find(r => r.Id === id);
-                return rope ? <Chip key={id} label={rope.Name} /> : null;
+                return rope ? <Chip size="small" key={id} label={rope.Name} /> : null;
               })}
             </Box>
           )}
@@ -45,8 +45,8 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           ))}
         </Select>
       </FormControl>
-      <FormControl fullWidth>
-        <InputLabel id="gear-select-label">Select Gear</InputLabel>
+      <FormControl sx={{ minWidth: 240, flex: 1 }}>
+        <InputLabel id="gear-select-label">Gear</InputLabel>
         <Select
           labelId="gear-select-label"
           label="Select Gear"
@@ -57,7 +57,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
                 const g = gear.find(gg => gg.Id === id);
-                return g ? <Chip key={id} label={g.Name} /> : null;
+                return g ? <Chip size="small" key={id} label={g.Name} /> : null;
               })}
             </Box>
           )}
@@ -76,6 +76,6 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           ])}
         </Select>
       </FormControl>
-    </Box>
+    </>
   );
 };

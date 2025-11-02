@@ -10,6 +10,7 @@ import { Canyon } from '../types/Canyon';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import { GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -25,15 +26,6 @@ type OtherOption = {
     VerticalRating: number;
     StarRating: number;
 }
-
-const WaterLevelDisplay: { [key in WaterLevel]: string } = {
-    [WaterLevel.Unknown]: 'Unknown',
-    [WaterLevel.VeryLow]: 'Very Low',
-    [WaterLevel.Low]: 'Low',   
-    [WaterLevel.Medium]: 'Medium',
-    [WaterLevel.High]: 'High',
-    [WaterLevel.VeryHigh]: 'Very High'
-};
 
 
 const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, submitString }) => {
@@ -89,7 +81,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 }),
                             });
                             setSnackbarOpen(true);
-                            navigate('/');
+                            navigate('/journal');
                         } catch (err: any) {
                             if (err.message !== 'Unauthorized') {
                                 alert(err.message || 'Failed to record canyon.');
@@ -205,7 +197,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     error={touched.WaterLevel && Boolean(errors.WaterLevel)}
                                 >
                                     {[WaterLevel.Unknown, WaterLevel.VeryLow, WaterLevel.Low, WaterLevel.Medium, WaterLevel.High, WaterLevel.VeryHigh].map((level) => (
-                                        <MenuItem key={level} value={level}>{WaterLevelDisplay[level]}</MenuItem>
+                                        <MenuItem key={level} value={level}>{GetWaterLevelDisplayName(level)}</MenuItem>
                                     ))}
                                 </Select></FormControl>
                                 <TextField
@@ -222,12 +214,14 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     helperText={touched.Comments && errors.Comments}
                                 />
                                 <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
+                                <Box display="flex" gap={2} flexDirection="column" mb={2}>
                                 <GearRopeSelector
                                     selectedRopeIds={values.RopeIds}
                                     setSelectedRopeIds={ids => setFieldValue('RopeIds', ids)}
                                     selectedGearIds={values.GearIds}
                                     setSelectedGearIds={ids => setFieldValue('GearIds', ids)}
                                 />
+                                </Box>
                                 <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         Cancel

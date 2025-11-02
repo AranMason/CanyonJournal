@@ -12,6 +12,7 @@ import CanyonTypeDisplay from '../components/CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+import LocationPinIcon from '@mui/icons-material/LocationPin';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -55,9 +56,9 @@ const CanyonOverviewPage: React.FC = () => {
         </Box>
         <Box display="flex" flexDirection="column" gap={1}>
           <Button type="button" variant='contained' onClick={() => navigate(`/journal/record`)} startIcon={<EditNoteIcon/>}>Record Descent</Button>
-          {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer">
-            More Details
-          </Button> : '-'}
+          {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer" startIcon={<LocationPinIcon/>}>
+            Canyon Log
+          </Button> : null}
         </Box>
       </Box>
     </Typography>
