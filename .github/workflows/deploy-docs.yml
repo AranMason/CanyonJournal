@@ -22,15 +22,6 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Overwrite docs config.json from workflow env (if provided)
-        run: |
-          echo "Writing docs/config.json with workflow env values"
-          cat > docs/src/config.json <<'JSON'
-          {
-            "loginUrl": "${{ secrets.LOGIN_URL || env.LOGIN_URL || '/login' }}"
-          }
-          JSON
-
       - name: Configure Pages
         uses: actions/configure-pages@v4
 
