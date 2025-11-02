@@ -11,13 +11,19 @@ a {color:var(--accent);text-decoration:none}
 html,body{height:100%}
 body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:rgb(35, 41, 70); color:var(--text); -webkit-font-smoothing:antialiased}
 .container{height:100vh;margin:0 auto; display: flex; flex-direction: column;}
-.header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;}
-.brand{display:flex;align-items:center;gap:12px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;flex-wrap: wrap;}
+.brand{display:flex;align-items:center;gap:12px;flex:1;min-width: 400px;}
 .logo{width:48px;height:48px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ff8f5a);display:flex;align-items:center;justify-content:center;font-weight:700}
 .site-title{font-size:1.25rem;font-weight:700}
+.nav {
+	flex: 1;
+	justify-content: flex-end;
+	display: flex;
+	align-items: center;
+}
 .nav a{color:var(--muted);text-decoration:none;margin-left:16px}
 .nav a.cta{color:var(--text)}
-.hero{flex:1;padding-left:auto;padding-right:auto;display:flex;flex-wrap:wrap;gap:24px;align-items:center;padding:48px 0;background-color: white;color:#081226;align-items: flex-start;}
+.hero{flex:1;padding-left:auto;padding-right:auto;display:flex;flex-wrap:wrap;gap:24px;padding:48px;background-color: white;color:#081226;justify-content: center;}
 .hero-image{background-image: url("/assets/hero.jpg");height:500px;width:100%;background-size:cover;background-position:center;display: flex;}
 .hero-cta{margin: auto;
   align-items: center;
@@ -31,7 +37,7 @@ body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, '
 .hero-left{flex:1;min-width:280px}
 .hero h1{font-size:2rem;margin:0 0 8px}
 .hero p{margin:0 0 18px;color:var(--muted)}
-.hero-content{max-width:1000px; margin-left:auto; margin-right:auto;}
+.hero-content{flex:1;max-width: 1000px;}
 .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
 .feature{background:rgba(255,255,255,0.02);padding:18px;border-radius:10px}
 .feature h3{margin:0 0 8px;font-size:1.05rem}
