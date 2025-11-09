@@ -14,8 +14,8 @@ const DashboardStats: React.FC = () => {
         return await apiFetch<number>(`/api/dashboard/${DashboardWidget.UniqueDescents}`);
       }
     
-      const loadRecentDescents = async (): Promise<number> => {
-        return await apiFetch<number>(`/api/dashboard/${DashboardWidget.RecentDescents}`);
+      const loadRecentDescents = async (): Promise<{ currentYear: number, priorYear: number}> => {
+        return await apiFetch<{ currentYear: number, priorYear: number}>(`/api/dashboard/${DashboardWidget.RecentDescents}`);
       }
 
     return <Box sx={{ display: "flex", gap: 2, mb: 4 }} className="hide-md">
@@ -30,8 +30,8 @@ const DashboardStats: React.FC = () => {
           </Typography>}
         </StatCard>
         <StatCard title="Total Canyons this year" getData={loadRecentDescents}>
-          {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
-            {data}
+          {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }} display="flex" flexDirection={"column"}>
+            {data?.currentYear} {data?.priorYear > 0 && <Typography variant="subtitle1" color="textSecondary"> (Last year: {data.priorYear})</Typography>}
           </Typography>}
         </StatCard>
       </Box>;
