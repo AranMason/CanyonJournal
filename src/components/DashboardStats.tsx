@@ -29,7 +29,7 @@ const DashboardStats: React.FC = () => {
             {data}
           </Typography>}
         </StatCard>
-        <StatCard title="Last 6 Months" getData={loadRecentDescents}>
+        <StatCard title="Total Canyons this year" getData={loadRecentDescents}>
           {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }}>
             {data}
           </Typography>}
