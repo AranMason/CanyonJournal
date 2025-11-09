@@ -26,10 +26,12 @@ export async function getUniqueCanyonsDescendedCount(userId: number): Promise<nu
     const pool = await getPool();
 
     // We treat unique canyons as distinct CanyonId values, but if CanyonId is null, we fall back to using the Name field
+    console.log("Getting unique canyons for user:", userId);
     const result = await pool.request()
         .input('userId', userId)
-        .query('SELECT COUNT(DISTINCT(COALESCE(CONVERT(varchar(10), CanyonId), Name))) FROM CanyonRecords  WHERE UserId = @userId')
+        .query('SELECT COUNT(DISTINCT(COALESCE(CONVERT(varchar(255), CanyonId), Name))) As Total FROM CanyonRecords WHERE UserId = @userId')
 
+        console.log("Unique canyons query result:", result.recordset);
 
     return result.recordset[0]?.Total ?? 0;
 }
