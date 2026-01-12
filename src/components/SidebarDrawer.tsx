@@ -75,7 +75,7 @@ type SidebarDrawerProps = {
 }
 
 const SidebarDrawer: React.FC<SidebarDrawerProps> = ({children}) => {
-  const [isOpen, setIsOpen] = React.useState(true);
+  const [isOpen, setIsOpen] = React.useState(false);
   const theme = useTheme();
   const { user } = useUser();
 

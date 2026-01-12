@@ -31,7 +31,7 @@ const EditRecordPage: React.FC = () => {
                     Comments: data.Comments || '', 
                     RopeIds: data.RopeIds, 
                     GearIds: data.GearIds, 
-                    CanyonId: data.CanyonId, 
+                    CanyonId: data.CanyonId ?? 0, // Zero indicates 'Other' canyon selected 
                     WaterLevel: data.WaterLevel || WaterLevel.Unknown 
                 });
             })
