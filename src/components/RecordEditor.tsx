@@ -1,4 +1,4 @@
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider } from "@mui/material";
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider, Rating } from "@mui/material";
 import { Formik, Form } from "formik";
 import {  useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
@@ -11,7 +11,8 @@ import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SearchIcon from '@mui/icons-material/Search';
-import { GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
+import { GetRegionDisplayName, GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
+import CanyonRating from "./CanyonRating";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -37,6 +38,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [searchDialogOpen, setSearchDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
+    const [searchFilter, setSearchFilter] = useState('');
 
     useEffect(() => {
         setCanyonsLoading(true);
@@ -89,31 +91,58 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             setFieldValue('CanyonId', canyon.Id);
                             setFieldValue('Name', canyon.Name);
                             setFieldValue('Url', canyon.Url);
+                            setSearchFilter('');
                             setSearchDialogOpen(false);
                         };
 
+                        const filteredCanyons = canyons.filter(canyon => 
+                            canyon.Name.toLowerCase().includes(searchFilter.toLowerCase())
+                        );
+
                         return (
                             <Form>
-                                <Dialog open={searchDialogOpen} onClose={() => setSearchDialogOpen(false)} maxWidth="sm" fullWidth>
+                                <Dialog open={searchDialogOpen} onClose={() => { setSearchDialogOpen(false); setSearchFilter(''); }} maxWidth="sm" fullWidth>
                                     <DialogTitle>Select a Canyon</DialogTitle>
-                                    <DialogContent>
+                                    <DialogContent sx={{ height: 500 }}>
                                         {isCanyonsLoading ? (
                                             <Box display="flex" justifyContent="center" p={3}>
                                                 <CircularProgress />
                                             </Box>
                                         ) : (
-                                            <List>
-                                                {canyons.map(canyon => (
-                                                    <ListItem key={canyon.Id} disablePadding>
-                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
-                                                            <ListItemText 
-                                                                primary={canyon.Name}
-                                                                secondary={canyon.Url}
-                                                            />
-                                                        </ListItemButton>
-                                                    </ListItem>
-                                                ))}
-                                            </List>
+                                            <>
+                                                <TextField
+                                                    fullWidth
+                                                    placeholder="Search by name..."
+                                                    value={searchFilter}
+                                                    onChange={(e) => setSearchFilter(e.target.value)}
+                                                    margin="normal"
+                                                    autoFocus
+                                                />
+                                                <List sx={{ maxHeight: 400, overflow: 'auto' }}>
+                                                    {filteredCanyons.map(canyon => (
+                                                        <ListItem key={canyon.Id} disablePadding>
+                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                                <ListItemText 
+                                                                    primary={
+                                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                            <span>{canyon.Name}</span>
+                                                                            <span>{GetRegionDisplayName(canyon.Region, true)}</span>
+                                                                        </Box>
+                                                                    }
+                                                                    secondary={
+                                                                        <CanyonRating 
+                                                                            aquaticRating={canyon.AquaticRating}
+                                                                            verticalRating={canyon.VerticalRating}
+                                                                            commitmentRating={canyon.CommitmentRating}
+                                                                            starRating={canyon.StarRating}
+                                                                            isUnrated={canyon.IsUnrated} />
+                                                                        }
+                                                                />
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    ))}
+                                                </List>
+                                            </>
                                         )}
                                     </DialogContent>
                                 </Dialog>

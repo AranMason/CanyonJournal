@@ -13,18 +13,22 @@ export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {
     return CanyonTypeDisplayName[type  ?? CanyonTypeEnum.Unknown];
 }
 
-const CanyonRegionDisplayName: {[key in RegionType]: string} = {
-    [RegionType.Unknown]: "-",
-    [RegionType.Scotland]: "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland",
-    [RegionType.England]: "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England",
-    [RegionType.Wales]: "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales",
-    [RegionType.NorthernIreland]: "🇬🇧 Northern Ireland",
-    [RegionType.IsleOfMan]: "🇬🇧 Isle of Man"
+const CanyonRegionDisplayName: {[key in RegionType]: {
+    symbol: string;
+    name: string;
+}} = {
+    [RegionType.Unknown]: { symbol: "", name: "-" },
+    [RegionType.Scotland]: { symbol: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", name: "Scotland" },
+    [RegionType.England]: { symbol: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", name: "England" },
+    [RegionType.Wales]: { symbol: "🏴󠁧󠁢󠁷󠁬󠁳󠁿", name: "Wales" },
+    [RegionType.NorthernIreland]: { symbol: "🇬🇧", name: "Northern Ireland" },
+    [RegionType.IsleOfMan]: { symbol: "🇬🇧", name: "Isle of Man" }
 }
 
-export function GetRegionDisplayName(type: RegionType): string {
-
-    return CanyonRegionDisplayName[type ?? RegionType.Unknown];
+export function GetRegionDisplayName(type: RegionType, isShort: boolean = false): string 
+{
+    var region = CanyonRegionDisplayName[type ?? RegionType.Unknown];
+    return isShort ? `${region.symbol}` : [region.symbol, region.name].join(" ");
 }
 
 const WaterLevelDisplay: { [key in WaterLevel]: string } = {
