@@ -40,7 +40,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                         </Box>
                     </Box>
                     <Box width={80} className="hide-sm">
-                        {GetRegionDisplayName(canyon?.Region ?? RegionType.Unknown)}
+                        {GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown)}
                     </Box>
                 </Box>
                 <Box display="flex" flexDirection="column" alignItems="flex-end" ml="auto" width={90}>

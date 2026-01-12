@@ -1,3 +1,5 @@
+import RegionType from './RegionEnum';
+
 export interface CanyonRecord {
     Id?: number;
     Name: string;
@@ -6,6 +8,7 @@ export interface CanyonRecord {
     TeamSize?: number;
     Comments?: string;
     CanyonId?: number;
+    Region?: RegionType;
     Timestamp?: string; // ISO string for when record was created
     RopeIds: number[];
     GearIds: number[];

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel, Alert } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { CanyonWithDescents } from '../types/Canyon';
@@ -102,6 +102,9 @@ const CanyonList: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
+      <Alert severity="info" sx={{ mb: 2 }}>
+        Only canyons in the UK are currently loaded.
+      </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>
           <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         

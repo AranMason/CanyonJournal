@@ -1,4 +1,4 @@
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider, Rating } from "@mui/material";
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider, Rating, Autocomplete, Alert } from "@mui/material";
 import { Formik, Form } from "formik";
 import {  useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
@@ -13,20 +13,12 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import SearchIcon from '@mui/icons-material/Search';
 import { GetRegionDisplayName, GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
 import CanyonRating from "./CanyonRating";
+import RegionType, { RegionTypeList } from "../types/RegionEnum";
 
 type RecordEditorProps = {
     isEdit: boolean,
     initialValues?: CanyonRecord
     submitString?: string
-}
-
-type OtherOption = {
-    Id: 0;
-    Name: string;
-    Url: string;
-    AquaticRating: number;
-    VerticalRating: number;
-    StarRating: number;
 }
 
 
@@ -48,7 +40,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     }, []);
     
       
-    const initialFormValues: CanyonRecord = initialValues || { Name: '', Date: new Date().toISOString().split('T')[0], Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined, WaterLevel: WaterLevel.Unknown }
+    const initialFormValues: CanyonRecord = initialValues || { Name: '', Date: new Date().toISOString().split('T')[0], Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined, Region: RegionType.Unknown, WaterLevel: WaterLevel.Unknown }
 
     return <>
         <Box maxWidth={400} mx="auto" mt={4}>
@@ -91,6 +83,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             setFieldValue('CanyonId', canyon.Id);
                             setFieldValue('Name', canyon.Name);
                             setFieldValue('Url', canyon.Url);
+                            setFieldValue('Region', canyon.Region);
                             setSearchFilter('');
                             setSearchDialogOpen(false);
                         };
@@ -110,6 +103,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                             </Box>
                                         ) : (
                                             <>
+                                                <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
+                                                    Only canyons in the UK have been included so far.
+                                                </Alert>
                                                 <TextField
                                                     fullWidth
                                                     placeholder="Search by name..."
@@ -172,6 +168,22 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     error={touched.Url && Boolean(errors.Url)}
                                     helperText={touched.Url && errors.Url}
                                 />
+                                <Autocomplete
+                                    options={RegionTypeList}
+                                    getOptionLabel={(option) => GetRegionDisplayName(option)}
+                                    value={values.Region ?? RegionType.Unknown}
+                                    onChange={(_, newValue) => setFieldValue('Region', newValue ?? RegionType.Unknown)}
+                                    disabled={Boolean(values.CanyonId)}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Country/Region"
+                                            margin="normal"
+                                            fullWidth
+                                        />
+                                    )}
+                                    isOptionEqualToValue={(option, value) => option === value}
+                                />
                                 <Box display="flex" alignItems="center" justifyContent={"space-between"} gap={1} mt={2} mb={1}>
                                     <Button
                                         variant="outlined"
@@ -186,6 +198,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                             setFieldValue('CanyonId', undefined);
                                             setFieldValue('Name', '');
                                             setFieldValue('Url', '');
+                                            setFieldValue('Region', RegionType.Unknown);
                                         }}
                                     >
                                         Clear

@@ -30,9 +30,10 @@ recordRouter.post('/', async (req: Request, res: Response) => {
       .input('comments', sql.NVarChar(1000), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId, WaterLevel)
+      .input('region', sql.Int, req.body.Region || null)
+      .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId, WaterLevel, Region)
               OUTPUT INSERTED.*
-              VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId, @waterLevel)`);
+              VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId, @waterLevel, @region)`);
     const record = result.recordset[0];
     // Insert mapping tables if ropeIds/gearIds provided
 
@@ -93,7 +94,8 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
       .input('comments', sql.NVarChar(1000), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .query(`UPDATE CanyonRecords SET Name=@name, Date=@date, Url=@url, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, WaterLevel=@waterLevel WHERE Id=@Id AND UserId=@userId`);
+      .input('region', sql.Int, req.body.Region || null)
+      .query(`UPDATE CanyonRecords SET Name=@name, Date=@date, Url=@url, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, WaterLevel=@waterLevel, Region=@region WHERE Id=@Id AND UserId=@userId`);
 
 
     // UPDATE GEAR/ROPE IDS
@@ -150,14 +152,30 @@ recordRouter.get('/', async (req: Request, res: Response) => {
     const canyonId = req.query.canyon ? Number(req.query.canyon) : undefined;
     const request = await pool.request()
       .input('userId', sql.Int, await getUserIdByRequest(req))
-    let query = `SELECT * FROM CanyonRecords WHERE UserId = @userId`;
+    let query = `
+      SELECT 
+        cr.Id,
+        cr.UserId,
+        cr.Name,
+        cr.Date,
+        cr.Url,
+        cr.TeamSize,
+        cr.Comments,
+        cr.CanyonId,
+        cr.WaterLevel,
+        cr.Timestamp,
+        COALESCE(cr.Region, c.Region) as Region
+      FROM CanyonRecords cr
+      LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+      WHERE cr.UserId = @userId
+    `;
 
     if(canyonId && !isNaN(canyonId)) {
-      query += ' AND CanyonId=@CanyonId';
+      query += ' AND cr.CanyonId=@CanyonId';
       request.input('canyonId', canyonId);
     }
 
-    query += ' ORDER BY Date DESC'
+    query += ' ORDER BY cr.Date DESC'
 
     if (max && !isNaN(max)) {
       query += ` OFFSET 0 ROWS FETCH NEXT ${max} ROWS ONLY`;
@@ -208,7 +226,23 @@ recordRouter.get('/', async (req: Request, res: Response) => {
 recordRouter.get('/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
-    const query = 'SELECT TOP 1 * FROM CanyonRecords WHERE Id = @Id AND UserId = @userId';
+    const query = `
+      SELECT TOP 1 
+        cr.Id,
+        cr.UserId,
+        cr.Name,
+        cr.Date,
+        cr.Url,
+        cr.TeamSize,
+        cr.Comments,
+        cr.CanyonId,
+        cr.WaterLevel,
+        cr.Timestamp,
+        COALESCE(cr.Region, c.Region) as Region
+      FROM CanyonRecords cr
+      LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+      WHERE cr.Id = @Id AND cr.UserId = @userId
+    `;
     const userId = await getUserIdByRequest(req);
     const result = await pool.request()
       .input('userId', sql.Int, userId)
