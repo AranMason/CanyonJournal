@@ -1,4 +1,4 @@
-import { Box, Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button } from "@mui/material";
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider } from "@mui/material";
 import { Formik, Form } from "formik";
 import {  useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
@@ -10,6 +10,7 @@ import { Canyon } from '../types/Canyon';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import SearchIcon from '@mui/icons-material/Search';
 import { GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
 
 type RecordEditorProps = {
@@ -34,8 +35,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     
     const [canyons, setCanyons] = useState<Canyon[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const customCanyonOption: OtherOption = { Id: 0, Name: 'Other', Url: '', AquaticRating: 0, VerticalRating: 0, StarRating: 0 };
-    const canyonOptions: (Canyon | OtherOption)[] = [...canyons, customCanyonOption];
+    const [searchDialogOpen, setSearchDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
 
     useEffect(() => {
@@ -53,17 +53,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                 <Formik
                     initialValues={initialFormValues}
                     validationSchema={Yup.object().shape({
-                        Name: Yup.string().when('CanyonId', {
-                            is: (val: number | undefined) => val === 0 || !val,
-                            then: schema => schema.required('Canyon name is required'),
-                            otherwise: schema => schema,
-                        }),
+                        Name: Yup.string().required('Canyon name is required'),
                         Date: Yup.string().test("maxDate", "Cannot be in the future", val => !val || Date.parse(val) < Date.now()).required('Date is required'),
-                        Url: Yup.string().when('CanyonId', {
-                            is: (val: number | undefined) => val === 0 || !val,
-                            then: schema => schema.url('Must be a valid URL').nullable(),
-                            otherwise: schema => schema,
-                        }),
+                        Url: Yup.string().url('Must be a valid URL').nullable(),
                         TeamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
                         Comments: Yup.string().nullable(),
                         WaterLevel: Yup.number().min(0, 'Invalid water level').max(5, 'Invalid water level')
@@ -93,46 +85,39 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                 >
                     {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => {
                         // Find selected canyon by id
-                        const selectedCanyon = canyonOptions.find(c => c.Id === values.CanyonId);
+                        const handleCanyonSelect = (canyon: Canyon) => {
+                            setFieldValue('CanyonId', canyon.Id);
+                            setFieldValue('Name', canyon.Name);
+                            setFieldValue('Url', canyon.Url);
+                            setSearchDialogOpen(false);
+                        };
+
                         return (
                             <Form>
-                                <Autocomplete
-                                    options={canyonOptions}
-                                    getOptionLabel={option => typeof option === 'string' ? option : option.Name}
-                                    loading={isCanyonsLoading}
-                                    onChange={(_, canyon) => {
-                                        if (!canyon || (typeof canyon === 'string')) {
-                                            setFieldValue('CanyonId', 0);
-                                            setFieldValue('Name', '');
-                                            setFieldValue('Url', '');
-                                        } else if (canyon.Id === 0) {
-                                            setFieldValue('CanyonId', 0);
-                                            setFieldValue('Name', '');
-                                            setFieldValue('Url', '');
-                                        } else {
-                                            setFieldValue('CanyonId', canyon.Id);
-                                            setFieldValue('Name', canyon.Name);
-                                            setFieldValue('Url', canyon.Url);
-                                        }
-                                    }}
-                                    value={
-                                        typeof values.CanyonId === 'undefined' ? null : canyonOptions.find(c => c.Id === values.CanyonId) || null
-                                    }
-                                    renderInput={params => (
-                                        <TextField
-                                            {...params}
-                                            label="Canyon"
-                                            name="Canyon"
-                                            onBlur={handleBlur}
-                                            required
-                                            margin="normal"
-                                        />
-                                    )}
-                                    isOptionEqualToValue={(option, value) => {
-                                        if (typeof option === 'string' || typeof value === 'string') return option === value;
-                                        return option.Id === value.Id;
-                                    }}
-                                />
+                                <Dialog open={searchDialogOpen} onClose={() => setSearchDialogOpen(false)} maxWidth="sm" fullWidth>
+                                    <DialogTitle>Select a Canyon</DialogTitle>
+                                    <DialogContent>
+                                        {isCanyonsLoading ? (
+                                            <Box display="flex" justifyContent="center" p={3}>
+                                                <CircularProgress />
+                                            </Box>
+                                        ) : (
+                                            <List>
+                                                {canyons.map(canyon => (
+                                                    <ListItem key={canyon.Id} disablePadding>
+                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                            <ListItemText 
+                                                                primary={canyon.Name}
+                                                                secondary={canyon.Url}
+                                                            />
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        )}
+                                    </DialogContent>
+                                </Dialog>
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Canyon</Typography>
                                 <TextField
                                     label="Name of the Canyon"
                                     name="Name"
@@ -140,24 +125,44 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     fullWidth
-                                    required={values.CanyonId === 0}
+                                    required
+                                    disabled={Boolean(values.CanyonId)}
                                     margin="normal"
                                     error={touched.Name && Boolean(errors.Name)}
                                     helperText={touched.Name && errors.Name}
-                                    disabled={!!selectedCanyon && selectedCanyon.Id !== 0}
                                 />
                                 <TextField
-                                    label="Canyon Log URL"
+                                    label="Reference URL"
                                     name="Url"
                                     value={values.Url}
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     fullWidth
+                                    disabled={Boolean(values.CanyonId)}
                                     margin="normal"
                                     error={touched.Url && Boolean(errors.Url)}
                                     helperText={touched.Url && errors.Url}
-                                    disabled={!!selectedCanyon && selectedCanyon.Id !== 0}
                                 />
+                                <Box display="flex" alignItems="center" justifyContent={"space-between"} gap={1} mt={2} mb={1}>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<SearchIcon />}
+                                        onClick={() => setSearchDialogOpen(true)}
+                                    >
+                                        Find canyon
+                                    </Button>
+                                    <Button
+                                        disabled={!Boolean(values.CanyonId)}
+                                        onClick={() => {
+                                            setFieldValue('CanyonId', undefined);
+                                            setFieldValue('Name', '');
+                                            setFieldValue('Url', '');
+                                        }}
+                                    >
+                                        Clear
+                                    </Button>
+                                </Box>
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Trip Information</Typography>
                                 <TextField
                                     label="Date"
                                     type="date"
