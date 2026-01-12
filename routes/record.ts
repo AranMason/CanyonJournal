@@ -27,7 +27,7 @@ recordRouter.post('/', async (req: Request, res: Response) => {
       .input('date', sql.Date, dateTime)
       .input('url', sql.NVarChar(255), Url)
       .input('teamSize', sql.Int, teamSizeNum)
-      .input('comments', sql.NVarChar(1000), Comments || null)
+      .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
       .input('region', sql.Int, req.body.Region || null)
@@ -91,7 +91,7 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
       .input('date', sql.Date, dateTime)
       .input('url', sql.NVarChar(255), Url)
       .input('teamSize', sql.Int, teamSizeNum)
-      .input('comments', sql.NVarChar(1000), Comments || null)
+      .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
       .input('region', sql.Int, req.body.Region || null)
@@ -140,7 +140,8 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
     await transaction.commit();
     res.status(201).json({ message: 'Canyon record updated!', Id });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to add canyon record' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add canyon record' } );
   }
 });
 
@@ -218,6 +219,7 @@ recordRouter.get('/', async (req: Request, res: Response) => {
 
     res.json({ records });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch records' });
   }
 });
@@ -266,6 +268,7 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
 
     res.json(resultRecord);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch records' });
   }
 });
