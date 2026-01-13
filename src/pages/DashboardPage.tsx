@@ -59,6 +59,7 @@ const DashboardPage: React.FC = () => {
 
         records.map(rec => (
           <CanyonRecordAccordion
+            key={rec.Id}
             isOpen={sectionOpen === rec.Id}
             onChange={() => handleAccordionToggle(rec.Id ?? null)}
             record={rec}

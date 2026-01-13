@@ -31,7 +31,7 @@ const DashboardStats: React.FC = () => {
         </StatCard>
         <StatCard title="Total Canyons this year" getData={loadRecentDescents}>
           {(data) => <Typography variant="h2" sx={{ fontWeight: 700, textAlign: 'center' }} display="flex" flexDirection={"column"}>
-            {data?.currentYear} {data?.priorYear > 0 && <Typography variant="subtitle1" color="textSecondary"> (Last year: {data.priorYear})</Typography>}
+            {data?.currentYear} {data?.priorYear > 0 && <Typography component="span" variant="subtitle1" color="textSecondary"> (Last year: {data.priorYear})</Typography>}
           </Typography>}
         </StatCard>
       </Box>;
