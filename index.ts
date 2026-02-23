@@ -105,7 +105,7 @@ app.get('/api/callback', passport.authenticate('auth0', {
 // Auth0 logout route
 app.get('/api/logout', (req, res) => {
   req.logout(() => {
-    res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${process.env.BASE_URL}`);
+    res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${process.env.BASE_URL}&federated`);
   });
 });
 

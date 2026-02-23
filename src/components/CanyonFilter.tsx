@@ -41,7 +41,7 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
         }
 
         if (filterOptions.type.length > 0) {
-            filtersList.push(s => filterOptions.type.includes(s.CanyonType ?? RegionType.Unknown))
+            filtersList.push(s => filterOptions.type.includes(s.CanyonType ?? CanyonTypeEnum.Unknown))
         }
 
         if(filterOptions.verticalRating.length > 0 || filterOptions.aquaRating.length > 0 || filterOptions.starRating.length > 0) {
