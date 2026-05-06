@@ -18,6 +18,7 @@ import CanyonOverviewPage from './pages/CanyonOverviewPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
 import MuiThemeProvider from './styles/MuiTheme';
 import Sidebar from './components/Sidebar';
+import CookieBanner from './components/CookieBanner';
 import { Box } from '@mui/material';
 
 
@@ -28,6 +29,7 @@ root.render(
   <React.StrictMode>
     <App>
       <MuiThemeProvider>
+        <CookieBanner />
         <BrowserRouter>
           <Box display={'flex'}>
             <Sidebar />
