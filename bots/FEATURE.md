@@ -27,7 +27,3 @@
 - Sometimes in a canyon your rope will be damaged, and we will want to be able to split it into smaller pieces 
 - These pieces might sum to less than the original rope (IE: 2x30m rope from a 70m rope)
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
-
-# BUG: When filtering by region, some regions return blank
-
-- IE: If I filter by scotland, I get canyons in the list. But if I filter to Spain in /journal I get an empty list, even if there are canyons I've done in spain

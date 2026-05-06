@@ -76,8 +76,9 @@ const RecordsOverviewPage: React.FC = () => {
 
       const matchesRegion = (rec: CanyonRecord, canyon?: Canyon) => {
         if (!regionFilter || regionFilter.length === 0) return true;
-        if (!canyon) return false;
-        return regionFilter.includes(canyon.Region ?? RegionType.Unknown);
+        // Prefer the linked canyon's region; fall back to the record's own region field
+        const region = canyon?.Region ?? rec.Region ?? RegionType.Unknown;
+        return regionFilter.includes(region);
       };
 
       const intersects = (gearUsed: number[] | undefined, gearFilteredBy: number[]) => {

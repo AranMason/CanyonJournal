@@ -10,7 +10,7 @@ CanyonJournal is a web application for canyoneers to log, track, and review thei
 |-------|-----------|
 | Frontend | React (TypeScript), Material UI, React Router DOM, Formik + Yup |
 | Backend | Express.js (TypeScript) |
-| Authentication | Auth0 via Passport.js (`passport-auth0`), `express-session` |
+| Authentication | Auth0 via `express-openid-connect` (stateless OIDC cookie) |
 | Database | SQL Server (`mssql`), pooled connection |
 | Hosting | Heroku |
 | Security | Helmet (CSP), `express-rate-limit` (1000 req/min), `compression` |
@@ -49,7 +49,7 @@ CanyonJournal is a web application for canyoneers to log, track, and review thei
 
 ## API Routes
 
-All routes are mounted under `/api/` and require the user to be authenticated. Unauthenticated requests are redirected to `/api/login`.
+All routes are mounted under `/api/` and require the user to be authenticated. Unauthenticated requests return `401 Unauthenticated`.
 
 | File | Method & Path | Description |
 |------|--------------|-------------|
@@ -71,10 +71,57 @@ All routes are mounted under `/api/` and require the user to be authenticated. U
 | `gear.ts` | `PUT /api/equipment/rope/:id` | Edit a rope item |
 | `gear.ts` | `DELETE /api/equipment/rope/:id` | Delete a rope item |
 
-### Auth Routes (on `index.ts`, outside `/api/`)
-- `GET /api/login` — Initiates Auth0 OAuth flow
-- `GET /api/callback` — Auth0 redirect callback
-- `GET /api/logout` — Clears session and redirects to Auth0 logout
+### Auth Routes (on `index.ts`, outside `/api/`, handled by `express-openid-connect`)
+- `GET /login` — Initiates Auth0 OAuth flow (always shows login screen via `prompt=login`)
+- `GET /api/callback` — Auth0 redirect callback (custom path to match Auth0 dashboard setting)
+- `GET /logout` — Clears session and redirects to Auth0 logout (`auth0Logout: true`)
+
+> **Note:** These are Express-level routes, not React Router routes. In the browser, navigating to `/login` or `/logout` triggers an immediate server-side redirect — the React SPA never renders for these paths.
+
+---
+
+## Local Development
+
+### Ports
+
+| Port | Process | Command |
+|------|---------|---------|
+| **8000** | Express backend (full stack) | `npm run watch:server` (`nodemon index.ts`) |
+| **3000** | CRA dev server (frontend only, with HMR) | `npm run dev` (`react-scripts start`) |
+
+### Development Workflows
+
+**Full-stack (recommended for auth and API testing):**
+```
+npm run build        # Compiles React → build/, TypeScript → build/index.js
+npm run watch:server # Runs Express via ts-node on port 8000
+```
+Visit **http://localhost:8000**. `/login`, `/logout`, and all API routes are handled by Express directly.
+
+**Frontend-only (fast UI iteration):**
+```
+npm run watch:server  # Express on port 8000 (API + auth)
+npm run dev           # CRA dev server on port 3000 (proxied to Express)
+```
+Visit **http://localhost:3000**. `setupProxy.js` proxies `/api`, `/login`, and `/logout` to port 8000, so auth works correctly.
+
+> ⚠️ **Common mistake:** Testing auth on port 3000 without `nodemon` running on 8000 — `/login` and `/logout` will be served as blank React pages because the proxy target is unavailable.
+
+### Auth0 Dashboard Settings (required)
+- **Allowed Callback URLs:** `http://localhost:8000/api/callback`, `https://app.canyonjournal.co.uk/api/callback`
+- **Allowed Logout URLs:** `http://localhost:8000`, `https://app.canyonjournal.co.uk`
+- **Allowed Web Origins:** `http://localhost:8000`, `https://app.canyonjournal.co.uk`
+
+### Environment Variables (`.env`)
+| Variable | Description |
+|---|---|
+| `SESSION_SECRET` | Secret for signing the OIDC session cookie |
+| `AUTH0_CLIENT_SECRET` | Auth0 application client secret |
+| `AUTH0_DOMAIN` | Auth0 domain (e.g. `your-tenant.auth0.com`) |
+| `AUTH0_CLIENT_ID` | Auth0 application client ID |
+| `BASE_URL` | Full base URL of the app (e.g. `http://localhost:8000`) |
+| `PORT` | Server port (default `8000`) |
+| `DB_*` | SQL Server connection variables |
 
 ---
 
@@ -152,8 +199,9 @@ Many-to-many join tables linking a `CanyonRecord` to the gear and ropes used on 
 ## Key Conventions
 
 - **Auth guard:** All `/api/` routes are protected by a middleware check in `index.ts`. Individual routes do not need to re-check authentication, but should call `getUserIdByRequest(req)` to get the DB user ID.
-- **`getUserIdByRequest(req)`** — from `routes/helpers/user.helper.ts`. Standard way to get the current user's integer DB `Id`. Returns `0` if not found.
+- **`getUserIdByRequest(req)`** — from `routes/helpers/user.helper.ts`. Standard way to get the current user's integer DB `Id`. Returns `undefined` if not found (not `0` — callers must handle undefined).
 - **`isAdmin(req)`** — from the same helper. Returns `boolean`. Use to gate admin-only operations.
+- **Session:** `express-openid-connect` uses a stateless encrypted cookie (`appSession`) — no server-side session store. `express-session` and `passport` are not used.
 - **Canyon verification:** Canyons have an `IsVerified` flag. Only verified canyons appear in public listings. Admins can view and verify unverified canyons via `GET /api/canyons/verify`.
 - **Freeform vs linked records:** A `CanyonRecord` can be linked to a verified `Canyon` via `CanyonId`, or exist as a freeform entry with just a name and URL. Both are valid.
 - **Unique canyon counting:** The dashboard's `UniqueDescents` widget counts `DISTINCT(COALESCE(CanyonId, Name))` — so freeform records are deduplicated by name.
