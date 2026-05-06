@@ -103,7 +103,7 @@ const CanyonList: React.FC = () => {
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
       <Alert severity="info" sx={{ mb: 2 }}>
-        Only canyons in the UK are currently loaded.
+        Only canyons in the UK, and ones you have recorded previously have been included so far.
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>

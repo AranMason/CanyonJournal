@@ -1,6 +1,7 @@
 import express from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
+import { normaliseUrl } from './helpers/urlHelper';
 import { } from '../src/types/express-session';
 
 const router = express.Router();
@@ -8,24 +9,63 @@ const router = express.Router();
 // GET /api/canyons - return the list of canyons from SQL Server
 router.get('/', async (req, res) => {
   try {
-    const pool = await getPool();
     // If withDescents=1, join with CanyonRecords for user-specific count
     const userId = await getUserIdByRequest(req);
     if (req.query.withDescents === '1' && userId) {
-      const result = await pool.request()
-        .input('userId', sql.Int, userId)
-        .query(`
-          SELECT c.*, 
-            COUNT(cr.Id) AS Descents,
-            MAX(cr.Date) AS LastDescentDate
-          FROM Canyons c
-          LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
-          WHERE c.IsVerified = 1
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted
-          ORDER BY Descents DESC, c.Name
-        `);
-      res.json(result.recordset);
+      const pool = await getPool();
+      const [verifiedResult, freeformResult] = await Promise.all([
+        pool.request()
+          .input('userId', sql.Int, userId)
+          .query(`
+            SELECT c.*, 
+              COUNT(cr.Id) AS Descents,
+              MAX(cr.Date) AS LastDescentDate
+            FROM Canyons c
+            LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+            WHERE c.IsVerified = 1
+            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted
+            ORDER BY Descents DESC, c.Name
+          `),
+        pool.request()
+          .input('userId', sql.Int, userId)
+          .query(`
+            SELECT Name, Url, Region, MAX(Date) AS LastDescentDate, COUNT(*) AS Descents
+            FROM CanyonRecords
+            WHERE UserId = @userId AND CanyonId IS NULL
+            GROUP BY Name, Url, Region
+            ORDER BY LastDescentDate DESC
+          `)
+      ]);
+
+      // Deduplicate freeform records by normalised URL (or name if no URL)
+      const seen = new Set<string>();
+      const freeformCanyons: any[] = [];
+      for (const r of freeformResult.recordset) {
+        const key = r.Url ? normaliseUrl(r.Url) : r.Name.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          freeformCanyons.push({
+            Id: null,
+            Name: r.Name,
+            Url: r.Url || '',
+            AquaticRating: 0,
+            VerticalRating: 0,
+            CommitmentRating: 0,
+            StarRating: 0,
+            IsVerified: false,
+            IsUnrated: true,
+            IsDeleted: false,
+            Region: r.Region,
+            CanyonType: null,
+            Descents: r.Descents,
+            LastDescentDate: r.LastDescentDate,
+          });
+        }
+      }
+
+      res.json([...verifiedResult.recordset, ...freeformCanyons]);
     } else {
+      const pool = await getPool();
       const result = await pool.request().query('SELECT * FROM Canyons WHERE IsVerified = 1 ORDER BY Name');
       res.json(result.recordset);
     }

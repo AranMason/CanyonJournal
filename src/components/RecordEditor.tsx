@@ -1,12 +1,12 @@
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider, Rating, Autocomplete, Alert } from "@mui/material";
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Divider, Rating, Autocomplete, Alert, ListSubheader } from "@mui/material";
 import { Formik, Form } from "formik";
 import {  useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
 import { GearRopeSelector } from "./GearRopeSelector";
 import SuccessSnackbar from "./SuccessSnackbar";
-import { useEffect, useState } from "react";
-import { Canyon } from '../types/Canyon';
+import React, { useEffect, useState } from "react";
+import { Canyon, CanyonWithDescents } from '../types/Canyon';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -14,6 +14,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { GetRegionDisplayName, GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import RegionType, { RegionTypeList } from "../types/RegionEnum";
+import { normaliseUrl } from "../utils/urlNormalise";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -26,7 +27,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
     const navigate = useNavigate();  
     
-    const [canyons, setCanyons] = useState<Canyon[]>([]);
+    const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [searchDialogOpen, setSearchDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
@@ -34,7 +35,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
     useEffect(() => {
         setCanyonsLoading(true);
-        apiFetch<Canyon[]>('/api/canyons')
+        apiFetch<CanyonWithDescents[]>('/api/canyons?withDescents=1')
             .then(data => setCanyons(data))
             .finally(() => setCanyonsLoading(false));
     }, []);
@@ -64,6 +65,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     RopeIds: values.RopeIds,
                                     GearIds: values.GearIds,
                                     CanyonId: values.CanyonId || null,
+                                    // Normalise URL for freeform records so future deduplication works
+                                    Url: !values.CanyonId && values.Url ? normaliseUrl(values.Url) : values.Url,
                                 }),
                             });
                             setSnackbarOpen(true);
@@ -78,7 +81,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     }}
                 >
                     {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => {
-                        // Find selected canyon by id
                         const handleCanyonSelect = (canyon: Canyon) => {
                             setFieldValue('CanyonId', canyon.Id);
                             setFieldValue('Name', canyon.Name);
@@ -88,9 +90,28 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             setSearchDialogOpen(false);
                         };
 
-                        const filteredCanyons = canyons.filter(canyon => 
-                            canyon.Name.toLowerCase().includes(searchFilter.toLowerCase())
-                        );
+                        const handleFreeformSelect = (record: CanyonWithDescents) => {
+                            setFieldValue('CanyonId', undefined);
+                            setFieldValue('Name', record.Name);
+                            setFieldValue('Url', record.Url);
+                            setFieldValue('Region', record.Region ?? RegionType.Unknown);
+                            setSearchFilter('');
+                            setSearchDialogOpen(false);
+                        };
+
+                        const lowerFilter = searchFilter.trim().toLowerCase();
+                        const matchesFilter = (name: string, url?: string) =>
+                            !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
+
+                        const visitedCanyons = canyons
+                            .filter(c => c.Descents > 0 && matchesFilter(c.Name, c.Url))
+                            .sort((a, b) => (b.LastDescentDate || '').localeCompare(a.LastDescentDate || ''));
+
+                        const unvisitedCanyons = canyons
+                            .filter(c => c.Descents === 0 && matchesFilter(c.Name, c.Url))
+                            .sort((a, b) => a.Name.localeCompare(b.Name));
+
+                        const hasPreviouslyVisited = visitedCanyons.length > 0;
 
                         return (
                             <Form>
@@ -102,9 +123,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 <CircularProgress />
                                             </Box>
                                         ) : (
-                                            <>
+                                    <>
                                                 <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
-                                                    Only canyons in the UK have been included so far.
+                                                    Only canyons in the UK, and ones you have recorded previously have been included so far.
                                                 </Alert>
                                                 <TextField
                                                     fullWidth
@@ -115,7 +136,37 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     autoFocus
                                                 />
                                                 <List sx={{ maxHeight: 400, overflow: 'auto' }}>
-                                                    {filteredCanyons.map(canyon => (
+                                                    {hasPreviouslyVisited && (
+                                                        <ListSubheader sx={{ lineHeight: '36px', fontWeight: 600 }}>Previously Visited</ListSubheader>
+                                                    )}
+                                                    {visitedCanyons.map((canyon, i) => (
+                                                        <ListItem key={canyon.Id ?? `freeform-${i}`} disablePadding>
+                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleFreeformSelect(canyon)}>
+                                                                <ListItemText 
+                                                                    primary={
+                                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                            <span>{canyon.Name}</span>
+                                                                            <span>{GetRegionDisplayName(canyon.Region, true)}</span>
+                                                                        </Box>
+                                                                    }
+                                                                    secondary={
+                                                                        canyon.IsVerified
+                                                                            ? <CanyonRating 
+                                                                                aquaticRating={canyon.AquaticRating}
+                                                                                verticalRating={canyon.VerticalRating}
+                                                                                commitmentRating={canyon.CommitmentRating}
+                                                                                starRating={canyon.StarRating}
+                                                                                isUnrated={canyon.IsUnrated} />
+                                                                            : canyon.Url || 'Custom canyon'
+                                                                    }
+                                                                />
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    ))}
+                                                    {unvisitedCanyons.length > 0 && (
+                                                        <ListSubheader sx={{ lineHeight: '36px', fontWeight: 600 }}>All Canyons</ListSubheader>
+                                                    )}
+                                                    {unvisitedCanyons.map(canyon => (
                                                         <ListItem key={canyon.Id} disablePadding>
                                                             <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
                                                                 <ListItemText 
@@ -132,7 +183,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                             commitmentRating={canyon.CommitmentRating}
                                                                             starRating={canyon.StarRating}
                                                                             isUnrated={canyon.IsUnrated} />
-                                                                        }
+                                                                    }
                                                                 />
                                                             </ListItemButton>
                                                         </ListItem>

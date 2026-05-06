@@ -2,7 +2,7 @@ import { CanyonTypeEnum } from "./CanyonTypeEnum";
 import RegionType from "./RegionEnum";
 
 export interface Canyon {
-  Id: number;
+  Id: number | null;
   Name: string;
   Url: string;
   AquaticRating: number;

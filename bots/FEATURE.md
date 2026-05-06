@@ -14,17 +14,13 @@
 - We want an report state style flag (could be an enum flag, with different states) and Admin notes as well for documentation. As well as a date reviewed, and who reviewed it.
 - By default we shouldn't show resolved reports, but we should be able to still discover them if need be.
 
-# 3) I want to be able to view all canyoning trips, I've taken a certain piece of gear on
-
-We currently record the gear we use for various canyons, but then we can't view this history.
-
-# 4) I want to be able to easily search and find the appropriate Canyon in the admin area
+# 3) I want to be able to easily search and find the appropriate Canyon in the admin area
 
 - Either by Name, Region, or by IsVerified based filtering
 - Lets lean local client side for now for filtering, given the smaller data sizes. Can revisit in the future.
 - We do already have a local client cache in CanyonDataStore, we should try leverage that pattern more.
 
-# 5) Import from Rope Wiki data
+# 4) Import from Rope Wiki data
 
 - See ropewiki_*.csv files
 - Want a SQL script to create the data in the DB
