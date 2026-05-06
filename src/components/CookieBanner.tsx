@@ -10,7 +10,7 @@ const CookieBanner: React.FC = () => {
             buttonText="Accept"
             declineButtonText="Decline"
             onDecline={() => {
-                window.location.href = '/api/logout';
+                window.location.href = '/logout';
             }}
             style={{
                 background: '#232946',

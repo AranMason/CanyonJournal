@@ -4,7 +4,7 @@ import './index.css';
 import './styles/breakpoints.css';
 import './styles/mui-overrides.css';
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
@@ -43,7 +43,7 @@ root.render(
               <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
               <Route path="/canyons" element={<CanyonPage />} />
               <Route path="/admin" element={<AdminPage />} />
-              {/* <Route path="*" element={<h2>404: Page Not Found</h2>} /> */}
+              <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           </Box>
         </BrowserRouter>

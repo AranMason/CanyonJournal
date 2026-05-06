@@ -13,7 +13,9 @@ import LoginIcon from '@mui/icons-material/Login';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 
 const Sidebar: React.FC = () => {
-  const { user, setUser } = useUser();
+  const { user, setUser, loading } = useUser();
+
+  if (loading) return null;
 
   return <SidebarDrawer>{(isOpen) => <><Box>
     <List>
@@ -69,7 +71,7 @@ const Sidebar: React.FC = () => {
           icon={<LogoutIcon />}
           onClick={() => {
             setUser(null);
-            window.location.href = '/api/logout';
+            window.location.href = '/logout';
           }}
         />}
         {!user  && <SidebarItem
@@ -77,7 +79,7 @@ const Sidebar: React.FC = () => {
           label="Login"
           icon={<LoginIcon />}
           onClick={() => {
-            window.location.href = '/api/login';
+            window.location.href = '/login';
           }}
         />}
       </List>

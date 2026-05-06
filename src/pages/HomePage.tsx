@@ -12,7 +12,7 @@ const HomePage: React.FC = () => {
       navigate('/dashboard'); // Redirect to Dashboard (home page)
     } else if(!loading && !user) {
       // If not logged in, redirect to login with Auth0
-      window.location.href = '/api/login'
+      window.location.href = '/login'
     }
   }, [user, loading, navigate]);
 

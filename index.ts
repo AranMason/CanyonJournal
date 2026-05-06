@@ -2,24 +2,28 @@ import express from 'express';
 import 'dotenv/config';
 import morgan from 'morgan';
 import router from './routes/index';
-import session from 'express-session';
-import passport from 'passport';
-import Auth0Strategy from 'passport-auth0';
 import path from 'path';
+import fs from 'fs';
 import compression from 'compression';
 import helmet from 'helmet';
 import RateLimit from 'express-rate-limit';
+import { auth } from 'express-openid-connect';
+import { getPool, sql } from './routes/middleware/sqlserver';
 
-const app = express()
+if (!process.env.SESSION_SECRET) throw new Error('SESSION_SECRET environment variable is required');
+if (!process.env.AUTH0_CLIENT_SECRET) throw new Error('AUTH0_CLIENT_SECRET environment variable is required');
+if (!process.env.AUTH0_DOMAIN) throw new Error('AUTH0_DOMAIN environment variable is required');
+if (!process.env.AUTH0_CLIENT_ID) throw new Error('AUTH0_CLIENT_ID environment variable is required');
+if (!process.env.BASE_URL) throw new Error('BASE_URL environment variable is required');
 
-const port: string = process.env.PORT || '8000'
+const app = express();
 
-app.set('trust proxy', 1); // For deployment behind a proxy, e.g., Heroku
+const port: string = process.env.PORT || '8000';
+
+app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(compression());
-// Add helmet to the middleware chain.
-// Set CSP headers to allow our Bootstrap and jQuery to be served
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -27,99 +31,74 @@ app.use(
     },
   }),
 );
-// Set up rate limiter: maximum of twenty requests per minute
+
 const limiter = RateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
+  windowMs: 1 * 60 * 1000,
   max: 1000,
 });
-// Apply rate limiter to all requests
 app.use(limiter);
 
-// Session middleware
-app.use(session({
-  secret: process.env.AUTH0_SECRET || 'keyboard cat',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+// OIDC auth via express-openid-connect
+app.use(auth({
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SESSION_SECRET,
+  baseURL: process.env.BASE_URL,
+  clientID: process.env.AUTH0_CLIENT_ID,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  routes: {
+    callback: '/api/callback', // Matches existing Auth0 dashboard callback URL
+  },
 }));
 
-// Passport.js setup
-passport.use(new Auth0Strategy({
-  domain: process.env.AUTH0_DOMAIN as string,
-  clientID: process.env.AUTH0_CLIENT_ID as string,
-  clientSecret: process.env.AUTH0_SECRET as string,
-  callbackURL: process.env.AUTH0_CALLBACK_URL || `${process.env.BASE_URL}/api/callback`
-},
-  function(accessToken, refreshToken, extraParams, profile, done) {
-    return done(null, profile);
-  }
-));
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-import { getPool, sql } from './routes/middleware/sqlserver';
+app.use(morgan('dev'));
 
-passport.deserializeUser(async (user: any, done) => {
+// Resolve DB user from OIDC claims on every authenticated request
+app.use(async (req, res, next) => {
+  if (!req.oidc.isAuthenticated()) return next();
   try {
-    // Use email from Auth0 profile
-    const guid = user?.emails?.[0]?.value || user?.email || user?.user_id;
-    if (!guid) return done(null, user);
+    const oidcUser = req.oidc.user;
+    const guid = oidcUser?.email || oidcUser?.sub;
+    if (!guid) return next();
+
     const pool = await getPool();
     let result = await pool.request()
       .input('guid', sql.NVarChar(255), guid)
       .query('SELECT Id, Guid, FirstName, ProfilePicture, IsAdmin FROM Users WHERE Guid = @guid');
-    
-    // If the user does not exist, create them
+
     if (result.recordset.length === 0) {
       result = await pool.request()
         .input('guid', sql.NVarChar(255), guid)
-        .input('firstName', sql.NVarChar(100), user?.name?.givenName || 'User')
-        .input('profilePicture', sql.NVarChar(255), user?.picture || '')
+        .input('firstName', sql.NVarChar(100), oidcUser?.given_name || oidcUser?.name || 'User')
+        .input('profilePicture', sql.NVarChar(255), oidcUser?.picture || '')
         .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0)');
-    };
-    // Attach DB user info to session user
-    const dbUser = result.recordset[0];
-    done(null, { ...user, dbUser });
+    }
+
+    req.user = { dbUser: result.recordset[0] };
+    next();
   } catch (err) {
-    done(err, user);
+    next(err);
   }
-});
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(morgan('dev'));
-
-// Auth0 login route
-app.get('/api/login', passport.authenticate('auth0', {
-  scope: 'openid email profile'
-}), (req, res) => {
-  res.redirect('/dashboard');
-});
-
-// Auth0 callback route
-app.get('/api/callback', passport.authenticate('auth0', {
-  failureRedirect: '/'
-}), (req, res) => {
-  res.redirect('/');
-});
-
-// Auth0 logout route
-app.get('/api/logout', (req, res) => {
-  req.logout(() => {
-    res.redirect(`https://${process.env.AUTH0_DOMAIN}/v2/logout?federated&client_id=${process.env.AUTH0_CLIENT_ID}&returnTo=${process.env.BASE_URL}`);
-  });
 });
 
 // Protect API routes (require login)
 app.use('/api', (req, res, next) => {
-  if (!req.isAuthenticated || !req.isAuthenticated()) {
-    return res.redirect('/api/login');
+  if (!req.oidc.isAuthenticated()) {
+    return res.status(401).json({ error: 'Unauthenticated' });
   }
   next();
 }, router);
 
-app.use(express.static(path.join(__dirname)));
+// In production (node build/index.js) __dirname === build/.
+// In dev (ts-node index.ts) __dirname === project root; React assets are in build/.
+const clientBuildPath = fs.existsSync(path.join(__dirname, 'index.html'))
+  ? __dirname
+  : path.join(__dirname, 'build');
+
+app.use(express.static(clientBuildPath));
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
 app.listen(port, (): void => {

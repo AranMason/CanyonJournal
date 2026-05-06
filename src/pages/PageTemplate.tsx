@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import '../App.css';
 import { Box, CircularProgress } from '@mui/material';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
 import Loader from '../components/Loader';
 interface PageTemplateProps {
@@ -19,7 +19,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
         if (!isAuthRequired || loading) return;
 
         if (!user && isAuthRequired) {
-            window.location.href = '/';
+            window.location.href = '/login';
         }
     }, [user, loading, navigate, isAuthRequired]);
 
@@ -29,7 +29,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
                 <h1 className="App-title">{pageTitle}</h1>
                 {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>}
                 {!isLoading && children}
-            </Box> : <Navigate to="/" />}
+            </Box> : null}
         </Loader>
     );
 }
