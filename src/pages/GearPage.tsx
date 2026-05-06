@@ -76,10 +76,9 @@ const GearPage: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Diameter</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Diameter</TableCell>
                 <TableCell>Length</TableCell>
-                <TableCell>Unit</TableCell>
-                <TableCell>Notes</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Notes</TableCell>
                 <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -87,12 +86,12 @@ const GearPage: React.FC = () => {
               {ropes.length === 0 ? null : ropes.map((row) => (
                 <TableRow key={row.Id}>
                   <TableCell>{row.Name}</TableCell>
-                  <TableCell>{row.Diameter}</TableCell>
-                  <TableCell>{row.Length}</TableCell>
-                  <TableCell>{row.Unit}</TableCell>
-                  <TableCell>{row.Notes}</TableCell>
-                  <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Diameter}</TableCell>
+                  <TableCell>{row.Length}{row.Unit === 'Metres' ? 'm' : row.Unit === 'Feet' ? 'ft' : row.Unit}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Notes}</TableCell>
+                  <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
                     <RowActions
+                      onViewTrips={() => navigate(`/journal?ropeId=${row.Id}`)}
                       onEdit={async () => setEditRopeId(row.Id)}
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/rope/${row.Id}`, { method: 'DELETE' });
@@ -139,7 +138,7 @@ const GearPage: React.FC = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Category</TableCell>
-                <TableCell>Notes</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Notes</TableCell>
                 <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -148,9 +147,10 @@ const GearPage: React.FC = () => {
                 <TableRow key={row.Id}>
                   <TableCell>{row.Name}</TableCell>
                   <TableCell>{row.Category}</TableCell>
-                  <TableCell>{row.Notes}</TableCell>
-                  <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Notes}</TableCell>
+                  <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
                     <RowActions
+                      onViewTrips={() => navigate(`/journal?gearId=${row.Id}`)}
                       onEdit={async () => setEditGearId(row.Id)}
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/gear/${row.Id}`, { method: 'DELETE' });

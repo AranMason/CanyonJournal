@@ -3,7 +3,7 @@ import { Box, Button, FormControl, InputLabel, Select, MenuItem, Chip, TextField
 import { apiFetch } from '../utils/api';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { Canyon } from '../types/Canyon';
@@ -17,6 +17,7 @@ type CanyonDict = { [n: number]: Canyon };
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, loading: loadingUser } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [canyonsById, setCanyonsById] = useState<CanyonDict>({});
@@ -26,8 +27,14 @@ const RecordsOverviewPage: React.FC = () => {
   // Filters
   const [nameFilter, setNameFilter] = useState<string>('');
   const [regionFilter, setRegionFilter] = useState<RegionType[]>([]);
-  const [selectedGearIds, setSelectedGearIds] = useState<number[]>([]);
-  const [selectedRopeIds, setSelectedRopeIds] = useState<number[]>([]);
+  const [selectedGearIds, setSelectedGearIds] = useState<number[]>(() => {
+    const id = searchParams.get('gearId');
+    return id ? [Number(id)] : [];
+  });
+  const [selectedRopeIds, setSelectedRopeIds] = useState<number[]>(() => {
+    const id = searchParams.get('ropeId');
+    return id ? [Number(id)] : [];
+  });
 
   useEffect(() => {
     const fetchRecords = async () => {
