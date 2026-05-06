@@ -45,6 +45,7 @@
     "passport": "^0.7.0",
     "passport-auth0": "^1.4.4",
     "react": "^19.1.1",
+    "react-cookie-consent": "^10.0.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.3",
     "react-scripts": "5.0.1",
