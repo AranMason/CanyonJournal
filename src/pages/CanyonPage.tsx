@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel, Alert } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
-import { CanyonWithDescents } from '../types/Canyon';
+import { CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { GetRegionDisplayName } from '../heleprs/EnumMapper';
@@ -26,7 +26,7 @@ enum SortOptionEnum {
 const SortParams: { [key in SortOptionEnum]: {
   option: key,
   displayName: string,
-  method: (a: CanyonWithDescents, b: CanyonWithDescents) => number,
+  method: (a: CanyonListEntry, b: CanyonListEntry) => number,
 } } = {
   [SortOptionEnum.TotalDescents]: {
     option: SortOptionEnum.TotalDescents,
@@ -70,13 +70,13 @@ const SortParams: { [key in SortOptionEnum]: {
 
 const CanyonList: React.FC = () => {
   const { user, loading } = useUser();
-  const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
+  const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState<SortOptionEnum>(SortOptionEnum.TotalDescents);
 
   const refresh = () => {
     setIsLoading(true);
-    apiFetch<CanyonWithDescents[]>('/api/canyons?withDescents=1')
+    apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=1')
       .then(setCanyons)
       .finally(() => setIsLoading(false));
   };
@@ -87,7 +87,7 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
-  function getSortedCanyons(filteredCanyons: CanyonWithDescents[]): CanyonWithDescents[] {
+  function getSortedCanyons(filteredCanyons: CanyonListEntry[]): CanyonListEntry[] {
 
     return [...filteredCanyons].sort((a, b) => {
       var diffVal = SortParams[sort].method(a, b);
@@ -128,7 +128,7 @@ const CanyonList: React.FC = () => {
         </Box>
       </Box>
       <CanyonFilter canyons={canyons}>
-        {(filteredCanyons: CanyonWithDescents[]) => <TableContainer component={Paper}>
+        {(filteredCanyons: CanyonListEntry[]) => <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -143,8 +143,8 @@ const CanyonList: React.FC = () => {
             </TableHead>
             <TableBody>
               {getSortedCanyons(filteredCanyons).map(canyon => (
-                <TableRow key={canyon.Id ?? (canyon.Url || canyon.Name)}>
-                  <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id}/>
+                <TableRow key={canyon.Key}>
+                  <CanyonNameTableCell name={canyon.Name} detailUrl={canyon.DetailUrl}/>
                   <TableCell className='hide-md'>
                     <CanyonRating
                       aquaticRating={canyon.AquaticRating}

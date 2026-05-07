@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 type CanyonNameTableCellProps = {
     name: string;
-    canyonId: number | null | undefined
+    detailUrl?: string | null;
 }
 
-const CanyonNameTableCell: React.FC<CanyonNameTableCellProps> = ({ name, canyonId }) => {
+const CanyonNameTableCell: React.FC<CanyonNameTableCellProps> = ({ name, detailUrl }) => {
     const navigate = useNavigate();
 
     return <TableCell>
-        {canyonId ? <Link component="a" color="textPrimary" onClick={() => navigate(`/canyons/${canyonId}`)} sx={{ cursor: 'pointer' }} >{name}</Link> : name}
+        {detailUrl ? <Link component="a" color="textPrimary" onClick={() => navigate(detailUrl)} sx={{ cursor: 'pointer' }} >{name}</Link> : name}
     </TableCell>
 }
 

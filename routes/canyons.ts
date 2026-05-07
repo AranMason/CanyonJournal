@@ -1,8 +1,9 @@
 import express from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
-import { normaliseUrl } from './helpers/urlHelper';
 import { } from '../src/types/express-session';
+import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
+import { canyonDetailUrl } from './helpers/urlHelper';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
     const userId = await getUserIdByRequest(req);
     if (req.query.withDescents === '1' && userId) {
       const pool = await getPool();
-      const [verifiedResult, freeformResult] = await Promise.all([
+      const [verifiedResult, userCanyonsResult] = await Promise.all([
         pool.request()
           .input('userId', sql.Int, userId)
           .query(`
@@ -29,41 +30,56 @@ router.get('/', async (req, res) => {
         pool.request()
           .input('userId', sql.Int, userId)
           .query(`
-            SELECT Name, Url, Region, MAX(Date) AS LastDescentDate, COUNT(*) AS Descents
-            FROM CanyonRecords
-            WHERE UserId = @userId AND CanyonId IS NULL
-            GROUP BY Name, Url, Region
-            ORDER BY LastDescentDate DESC
+            SELECT uc.Id, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+                   uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
+                   uc.StarRating, uc.IsUnrated,
+                   COUNT(cr.Id) AS Descents,
+                   MAX(cr.Date) AS LastDescentDate
+            FROM UserCanyons uc
+            LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
+            WHERE uc.UserId = @userId
+            GROUP BY uc.Id, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+                     uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
+                     uc.StarRating, uc.IsUnrated
+            ORDER BY Descents DESC, uc.Name
           `)
       ]);
 
-      // Deduplicate freeform records by normalised URL (or name if no URL)
-      const seen = new Set<string>();
-      const freeformCanyons: any[] = [];
-      for (const r of freeformResult.recordset) {
-        const key = r.Url ? normaliseUrl(r.Url) : r.Name.toLowerCase();
-        if (!seen.has(key)) {
-          seen.add(key);
-          freeformCanyons.push({
-            Id: null,
-            Name: r.Name,
-            Url: r.Url || '',
-            AquaticRating: 0,
-            VerticalRating: 0,
-            CommitmentRating: 0,
-            StarRating: 0,
-            IsVerified: false,
-            IsUnrated: true,
-            IsDeleted: false,
-            Region: r.Region,
-            CanyonType: null,
-            Descents: r.Descents,
-            LastDescentDate: r.LastDescentDate,
-          });
-        }
-      }
+      const userCanyons = userCanyonsResult.recordset.map((uc: any) => ({
+        Key: userCanyonKey(uc.Id),
+        DetailUrl: canyonDetailUrl(null, uc.Id),
+        Name: uc.Name,
+        Url: uc.Url || '',
+        AquaticRating: uc.AquaticRating,
+        VerticalRating: uc.VerticalRating,
+        CommitmentRating: uc.CommitmentRating,
+        StarRating: uc.StarRating,
+        IsVerified: false,
+        IsUnrated: uc.IsUnrated,
+        Region: uc.Region,
+        CanyonType: uc.CanyonType ?? null,
+        Descents: uc.Descents,
+        LastDescentDate: uc.LastDescentDate,
+      }));
 
-      res.json([...verifiedResult.recordset, ...freeformCanyons]);
+      const officialCanyons = verifiedResult.recordset.map((c: any) => ({
+        Key: canyonKey(c.Id),
+        DetailUrl: canyonDetailUrl(c.Id),
+        Name: c.Name,
+        Url: c.Url || '',
+        AquaticRating: c.AquaticRating,
+        VerticalRating: c.VerticalRating,
+        CommitmentRating: c.CommitmentRating,
+        StarRating: c.StarRating,
+        IsVerified: c.IsVerified,
+        IsUnrated: c.IsUnrated,
+        Region: c.Region,
+        CanyonType: c.CanyonType,
+        Descents: c.Descents,
+        LastDescentDate: c.LastDescentDate,
+      }));
+
+      res.json([...officialCanyons, ...userCanyons]);
     } else {
       const pool = await getPool();
       const result = await pool.request().query('SELECT * FROM Canyons WHERE IsVerified = 1 ORDER BY Name');
@@ -95,6 +111,56 @@ router.get('/verify', async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to fetch canyons' });
+  }
+});
+
+// GET /api/canyons/:id/record-count - count of ALL CanyonRecords linked to this canyon (admin only)
+router.get('/:id/record-count', async (req, res) => {
+  if (await isAdmin(req) === false) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .input('canyonId', sql.Int, parseInt(req.params.id, 10))
+      .query('SELECT COUNT(*) AS Count FROM CanyonRecords WHERE CanyonId = @canyonId');
+    res.json({ count: result.recordset[0].Count });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to count records' });
+  }
+});
+
+// DELETE /api/canyons/:id - delete a canyon and all linked journal entries (admin only)
+router.delete('/:id', async (req, res) => {
+  if (await isAdmin(req) === false) {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  try {
+    const pool = await getPool();
+    const canyonId = parseInt(req.params.id, 10);
+
+    // Cascade: remove gear/rope junction rows, then records, then canyon
+    await pool.request()
+      .input('canyonId', sql.Int, canyonId)
+      .query(`
+        DELETE crg FROM CanyonRecordGear crg
+        JOIN CanyonRecords cr ON crg.CanyonRecordId = cr.Id
+        WHERE cr.CanyonId = @canyonId;
+
+        DELETE crr FROM CanyonRecordRope crr
+        JOIN CanyonRecords cr ON crr.CanyonRecordId = cr.Id
+        WHERE cr.CanyonId = @canyonId;
+
+        DELETE FROM CanyonRecords WHERE CanyonId = @canyonId;
+
+        DELETE FROM Canyons WHERE Id = @canyonId;
+      `);
+
+    res.status(204).send();
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to delete canyon' });
   }
 });
 

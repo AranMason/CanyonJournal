@@ -4,13 +4,13 @@ import { List, Box,  Divider } from '@mui/material';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import RopeIcon from '@mui/icons-material/Build';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SidebarDrawer from './SidebarDrawer';
 import LoginIcon from '@mui/icons-material/Login';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
@@ -50,9 +50,9 @@ const Sidebar: React.FC = () => {
       />
       <SidebarItem
         isOpen={isOpen}
-        label="Your Gear"
-        icon={<RopeIcon />}
-        url='/gear'
+        label="Settings"
+        icon={<SettingsIcon />}
+        url='/settings'
         disabled={!user}
       />
       {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem

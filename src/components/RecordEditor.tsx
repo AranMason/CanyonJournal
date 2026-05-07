@@ -1,4 +1,4 @@
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, Dialog, DialogTitle, DialogContent, List, ListItem, ListItemButton, ListItemText, CircularProgress, Autocomplete, Alert, ListSubheader } from "@mui/material";
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper } from "@mui/material";
 import { Formik, Form } from "formik";
 import {  useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
@@ -6,15 +6,17 @@ import { apiFetch } from "../utils/api";
 import { GearRopeSelector } from "./GearRopeSelector";
 import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
-import { Canyon, CanyonWithDescents } from '../types/Canyon';
+import { CanyonListEntry } from '../types/Canyon';
+import { UserCanyon } from '../types/UserCanyon';
+import { parseCanyonKey } from '../utils/canyonKey';
+import AddCanyonModal, { CanyonModalFormValues } from './AddCanyonModal';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
-import SearchIcon from '@mui/icons-material/Search';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditIcon from '@mui/icons-material/Edit';
 import { GetRegionDisplayName, GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
 import CanyonRating from "./CanyonRating";
-import RegionType, { RegionTypeList } from "../types/RegionEnum";
-import { normaliseUrl } from "../utils/urlNormalise";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -22,39 +24,54 @@ type RecordEditorProps = {
     submitString?: string
 }
 
-
 const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, submitString }) => {
 
-    const navigate = useNavigate();  
-    
-    const [canyons, setCanyons] = useState<CanyonWithDescents[]>([]);
+    const navigate = useNavigate();
+
+    const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [searchDialogOpen, setSearchDialogOpen] = useState(false);
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
     const [searchFilter, setSearchFilter] = useState('');
+    const [selectedDisplay, setSelectedDisplay] = useState<{ name: string; isVerified: boolean; canyon?: CanyonListEntry } | null>(null);
 
     useEffect(() => {
         setCanyonsLoading(true);
-        apiFetch<CanyonWithDescents[]>('/api/canyons?withDescents=1')
-            .then(data => setCanyons(data))
+        apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=1')
+            .then(data => {
+                setCanyons(data);
+                // Restore display info for edit mode using parseCanyonKey
+                if (initialValues?.CanyonId) {
+                    const match = data.find(c => parseCanyonKey(c.Key).canyonId === initialValues.CanyonId);
+                    if (match) setSelectedDisplay({ name: match.Name, isVerified: true, canyon: match });
+                } else if (initialValues?.UserCanyonId) {
+                    const match = data.find(c => parseCanyonKey(c.Key).userCanyonId === initialValues.UserCanyonId);
+                    if (match) setSelectedDisplay({ name: match.Name, isVerified: false, canyon: match });
+                }
+            })
             .finally(() => setCanyonsLoading(false));
-    }, []);
-    
-      
-    const initialFormValues: CanyonRecord = initialValues || { Name: '', Date: new Date().toISOString().split('T')[0], Url: '', TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [], CanyonId: undefined, Region: RegionType.Unknown, WaterLevel: WaterLevel.Unknown }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return <>
+    const initialFormValues: CanyonRecord = initialValues || {
+        Date: new Date().toISOString().split('T')[0],
+        TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [],
+        CanyonId: undefined, UserCanyonId: undefined, WaterLevel: WaterLevel.Unknown
+    };
+
+    return<>
         <Box maxWidth={400} mx="auto" mt={4}>
                 <Formik
                     initialValues={initialFormValues}
                     validationSchema={Yup.object().shape({
-                        Name: Yup.string().required('Canyon name is required'),
                         Date: Yup.string().test("maxDate", "Cannot be in the future", val => !val || Date.parse(val) < Date.now()).required('Date is required'),
-                        Url: Yup.string().url('Must be a valid URL').nullable(),
                         TeamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
                         Comments: Yup.string().nullable(),
-                        WaterLevel: Yup.number().min(0, 'Invalid water level').max(5, 'Invalid water level')
-                    })}
+                        WaterLevel: Yup.number().min(0, 'Invalid water level').max(5, 'Invalid water level'),
+                        CanyonId: Yup.number().nullable(),
+                        UserCanyonId: Yup.number().nullable(),
+                    }).test('canyon-required', 'A canyon must be selected', (values) =>
+                        Boolean(values.CanyonId) || Boolean(values.UserCanyonId)
+                    )}
                     onSubmit={async (values, { setSubmitting }) => {
                         try {
                             await apiFetch('/api/record', {
@@ -65,8 +82,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     RopeIds: values.RopeIds,
                                     GearIds: values.GearIds,
                                     CanyonId: values.CanyonId || null,
-                                    // Normalise URL for freeform records so future deduplication works
-                                    Url: !values.CanyonId && values.Url ? normaliseUrl(values.Url) : values.Url,
+                                    UserCanyonId: values.UserCanyonId || null,
                                 }),
                             });
                             setSnackbarOpen(true);
@@ -80,181 +96,188 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                         }
                     }}
                 >
-                    {({ errors, touched, handleChange, handleBlur, values, setFieldValue, isSubmitting }) => {
-                        const handleCanyonSelect = (canyon: Canyon) => {
-                            setFieldValue('CanyonId', canyon.Id);
-                            setFieldValue('Name', canyon.Name);
-                            setFieldValue('Url', canyon.Url);
-                            setFieldValue('Region', canyon.Region);
+                    {({ errors, touched, handleChange, handleBlur, values, setFieldValue, setFieldTouched, isSubmitting }) => {
+
+                        const handleCanyonSelect = (canyon: CanyonListEntry) => {
+                            const { canyonId } = parseCanyonKey(canyon.Key);
+                            setFieldValue('CanyonId', canyonId);
+                            setFieldValue('UserCanyonId', undefined);
+                            setSelectedDisplay({ name: canyon.Name, isVerified: true, canyon });
                             setSearchFilter('');
-                            setSearchDialogOpen(false);
                         };
 
-                        const handleFreeformSelect = (record: CanyonWithDescents) => {
+                        const handleUserCanyonSelect = (canyon: CanyonListEntry) => {
+                            const { userCanyonId } = parseCanyonKey(canyon.Key);
+                            setFieldValue('UserCanyonId', userCanyonId);
                             setFieldValue('CanyonId', undefined);
-                            setFieldValue('Name', record.Name);
-                            setFieldValue('Url', record.Url);
-                            setFieldValue('Region', record.Region ?? RegionType.Unknown);
+                            setSelectedDisplay({ name: canyon.Name, isVerified: false, canyon });
                             setSearchFilter('');
-                            setSearchDialogOpen(false);
+                        };
+
+                        const handleAddCanyonSubmit = async (values: CanyonModalFormValues) => {
+                            const newCanyon = await apiFetch<UserCanyon>('/api/user-canyons', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    Name: values.name,
+                                    Url: values.url || null,
+                                    Region: values.canyonRegion,
+                                    CanyonType: values.canyonType,
+                                    AquaticRating: Number(values.aquaticRating),
+                                    VerticalRating: Number(values.verticalRating),
+                                    CommitmentRating: Number(values.commitmentRating),
+                                    StarRating: Number(values.starRating),
+                                    IsUnrated: values.isUnrated,
+                                    Notes: values.notes,
+                                }),
+                            });
+                            setFieldValue('UserCanyonId', newCanyon.Id);
+                            setFieldValue('CanyonId', undefined);
+                            setSelectedDisplay({ name: newCanyon.Name, isVerified: false });
                         };
 
                         const lowerFilter = searchFilter.trim().toLowerCase();
                         const matchesFilter = (name: string, url?: string) =>
                             !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
 
-                        const visitedCanyons = canyons
+                        const previouslyVisited = canyons
                             .filter(c => c.Descents > 0 && matchesFilter(c.Name, c.Url))
-                            .sort((a, b) => (b.LastDescentDate || '').localeCompare(a.LastDescentDate || ''));
+                            .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
                         const unvisitedCanyons = canyons
-                            .filter(c => c.Descents === 0 && matchesFilter(c.Name, c.Url))
-                            .sort((a, b) => a.Name.localeCompare(b.Name));
+                            .filter(c => c.Descents === 0 && c.IsVerified && matchesFilter(c.Name, c.Url))
+                            .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
-                        const hasPreviouslyVisited = visitedCanyons.length > 0;
+                        const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
 
                         return (
                             <Form>
-                                <Dialog open={searchDialogOpen} onClose={() => { setSearchDialogOpen(false); setSearchFilter(''); }} maxWidth="sm" fullWidth>
-                                    <DialogTitle>Select a Canyon</DialogTitle>
-                                    <DialogContent sx={{ height: 500 }}>
-                                        {isCanyonsLoading ? (
-                                            <Box display="flex" justifyContent="center" p={3}>
-                                                <CircularProgress />
-                                            </Box>
-                                        ) : (
+                                {/* Create Custom Canyon Modal */}
+                                <AddCanyonModal
+                                    canyon={null}
+                                    open={createDialogOpen}
+                                    onClose={() => setCreateDialogOpen(false)}
+                                    title="New Canyon"
+                                    showNotes
+                                    onSubmit={handleAddCanyonSubmit}
+                                />
+
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Canyon</Typography>
+
+                                {selectedDisplay ? (
                                     <>
-                                                <Alert severity="info" sx={{ mt: 1, mb: 2 }}>
-                                                    Only canyons in the UK, and ones you have recorded previously have been included so far.
-                                                </Alert>
+                                    <Box border={1} borderColor="divider" borderRadius={1} p={2} mb={2}>
+                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                {selectedDisplay.isVerified && <CheckCircleIcon sx={{ fontSize: 14, color: 'success.main' }} />}
+                                                <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
+                                            </Box>
+                                            <Typography variant="body2">
+                                                {selectedDisplay.canyon ? GetRegionDisplayName(selectedDisplay.canyon.Region) : ''}
+                                            </Typography>
+                                        </Box>
+                                        {selectedDisplay.canyon && (
+                                            <Box sx={{ color: 'text.secondary' }}>
+                                                <CanyonRating
+                                                    aquaticRating={selectedDisplay.canyon.AquaticRating}
+                                                    verticalRating={selectedDisplay.canyon.VerticalRating}
+                                                    commitmentRating={selectedDisplay.canyon.CommitmentRating}
+                                                    starRating={selectedDisplay.canyon.StarRating}
+                                                    isUnrated={selectedDisplay.canyon.IsUnrated}
+                                                />
+                                            </Box>
+                                        )}
+                                        
+                                    </Box>
+                                    <Box display="flex" gap={1} mt={1}>
+                                            <Button size="small" startIcon={<EditIcon />} onClick={() => {
+                                                setFieldValue('CanyonId', undefined);
+                                                setFieldValue('UserCanyonId', undefined);
+                                                setSelectedDisplay(null);
+                                                setSearchFilter('');
+                                            }}>
+                                                Change Canyon
+                                            </Button>
+                                        </Box>
+                                    </>
+                                ) : (
+                                    <Box mb={2}>
+                                        {isCanyonsLoading ? (
+                                            <Box display="flex" justifyContent="center" p={3}><CircularProgress /></Box>
+                                        ) : (
+                                            <>
                                                 <TextField
                                                     fullWidth
                                                     placeholder="Search by name..."
                                                     value={searchFilter}
                                                     onChange={(e) => setSearchFilter(e.target.value)}
-                                                    margin="normal"
-                                                    autoFocus
+                                                    size="small"
+                                                    sx={{ mb: 1 }}
+                                                    error={canyonError}
+                                                    helperText={canyonError ? 'A canyon must be selected' : ''}
                                                 />
-                                                <List sx={{ maxHeight: 400, overflow: 'auto' }}>
-                                                    {hasPreviouslyVisited && (
-                                                        <ListSubheader sx={{ lineHeight: '36px', fontWeight: 600 }}>Previously Visited</ListSubheader>
+                                                <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
+                                                    {previouslyVisited.length > 0 && (
+                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>Previously Visited</ListSubheader>
                                                     )}
-                                                    {visitedCanyons.map((canyon, i) => (
-                                                        <ListItem key={canyon.Id ?? `freeform-${i}`} disablePadding>
-                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleFreeformSelect(canyon)}>
-                                                                <ListItemText 
+                                                    {previouslyVisited.map((canyon) => (
+                                                        <ListItem key={canyon.Key} disablePadding>
+                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleUserCanyonSelect(canyon)}>
+                                                                <ListItemText
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                                            <span>{canyon.Name}</span>
+                                                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                                                {canyon.IsVerified && <CheckCircleIcon sx={{ fontSize: 14, color: 'success.main' }} />}
+                                                                                <span>{canyon.Name}</span>
+                                                                            </Box>
                                                                             <span>{GetRegionDisplayName(canyon.Region, true)}</span>
                                                                         </Box>
                                                                     }
                                                                     secondary={
-                                                                        canyon.IsVerified
-                                                                            ? <CanyonRating 
-                                                                                aquaticRating={canyon.AquaticRating}
-                                                                                verticalRating={canyon.VerticalRating}
-                                                                                commitmentRating={canyon.CommitmentRating}
-                                                                                starRating={canyon.StarRating}
-                                                                                isUnrated={canyon.IsUnrated} />
-                                                                            : canyon.Url || 'Custom canyon'
+                                                                        <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
                                                                     }
                                                                 />
                                                             </ListItemButton>
                                                         </ListItem>
                                                     ))}
                                                     {unvisitedCanyons.length > 0 && (
-                                                        <ListSubheader sx={{ lineHeight: '36px', fontWeight: 600 }}>All Canyons</ListSubheader>
+                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>All Canyons</ListSubheader>
                                                     )}
                                                     {unvisitedCanyons.map(canyon => (
-                                                        <ListItem key={canyon.Id} disablePadding>
+                                                        <ListItem key={canyon.Key} disablePadding>
                                                             <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
-                                                                <ListItemText 
+                                                                <ListItemText
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                                            <span>{canyon.Name}</span>
+                                                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                                                <CheckCircleIcon sx={{ fontSize: 14, color: 'success.main' }} />
+                                                                                <span>{canyon.Name}</span>
+                                                                            </Box>
                                                                             <span>{GetRegionDisplayName(canyon.Region, true)}</span>
                                                                         </Box>
                                                                     }
                                                                     secondary={
-                                                                        <CanyonRating 
-                                                                            aquaticRating={canyon.AquaticRating}
-                                                                            verticalRating={canyon.VerticalRating}
-                                                                            commitmentRating={canyon.CommitmentRating}
-                                                                            starRating={canyon.StarRating}
-                                                                            isUnrated={canyon.IsUnrated} />
+                                                                        <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
                                                                     }
                                                                 />
                                                             </ListItemButton>
                                                         </ListItem>
                                                     ))}
                                                 </List>
+                                                <Button
+                                                    variant="outlined"
+                                                    startIcon={<AddIcon />}
+                                                    fullWidth
+                                                    sx={{ mt: 2 }}
+                                                    onClick={() => setCreateDialogOpen(true)}
+                                                >
+                                                    Add New Canyon
+                                                </Button>
                                             </>
                                         )}
-                                    </DialogContent>
-                                </Dialog>
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Canyon</Typography>
-                                <TextField
-                                    label="Name of the Canyon"
-                                    name="Name"
-                                    value={values.Name}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                    required
-                                    disabled={Boolean(values.CanyonId)}
-                                    margin="normal"
-                                    error={touched.Name && Boolean(errors.Name)}
-                                    helperText={touched.Name && errors.Name}
-                                />
-                                <TextField
-                                    label="Reference URL"
-                                    name="Url"
-                                    value={values.Url}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                    disabled={Boolean(values.CanyonId)}
-                                    margin="normal"
-                                    error={touched.Url && Boolean(errors.Url)}
-                                    helperText={touched.Url && errors.Url}
-                                />
-                                <Autocomplete
-                                    options={RegionTypeList}
-                                    getOptionLabel={(option) => GetRegionDisplayName(option)}
-                                    value={values.Region ?? RegionType.Unknown}
-                                    onChange={(_, newValue) => setFieldValue('Region', newValue ?? RegionType.Unknown)}
-                                    disabled={Boolean(values.CanyonId)}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Country/Region"
-                                            margin="normal"
-                                            fullWidth
-                                        />
-                                    )}
-                                    isOptionEqualToValue={(option, value) => option === value}
-                                />
-                                <Box display="flex" alignItems="center" justifyContent={"space-between"} gap={1} mt={2} mb={1}>
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<SearchIcon />}
-                                        onClick={() => setSearchDialogOpen(true)}
-                                    >
-                                        Find canyon
-                                    </Button>
-                                    <Button
-                                        disabled={!Boolean(values.CanyonId)}
-                                        onClick={() => {
-                                            setFieldValue('CanyonId', undefined);
-                                            setFieldValue('Name', '');
-                                            setFieldValue('Url', '');
-                                            setFieldValue('Region', RegionType.Unknown);
-                                        }}
-                                    >
-                                        Clear
-                                    </Button>
-                                </Box>
+                                    </Box>
+                                )}
+
                                 <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Trip Information</Typography>
                                 <TextField
                                     label="Date"
@@ -324,7 +347,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         Cancel
                                     </Button>}
-                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting}>
+                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
                                         {submitString || "Create Record"}
                                     </Button>
                                     

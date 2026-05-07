@@ -9,12 +9,13 @@ import DashboardPage from './pages/DashboardPage';
 import reportWebVitals from './reportWebVitals';
 import RecordPage from './pages/RecordPage';
 import App from './App';
-import GearPage from './pages/GearPage';
 import CanyonPage from './pages/CanyonPage';
 import HomePage from './pages/HomePage';
 import EditRecordPage from './pages/EditRecordPage';
 import AdminPage from './pages/AdminPage';
 import CanyonOverviewPage from './pages/CanyonOverviewPage';
+import UserCanyonOverviewPage from './pages/UserCanyonOverviewPage';
+import UserSettingsPage from './pages/UserSettingsPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
 import MuiThemeProvider from './styles/MuiTheme';
 import Sidebar from './components/Sidebar';
@@ -39,9 +40,10 @@ root.render(
               <Route path="/journal/record/:id" element={<EditRecordPage />} />
               <Route path="/journal/record" element={<RecordPage />} />
               <Route path="/journal" element={<RecordsOverviewPage />} />
-              <Route path="/gear" element={<GearPage />} />
+              <Route path="/canyons/users/:id" element={<UserCanyonOverviewPage />} />
               <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
               <Route path="/canyons" element={<CanyonPage />} />
+              <Route path="/settings" element={<UserSettingsPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

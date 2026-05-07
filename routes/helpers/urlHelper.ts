@@ -16,3 +16,15 @@ export function normaliseUrl(url: string | undefined | null): string {
         return url.toLowerCase().replace(/\/+$/, '');
     }
 }
+
+/**
+ * Returns the internal app detail URL for a canyon record.
+ * - Verified canyon  → /canyons/:id
+ * - User canyon      → /canyons/users/:id
+ * - Neither          → null
+ */
+export function canyonDetailUrl(canyonId?: number | null, userCanyonId?: number | null): string | null {
+    if (canyonId) return `/canyons/${canyonId}`;
+    if (userCanyonId) return `/canyons/users/${userCanyonId}`;
+    return null;
+}

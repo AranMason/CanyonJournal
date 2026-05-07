@@ -1,39 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import PageTemplate from './PageTemplate';
-import RopeModal from '../components/RopeModal';
-import GearModal from '../components/GearModal';
-import SuccessSnackbar from '../components/SuccessSnackbar';
-import RowActions from '../components/RowActions';
-import { apiFetch } from '../utils/api';
-import { GearItem, RopeItem } from '../types/types';
+import {
+  Box, Button, Paper, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Typography,
+} from '@mui/material';
+import { apiFetch } from '../../utils/api';
+import { GearItem, RopeItem } from '../../types/types';
+import RopeModal from '../RopeModal';
+import GearModal from '../GearModal';
+import SuccessSnackbar from '../SuccessSnackbar';
+import RowActions from '../RowActions';
 
-const GearPage: React.FC = () => {
+const SettingsGearTab: React.FC = () => {
   const navigate = useNavigate();
-  const [ropeModalOpen, setRopeModalOpen] = React.useState(false);
-  const [gearModalOpen, setGearModalOpen] = React.useState(false);
-  const [ropes, setRopes] = React.useState<RopeItem[]>([]);
-  const [gear, setGear] = React.useState<GearItem[]>([]);
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
-  const [editRopeId, setEditRopeId] = React.useState<Number | null>(null);
-  const [editGearId, setEditGearId] = React.useState<Number | null>(null);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [ropeModalOpen, setRopeModalOpen] = useState(false);
+  const [gearModalOpen, setGearModalOpen] = useState(false);
+  const [ropes, setRopes] = useState<RopeItem[]>([]);
+  const [gear, setGear] = useState<GearItem[]>([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [editRopeId, setEditRopeId] = useState<Number | null>(null);
+  const [editGearId, setEditGearId] = useState<Number | null>(null);
 
-  // Load gear and ropes on mount
-  React.useEffect(() => {
-    const fetchGearAndRopes = async () => {
-      setIsLoading(true);
-      try {
-        const data = await apiFetch<{ gear: GearItem[], ropes: RopeItem[]}>('/api/equipment');
+  useEffect(() => {
+    apiFetch<{ gear: GearItem[]; ropes: RopeItem[] }>('/api/equipment')
+      .then(data => {
         setGear(data.gear || []);
         setRopes(data.ropes || []);
-      } catch (err: any) {
+      })
+      .catch((err: any) => {
         if (err.message === 'Unauthorized') navigate('/');
-      }
-      finally { setIsLoading(false); }
-    };
-    fetchGearAndRopes();
+      });
   }, [navigate]);
 
   const handleAddRope = async (data: any) => {
@@ -49,6 +45,7 @@ const GearPage: React.FC = () => {
       if (err.message === 'Unauthorized') navigate('/');
     }
   };
+
   const handleAddGear = async (data: any) => {
     try {
       const response = await apiFetch<any>('/api/equipment/gear', {
@@ -64,9 +61,9 @@ const GearPage: React.FC = () => {
   };
 
   return (
-    <PageTemplate pageTitle="Gear" isAuthRequired isLoading={isLoading}> 
-      Add and update your gear
-      <Box sx={{ mb: 4, mt: 2 }}>
+    <>
+      {/* Rope */}
+      <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Rope</Typography>
           <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>Add Rope</Button>
@@ -83,7 +80,7 @@ const GearPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ropes.length === 0 ? null : ropes.map((row) => (
+              {ropes.map(row => (
                 <TableRow key={row.Id}>
                   <TableCell>{row.Name}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Diameter}</TableCell>
@@ -95,7 +92,7 @@ const GearPage: React.FC = () => {
                       onEdit={async () => setEditRopeId(row.Id)}
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/rope/${row.Id}`, { method: 'DELETE' });
-                        setRopes(prev => prev.filter((r) => r.Id !== row.Id));
+                        setRopes(prev => prev.filter(r => r.Id !== row.Id));
                       }}
                     />
                   </TableCell>
@@ -115,7 +112,7 @@ const GearPage: React.FC = () => {
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(data),
                 });
-                setRopes(prev => prev.map((r) => r.Id === editRopeId ? response : r));
+                setRopes(prev => prev.map(r => r.Id === editRopeId ? response : r));
                 setEditRopeId(null);
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
@@ -127,6 +124,8 @@ const GearPage: React.FC = () => {
           initialValues={editRopeId !== null ? ropes.find(r => r.Id === editRopeId) : undefined}
         />
       </Box>
+
+      {/* Gear */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">Gear</Typography>
@@ -143,7 +142,7 @@ const GearPage: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {gear.length === 0 ? null : gear.map((row) => (
+              {gear.map(row => (
                 <TableRow key={row.Id}>
                   <TableCell>{row.Name}</TableCell>
                   <TableCell>{row.Category}</TableCell>
@@ -154,7 +153,7 @@ const GearPage: React.FC = () => {
                       onEdit={async () => setEditGearId(row.Id)}
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/gear/${row.Id}`, { method: 'DELETE' });
-                        setGear(prev => prev.filter((g) => g.Id !== row.Id));
+                        setGear(prev => prev.filter(g => g.Id !== row.Id));
                       }}
                     />
                   </TableCell>
@@ -174,7 +173,7 @@ const GearPage: React.FC = () => {
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify(data),
                 });
-                setGear(prev => prev.map((g) => g.Id === editGearId ? response : g));
+                setGear(prev => prev.map(g => g.Id === editGearId ? response : g));
                 setEditGearId(null);
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
@@ -186,9 +185,10 @@ const GearPage: React.FC = () => {
           initialValues={editGearId !== null ? gear.find(g => g.Id === editGearId) : undefined}
         />
       </Box>
+
       <SuccessSnackbar open={snackbarOpen} message="Added successfully!" onClose={() => setSnackbarOpen(false)} />
-    </PageTemplate>
+    </>
   );
 };
 
-export default GearPage;
+export default SettingsGearTab;

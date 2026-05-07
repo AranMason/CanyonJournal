@@ -61,7 +61,11 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                     
                 </Box> : <span>No Data</span>}
                 <Box sx={{ml: "auto"}}>
-                    <IconButton size="small" disabled={!record.CanyonId} onClick={() => navigate(`/canyons/${record.CanyonId}`)}><LocationPinIcon /></IconButton>
+                    <IconButton
+                        size="small"
+                        disabled={!record.DetailUrl}
+                        onClick={() => { if (record.DetailUrl) navigate(record.DetailUrl); }}
+                    ><LocationPinIcon /></IconButton>
                     <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} ><EditIcon /></IconButton>
                 </Box>
                 

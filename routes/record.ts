@@ -2,15 +2,19 @@ import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { CanyonRecord } from '../src/types/CanyonRecord';
 import { getUserIdByRequest } from './helpers/user.helper';
+import { canyonDetailUrl } from './helpers/urlHelper';
 
 const recordRouter: Router = express.Router();
 
 // POST /api/record - add a canyon record to SQL Server
 recordRouter.post('/', async (req: Request, res: Response) => {
-  const { Name,  Url, TeamSize, Comments, CanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
+  const { TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
   const dateTime = req.body.Date;
-  if (!Name || !dateTime) {
-    return res.status(400).json({ error: 'Name and date are required.' });
+  if (!dateTime) {
+    return res.status(400).json({ error: 'Date is required.' });
+  }
+  if (!CanyonId && !UserCanyonId) {
+    return res.status(400).json({ error: 'A canyon must be selected (CanyonId or UserCanyonId required).' });
   }
   if(Date.parse(dateTime) > Date.now()) {
     return res.status(400).json({ error: 'Date cannot be in the future.' });
@@ -23,17 +27,15 @@ recordRouter.post('/', async (req: Request, res: Response) => {
     const pool = await getPool();
     const result = await pool.request()
       .input('userId', sql.Int, await getUserIdByRequest(req))
-      .input('name', sql.NVarChar(200), Name)
       .input('date', sql.Date, dateTime)
-      .input('url', sql.NVarChar(255), Url)
       .input('teamSize', sql.Int, teamSizeNum)
       .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
+      .input('userCanyonId', sql.Int, UserCanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .input('region', sql.Int, req.body.Region ?? null)
-      .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId, WaterLevel, Region)
+      .query(`INSERT INTO CanyonRecords (UserId, Date, TeamSize, Comments, CanyonId, UserCanyonId, WaterLevel)
               OUTPUT INSERTED.*
-              VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId, @waterLevel, @region)`);
+              VALUES (@userId, @date, @teamSize, @comments, @canyonId, @userCanyonId, @waterLevel)`);
     const record = result.recordset[0];
     // Insert mapping tables if ropeIds/gearIds provided
 
@@ -66,14 +68,17 @@ recordRouter.post('/', async (req: Request, res: Response) => {
 });
 
 recordRouter.patch('/', async (req: Request, res: Response) => {
-  const { Id, Name, Url, TeamSize, Comments, CanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
+  const { Id, TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
   const dateTime = req.body.Date;
 
   if (!Id) {
     return res.status(400).json({ error: 'Record ID is required for update.' });
   }
-  if (!Name || !dateTime) {
-    return res.status(400).json({ error: 'Name and date are required.' });
+  if (!dateTime) {
+    return res.status(400).json({ error: 'Date is required.' });
+  }
+  if (!CanyonId && !UserCanyonId) {
+    return res.status(400).json({ error: 'A canyon must be selected (CanyonId or UserCanyonId required).' });
   }
   if(Date.parse(dateTime) > Date.now()) {
     return res.status(400).json({ error: 'Date cannot be in the future.' });
@@ -87,15 +92,13 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
     await pool.request()
       .input('Id', sql.Int, Id)
       .input('userId', sql.Int, await getUserIdByRequest(req))
-      .input('name', sql.NVarChar(200), Name)
       .input('date', sql.Date, dateTime)
-      .input('url', sql.NVarChar(255), Url)
       .input('teamSize', sql.Int, teamSizeNum)
       .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
+      .input('userCanyonId', sql.Int, UserCanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .input('region', sql.Int, req.body.Region ?? null)
-      .query(`UPDATE CanyonRecords SET Name=@name, Date=@date, Url=@url, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, WaterLevel=@waterLevel, Region=@region WHERE Id=@Id AND UserId=@userId`);
+      .query(`UPDATE CanyonRecords SET Date=@date, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, UserCanyonId=@userCanyonId, WaterLevel=@waterLevel WHERE Id=@Id AND UserId=@userId`);
 
 
     // UPDATE GEAR/ROPE IDS
@@ -151,29 +154,37 @@ recordRouter.get('/', async (req: Request, res: Response) => {
     const pool = await getPool();
     const max = req.query.max ? Number(req.query.max) : undefined;
     const canyonId = req.query.canyon ? Number(req.query.canyon) : undefined;
+    const userCanyonId = req.query.userCanyon ? Number(req.query.userCanyon) : undefined;
     const request = await pool.request()
       .input('userId', sql.Int, await getUserIdByRequest(req))
     let query = `
       SELECT 
         cr.Id,
         cr.UserId,
-        cr.Name,
         cr.Date,
-        cr.Url,
         cr.TeamSize,
         cr.Comments,
         cr.CanyonId,
+        cr.UserCanyonId,
         cr.WaterLevel,
         cr.Timestamp,
-        COALESCE(cr.Region, c.Region) as Region
+        COALESCE(c.Name, uc.Name) AS Name,
+        COALESCE(c.Url, uc.Url) AS Url,
+        COALESCE(c.Region, uc.Region) AS Region
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+      LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
       WHERE cr.UserId = @userId
     `;
 
     if(canyonId && !isNaN(canyonId)) {
       query += ' AND cr.CanyonId=@CanyonId';
       request.input('canyonId', canyonId);
+    }
+
+    if(userCanyonId && !isNaN(userCanyonId)) {
+      query += ' AND cr.UserCanyonId=@UserCanyonId';
+      request.input('UserCanyonId', userCanyonId);
     }
 
     query += ' ORDER BY cr.Date DESC'
@@ -213,6 +224,7 @@ recordRouter.get('/', async (req: Request, res: Response) => {
         records.forEach(rec => {
           rec.RopeIds = ropesByRecord[rec.Id] || [];
           rec.GearIds = gearByRecord[rec.Id] || [];
+          rec.DetailUrl = canyonDetailUrl(rec.CanyonId, rec.UserCanyonId);
         });
       }
     }
@@ -232,17 +244,19 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
       SELECT TOP 1 
         cr.Id,
         cr.UserId,
-        cr.Name,
         cr.Date,
-        cr.Url,
         cr.TeamSize,
         cr.Comments,
         cr.CanyonId,
+        cr.UserCanyonId,
         cr.WaterLevel,
         cr.Timestamp,
-        COALESCE(cr.Region, c.Region) as Region
+        COALESCE(c.Name, uc.Name) AS Name,
+        COALESCE(c.Url, uc.Url) AS Url,
+        COALESCE(c.Region, uc.Region) AS Region
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+      LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
       WHERE cr.Id = @Id AND cr.UserId = @userId
     `;
     const userId = await getUserIdByRequest(req);
@@ -256,6 +270,7 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
     }
 
     var resultRecord = result.recordset[0] as CanyonRecord;
+    resultRecord.DetailUrl = canyonDetailUrl(resultRecord.CanyonId, resultRecord.UserCanyonId);
 
     resultRecord.RopeIds = await pool.request()
       .input('Id', sql.Int, Number(req.params.id))

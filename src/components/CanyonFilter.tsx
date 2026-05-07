@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { CanyonWithDescents } from "../types/Canyon";
+import { CanyonListEntry } from "../types/Canyon";
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import RegionType, { RegionTypeList } from "../types/RegionEnum";
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from "../heleprs/EnumMapper";
 import { CanyonTypeEnum, CanyonTypeList } from "../types/CanyonTypeEnum";
 
 type CanyonFilterProps = {
-    canyons: CanyonWithDescents[]
-    children: (canyons: CanyonWithDescents[]) => React.ReactNode
+    canyons: CanyonListEntry[]
+    children: (canyons: CanyonListEntry[]) => React.ReactNode
 }
 
 const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
@@ -19,8 +19,6 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
     const [starRatingFilter, setStarRatingFilter] = useState<number[]>([]);
 
     const filteredCanyons = useMemo(() => {
-
-        console.log('Filtering canyons with filters', { canyons });
 
         return canyons.filter(canyon => {
             if (regionFilter.length > 0) {
@@ -53,8 +51,6 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
             return true;
         });
     }, [canyons, regionFilter, typeFilter, verticalRatingFilter, aquaRatingFilter, starRatingFilter]);
-
-    console.log('Filtered canyons', { filteredCanyons });
 
     return <Box>
         <Box display="flex" flexDirection="column" mb={2}>

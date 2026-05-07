@@ -5,20 +5,45 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
 import { Canyon } from '../types/Canyon';
+import { UserCanyon } from '../types/UserCanyon';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
 
+export interface CanyonModalFormValues {
+  id?: number;
+  name: string;
+  url: string;
+  aquaticRating: number;
+  verticalRating: number;
+  starRating: number;
+  commitmentRating: number;
+  isUnrated: boolean;
+  canyonRegion: RegionType;
+  canyonType: CanyonTypeEnum;
+  notes: string;
+}
+
 interface AddCanyonModalProps {
-  canyon: Canyon | null;
+  canyon: Canyon | UserCanyon | null;
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  title?: string;
+  showNotes?: boolean;
+  showCanyonType?: boolean;
+  onSubmit?: (values: CanyonModalFormValues) => Promise<void>;
 }
 
-const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, onSuccess }) => {
+const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
+  canyon, open, onClose, onSuccess,
+  title = 'Add New Canyon',
+  showNotes = false,
+  showCanyonType = true,
+  onSubmit: customOnSubmit,
+}) => {
 
-  const initialValues = {
+  const initialValues: CanyonModalFormValues = {
     id: canyon?.Id || undefined,
     name: canyon?.Name || '',
     url: canyon?.Url || '',
@@ -28,15 +53,17 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
     commitmentRating: canyon?.CommitmentRating || 0,
     isUnrated: canyon?.IsUnrated || false,
     canyonRegion: canyon?.Region || RegionType.Unknown,
-    canyonType: canyon?.CanyonType || CanyonTypeEnum.Unknown
-  }
+    canyonType: (canyon as Canyon)?.CanyonType || CanyonTypeEnum.Unknown,
+    notes: (canyon as UserCanyon)?.Notes || '',
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>Add New Canyon</DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={initialValues}
+          enableReinitialize
           validationSchema={Yup.object({
             name: Yup.string().required('Name is required'),
             url: Yup.string().url('Must be a valid URL').nullable(),
@@ -48,23 +75,27 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
           onSubmit={async (values, { setSubmitting, setStatus, resetForm }) => {
             setStatus(undefined);
             try {
-              await apiFetch('/api/canyons', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  ...values,
-                  aquaticRating: Number(values.aquaticRating),
-                  verticalRating: Number(values.verticalRating),
-                  starRating: Number(values.starRating),
-                  commitmentRating: Number(values.commitmentRating),
-                }),
-              });
+              if (customOnSubmit) {
+                await customOnSubmit(values);
+              } else {
+                await apiFetch('/api/canyons', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    ...values,
+                    aquaticRating: Number(values.aquaticRating),
+                    verticalRating: Number(values.verticalRating),
+                    starRating: Number(values.starRating),
+                    commitmentRating: Number(values.commitmentRating),
+                  }),
+                });
+              }
               setStatus({ success: true });
               resetForm();
               if (onSuccess) onSuccess();
               onClose();
             } catch (err: any) {
-              setStatus({ error: err.message || 'Failed to add canyon' });
+              setStatus({ error: err.message || 'Failed to save canyon' });
             } finally {
               setSubmitting(false);
             }
@@ -109,34 +140,32 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                     ))}
                   </Select>
                 </FormControl>
-                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  
-                  <InputLabel id="canyon-type">Canyon Type</InputLabel>
-                  <Select
-                    labelId="canyon-type"
-                    label="Canyon Type"
-                    value={values.canyonType}
-                    onChange={e => setFieldValue('canyonType', e.target.value as number)}
-                    fullWidth
-                    error={touched.canyonType && Boolean(errors.canyonType)}
-                  >
-                    {CanyonTypeList.map((type) => (
-                      <MenuItem key={type} value={type}>{GetCanyonTypeDisplayName(type)}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                {showCanyonType && (
+                  <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+                    <InputLabel id="canyon-type">Canyon Type</InputLabel>
+                    <Select
+                      labelId="canyon-type"
+                      label="Canyon Type"
+                      value={values.canyonType}
+                      onChange={e => setFieldValue('canyonType', e.target.value as number)}
+                      fullWidth
+                      error={touched.canyonType && Boolean(errors.canyonType)}
+                    >
+                      {CanyonTypeList.map((type) => (
+                        <MenuItem key={type} value={type}>{GetCanyonTypeDisplayName(type)}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
                 <Divider />
-                <Typography  my={2} align='center' variant='h6'>
-                    <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
-                </Typography >
-                
+                <Typography my={2} align='center' variant='h6'>
+                  <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
+                </Typography>
                 <FormControlLabel control={<Checkbox
                   checked={values.isUnrated}
                   name='isUnrated'
                   onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }} />} label="Is Unrated">
-
-                </FormControlLabel>
+                  inputProps={{ 'aria-label': 'controlled' }} />} label="Is Unrated" />
                 <TextField
                   label="Vertical Rating"
                   name="verticalRating"
@@ -189,8 +218,20 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({ canyon, open, onClose, 
                   error={touched.starRating && Boolean(errors.starRating)}
                   helperText={touched.starRating && errors.starRating}
                 />
-                {status && status.error && <Typography color="error">{status.error}</Typography>}
-                {status && status.success && <Typography color="success.main">Canyon added!</Typography>}
+                {showNotes && (
+                  <TextField
+                    label="Notes (optional)"
+                    name="notes"
+                    value={values.notes}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    fullWidth
+                    multiline
+                    minRows={2}
+                  />
+                )}
+                {status?.error && <Typography color="error">{status.error}</Typography>}
+                {status?.success && <Typography color="success.main">Canyon saved!</Typography>}
               </Stack>
               <DialogActions sx={{ mt: 2 }}>
                 <Button onClick={onClose}>Cancel</Button>

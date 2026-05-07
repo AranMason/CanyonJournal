@@ -47,7 +47,7 @@ const EditCanyons: React.FC = () => {
             <TableBody>
                 {canyons.map(canyon => (
                     <TableRow key={canyon.Id}>
-                        <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id} />
+                        <CanyonNameTableCell name={canyon.Name} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} />
                         <TableCell>
                             <CanyonRating
                                 aquaticRating={canyon.AquaticRating}

@@ -22,17 +22,16 @@ const EditRecordPage: React.FC = () => {
         setRecordLoading(true);
         apiFetch<CanyonRecord>('/api/record/' + recordIdNum)
             .then(data => {
-                setInitialValues({ 
+                setInitialValues({
                     Id: data.Id,
-                    Name: data.Name, 
-                    Date: data.Date.split('T')[0], 
-                    Url: data.Url, 
-                    TeamSize: data.TeamSize, 
-                    Comments: data.Comments || '', 
-                    RopeIds: data.RopeIds, 
-                    GearIds: data.GearIds, 
-                    CanyonId: data.CanyonId ?? 0, // Zero indicates 'Other' canyon selected 
-                    WaterLevel: data.WaterLevel || WaterLevel.Unknown 
+                    Date: data.Date.split('T')[0],
+                    TeamSize: data.TeamSize,
+                    Comments: data.Comments || '',
+                    RopeIds: data.RopeIds,
+                    GearIds: data.GearIds,
+                    CanyonId: data.CanyonId || undefined,
+                    UserCanyonId: data.UserCanyonId || undefined,
+                    WaterLevel: data.WaterLevel || WaterLevel.Unknown
                 });
             })
             .finally(() => setRecordLoading(false));

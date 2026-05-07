@@ -27,3 +27,15 @@
 - Sometimes in a canyon your rope will be damaged, and we will want to be able to split it into smaller pieces 
 - These pieces might sum to less than the original rope (IE: 2x30m rope from a 70m rope)
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
+
+# Add the ability to favourite canyons
+
+# Add the ability to rate the trip out of 5 stars
+
+# Use the iconography for Water Level in trip recording
+
+- This could also be used for the 5 star rating, so should be a re-usable component
+- X X X X X - Five Icons X, and you select how far across you want to rate it, rather than a dropdown
+
+# When recording a descent from a canyon page (user or official) we should auto populate the canyon field
+

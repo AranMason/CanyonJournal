@@ -5,7 +5,7 @@ import { apiFetch } from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Chip, Typography } from '@mui/material';
 import { GetRegionDisplayName } from '../heleprs/EnumMapper';
 import RegionType from '../types/RegionEnum';
 import CanyonTypeDisplay from '../components/CanyonTypeDisplay';
@@ -13,6 +13,7 @@ import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -48,6 +49,9 @@ const CanyonOverviewPage: React.FC = () => {
     <Typography variant="h5">
       <Box display="flex" alignContent="center" gap={2} py={2} justifyContent="space-between">
         <Box>
+          {canyonData?.IsVerified && (
+            <Chip icon={<CheckCircleIcon />} label="Verified" size="small" color="success" variant="outlined" sx={{ mb: 1 }} />
+          )}
           <div>
             {GetRegionDisplayName(canyonData?.Region ?? RegionType.Unknown)}
           </div>
