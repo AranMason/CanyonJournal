@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { CanyonWithDescents } from "../types/Canyon";
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import RegionType, { RegionTypeList } from "../types/RegionEnum";
@@ -10,64 +10,51 @@ type CanyonFilterProps = {
     children: (canyons: CanyonWithDescents[]) => React.ReactNode
 }
 
-type FilterOptions = {
-    region: RegionType[]
-    type: CanyonTypeEnum[],
-    verticalRating: number[],
-    aquaRating: number[],
-    starRating: number[]
-}
-
-const initialFilterOptions: FilterOptions = {
-    region: [],
-    type: [],
-    verticalRating: [],
-    aquaRating: [],
-    starRating: []
-}
-
 const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
 
-    const [filteredCanyons, setCanyons] = useState<CanyonWithDescents[]>(canyons)
-    const [filterOptions, setFilterOptions] = useState<FilterOptions>(initialFilterOptions)
+    const [regionFilter, setRegionFilter] = useState<RegionType[]>([]);
+    const [typeFilter, setTypeFilter] = useState<CanyonTypeEnum[]>([]);
+    const [verticalRatingFilter, setVerticalRatingFilter] = useState<number[]>([]);
+    const [aquaRatingFilter, setAquaRatingFilter] = useState<number[]>([]);
+    const [starRatingFilter, setStarRatingFilter] = useState<number[]>([]);
 
+    const filteredCanyons = useMemo(() => {
 
-    useEffect(() => {
+        console.log('Filtering canyons with filters', { canyons });
 
-        var filtersList: ((value: CanyonWithDescents) => boolean)[] = []
+        return canyons.filter(canyon => {
+            if (regionFilter.length > 0) {
+                const region = canyon.Region ?? RegionType.Unknown;
+                if (!regionFilter.includes(region)) return false;
+            }
 
-        if (filterOptions.region.length > 0) {
-            filtersList.push(s => filterOptions.region.includes(s.Region ?? RegionType.Unknown))
-        }
+            if (typeFilter.length > 0) {
+                const canyonType = canyon.CanyonType;
+                if (canyonType === null || canyonType === undefined) return false;
+                if (!typeFilter.includes(canyonType)) return false;
+            }
 
-        if (filterOptions.type.length > 0) {
-            filtersList.push(s => filterOptions.type.includes(s.CanyonType ?? CanyonTypeEnum.Unknown))
-        }
+            if (verticalRatingFilter.length > 0 || aquaRatingFilter.length > 0 || starRatingFilter.length > 0) {
+                if (canyon.IsUnrated) return false;
+            }
 
-        if(filterOptions.verticalRating.length > 0 || filterOptions.aquaRating.length > 0 || filterOptions.starRating.length > 0) {
-            filtersList.push(s => !s.IsUnrated)
-        }
+            if (verticalRatingFilter.length > 0) {
+                if (!verticalRatingFilter.includes(canyon.VerticalRating ?? 0)) return false;
+            }
 
-        if (filterOptions.verticalRating.length > 0) {
-            filtersList.push(s => filterOptions.verticalRating.includes(s.VerticalRating ?? 0))
-        }
-        if (filterOptions.aquaRating.length > 0) {
-            filtersList.push(s => filterOptions.aquaRating.includes(s.AquaticRating ?? 0))
-        }
-        if (filterOptions.starRating.length > 0) {
-            filtersList.push(s => filterOptions.starRating.includes(s.StarRating ?? 0))
-        }
+            if (aquaRatingFilter.length > 0) {
+                if (!aquaRatingFilter.includes(canyon.AquaticRating ?? 0)) return false;
+            } 
 
-        if (filtersList.length === 0) {
-            setCanyons(canyons);
-        } else {
-            var newCanyonsList = canyons.filter(canyon => filtersList.every(filter => filter(canyon)))
+            if (starRatingFilter.length > 0) {
+                if (!starRatingFilter.includes(canyon.StarRating ?? 0)) return false;
+            }
 
-            setCanyons(newCanyonsList);
-        }
+            return true;
+        });
+    }, [canyons, regionFilter, typeFilter, verticalRatingFilter, aquaRatingFilter, starRatingFilter]);
 
-
-    }, [filterOptions, canyons])
+    console.log('Filtered canyons', { filteredCanyons });
 
     return <Box>
         <Box display="flex" flexDirection="column" mb={2}>
@@ -80,14 +67,11 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         multiple
                         labelId="canyon-region"
                         label="Canyon Region"
-                        value={filterOptions.region}
-                        onChange={e => setFilterOptions({
-                            ...filterOptions,
-                            region: e.target.value as RegionType[]
-                        })}
+                        value={regionFilter}
+                        onChange={e => setRegionFilter(e.target.value as RegionType[])}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {(selected).map((region) => {
+                                {(selected as RegionType[]).map((region) => {
                                     return <Chip size="small" key={region} label={GetRegionDisplayName(region)} />;
                                 })}
                             </Box>
@@ -105,14 +89,11 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         multiple
                         labelId="canyon-type"
                         label="Canyon Type"
-                        value={filterOptions.type}
-                        onChange={e => setFilterOptions({
-                            ...filterOptions,
-                            type: e.target.value as CanyonTypeEnum[]
-                        })}
+                        value={typeFilter}
+                        onChange={e => setTypeFilter(e.target.value as CanyonTypeEnum[])}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {(selected).map((type) => {
+                                {(selected as CanyonTypeEnum[]).map((type) => {
                                     return <Chip size="small" key={type} label={GetCanyonTypeDisplayName(type)} />;
                                 })}
                             </Box>
@@ -131,11 +112,8 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         multiple
                         labelId="vert-rating"
                         label="Vertical Rating"
-                        value={filterOptions.verticalRating}
-                        onChange={e => setFilterOptions({
-                            ...filterOptions,
-                            verticalRating: (e.target.value as number[]).sort()
-                        })}
+                        value={verticalRatingFilter}
+                        onChange={e => setVerticalRatingFilter((e.target.value as number[]).sort())}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((rating) => {
@@ -156,11 +134,8 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         multiple
                         labelId="aqua-rating"
                         label="Aquatic Rating"
-                        value={filterOptions.aquaRating}
-                        onChange={e => setFilterOptions({
-                            ...filterOptions,
-                            aquaRating: (e.target.value as number[]).sort()
-                        })}
+                        value={aquaRatingFilter}
+                        onChange={e => setAquaRatingFilter((e.target.value as number[]).sort())}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((rating) => {
@@ -181,11 +156,8 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                         multiple
                         labelId="star-rating"
                         label="Star Rating"
-                        value={filterOptions.starRating}
-                        onChange={e => setFilterOptions({
-                            ...filterOptions,
-                            starRating: (e.target.value as number[]).sort()
-                        })}
+                        value={starRatingFilter}
+                        onChange={e => setStarRatingFilter((e.target.value as number[]).sort())}
                         renderValue={(selected) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                 {selected.map((rating) => {

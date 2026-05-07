@@ -89,7 +89,7 @@ const CanyonList: React.FC = () => {
 
   function getSortedCanyons(filteredCanyons: CanyonWithDescents[]): CanyonWithDescents[] {
 
-    return filteredCanyons.sort((a, b) => {
+    return [...filteredCanyons].sort((a, b) => {
       var diffVal = SortParams[sort].method(a, b);
 
       if(diffVal === 0) {
@@ -143,7 +143,7 @@ const CanyonList: React.FC = () => {
             </TableHead>
             <TableBody>
               {getSortedCanyons(filteredCanyons).map(canyon => (
-                <TableRow key={canyon.Id}>
+                <TableRow key={canyon.Id ?? (canyon.Url || canyon.Name)}>
                   <CanyonNameTableCell name={canyon.Name} canyonId={canyon.Id}/>
                   <TableCell className='hide-md'>
                     <CanyonRating
