@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Button, FormControl, InputLabel, Select, MenuItem, Chip, TextField } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { useUser } from '../App';
@@ -57,6 +57,19 @@ const RecordsOverviewPage: React.FC = () => {
       setRecords([]);
     }
   }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Derive available regions from actual records (only regions the user has descended in)
+  const availableRegions = useMemo(() => {
+    const regionSet = new Set(
+      records
+        .map(rec => {
+          const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : undefined;
+          return canyon?.Region ?? rec.Region;
+        })
+        .filter((r): r is RegionType => r !== null && r !== undefined)
+    );
+    return RegionTypeList.filter(r => regionSet.has(r));
+  }, [records, canyonsById]);
 
   // Apply filters when records, canyons or filter options change
   useEffect(() => {
@@ -158,7 +171,7 @@ const RecordsOverviewPage: React.FC = () => {
                   </Box>
                 )}
               >
-                {RegionTypeList.map((region) => (
+                {availableRegions.map((region) => (
                   <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
                 ))}
               </Select>

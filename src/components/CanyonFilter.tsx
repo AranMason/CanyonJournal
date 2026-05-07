@@ -18,6 +18,16 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
     const [aquaRatingFilter, setAquaRatingFilter] = useState<number[]>([]);
     const [starRatingFilter, setStarRatingFilter] = useState<number[]>([]);
 
+    const availableRegions = useMemo(() => {
+        const regionSet = new Set(
+            canyons
+                .filter(c => (c.Descents ?? 0) > 0)
+                .map(c => c.Region)
+                .filter((r): r is RegionType => r !== null && r !== undefined)
+        );
+        return RegionTypeList.filter(r => regionSet.has(r));
+    }, [canyons]);
+
     const filteredCanyons = useMemo(() => {
 
         return canyons.filter(canyon => {
@@ -73,7 +83,7 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
                             </Box>
                         )}
                     >
-                        {RegionTypeList.map((region) => (
+                        {availableRegions.map((region) => (
                             <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
                         ))}
                     </Select>
