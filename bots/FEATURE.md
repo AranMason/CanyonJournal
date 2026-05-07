@@ -30,12 +30,10 @@
 
 # Add the ability to favourite canyons
 
+- These canyons should appear at the top of the Journal Create in Alphabetical order
+- We should no-longer display canyons that the user has descended previously first
+- Use heart icon
+
 # Add the ability to rate the trip out of 5 stars
-
-# Use the iconography for Water Level in trip recording
-
-- This could also be used for the 5 star rating, so should be a re-usable component
-- X X X X X - Five Icons X, and you select how far across you want to rate it, rather than a dropdown
-
-# When recording a descent from a canyon page (user or official) we should auto populate the canyon field
+- Use the IconPicker component
 

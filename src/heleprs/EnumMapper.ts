@@ -6,7 +6,8 @@ const CanyonTypeDisplayName: {[key in CanyonTypeEnum]: string} = {
     [CanyonTypeEnum.Unknown]: "-",
     [CanyonTypeEnum.Sports]: "Sports",
     [CanyonTypeEnum.Adventure]: "Adventure",
-    [CanyonTypeEnum.GorgeWalk]: "Gorge Scramble"
+    [CanyonTypeEnum.GorgeWalk]: "Gorge Scramble",
+    [CanyonTypeEnum.Dry]: "Dry"
 }
 
 export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {

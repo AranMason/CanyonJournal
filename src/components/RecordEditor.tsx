@@ -1,6 +1,6 @@
-import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper } from "@mui/material";
+import { Box, TextField, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper } from "@mui/material";
 import { Formik, Form } from "formik";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
 import { GearRopeSelector } from "./GearRopeSelector";
@@ -15,8 +15,10 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
-import { GetRegionDisplayName, GetWaterLevelDisplayName } from "../heleprs/EnumMapper";
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import { GetRegionDisplayName } from "../heleprs/EnumMapper";
 import CanyonRating from "./CanyonRating";
+import IconPicker from "./IconPicker";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -278,7 +280,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     </Box>
                                 )}
 
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Trip Information</Typography>
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Trip Information</Typography>                               
                                 <TextField
                                     label="Date"
                                     type="date"
@@ -307,20 +309,15 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     error={touched.TeamSize && Boolean(errors.TeamSize)}
                                     helperText={touched.TeamSize && errors.TeamSize}
                                 />
-                                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                                <InputLabel id="water-level-label">Water Level</InputLabel>
-                                <Select
-                                    labelId="water-level-label"
-                                    label="Water Level"
-                                    value={values.WaterLevel}
-                                    onChange={e => setFieldValue('WaterLevel', e.target.value as number)}
-                                    fullWidth
-                                    error={touched.WaterLevel && Boolean(errors.WaterLevel)}
-                                >
-                                    {[WaterLevel.Unknown, WaterLevel.VeryLow, WaterLevel.Low, WaterLevel.Medium, WaterLevel.High, WaterLevel.VeryHigh].map((level) => (
-                                        <MenuItem key={level} value={level}>{GetWaterLevelDisplayName(level)}</MenuItem>
-                                    ))}
-                                </Select></FormControl>
+                                <Box sx={{ mb: 2, mt: 2 }}>
+                                    <IconPicker
+                                        label="Water Level"
+                                        value={values.WaterLevel ?? 0}
+                                        onChange={v => setFieldValue('WaterLevel', v)}
+                                        icon={WaterDropIcon}
+                                        activeColor="info"
+                                    />
+                                </Box>
                                 <TextField
                                     label="Comments"
                                     name="Comments"
@@ -343,6 +340,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     setSelectedGearIds={ids => setFieldValue('GearIds', ids)}
                                 />
                                 </Box>
+                                
                                 <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         Cancel

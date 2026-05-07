@@ -59,7 +59,7 @@ const CanyonOverviewPage: React.FC = () => {
           <CanyonRating verticalRating={canyonData?.VerticalRating} aquaticRating={canyonData?.AquaticRating} commitmentRating={canyonData?.CommitmentRating} starRating={canyonData?.StarRating} />
         </Box>
         <Box display="flex" flexDirection="column" gap={1}>
-          <Button type="button" variant='contained' onClick={() => navigate(`/journal/record`)} startIcon={<EditNoteIcon/>}>Record Descent</Button>
+          <Button type="button" variant='contained' onClick={() => navigate(`/journal/record?canyonId=${canyonId}`)} startIcon={<EditNoteIcon/>}>Record Descent</Button>
           {canyonData?.Url ? <Button type='button' variant="outlined" href={canyonData?.Url} target="_blank" rel="noopener noreferrer" startIcon={<LocationPinIcon/>}>
             Canyon Log
           </Button> : null}

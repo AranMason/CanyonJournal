@@ -53,7 +53,7 @@ const UserCanyonOverviewPage: React.FC = () => {
             />
           </Box>
           <Box display="flex" flexDirection="column" gap={1}>
-            <Button type="button" variant="contained" onClick={() => navigate('/journal/record')} startIcon={<EditNoteIcon />}>
+            <Button type="button" variant="contained" onClick={() => navigate(`/journal/record?userCanyonId=${userCanyonId}`)} startIcon={<EditNoteIcon />}>
               Record Descent
             </Button>
             {canyonData?.Url && (
