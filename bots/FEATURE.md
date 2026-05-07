@@ -7,6 +7,7 @@
 - Add to the admin only area to review, mark a report as reviewed, rejected or tbd - And allow us to edit the canyon in question, this will likely be seperated by Tabs
 - We want an report state style flag (could be an enum flag, with different states) and Admin notes as well for documentation. As well as a date reviewed, and who reviewed it.
 - By default we shouldn't show resolved reports, but we should be able to still discover them if need be.
+- Could be a mailto: link initially, with a admin panel changes as a seperate feature work
 
 # I want to be able to easily search and find the appropriate Canyon in the admin area
 
@@ -37,3 +38,4 @@
 # Add the ability to rate the trip out of 5 stars
 - Use the IconPicker component
 
+# Improve caching of data locally for re-use
