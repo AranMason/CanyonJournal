@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box, Button, CircularProgress, Dialog, DialogActions, DialogContent,
-  DialogTitle, Alert, IconButton, Paper, Table, TableBody, TableCell,
+  DialogTitle, Alert, IconButton, Link, Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Tooltip, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import RegionType from '../../types/RegionEnum';
@@ -17,6 +18,7 @@ import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
 import AddCanyonModal, { CanyonModalFormValues } from '../AddCanyonModal';
 
 const SettingsCanyonsTab: React.FC = () => {
+  const navigate = useNavigate();
   const [canyons, setCanyons] = useState<UserCanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -135,12 +137,9 @@ const SettingsCanyonsTab: React.FC = () => {
             {canyons.map(canyon => (
               <TableRow key={canyon.Id}>
                 <TableCell>
-                  <Typography fontWeight={500}>{canyon.Name}</Typography>
-                  {canyon.Url && (
-                    <Typography variant="caption" color="text.secondary">
-                      <a href={canyon.Url} target="_blank" rel="noopener noreferrer">{canyon.Url}</a>
-                    </Typography>
-                  )}
+                  <Link component="a" color="textPrimary" onClick={() => navigate(`/canyons/users/${canyon.Id}`)} sx={{ cursor: 'pointer', fontWeight: 500 }}>
+                    {canyon.Name}
+                  </Link>
                 </TableCell>
                 <TableCell>{GetRegionDisplayName(canyon.Region ?? RegionType.Unknown)}</TableCell>
                 <TableCell>
