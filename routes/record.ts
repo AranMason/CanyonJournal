@@ -30,7 +30,7 @@ recordRouter.post('/', async (req: Request, res: Response) => {
       .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .input('region', sql.Int, req.body.Region || null)
+      .input('region', sql.Int, req.body.Region ?? null)
       .query(`INSERT INTO CanyonRecords (UserId, Name, Date, Url, TeamSize, Comments, CanyonId, WaterLevel, Region)
               OUTPUT INSERTED.*
               VALUES (@userId, @name, @date, @url, @teamSize, @comments, @canyonId, @waterLevel, @region)`);
@@ -94,7 +94,7 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
       .input('comments', sql.NVarChar(), Comments || null)
       .input('canyonId', sql.Int, CanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .input('region', sql.Int, req.body.Region || null)
+      .input('region', sql.Int, req.body.Region ?? null)
       .query(`UPDATE CanyonRecords SET Name=@name, Date=@date, Url=@url, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, WaterLevel=@waterLevel, Region=@region WHERE Id=@Id AND UserId=@userId`);
 
 

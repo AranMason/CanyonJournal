@@ -77,7 +77,9 @@ const RecordsOverviewPage: React.FC = () => {
       const matchesRegion = (rec: CanyonRecord, canyon?: Canyon) => {
         if (!regionFilter || regionFilter.length === 0) return true;
         // Prefer the linked canyon's region; fall back to the record's own region field
-        const region = canyon?.Region ?? rec.Region ?? RegionType.Unknown;
+        // null/undefined means region was never set — don't conflate with Unknown (0)
+        const region = canyon?.Region ?? rec.Region;
+        if (region === null || region === undefined) return false;
         return regionFilter.includes(region);
       };
 
