@@ -169,6 +169,7 @@ recordRouter.get('/', async (req: Request, res: Response) => {
         cr.CanyonId,
         cr.UserCanyonId,
         cr.WaterLevel,
+        cr.TripRating,
         cr.Timestamp,
         COALESCE(c.Name, uc.Name) AS Name,
         COALESCE(c.Url, uc.Url) AS Url,

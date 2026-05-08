@@ -7,6 +7,7 @@ import { apiFetch } from '../utils/api';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { loadById } from '../helpers/CanyonDataStore';
 import { Canyon } from '../types/Canyon';
+import { UserCanyon } from '../types/UserCanyon';
 import DashboardStats from '../components/DashboardStats';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
@@ -17,18 +18,23 @@ const DashboardPage: React.FC = () => {
   const { user, loading } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
-  const [canyonsById, setCanyonsById] = useState<{ [key: number]: Canyon }>({})
+  const [canyonsById, setCanyonsById] = useState<{ [key: number]: Canyon }>({});
+  const [userCanyonsById, setUserCanyonsById] = useState<{ [key: number]: UserCanyon }>({});
 
   useEffect(() => {
     const fetchRecords = async () => {
     
-        const [data, dataCanyonsById] = await Promise.all([
+        const [data, dataCanyonsById, userCanyons] = await Promise.all([
           apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10'),
-          loadById()
+          loadById(),
+          apiFetch<UserCanyon[]>('/api/user-canyons'),
         ])
 
         setRecords(data.records || []);
-        setCanyonsById(dataCanyonsById)
+        setCanyonsById(dataCanyonsById);
+        const ucById: { [key: number]: UserCanyon } = {};
+        userCanyons.forEach(uc => { ucById[uc.Id] = uc; });
+        setUserCanyonsById(ucById);
       
     };
     if (user && !loading) {
@@ -63,7 +69,7 @@ const DashboardPage: React.FC = () => {
             isOpen={sectionOpen === rec.Id}
             onChange={() => handleAccordionToggle(rec.Id ?? null)}
             record={rec}
-            canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : undefined} />
+            canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined} />
         ))
       )}
     </PageTemplate>

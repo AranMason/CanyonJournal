@@ -7,6 +7,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { Canyon } from '../types/Canyon';
+import { UserCanyon } from '../types/UserCanyon';
 import { loadById } from '../helpers/CanyonDataStore';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { GetRegionDisplayName } from '../helpers/EnumMapper';
@@ -14,6 +15,7 @@ import { GearRopeSelector } from '../components/GearRopeSelector';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 
 type CanyonDict = { [n: number]: Canyon };
+type UserCanyonDict = { [n: number]: UserCanyon };
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const RecordsOverviewPage: React.FC = () => {
   const { user, loading: loadingUser } = useUser();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [canyonsById, setCanyonsById] = useState<CanyonDict>({});
+  const [userCanyonsById, setUserCanyonsById] = useState<UserCanyonDict>({});
   const [filteredRecords, setFilteredRecords] = useState<CanyonRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
@@ -40,13 +43,16 @@ const RecordsOverviewPage: React.FC = () => {
     const fetchRecords = async () => {
       setIsLoading(true)
 
-      const [data, canyons] = await Promise.all([
+      const [data, canyons, userCanyons] = await Promise.all([
         apiFetch<{ records: CanyonRecord[] }>('/api/record'),
-        loadById()
+        loadById(),
+        apiFetch<UserCanyon[]>('/api/user-canyons'),
       ])
       setRecords(data.records || []);
-
       setCanyonsById(canyons);
+      const ucById: UserCanyonDict = {};
+      userCanyons.forEach(uc => { ucById[uc.Id] = uc; });
+      setUserCanyonsById(ucById);
 
       setIsLoading(false);
     };
@@ -195,7 +201,7 @@ const RecordsOverviewPage: React.FC = () => {
               isOpen={sectionOpen === rec.Id}
               onChange={() => handleAccordionToggle(rec.Id ?? null)}
               record={rec}
-              canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : undefined} />
+              canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined} />
           ))
         )}
       </Box>
