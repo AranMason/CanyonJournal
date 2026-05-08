@@ -19,6 +19,7 @@ export interface CanyonRecord {
     RopeIds: number[];
     GearIds: number[];
     WaterLevel?: WaterLevel;
+    TripRating?: number;
 }
 
 export enum WaterLevel {

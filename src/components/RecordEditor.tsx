@@ -16,6 +16,7 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../helpers/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
@@ -142,12 +143,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                         const matchesFilter = (name: string, url?: string) =>
                             !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
 
-                        const previouslyVisited = canyons
-                            .filter(c => c.Descents > 0 && matchesFilter(c.Name, c.Url))
+                        const favouriteCanyons = canyons
+                            .filter(c => c.IsFavourite && matchesFilter(c.Name, c.Url))
                             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
-                        const unvisitedCanyons = canyons
-                            .filter(c => c.Descents === 0 && c.IsVerified && matchesFilter(c.Name, c.Url))
+                        const otherCanyons = canyons
+                            .filter(c => !c.IsFavourite && (c.IsVerified || c.Descents > 0) && matchesFilter(c.Name, c.Url))
                             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
                         const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
@@ -219,10 +220,10 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     helperText={canyonError ? 'A canyon must be selected' : ''}
                                                 />
                                                 <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
-                                                    {previouslyVisited.length > 0 && (
-                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>Previously Visited</ListSubheader>
+                                                    {favouriteCanyons.length > 0 && (
+                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>Favourites</ListSubheader>
                                                     )}
-                                                    {previouslyVisited.map((canyon) => (
+                                                    {favouriteCanyons.map((canyon) => (
                                                         <ListItem key={canyon.Key} disablePadding>
                                                             <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleUserCanyonSelect(canyon)}>
                                                                 <ListItemText
@@ -242,17 +243,17 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                             </ListItemButton>
                                                         </ListItem>
                                                     ))}
-                                                    {unvisitedCanyons.length > 0 && (
+                                                    {otherCanyons.length > 0 && (
                                                         <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>All Canyons</ListSubheader>
                                                     )}
-                                                    {unvisitedCanyons.map(canyon => (
+                                                    {otherCanyons.map(canyon => (
                                                         <ListItem key={canyon.Key} disablePadding>
-                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleUserCanyonSelect(canyon)}>
                                                                 <ListItemText
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                <CheckCircleIcon sx={{ fontSize: 14, color: 'success.main' }} />
+                                                                                {canyon.IsVerified && <CheckCircleIcon sx={{ fontSize: 14, color: 'success.main' }} />}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
                                                                             <span>{GetRegionDisplayName(canyon.Region, true)}</span>
@@ -316,6 +317,15 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                         onChange={v => setFieldValue('WaterLevel', v)}
                                         icon={WaterDropIcon}
                                         activeColor="info"
+                                    />
+                                </Box>
+                                <Box sx={{ mb: 2, mt: 2 }}>
+                                    <IconPicker
+                                        label="Trip Rating"
+                                        value={values.TripRating ?? 0}
+                                        onChange={v => setFieldValue('TripRating', v)}
+                                        icon={StarIcon}
+                                        activeColor="warning"
                                     />
                                 </Box>
                                 <TextField

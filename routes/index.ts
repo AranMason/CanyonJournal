@@ -5,6 +5,7 @@ import gear from './gear'
 import canyons from './canyons'
 import dashboard from './dashboard';
 import userCanyons from './userCanyons';
+import favourites from './favourites';
 
 const router: Router = express.Router()
 
@@ -14,5 +15,6 @@ router.use('/record', record);
 router.use('/equipment', gear);
 router.use('/canyons', canyons);
 router.use('/user-canyons', userCanyons);
+router.use('/favourites', favourites);
 
 export default router;

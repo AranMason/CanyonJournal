@@ -33,9 +33,10 @@ recordRouter.post('/', async (req: Request, res: Response) => {
       .input('canyonId', sql.Int, CanyonId || null)
       .input('userCanyonId', sql.Int, UserCanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .query(`INSERT INTO CanyonRecords (UserId, Date, TeamSize, Comments, CanyonId, UserCanyonId, WaterLevel)
+      .input('tripRating', sql.Int, req.body.TripRating || null)
+      .query(`INSERT INTO CanyonRecords (UserId, Date, TeamSize, Comments, CanyonId, UserCanyonId, WaterLevel, TripRating)
               OUTPUT INSERTED.*
-              VALUES (@userId, @date, @teamSize, @comments, @canyonId, @userCanyonId, @waterLevel)`);
+              VALUES (@userId, @date, @teamSize, @comments, @canyonId, @userCanyonId, @waterLevel, @tripRating)`);
     const record = result.recordset[0];
     // Insert mapping tables if ropeIds/gearIds provided
 
@@ -98,7 +99,8 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
       .input('canyonId', sql.Int, CanyonId || null)
       .input('userCanyonId', sql.Int, UserCanyonId || null)
       .input('waterLevel', sql.Int, req.body.WaterLevel || null)
-      .query(`UPDATE CanyonRecords SET Date=@date, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, UserCanyonId=@userCanyonId, WaterLevel=@waterLevel WHERE Id=@Id AND UserId=@userId`);
+      .input('tripRating', sql.Int, req.body.TripRating || null)
+      .query(`UPDATE CanyonRecords SET Date=@date, TeamSize=@teamSize, Comments=@comments, CanyonId=@canyonId, UserCanyonId=@userCanyonId, WaterLevel=@waterLevel, TripRating=@tripRating WHERE Id=@Id AND UserId=@userId`);
 
 
     // UPDATE GEAR/ROPE IDS

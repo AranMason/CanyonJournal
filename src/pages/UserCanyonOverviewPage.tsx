@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, IconButton, Tooltip, Typography } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
 import { UserCanyonWithDescents } from '../types/UserCanyon';
@@ -21,17 +23,34 @@ const UserCanyonOverviewPage: React.FC = () => {
   const [canyonData, setCanyonData] = useState<UserCanyonWithDescents>();
   const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
+  const [isFavourite, setIsFavourite] = useState(false);
 
   function handleAccordionToggle(id: number | null) {
     setSectionOpen(sectionOpen === id ? null : id);
   }
+
+  const toggleFavourite = async () => {
+    const next = !isFavourite;
+    setIsFavourite(next);
+    try {
+      await apiFetch('/api/favourites', {
+        method: next ? 'POST' : 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ UserCanyonId: userCanyonId }),
+      });
+    } catch {
+      setIsFavourite(!next);
+    }
+  };
 
   useEffect(() => {
     if (!userCanyonId) return;
     setIsLoading(true);
     Promise.all([
       apiFetch<UserCanyonWithDescents>(`/api/user-canyons/${userCanyonId}`).then(setCanyonData),
-      apiFetch<{ records: CanyonRecord[] }>(`/api/record?userCanyon=${userCanyonId}`).then(res => setRecords(res.records))
+      apiFetch<{ records: CanyonRecord[] }>(`/api/record?userCanyon=${userCanyonId}`).then(res => setRecords(res.records)),
+      apiFetch<{ CanyonId: number | null; UserCanyonId: number | null }[]>('/api/favourites')
+        .then(favs => setIsFavourite(favs.some(f => f.UserCanyonId === userCanyonId))),
     ]).finally(() => setIsLoading(false));
   }, [userCanyonId]);
 
@@ -40,7 +59,12 @@ const UserCanyonOverviewPage: React.FC = () => {
       <Typography variant="h5">
         <Box display="flex" alignContent="center" gap={2} py={2} justifyContent="space-between">
           <Box>
-            <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+            <Box display="flex" alignItems="center" gap={0.5} mb={0.5}>
+              <Tooltip title={isFavourite ? 'Remove from favourites' : 'Add to favourites'}>
+                <IconButton onClick={toggleFavourite} color="error" size="small" sx={{ p: 0.25 }}>
+                  {isFavourite ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
+                </IconButton>
+              </Tooltip>
               <Chip label="Custom Canyon" size="small" variant="outlined" />
             </Box>
             <div>{GetRegionDisplayName(canyonData?.Region ?? RegionType.Unknown)}</div>
@@ -52,7 +76,7 @@ const UserCanyonOverviewPage: React.FC = () => {
               isUnrated={canyonData?.IsUnrated ?? true}
             />
           </Box>
-          <Box display="flex" flexDirection="column" gap={1}>
+          <Box display="flex" flexDirection="column" gap={1} alignItems="flex-end">
             <Button type="button" variant="contained" onClick={() => navigate(`/journal/record?userCanyonId=${userCanyonId}`)} startIcon={<EditNoteIcon />}>
               Record Descent
             </Button>

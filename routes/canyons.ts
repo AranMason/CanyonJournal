@@ -20,11 +20,13 @@ router.get('/', async (req, res) => {
           .query(`
             SELECT c.*, 
               COUNT(cr.Id) AS Descents,
-              MAX(cr.Date) AS LastDescentDate
+              MAX(cr.Date) AS LastDescentDate,
+              CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
             FROM Canyons c
             LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+            LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
             WHERE c.IsVerified = 1
-            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted
+            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted, cf.Id
             ORDER BY Descents DESC, c.Name
           `),
         pool.request()
@@ -34,13 +36,15 @@ router.get('/', async (req, res) => {
                    uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
                    uc.StarRating, uc.IsUnrated,
                    COUNT(cr.Id) AS Descents,
-                   MAX(cr.Date) AS LastDescentDate
+                   MAX(cr.Date) AS LastDescentDate,
+                   CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
             FROM UserCanyons uc
             LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
+            LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
             WHERE uc.UserId = @userId
             GROUP BY uc.Id, uc.Name, uc.Url, uc.Region, uc.CanyonType,
                      uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                     uc.StarRating, uc.IsUnrated
+                     uc.StarRating, uc.IsUnrated, cf.Id
             ORDER BY Descents DESC, uc.Name
           `)
       ]);
@@ -60,6 +64,7 @@ router.get('/', async (req, res) => {
         CanyonType: uc.CanyonType ?? null,
         Descents: uc.Descents,
         LastDescentDate: uc.LastDescentDate,
+        IsFavourite: uc.IsFavourite ?? false,
       }));
 
       const officialCanyons = verifiedResult.recordset.map((c: any) => ({
@@ -77,6 +82,7 @@ router.get('/', async (req, res) => {
         CanyonType: c.CanyonType,
         Descents: c.Descents,
         LastDescentDate: c.LastDescentDate,
+        IsFavourite: c.IsFavourite ?? false,
       }));
 
       res.json([...officialCanyons, ...userCanyons]);

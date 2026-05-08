@@ -36,4 +36,5 @@ export interface CanyonListEntry {
   CanyonType: CanyonTypeEnum | null;
   Descents: number;
   LastDescentDate?: string | null;
+  IsFavourite?: boolean;
 }
