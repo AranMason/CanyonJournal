@@ -1,8 +1,9 @@
 import { RopeItem, Unit } from '../types/types';
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Box } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, Box } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import FormikTextField from './FormikTextField';
 
 interface RopeModalProps {
   open: boolean;
@@ -47,14 +48,14 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
           <Form>
             <DialogContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-                <TextField label="Name" name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} fullWidth required error={touched.name && Boolean(errors.name)} helperText={typeof errors.name === 'string' && touched.name ? errors.name : undefined} />
-                <TextField label="Diameter" name="diameter" type="number" value={values.diameter} onChange={handleChange} onBlur={handleBlur} fullWidth required error={touched.diameter && Boolean(errors.diameter)} helperText={typeof errors.diameter === 'string' && touched.diameter ? errors.diameter : undefined} />
-                <TextField label="Length" name="length" type="number" value={values.length} onChange={handleChange} onBlur={handleBlur} fullWidth required error={touched.length && Boolean(errors.length)} helperText={typeof errors.length === 'string' && touched.length ? errors.length : undefined} />
-                <TextField select label="Unit" name="unit" value={values.unit} onChange={handleChange} onBlur={handleBlur} fullWidth error={touched.unit && Boolean(errors.unit)} helperText={typeof errors.unit === 'string' && touched.unit ? errors.unit : undefined}>
+                <FormikTextField<typeof values> label="Name" name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> label="Diameter" name="diameter" type="number" value={values.diameter} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> label="Length" name="length" type="number" value={values.length} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> select label="Unit" name="unit" value={values.unit} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors}>
                   <MenuItem value={Unit.Metres}>{Unit.Metres}</MenuItem>
                   <MenuItem value={Unit.Feet}>{Unit.Feet}</MenuItem>
-                </TextField>
-                <TextField label="Notes" name="notes" value={values.notes} onChange={handleChange} onBlur={handleBlur} fullWidth multiline minRows={2} error={touched.notes && Boolean(errors.notes)} helperText={typeof errors.notes === 'string' && touched.notes ? errors.notes : undefined} />
+                </FormikTextField>
+                <FormikTextField<typeof values> label="Notes" name="notes" value={values.notes} onChange={handleChange} onBlur={handleBlur} fullWidth multiline minRows={2} touched={touched} errors={errors} />
               </Box>
             </DialogContent>
             <DialogActions>

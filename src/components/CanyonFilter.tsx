@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { CanyonListEntry } from "../types/Canyon";
-import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box } from "@mui/material";
 import RegionType, { RegionTypeList } from "../types/RegionEnum";
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from "../helpers/EnumMapper";
 import { CanyonTypeEnum, CanyonTypeList } from "../types/CanyonTypeEnum";
+import MultiSelectChipFilter from "./MultiSelectChipFilter";
 
 type CanyonFilterProps = {
     canyons: CanyonListEntry[]
@@ -64,119 +65,49 @@ const CanyonFilter: React.FC<CanyonFilterProps> = ({ canyons, children }) => {
 
     return <Box>
         <Box display="flex" flexDirection="column" mb={2}>
-
-
             <Box display="flex" flexDirection="row" gap={2}>
-                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                    <InputLabel id="canyon-region">Canyon Region</InputLabel>
-                    <Select
-                        multiple
-                        labelId="canyon-region"
-                        label="Canyon Region"
-                        value={regionFilter}
-                        onChange={e => setRegionFilter(e.target.value as RegionType[])}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {(selected as RegionType[]).map((region) => {
-                                    return <Chip size="small" key={region} label={GetRegionDisplayName(region)} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {availableRegions.map((region) => (
-                            <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                    <InputLabel id="canyon-type">Canyon Type</InputLabel>
-                    <Select
-                        multiple
-                        labelId="canyon-type"
-                        label="Canyon Type"
-                        value={typeFilter}
-                        onChange={e => setTypeFilter(e.target.value as CanyonTypeEnum[])}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {(selected as CanyonTypeEnum[]).map((type) => {
-                                    return <Chip size="small" key={type} label={GetCanyonTypeDisplayName(type)} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {CanyonTypeList.map((type) => (
-                            <MenuItem key={type} value={type}>{GetCanyonTypeDisplayName(type)}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <MultiSelectChipFilter<RegionType>
+                    label="Canyon Region"
+                    labelId="canyon-region"
+                    value={regionFilter}
+                    onChange={setRegionFilter}
+                    options={availableRegions.map(r => ({ value: r, label: GetRegionDisplayName(r) }))}
+                    sx={{ mb: 2, mt: 2 }}
+                />
+                <MultiSelectChipFilter<CanyonTypeEnum>
+                    label="Canyon Type"
+                    labelId="canyon-type"
+                    value={typeFilter}
+                    onChange={setTypeFilter}
+                    options={CanyonTypeList.map(t => ({ value: t, label: GetCanyonTypeDisplayName(t) }))}
+                    sx={{ mb: 2, mt: 2 }}
+                />
             </Box>
             <Box display="flex" flexDirection="row" gap={2}>
-                <FormControl style={{flex: 1}}>
-                    <InputLabel id="vert-rating">Vertical Rating</InputLabel>
-                    <Select
-                        multiple
-                        labelId="vert-rating"
-                        label="Vertical Rating"
-                        value={verticalRatingFilter}
-                        onChange={e => setVerticalRatingFilter((e.target.value as number[]).sort())}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((rating) => {
-                                    return <Chip size="small" key={rating} label={`V${rating}`} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {[...Array(7).keys()].map((rating) => (
-                            <MenuItem key={rating} value={rating + 1}>{`V${rating+1}`}</MenuItem>
-                        ))}
-                    </Select>
-
-                </FormControl>
-                <FormControl style={{flex: 1}}>
-                    <InputLabel id="aqua-rating">Aquatic Rating</InputLabel>
-                    <Select
-                        multiple
-                        labelId="aqua-rating"
-                        label="Aquatic Rating"
-                        value={aquaRatingFilter}
-                        onChange={e => setAquaRatingFilter((e.target.value as number[]).sort())}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((rating) => {
-                                    return <Chip size="small" key={rating} label={`A${rating}`} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {[...Array(7).keys()].map((rating) => (
-                            <MenuItem key={rating} value={rating + 1}>{`A${rating+1}`}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                <FormControl style={{flex: 1}}>
-                    <InputLabel id="star-rating">Star Rating</InputLabel>
-                    <Select
-                        multiple
-                        labelId="star-rating"
-                        label="Star Rating"
-                        value={starRatingFilter}
-                        onChange={e => setStarRatingFilter((e.target.value as number[]).sort())}
-                        renderValue={(selected) => (
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((rating) => {
-                                    return <Chip size="small" key={rating} label={rating > 0 ? '★'.repeat(rating ?? 0) : "None"} />;
-                                })}
-                            </Box>
-                        )}
-                    >
-                        {[...Array(6).keys()].map((rating) => (
-                            <MenuItem key={rating} value={rating}>{rating > 0 ? '★'.repeat(rating ?? 0) : "None"}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <MultiSelectChipFilter<number>
+                    label="Vertical Rating"
+                    labelId="vert-rating"
+                    value={verticalRatingFilter}
+                    onChange={v => setVerticalRatingFilter([...v].sort())}
+                    options={[...Array(7).keys()].map(i => ({ value: i + 1, label: `V${i + 1}` }))}
+                    sx={{ flex: 1 }}
+                />
+                <MultiSelectChipFilter<number>
+                    label="Aquatic Rating"
+                    labelId="aqua-rating"
+                    value={aquaRatingFilter}
+                    onChange={v => setAquaRatingFilter([...v].sort())}
+                    options={[...Array(7).keys()].map(i => ({ value: i + 1, label: `A${i + 1}` }))}
+                    sx={{ flex: 1 }}
+                />
+                <MultiSelectChipFilter<number>
+                    label="Star Rating"
+                    labelId="star-rating"
+                    value={starRatingFilter}
+                    onChange={v => setStarRatingFilter([...v].sort())}
+                    options={[...Array(6).keys()].map(i => ({ value: i, label: i > 0 ? '★'.repeat(i) : 'None' }))}
+                    sx={{ flex: 1 }}
+                />
             </Box>
         </Box>
         {children(filteredCanyons)}

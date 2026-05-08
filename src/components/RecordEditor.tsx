@@ -10,6 +10,7 @@ import { CanyonListEntry } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
 import { parseCanyonKey } from '../utils/canyonKey';
 import AddCanyonModal, { CanyonModalFormValues } from './AddCanyonModal';
+import { mapCanyonFormToApiBody } from '../utils/canyonForm';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
@@ -121,18 +122,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             const newCanyon = await apiFetch<UserCanyon>('/api/user-canyons', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    Name: values.name,
-                                    Url: values.url || null,
-                                    Region: values.canyonRegion,
-                                    CanyonType: values.canyonType,
-                                    AquaticRating: Number(values.aquaticRating),
-                                    VerticalRating: Number(values.verticalRating),
-                                    CommitmentRating: Number(values.commitmentRating),
-                                    StarRating: Number(values.starRating),
-                                    IsUnrated: values.isUnrated,
-                                    Notes: values.notes,
-                                }),
+                                body: JSON.stringify(mapCanyonFormToApiBody(values)),
                             });
                             setFieldValue('UserCanyonId', newCanyon.Id);
                             setFieldValue('CanyonId', undefined);

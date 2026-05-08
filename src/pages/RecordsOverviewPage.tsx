@@ -1,31 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Button, FormControl, InputLabel, Select, MenuItem, Chip, TextField } from '@mui/material';
-import { apiFetch } from '../utils/api';
+import { Box, Button, TextField } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { Canyon } from '../types/Canyon';
-import { UserCanyon } from '../types/UserCanyon';
-import { loadById } from '../helpers/CanyonDataStore';
+import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import { GearRopeSelector } from '../components/GearRopeSelector';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-
-type CanyonDict = { [n: number]: Canyon };
-type UserCanyonDict = { [n: number]: UserCanyon };
+import MultiSelectChipFilter from '../components/MultiSelectChipFilter';
+import { useCanyonRecords } from '../hooks/useCanyonRecords';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user, loading: loadingUser } = useUser();
-  const [records, setRecords] = useState<CanyonRecord[]>([]);
-  const [canyonsById, setCanyonsById] = useState<CanyonDict>({});
-  const [userCanyonsById, setUserCanyonsById] = useState<UserCanyonDict>({});
   const [filteredRecords, setFilteredRecords] = useState<CanyonRecord[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
   // Filters
   const [nameFilter, setNameFilter] = useState<string>('');
@@ -39,30 +31,10 @@ const RecordsOverviewPage: React.FC = () => {
     return id ? [Number(id)] : [];
   });
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-      setIsLoading(true)
-
-      const [data, canyons, userCanyons] = await Promise.all([
-        apiFetch<{ records: CanyonRecord[] }>('/api/record'),
-        loadById(),
-        apiFetch<UserCanyon[]>('/api/user-canyons'),
-      ])
-      setRecords(data.records || []);
-      setCanyonsById(canyons);
-      const ucById: UserCanyonDict = {};
-      userCanyons.forEach(uc => { ucById[uc.Id] = uc; });
-      setUserCanyonsById(ucById);
-
-      setIsLoading(false);
-    };
-
-    if (user && (!isLoading || !loadingUser)) {
-      fetchRecords();
-    } else {
-      setRecords([]);
-    }
-  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+  const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
+    '/api/record',
+    !loadingUser && Boolean(user)
+  );
 
   // Derive available regions from actual records (only regions the user has descended in)
   const availableRegions = useMemo(() => {
@@ -124,12 +96,7 @@ const RecordsOverviewPage: React.FC = () => {
   }, [records, canyonsById, nameFilter, regionFilter, selectedGearIds, selectedRopeIds]);
 
   function handleAccordionToggle(id: number | null) {
-
-    if (!id || sectionOpen === id) {
-      setSectionOpen(null);
-    } else {
-      setSectionOpen(id);
-    }
+    setSectionOpen(prev => prev === id ? null : id);
   }
 
 
@@ -161,27 +128,14 @@ const RecordsOverviewPage: React.FC = () => {
               onChange={e => setNameFilter(e.target.value)}
               sx={{ flex: 1 }}
             />
-            <FormControl sx={{ minWidth: 240, flex: 1 }}>
-              <InputLabel id="record-region-label">Region</InputLabel>
-              <Select
-                multiple
-                labelId="record-region-label"
-                label="Region"
-                value={regionFilter}
-                onChange={e => setRegionFilter(e.target.value as RegionType[])}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {(selected as RegionType[]).map((region) => (
-                      <Chip size="small" key={region} label={GetRegionDisplayName(region)} />
-                    ))}
-                  </Box>
-                )}
-              >
-                {availableRegions.map((region) => (
-                  <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <MultiSelectChipFilter<RegionType>
+              label="Region"
+              labelId="record-region-label"
+              value={regionFilter}
+              onChange={setRegionFilter}
+              options={availableRegions.map(r => ({ value: r, label: GetRegionDisplayName(r) }))}
+              sx={{ minWidth: 240, flex: 1 }}
+            />
           </Box>
           <Box display="flex" gap={2} flexDirection="row">
             <GearRopeSelector

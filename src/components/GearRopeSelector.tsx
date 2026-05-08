@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } from '@mui/material';
-import axios from 'axios';
 import { GearItem, RopeItem } from '../types/types';
+import { apiFetch } from '../utils/api';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -15,9 +15,9 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   const [gear, setGear] = useState<GearItem[]>([]);
 
   useEffect(() => {
-    axios.get('/api/equipment').then(res => {
-      setRopes(res.data.ropes || []);
-      setGear(res.data.gear || []);
+    apiFetch<{ gear: GearItem[]; ropes: RopeItem[] }>('/api/equipment').then(data => {
+      setRopes(data.ropes || []);
+      setGear(data.gear || []);
     });
   }, []);
 

@@ -15,6 +15,7 @@ import LocationPinIcon from '@mui/icons-material/LocationPin';
 import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../../helpers/EnumMapper";
 import RegionType from "../../types/RegionEnum";
+import IconDisplay from "../IconDisplay";
 
 type CanyonInfo = Canyon | UserCanyon;
 
@@ -45,9 +46,9 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                     
                 </Box>
                 <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-                        {record.TripRating ? [1, 2, 3, 4, 5].map(i => (
-                            <StarIcon key={i} sx={{ height: '1rem', width: '1rem' }} color={record.TripRating! >= i ? 'warning' : 'disabled'} />
-                        )) : <Typography variant="body2" color="text.secondary">-</Typography>}
+                        {record.TripRating
+                          ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="warning" />
+                          : <Typography variant="body2" color="text.secondary">-</Typography>}
                     </Box>
                     {/* <Box width={80} className="hide-sm">
                         {GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown)}

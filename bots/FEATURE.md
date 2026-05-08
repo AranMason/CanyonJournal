@@ -1,5 +1,11 @@
 
 
+# [Tech] Unify canyon tables in EditCanyons and SettingsCanyonsTab
+
+- `EditCanyons` (admin) and `SettingsCanyonsTab` (user settings) both render a canyon table with Name, Grade, Region, Type columns
+- They differ in one column: admin has "Verified", settings has "Descents"
+- Could share a base canyon table component with optional column slots
+
 # We should be able to report issues with a canyon on the Canyon Page
 
 - Dropdown for common issues, like 'Incorrect Rating', or 'Broken Link', combined with a free text
@@ -23,15 +29,6 @@
 - Sometimes in a canyon your rope will be damaged, and we will want to be able to split it into smaller pieces 
 - These pieces might sum to less than the original rope (IE: 2x30m rope from a 70m rope)
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
-
-# Add the ability to favourite canyons
-
-- These canyons should appear at the top of the Journal Create in Alphabetical order
-- We should no-longer display canyons that the user has descended previously first
-- Use heart icon
-
-# Add the ability to rate the trip out of 5 stars
-- Use the IconPicker component
 
 # Improve caching of data locally for re-use
 

@@ -16,6 +16,17 @@ See `/bots/FEATURE.md` for the current feature backlog. Please update this file 
 
 ---
 
+### Coding Strategy
+
+- Follow existing patterns and conventions in the codebase. When in doubt, look for a similar or ask the user.
+- Proactively identify code re-use opportunities. If you find yourself writing similar code to an existing function, consider refactoring into a shared helper.
+- Proactively identify maintainability improvements. If you see a pattern of code that could be improved with better abstractions, error handling, or type safety, suggest and implement those improvements.
+- Proactively identify componentization opportunities. If you find yourself writing similar UI code in multiple places, consider creating a reusable component.
+- Keep things clean and simple. Avoid over-engineering or adding unnecessary abstractions. The goal is to write code that is easy to understand and maintain for future developers (including yourself). This includes compilation warnings — if you see a way to fix or eliminate a TypeScript warning, do it.
+- If working on a complex feature, document key decisions and assumptions in code comments or in the `/bots/` documentation files, to help future developers understand the context.
+
+---
+
 ## Key Conventions
 
 ### Backend

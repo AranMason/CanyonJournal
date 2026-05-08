@@ -1,23 +1,15 @@
 import React from "react";
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import { WaterLevel } from "../types/CanyonRecord";
+import IconDisplay from "./IconDisplay";
 
 type WaterLevelRatingProps = {
     waterLevel: WaterLevel
 }
 
-const WaterLevelRating: React.FC<WaterLevelRatingProps> = ({waterLevel}) => {
-
-    if(waterLevel === WaterLevel.Unknown) {
-        return "-"
-    }
-
-    return <div>
-        {[1, 2, 3, 4, 5].map(i => <WaterDropIcon key={i} 
-        className="CanyonSummaryBar-waterdrop" 
-        sx={{height: "1rem", width: "1rem"}} 
-        color={waterLevel >= i ? "info" : "disabled"}/>)}
-    </div>
+const WaterLevelRating: React.FC<WaterLevelRatingProps> = ({ waterLevel }) => {
+    if (waterLevel === WaterLevel.Unknown) return "-";
+    return <IconDisplay icon={WaterDropIcon} value={waterLevel} count={5} activeColor="info" />;
 }
 
 export default WaterLevelRating

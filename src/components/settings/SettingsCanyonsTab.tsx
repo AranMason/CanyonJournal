@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box, Button, CircularProgress, Dialog, DialogActions, DialogContent,
-  DialogTitle, Alert, IconButton, Link, Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Tooltip, Typography,
+  DialogTitle, Alert, Link, Paper, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
@@ -16,6 +14,8 @@ import CanyonRating from '../CanyonRating';
 import CanyonTypeDisplay from '../CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
 import AddCanyonModal, { CanyonModalFormValues } from '../AddCanyonModal';
+import { mapCanyonFormToApiBody } from '../../utils/canyonForm';
+import RowActions from '../RowActions';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
@@ -39,18 +39,7 @@ const SettingsCanyonsTab: React.FC = () => {
   const openEdit = (canyon: UserCanyonWithDescents) => { setEditingCanyon(canyon); setDialogOpen(true); };
 
   const handleSave = async (values: CanyonModalFormValues) => {
-    const body = {
-      Name: values.name,
-      Url: values.url || null,
-      Region: values.canyonRegion,
-      CanyonType: values.canyonType,
-      AquaticRating: Number(values.aquaticRating),
-      VerticalRating: Number(values.verticalRating),
-      CommitmentRating: Number(values.commitmentRating),
-      StarRating: Number(values.starRating),
-      IsUnrated: values.isUnrated,
-      Notes: values.notes,
-    };
+    const body = mapCanyonFormToApiBody(values);
     if (values.id) {
       await apiFetch(`/api/user-canyons/${values.id}`, {
         method: 'PATCH',
@@ -156,16 +145,10 @@ const SettingsCanyonsTab: React.FC = () => {
                 </TableCell>
                 <TableCell>{canyon.Descents}</TableCell>
                 <TableCell>
-                  <Tooltip title="Edit">
-                    <IconButton size="small" onClick={() => openEdit(canyon)} sx={{ color: 'grey.500' }}>
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Delete">
-                    <IconButton size="small" onClick={() => setDeleteTarget(canyon)} sx={{ color: 'grey.500' }}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <RowActions
+                    onEdit={() => openEdit(canyon)}
+                    onDelete={() => setDeleteTarget(canyon)}
+                  />
                 </TableCell>
               </TableRow>
             ))}

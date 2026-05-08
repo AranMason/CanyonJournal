@@ -1,60 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PageTemplate from './PageTemplate';
 import { Button, Typography } from '@mui/material';
-import { CanyonRecord } from '../types/CanyonRecord';
 import { useUser } from '../App';
-import { apiFetch } from '../utils/api';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import { loadById } from '../helpers/CanyonDataStore';
-import { Canyon } from '../types/Canyon';
-import { UserCanyon } from '../types/UserCanyon';
 import DashboardStats from '../components/DashboardStats';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
+import { useCanyonRecords } from '../hooks/useCanyonRecords';
 
 const DashboardPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { user, loading } = useUser();
-  const [records, setRecords] = useState<CanyonRecord[]>([]);
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
-  const [canyonsById, setCanyonsById] = useState<{ [key: number]: Canyon }>({});
-  const [userCanyonsById, setUserCanyonsById] = useState<{ [key: number]: UserCanyon }>({});
 
-  useEffect(() => {
-    const fetchRecords = async () => {
-    
-        const [data, dataCanyonsById, userCanyons] = await Promise.all([
-          apiFetch<{ records: CanyonRecord[] }>('/api/record?max=10'),
-          loadById(),
-          apiFetch<UserCanyon[]>('/api/user-canyons'),
-        ])
-
-        setRecords(data.records || []);
-        setCanyonsById(dataCanyonsById);
-        const ucById: { [key: number]: UserCanyon } = {};
-        userCanyons.forEach(uc => { ucById[uc.Id] = uc; });
-        setUserCanyonsById(ucById);
-      
-    };
-    if (user && !loading) {
-      fetchRecords();
-    } else {
-      setRecords([]);
-    }
-  }, [user, loading]);
+  const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
+    '/api/record?max=10',
+    !loading && Boolean(user)
+  );
 
   function handleAccordionToggle(id: number | null) {
-
-    if (!id || sectionOpen === id) {
-      setSectionOpen(null);
-    } else {
-      setSectionOpen(id);
-    }
+    setSectionOpen(prev => prev === id ? null : id);
   }
 
   return (
-    <PageTemplate pageTitle="Canyon Journal" isLoading={loading}>
+    <PageTemplate pageTitle="Canyon Journal" isLoading={loading || isLoading}>
 
       <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>Record Descent</Button>
       <DashboardStats />
