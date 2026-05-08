@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel, Alert } from '@mui/material';
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { CanyonListEntry } from '../types/Canyon';

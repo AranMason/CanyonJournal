@@ -9,11 +9,6 @@
 - By default we shouldn't show resolved reports, but we should be able to still discover them if need be.
 - Could be a mailto: link initially, with a admin panel changes as a seperate feature work
 
-# I want to be able to easily search and find the appropriate Canyon in the admin area
-
-- Either by Name, Region, or by IsVerified based filtering
-- Lets lean local client side for now for filtering, given the smaller data sizes. Can revisit in the future.
-- We do already have a local client cache in CanyonDataStore, we should try leverage that pattern more.
 
 # Import from Rope Wiki data
 
@@ -56,9 +51,23 @@
 - Zero to many tags can be added
 - Auto complete when adding a record to match existing tags
 
-# Add ability to add new canyons to the Admin Panel
+# ~~Add ability to add new canyons to the Admin Panel~~ ✅ DONE (partial)
 
-- Investigate via CSV import as an option, but if so they're all unverified. This will need input validation.
-- We will need a new date added, and a UserId for the Canyon when it's created when and by whom (Default Now?)
-- Lets also consider a last updated audit field as well
-- Add modal single option for importing
+~~- Add modal single option for importing~~
+
+**Implemented:** "Add Canyon" button on Admin Panel opens existing `AddCanyonModal`. Admin-created canyons are auto-verified (`IsVerified=1`).
+
+**Still pending (future work):**
+- CSV import option (out of scope for now)
+- Date added / UserId audit fields on Canyon creation
+- Last updated audit field
+
+
+# Fully suppprt deleting canyons
+- Mark IsDeleted as true
+- Should still be able to access the canyon page
+- Deleted canyons shouldn't be included in the Canyon List page, or selectable for creating Journal Entries for.
+- Deleted Canyons should be marked as such
+- This same logic should also be extended to users custom canyons
+  - These user delete ones should be hidden on the user page, but still discoverable via a filter toggle such as [ ] Show Retired
+  - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.

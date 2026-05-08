@@ -236,10 +236,11 @@ router.post('/', async (req, res) => {
     }
 
     else {
-
-      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating)
+      const isAdminUser = await isAdmin(req);
+      request.input('isVerified', sql.Bit, isAdminUser ? 1 : 0);
+      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating, IsUnrated, Region, CanyonType, IsVerified, IsDeleted)
               OUTPUT INSERTED.*
-              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating)`);
+              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating, @isUnrated, @canyonRegion, @canyonType, @isVerified, 0)`);
       return res.status(201).json(result.recordset[0]);
     }
 
