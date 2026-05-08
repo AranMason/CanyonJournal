@@ -5,7 +5,7 @@ import { apiFetch } from '../utils/api';
 import { CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
-import { GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import CanyonFilter from '../components/CanyonFilter';
 import DateTableCell from '../components/table/DateTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';

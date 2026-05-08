@@ -5,7 +5,7 @@ import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody
 import CanyonRating from '../CanyonRating';
 import AddCanyonModal from '../AddCanyonModal';
 import RowActions from '../RowActions';
-import { GetRegionDisplayName } from '../../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../../helpers/EnumMapper';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import CanyonTypeTableCell from '../table/CanyonTypeCell';

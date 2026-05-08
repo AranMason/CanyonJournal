@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
 import { Box, Button, Chip, Typography } from '@mui/material';
-import { GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import RegionType from '../types/RegionEnum';
 import CanyonTypeDisplay from '../components/CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';

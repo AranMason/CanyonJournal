@@ -9,7 +9,7 @@ import { UserCanyonWithDescents } from '../types/UserCanyon';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRating from '../components/CanyonRating';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import { GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import RegionType from '../types/RegionEnum';
 
 const UserCanyonOverviewPage: React.FC = () => {

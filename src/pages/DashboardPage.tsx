@@ -5,7 +5,7 @@ import { CanyonRecord } from '../types/CanyonRecord';
 import { useUser } from '../App';
 import { apiFetch } from '../utils/api';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import { loadById } from '../heleprs/CanyonDataStore';
+import { loadById } from '../helpers/CanyonDataStore';
 import { Canyon } from '../types/Canyon';
 import DashboardStats from '../components/DashboardStats';
 import EditNoteIcon from '@mui/icons-material/EditNote';

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { CanyonListEntry } from "../types/Canyon";
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import RegionType, { RegionTypeList } from "../types/RegionEnum";
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from "../heleprs/EnumMapper";
+import { GetCanyonTypeDisplayName, GetRegionDisplayName } from "../helpers/EnumMapper";
 import { CanyonTypeEnum, CanyonTypeList } from "../types/CanyonTypeEnum";
 
 type CanyonFilterProps = {

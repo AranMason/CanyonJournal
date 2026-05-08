@@ -8,7 +8,7 @@ import { Canyon } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../helpers/EnumMapper';
 
 export interface CanyonModalFormValues {
   id?: number;

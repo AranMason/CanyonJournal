@@ -39,3 +39,26 @@
 - Use the IconPicker component
 
 # Improve caching of data locally for re-use
+
+# Move public website to templating engine
+
+- Should be supported by github pages
+- Updated content
+- 
+
+# Add Localization
+
+# Add Tags to Trips
+
+- Attached to a trip record
+- Can be filtered by in the Journal Page - Multiple tags can be selected, and all must match
+- Custom Text, can be created when adding a record
+- Zero to many tags can be added
+- Auto complete when adding a record to match existing tags
+
+# Add ability to add new canyons to the Admin Panel
+
+- Investigate via CSV import as an option, but if so they're all unverified. This will need input validation.
+- We will need a new date added, and a UserId for the Canyon when it's created when and by whom (Default Now?)
+- Lets also consider a last updated audit field as well
+- Add modal single option for importing

@@ -7,9 +7,9 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import { Canyon } from '../types/Canyon';
-import { loadById } from '../heleprs/CanyonDataStore';
+import { loadById } from '../helpers/CanyonDataStore';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
-import { GetRegionDisplayName } from '../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import { GearRopeSelector } from '../components/GearRopeSelector';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 

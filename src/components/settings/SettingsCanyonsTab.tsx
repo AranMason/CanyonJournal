@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import RegionType from '../../types/RegionEnum';
-import { GetRegionDisplayName } from '../../heleprs/EnumMapper';
+import { GetRegionDisplayName } from '../../helpers/EnumMapper';
 import CanyonRating from '../CanyonRating';
 import CanyonTypeDisplay from '../CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';

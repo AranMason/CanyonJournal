@@ -16,7 +16,7 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EditIcon from '@mui/icons-material/Edit';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
-import { GetRegionDisplayName } from "../heleprs/EnumMapper";
+import { GetRegionDisplayName } from "../helpers/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
 

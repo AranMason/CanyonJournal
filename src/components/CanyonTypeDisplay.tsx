@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
 import { CanyonTypeEnum } from "../types/CanyonTypeEnum";
-import { GetCanyonTypeDisplayName } from "../heleprs/EnumMapper";
+import { GetCanyonTypeDisplayName } from "../helpers/EnumMapper";
 import HikingIcon from '@mui/icons-material/Hiking';
 import GestureIcon from '@mui/icons-material/Gesture';
 import TerrainIcon from '@mui/icons-material/Terrain';

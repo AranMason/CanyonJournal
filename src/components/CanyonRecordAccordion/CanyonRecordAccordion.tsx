@@ -11,7 +11,7 @@ import CanyonTypeDisplay from "../CanyonTypeDisplay";
 import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
 import { Canyon } from "../../types/Canyon";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
-import { GetRegionDisplayName } from "../../heleprs/EnumMapper";
+import { GetRegionDisplayName } from "../../helpers/EnumMapper";
 import RegionType from "../../types/RegionEnum";
 
 
