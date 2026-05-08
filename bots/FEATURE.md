@@ -32,6 +32,10 @@
 
 # Improve caching of data locally for re-use
 
+- `CanyonDataStore` already uses a module-level promise cache pattern (single fetch, multiple awaits)
+- Extend the same pattern to `/api/equipment` (gear + ropes) via `EquipmentDataStore.ts`
+- Currently two `async-multi-select` filter configs in `FilterPanel` each call the same endpoint separately
+
 # Move public website to templating engine
 
 - Should be supported by github pages

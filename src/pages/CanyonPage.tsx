@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel } from '@mui/material';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
@@ -6,10 +6,16 @@ import { CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { GetRegionDisplayName } from '../helpers/EnumMapper';
-import CanyonFilter from '../components/CanyonFilter';
+import FilterPanel, { FilterValues } from '../components/FilterPanel';
 import DateTableCell from '../components/table/DateTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';
 import CanyonTypeTableCell from '../components/table/CanyonTypeCell';
+import RegionType from '../types/RegionEnum';
+import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
+import {
+  getRegionFilterConfig, getCanyonTypeFilterConfig,
+  getVerticalRatingFilterConfig, getAquaticRatingFilterConfig, getStarRatingFilterConfig,
+} from '../helpers/filterConfigs';
 
 const minDateString: string = '1900-01-01' 
 
@@ -87,6 +93,37 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
+  const filterConfig = useMemo(() => [
+    getRegionFilterConfig(),
+    getCanyonTypeFilterConfig(),
+    getVerticalRatingFilterConfig(),
+    getAquaticRatingFilterConfig(),
+    getStarRatingFilterConfig(),
+  ], []);
+
+  const filterFn = useCallback((canyon: CanyonListEntry, values: FilterValues) => {
+    if (values.region !== '' && (canyon.Region ?? RegionType.Unknown) !== values.region) return false;
+
+    const typeFilter = values.type as CanyonTypeEnum[];
+    if (typeFilter.length > 0) {
+      if (canyon.CanyonType === null || canyon.CanyonType === undefined) return false;
+      if (!typeFilter.includes(canyon.CanyonType)) return false;
+    }
+
+    const vertFilter = values.verticalRating as number[];
+    const aquaFilter = values.aquaRating as number[];
+    const starFilter = values.starRating as number[];
+
+    if (vertFilter.length > 0 || aquaFilter.length > 0 || starFilter.length > 0) {
+      if (canyon.IsUnrated) return false;
+    }
+    if (vertFilter.length > 0 && !vertFilter.includes(canyon.VerticalRating ?? 0)) return false;
+    if (aquaFilter.length > 0 && !aquaFilter.includes(canyon.AquaticRating ?? 0)) return false;
+    if (starFilter.length > 0 && !starFilter.includes(canyon.StarRating ?? 0)) return false;
+
+    return true;
+  }, []);
+
   function getSortedCanyons(filteredCanyons: CanyonListEntry[]): CanyonListEntry[] {
 
     return [...filteredCanyons].sort((a, b) => {
@@ -124,8 +161,12 @@ const CanyonList: React.FC = () => {
           </Box>
         </Box>
       </Box>
-      <CanyonFilter canyons={canyons}>
-        {(filteredCanyons: CanyonListEntry[]) => <TableContainer component={Paper}>
+      <FilterPanel<CanyonListEntry>
+        items={canyons}
+        config={filterConfig}
+        filterFn={filterFn}
+      >
+        {(filteredCanyons) => <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -167,7 +208,7 @@ const CanyonList: React.FC = () => {
         </TableContainer>}
       
         
-      </CanyonFilter>
+      </FilterPanel>
     </PageTemplate>
   );
 };
