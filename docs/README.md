@@ -1,13 +1,32 @@
-# Canyon Journal — Static Home (docs/)
+# Canyon Journal — Marketing Site (docs/)
 
-This folder contains a simple static website intended to be published with GitHub Pages.
+Static marketing website published via GitHub Pages. Built with Jekyll for shared layouts and templating.
 
-Files:
-- `index.html` — Homepage with a call-to-action to log in and highlights features.
-- `privacy.html` — Privacy statement placeholder.
-- `contact.html` — Contact page with an email address.
-- `styles.css` — Basic styles used by the pages.
+## Files
 
-Deploy: Configure the repository GitHub Pages setting to serve from the `docs/` folder on the `main` branch.
+- `index.html` — Homepage with hero, feature grid, and call-to-action.
+- `contact.html` — Contact page with email address.
+- `privacy.html` — Privacy statement.
+- `assets/styles.css` — Site styles.
+- `_layouts/base.html` — Shared layout (head, header, footer). All pages extend this.
+- `_layouts/page.html` — Centred content page layout (used by contact + privacy).
+- `_config.yml` — Jekyll site configuration.
 
-Customize: Edit the pages in this folder to replace placeholder text and contact addresses.
+## Deploy
+
+GitHub Pages automatically builds Jekyll when you push to `main`. No workflow file needed — just ensure the Pages setting points to the `docs/` folder.
+
+## Testing Locally
+
+Requires Ruby. On Windows, install via [RubyInstaller](https://rubyinstaller.org/) (Ruby+Devkit).
+
+```bash
+# One-time setup
+gem install bundler jekyll
+
+# Serve locally
+cd docs
+jekyll serve
+```
+
+Then visit **http://localhost:4000**.

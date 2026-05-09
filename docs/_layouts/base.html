@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="/assets/favicon.svg" />
+  <title>{% if page.title %}{{ page.title }} — {% endif %}Canyon Journal</title>
+  <link rel="stylesheet" href="/src/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+  <meta name="description" content="{{ page.description | default: site.description }}" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <img src="/assets/favicon.svg" width="48" height="48" alt="Canyon Journal logo"/>
+        <div>
+          <div class="site-title">Canyon Journal</div>
+          <div class="small">Record Adventures • Track Gear • Discover Canyons</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a class="small" href="/">Home</a>
+        <a class="small" href="/contact.html">Contact</a>
+        <a class="small cta" href="https://app.canyonjournal.co.uk/">Login</a>
+      </nav>
+    </header>
+
+    {{ content }}
+
+    <footer class="footer">
+      <div class="small">© Canyon Journal</div>
+      <div>
+        <a class="privacy-link" href="/privacy.html">Privacy</a>
+        &nbsp;•&nbsp;
+        <a class="privacy-link" href="/contact.html">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

@@ -58,3 +58,7 @@
   - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.
 
   # Ability to rename tags in the Settings menu
+
+  # Set the page title based on the users current page viewed
+
+  # Improve dashboard overview

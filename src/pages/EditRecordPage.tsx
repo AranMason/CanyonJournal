@@ -32,7 +32,8 @@ const EditRecordPage: React.FC = () => {
                     Tags: data.Tags,
                     CanyonId: data.CanyonId || undefined,
                     UserCanyonId: data.UserCanyonId || undefined,
-                    WaterLevel: data.WaterLevel || WaterLevel.Unknown
+                    WaterLevel: data.WaterLevel || WaterLevel.Unknown,
+                    TripRating: data.TripRating || undefined,
                 });
             })
             .finally(() => setRecordLoading(false));
