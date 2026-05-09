@@ -6,9 +6,32 @@ import { canyonDetailUrl } from './helpers/urlHelper';
 
 const recordRouter: Router = express.Router();
 
+/** Upsert a list of tag names for a user, returning their IDs. */
+async function upsertTags(pool: any, userId: number, tagNames: string[]): Promise<number[]> {
+  const ids: number[] = [];
+  for (const name of tagNames) {
+    const trimmed = name.trim();
+    if (!trimmed) continue;
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(100), trimmed)
+      .query(`
+        MERGE Tags AS target
+        USING (SELECT @userId AS UserId, @name AS Name) AS source
+        ON target.UserId = source.UserId AND target.Name = source.Name
+        WHEN NOT MATCHED THEN INSERT (UserId, Name) VALUES (source.UserId, source.Name);
+        SELECT Id FROM Tags WHERE UserId = @userId AND Name = @name;
+      `);
+    if (result.recordset.length > 0) {
+      ids.push(result.recordset[0].Id);
+    }
+  }
+  return ids;
+}
+
 // POST /api/record - add a canyon record to SQL Server
 recordRouter.post('/', async (req: Request, res: Response) => {
-  const { TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
+  const { TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds, TagNames } = req.body as CanyonRecord & { TagNames?: string[] };
   const dateTime = req.body.Date;
   if (!dateTime) {
     return res.status(400).json({ error: 'Date is required.' });
@@ -60,6 +83,19 @@ recordRouter.post('/', async (req: Request, res: Response) => {
       }
     }
 
+    if (Array.isArray(TagNames) && TagNames.length > 0) {
+      const userId = await getUserIdByRequest(req);
+      if (userId) {
+        const tagIds = await upsertTags(pool, userId, TagNames);
+        for (const tagId of tagIds) {
+          await transaction.request()
+            .input('canyonRecordId', sql.Int, record.Id)
+            .input('tagId', sql.Int, tagId)
+            .query('INSERT INTO CanyonRecordTags (CanyonRecordId, TagId) VALUES (@canyonRecordId, @tagId)');
+        }
+      }
+    }
+
     transaction.commit();
     res.status(201).json({ message: 'Canyon record added!', record });
   } catch (err) {
@@ -69,7 +105,7 @@ recordRouter.post('/', async (req: Request, res: Response) => {
 });
 
 recordRouter.patch('/', async (req: Request, res: Response) => {
-  const { Id, TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds } = req.body as CanyonRecord;
+  const { Id, TeamSize, Comments, CanyonId, UserCanyonId, RopeIds, GearIds, TagNames } = req.body as CanyonRecord & { TagNames?: string[] };
   const dateTime = req.body.Date;
 
   if (!Id) {
@@ -115,6 +151,9 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
     await transaction.request()
       .input('Id', sql.Int, Id)
       .query('DELETE FROM CanyonRecordGear WHERE CanyonRecordId = @Id');
+    await transaction.request()
+      .input('Id', sql.Int, Id)
+      .query('DELETE FROM CanyonRecordTags WHERE CanyonRecordId = @Id');
 
     // Insert mapping tables if ropeIds/gearIds provided
     if (Array.isArray(RopeIds) && RopeIds.length > 0) {
@@ -140,6 +179,18 @@ recordRouter.patch('/', async (req: Request, res: Response) => {
           values.push(`(@Id, @gearItemId_${index})`);
       } 
       await baseRequest.query(baseQuery + values.join(', '));
+    }
+    if (Array.isArray(TagNames) && TagNames.length > 0) {
+      const userId = await getUserIdByRequest(req);
+      if (userId) {
+        const tagIds = await upsertTags(pool, userId, TagNames);
+        for (const tagId of tagIds) {
+          await transaction.request()
+            .input('canyonRecordId', sql.Int, Id)
+            .input('tagId', sql.Int, tagId)
+            .query('INSERT INTO CanyonRecordTags (CanyonRecordId, TagId) VALUES (@canyonRecordId, @tagId)');
+        }
+      }
     }
 
     await transaction.commit();
@@ -211,6 +262,9 @@ recordRouter.get('/', async (req: Request, res: Response) => {
         const gearRows = await pool.request()
           .query(`SELECT CanyonRecordId, GearItemId FROM CanyonRecordGear WHERE CanyonRecordId IN (${idList})`)
           .then(r => r.recordset as any[]);
+        const tagRows = await pool.request()
+          .query(`SELECT crt.CanyonRecordId, t.Id, t.Name FROM CanyonRecordTags crt JOIN Tags t ON crt.TagId = t.Id WHERE crt.CanyonRecordId IN (${idList})`)
+          .then(r => r.recordset as any[]);
 
         const ropesByRecord: Record<number, number[]> = {};
         ropeRows.forEach(r => {
@@ -224,9 +278,16 @@ recordRouter.get('/', async (req: Request, res: Response) => {
           gearByRecord[g.CanyonRecordId].push(g.GearItemId);
         });
 
+        const tagsByRecord: Record<number, { Id: number; Name: string }[]> = {};
+        tagRows.forEach((t: any) => {
+          tagsByRecord[t.CanyonRecordId] = tagsByRecord[t.CanyonRecordId] || [];
+          tagsByRecord[t.CanyonRecordId].push({ Id: t.Id, Name: t.Name });
+        });
+
         records.forEach(rec => {
           rec.RopeIds = ropesByRecord[rec.Id] || [];
           rec.GearIds = gearByRecord[rec.Id] || [];
+          rec.Tags = tagsByRecord[rec.Id] || [];
           rec.DetailUrl = canyonDetailUrl(rec.CanyonId, rec.UserCanyonId);
         });
       }
@@ -283,6 +344,10 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
       .input('Id', sql.Int, Number(req.params.id))
       .query('SELECT GearItemId FROM CanyonRecordGear WHERE CanyonRecordId = @Id')
       .then(r => r.recordset.map((row: any) => row.GearItemId));
+    (resultRecord as any).Tags = await pool.request()
+      .input('Id', sql.Int, Number(req.params.id))
+      .query('SELECT t.Id, t.Name FROM CanyonRecordTags crt JOIN Tags t ON crt.TagId = t.Id WHERE crt.CanyonRecordId = @Id')
+      .then(r => r.recordset.map((row: any) => ({ Id: row.Id, Name: row.Name })));
 
     res.json(resultRecord);
   } catch (err) {

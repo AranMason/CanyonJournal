@@ -11,11 +11,20 @@ import SidebarDrawer from './SidebarDrawer';
 import LoginIcon from '@mui/icons-material/Login';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import SettingsIcon from '@mui/icons-material/Settings';
+import BugReportIcon from '@mui/icons-material/BugReport';
 
 const Sidebar: React.FC = () => {
   const { user, setUser, loading } = useUser();
 
   if (loading) return null;
+
+  const handleBugReport = () => {
+    const subject = encodeURIComponent('Bug Report – CanyonJournal');
+    const body = encodeURIComponent(
+      `Please describe the issue below:\n\n\n\n---\nPage: ${window.location.href}\nUser ID: ${user?.id ?? 'unknown'}`
+    );
+    window.open(`mailto:hello@canyonjournal.co.uk?subject=${subject}&body=${body}`);
+  };
 
   return <SidebarDrawer>{(isOpen) => <><Box>
     <List>
@@ -65,6 +74,12 @@ const Sidebar: React.FC = () => {
   </Box>    
     <Box sx={{ py: 2, marginTop: "auto" }}>
       <List>
+        <SidebarItem
+          isOpen={isOpen}
+          label="Report a Bug"
+          icon={<BugReportIcon />}
+          onClick={handleBugReport}
+        />
         {user  && <SidebarItem
           isOpen={isOpen}
           label="Logout"

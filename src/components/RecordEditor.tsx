@@ -1,9 +1,10 @@
-import { Box, TextField, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper } from "@mui/material";
+import { Box, TextField, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper, Autocomplete, Chip } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
 import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
+import * as TagsDataStore from '../helpers/TagsDataStore';
 import { GearRopeSelector } from "./GearRopeSelector";
 import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
@@ -39,6 +40,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
     const [searchFilter, setSearchFilter] = useState('');
     const [selectedDisplay, setSelectedDisplay] = useState<{ name: string; isVerified: boolean; canyon?: CanyonListEntry } | null>(null);
+    const [availableTags, setAvailableTags] = useState<string[]>([]);
+    const [selectedTagNames, setSelectedTagNames] = useState<string[]>(initialValues?.Tags?.map(t => t.Name) || []);
 
     useEffect(() => {
         setCanyonsLoading(true);
@@ -55,6 +58,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                 }
             })
             .finally(() => setCanyonsLoading(false));
+        TagsDataStore.load().then(tags => setAvailableTags(tags.map(t => t.Name)));
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const initialFormValues: CanyonRecord = initialValues || {
@@ -86,10 +90,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     ...values,
                                     RopeIds: values.RopeIds,
                                     GearIds: values.GearIds,
+                                    TagNames: selectedTagNames,
                                     CanyonId: values.CanyonId || null,
                                     UserCanyonId: values.UserCanyonId || null,
                                 }),
                             });
+                            TagsDataStore.invalidate();
                             setSnackbarOpen(true);
                             navigate('/journal');
                         } catch (err: any) {
@@ -332,6 +338,21 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     minRows={3}
                                     error={touched.Comments && Boolean(errors.Comments)}
                                     helperText={touched.Comments && errors.Comments}
+                                />
+                                <Autocomplete
+                                    multiple
+                                    freeSolo
+                                    options={availableTags}
+                                    value={selectedTagNames}
+                                    onChange={(_, newValue) => setSelectedTagNames(newValue as string[])}
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip {...getTagProps({ index })} key={option} label={option} size="small" />
+                                        ))
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Tags" placeholder="Add tags..." margin="normal" />
+                                    )}
                                 />
                                 <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
                                 <Box display="flex" gap={2} flexDirection="column" mb={2}>

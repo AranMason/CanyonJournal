@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, IconButton, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Chip, Divider, IconButton, Typography } from "@mui/material";
 import React from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WaterLevelRating from "../WaterLevelRating";
@@ -85,6 +85,13 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
             <Typography variant="body2" whiteSpace={"pre-line"} fontStyle={"italic"} pl={2}>
                 {record.Comments ?? "-"}
             </Typography>
+            {record.Tags && record.Tags.length > 0 && (
+                <Box display="flex" flexWrap="wrap" gap={0.5} mt={1} pl={2}>
+                    {record.Tags.map(tag => (
+                        <Chip key={tag.Id} label={tag.Name} size="small" variant="outlined" />
+                    ))}
+                </Box>
+            )}
         </AccordionDetails>
     </Accordion>
 }

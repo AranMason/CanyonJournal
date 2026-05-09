@@ -162,7 +162,9 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
         );
 
       case 'async-multi-select': {
+        const loaded = asyncOptions[c.key] !== undefined;
         const options = asyncOptions[c.key] ?? [];
+        const disabled = !loaded || options.length === 0;
         const selected: number[] = values[c.key] ?? [];
         const hasGroups = options.some(o => o.group);
         const grouped = hasGroups
@@ -175,8 +177,10 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
           : null;
 
         return (
-          <FormControl key={c.key} sx={{ flex: 1, minWidth: 240 }}>
-            <InputLabel id={c.labelId}>{c.label}</InputLabel>
+          <FormControl key={c.key} sx={{ flex: 1, minWidth: 240 }} disabled={disabled}>
+            <InputLabel id={c.labelId}>
+              {!loaded ? `${c.label} (Loading…)` : c.label}
+            </InputLabel>
             <Select
               labelId={c.labelId}
               label={c.label}

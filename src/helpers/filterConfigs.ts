@@ -1,5 +1,6 @@
 import { FilterConfig } from '../components/FilterPanel';
 import * as EquipmentDataStore from './EquipmentDataStore';
+import * as TagsDataStore from './TagsDataStore';
 import { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from './EnumMapper';
@@ -93,6 +94,17 @@ export function getVerifiedFilterConfig(key = 'verified'): FilterConfig {
       { value: 'verified', label: 'Verified' },
       { value: 'unverified', label: 'Unverified' },
     ],
+  };
+}
+
+export function getTagFilterConfig(key = 'tags'): FilterConfig {
+  return {
+    type: 'async-multi-select',
+    key,
+    label: 'Tags',
+    labelId: 'tag-filter',
+    loadOptions: () => TagsDataStore.load()
+      .then(tags => tags.map(t => ({ value: t.Id, label: t.Name }))),
   };
 }
 

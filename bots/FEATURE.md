@@ -30,11 +30,6 @@
 - These pieces might sum to less than the original rope (IE: 2x30m rope from a 70m rope)
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
 
-# Improve caching of data locally for re-use
-
-- `CanyonDataStore` already uses a module-level promise cache pattern (single fetch, multiple awaits)
-- Extend the same pattern to `/api/equipment` (gear + ropes) via `EquipmentDataStore.ts`
-- Currently two `async-multi-select` filter configs in `FilterPanel` each call the same endpoint separately
 
 # Move public website to templating engine
 
@@ -44,17 +39,6 @@
 
 # Add Localization
 
-# Add Tags to Trips
-
-- Attached to a trip record
-- Can be filtered by in the Journal Page - Multiple tags can be selected, and all must match
-- Custom Text, can be created when adding a record
-- Zero to many tags can be added
-- Auto complete when adding a record to match existing tags
-
-# ~~Add ability to add new canyons to the Admin Panel~~ ✅ DONE (partial)
-
-~~- Add modal single option for importing~~
 
 **Implemented:** "Add Canyon" button on Admin Panel opens existing `AddCanyonModal`. Admin-created canyons are auto-verified (`IsVerified=1`).
 
@@ -72,3 +56,5 @@
 - This same logic should also be extended to users custom canyons
   - These user delete ones should be hidden on the user page, but still discoverable via a filter toggle such as [ ] Show Retired
   - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.
+
+  # Ability to rename tags in the Settings menu

@@ -20,6 +20,8 @@ export interface CanyonRecord {
     GearIds: number[];
     WaterLevel?: WaterLevel;
     TripRating?: number;
+    /** Tags attached to this trip record */
+    Tags?: { Id: number; Name: string }[];
 }
 
 export enum WaterLevel {

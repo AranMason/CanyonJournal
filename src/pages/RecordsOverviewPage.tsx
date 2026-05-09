@@ -10,7 +10,7 @@ import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import FilterPanel, { FilterValues } from '../components/FilterPanel';
 import {
   getCanyonNameFilterConfig, getRegionFilterConfig,
-  getRopeFilterConfig, getGearFilterConfig,
+  getRopeFilterConfig, getGearFilterConfig, getTagFilterConfig,
 } from '../helpers/filterConfigs';
 
 const RecordsOverviewPage: React.FC = () => {
@@ -29,6 +29,7 @@ const RecordsOverviewPage: React.FC = () => {
     getRegionFilterConfig(),
     getRopeFilterConfig(),
     getGearFilterConfig(),
+    getTagFilterConfig(),
   ], []);
 
   const filterFn = useCallback((rec: CanyonRecord, values: FilterValues) => {
@@ -50,6 +51,12 @@ const RecordsOverviewPage: React.FC = () => {
     const ropeFilter = values.ropes as number[];
     if (ropeFilter.length > 0) {
       if (!rec.RopeIds || !ropeFilter.every(x => rec.RopeIds.includes(x))) return false;
+    }
+
+    const tagFilter = values.tags as number[];
+    if (tagFilter.length > 0) {
+      const recTagIds = rec.Tags?.map(t => t.Id) ?? [];
+      if (!tagFilter.every(x => recTagIds.includes(x))) return false;
     }
 
     return true;
