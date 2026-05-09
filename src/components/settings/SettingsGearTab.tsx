@@ -5,6 +5,7 @@ import {
   TableHead, TableRow, Typography,
 } from '@mui/material';
 import { apiFetch } from '../../utils/api';
+import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { GearItem, RopeItem } from '../../types/types';
 import RopeModal from '../RopeModal';
 import GearModal from '../GearModal';
@@ -22,7 +23,7 @@ const SettingsGearTab: React.FC = () => {
   const [editGearId, setEditGearId] = useState<Number | null>(null);
 
   useEffect(() => {
-    apiFetch<{ gear: GearItem[]; ropes: RopeItem[] }>('/api/equipment')
+    EquipmentDataStore.load()
       .then(data => {
         setGear(data.gear || []);
         setRopes(data.ropes || []);
@@ -40,6 +41,7 @@ const SettingsGearTab: React.FC = () => {
         body: JSON.stringify(data),
       });
       setRopes(prev => [...prev, response]);
+      EquipmentDataStore.invalidate();
       setSnackbarOpen(true);
     } catch (err: any) {
       if (err.message === 'Unauthorized') navigate('/');
@@ -54,6 +56,7 @@ const SettingsGearTab: React.FC = () => {
         body: JSON.stringify(data),
       });
       setGear(prev => [...prev, response]);
+      EquipmentDataStore.invalidate();
       setSnackbarOpen(true);
     } catch (err: any) {
       if (err.message === 'Unauthorized') navigate('/');
@@ -93,6 +96,7 @@ const SettingsGearTab: React.FC = () => {
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/rope/${row.Id}`, { method: 'DELETE' });
                         setRopes(prev => prev.filter(r => r.Id !== row.Id));
+                        EquipmentDataStore.invalidate();
                       }}
                     />
                   </TableCell>
@@ -114,6 +118,7 @@ const SettingsGearTab: React.FC = () => {
                 });
                 setRopes(prev => prev.map(r => r.Id === editRopeId ? response : r));
                 setEditRopeId(null);
+                EquipmentDataStore.invalidate();
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
               }
@@ -154,6 +159,7 @@ const SettingsGearTab: React.FC = () => {
                       onDelete={async () => {
                         await apiFetch(`/api/equipment/gear/${row.Id}`, { method: 'DELETE' });
                         setGear(prev => prev.filter(g => g.Id !== row.Id));
+                        EquipmentDataStore.invalidate();
                       }}
                     />
                   </TableCell>
@@ -175,6 +181,7 @@ const SettingsGearTab: React.FC = () => {
                 });
                 setGear(prev => prev.map(g => g.Id === editGearId ? response : g));
                 setEditGearId(null);
+                EquipmentDataStore.invalidate();
               } catch (err: any) {
                 if (err.message === 'Unauthorized') navigate('/');
               }

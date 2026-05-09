@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../utils/api';
+import * as FavouritesDataStore from '../helpers/FavouritesDataStore';
 
 interface UseFavouriteOptions {
   canyonId?: number;
@@ -16,7 +17,7 @@ export function useFavourite({ canyonId, userCanyonId }: UseFavouriteOptions): U
 
   useEffect(() => {
     if (!canyonId && !userCanyonId) return;
-    apiFetch<{ CanyonId: number | null; UserCanyonId: number | null }[]>('/api/favourites')
+    FavouritesDataStore.load()
       .then(favs => {
         if (canyonId) {
           setIsFavourite(favs.some(f => f.CanyonId === canyonId));
@@ -37,6 +38,7 @@ export function useFavourite({ canyonId, userCanyonId }: UseFavouriteOptions): U
           canyonId ? { CanyonId: canyonId } : { UserCanyonId: userCanyonId }
         ),
       });
+      FavouritesDataStore.invalidate();
     } catch {
       setIsFavourite(!next);
     }

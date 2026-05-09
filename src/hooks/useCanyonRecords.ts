@@ -4,6 +4,7 @@ import { Canyon } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
 import { apiFetch } from '../utils/api';
 import { loadById } from '../helpers/CanyonDataStore';
+import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
 
 interface UseCanyonRecordsResult {
   records: CanyonRecord[];
@@ -27,12 +28,10 @@ export function useCanyonRecords(url: string, enabled: boolean): UseCanyonRecord
     Promise.all([
       apiFetch<{ records: CanyonRecord[] }>(url),
       loadById(),
-      apiFetch<UserCanyon[]>('/api/user-canyons'),
-    ]).then(([data, canyons, userCanyons]) => {
+      UserCanyonDataStore.loadById(),
+    ]).then(([data, canyons, ucById]) => {
       setRecords(data.records || []);
       setCanyonsById(canyons);
-      const ucById: { [id: number]: UserCanyon } = {};
-      userCanyons.forEach(uc => { ucById[uc.Id] = uc; });
       setUserCanyonsById(ucById);
     }).finally(() => setIsLoading(false));
   }, [url, enabled]); // eslint-disable-line react-hooks/exhaustive-deps

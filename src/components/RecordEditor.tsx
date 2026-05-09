@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
+import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
 import { GearRopeSelector } from "./GearRopeSelector";
 import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
@@ -127,6 +128,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             setFieldValue('UserCanyonId', newCanyon.Id);
                             setFieldValue('CanyonId', undefined);
                             setSelectedDisplay({ name: newCanyon.Name, isVerified: false });
+                            UserCanyonDataStore.invalidate();
                         };
 
                         const lowerFilter = searchFilter.trim().toLowerCase();

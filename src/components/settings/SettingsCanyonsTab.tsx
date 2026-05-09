@@ -7,6 +7,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
+import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import RegionType from '../../types/RegionEnum';
 import { GetRegionDisplayName } from '../../helpers/EnumMapper';
@@ -27,8 +28,9 @@ const SettingsCanyonsTab: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const refresh = () => {
+    UserCanyonDataStore.invalidate();
     setIsLoading(true);
-    apiFetch<UserCanyonWithDescents[]>('/api/user-canyons')
+    UserCanyonDataStore.load()
       .then(setCanyons)
       .finally(() => setIsLoading(false));
   };

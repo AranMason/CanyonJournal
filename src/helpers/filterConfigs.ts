@@ -1,6 +1,5 @@
 import { FilterConfig } from '../components/FilterPanel';
-import { apiFetch } from '../utils/api';
-import { GearItem, RopeItem } from '../types/types';
+import * as EquipmentDataStore from './EquipmentDataStore';
 import { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from './EnumMapper';
@@ -69,7 +68,7 @@ export function getRopeFilterConfig(key = 'ropes'): FilterConfig {
     key,
     label: 'Ropes',
     labelId: 'rope-filter',
-    loadOptions: () => apiFetch<{ gear: GearItem[]; ropes: RopeItem[] }>('/api/equipment')
+    loadOptions: () => EquipmentDataStore.load()
       .then(d => d.ropes.map(r => ({ value: r.Id, label: `${r.Name} - ${r.Length} ${r.Unit}` }))),
   };
 }
@@ -80,7 +79,7 @@ export function getGearFilterConfig(key = 'gear'): FilterConfig {
     key,
     label: 'Gear',
     labelId: 'gear-filter',
-    loadOptions: () => apiFetch<{ gear: GearItem[]; ropes: RopeItem[] }>('/api/equipment')
+    loadOptions: () => EquipmentDataStore.load()
       .then(d => d.gear.map(g => ({ value: g.Id, label: g.Name, group: g.Category }))),
   };
 }
