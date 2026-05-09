@@ -17,18 +17,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node (for potential build steps)
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
       - name: Configure Pages
         uses: actions/configure-pages@v4
+
+      - name: Build Jekyll site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./docs
+          destination: ./_site
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./docs
+          path: ./_site
 
   deploy-pages:
     needs: deploy
