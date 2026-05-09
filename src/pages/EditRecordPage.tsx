@@ -29,6 +29,7 @@ const EditRecordPage: React.FC = () => {
                     Comments: data.Comments || '',
                     RopeIds: data.RopeIds,
                     GearIds: data.GearIds,
+                    Tags: data.Tags,
                     CanyonId: data.CanyonId || undefined,
                     UserCanyonId: data.UserCanyonId || undefined,
                     WaterLevel: data.WaterLevel || WaterLevel.Unknown
