@@ -62,18 +62,18 @@ const EditCanyons: React.FC = () => {
             <TableHead>
                 <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Grade</TableCell>
-                    <TableCell>Region</TableCell>
-                    <TableCell>Type</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Grade</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Region</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Type</TableCell>
                     <TableCell>Edit</TableCell>
-                    <TableCell>Is Verified</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Is Verified</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
                 {filteredCanyons.map(canyon => (
                     <TableRow key={canyon.Id}>
                         <CanyonNameTableCell name={canyon.Name} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} />
-                        <TableCell>
+                        <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                             <CanyonRating
                                 aquaticRating={canyon.AquaticRating}
                                 verticalRating={canyon.VerticalRating}
@@ -82,14 +82,14 @@ const EditCanyons: React.FC = () => {
                                 isUnrated={canyon.IsUnrated}
                             />
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                             {GetRegionDisplayName(canyon.Region)}
                         </TableCell>
-                        <CanyonTypeTableCell type={canyon.CanyonType} />
+                        <CanyonTypeTableCell type={canyon.CanyonType} sx={{ display: { xs: 'none', sm: 'table-cell' } }} />
                         <TableCell>
                             <RowActions onEdit={() => setEditCanyon(canyon)} /> 
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                             {canyon.IsVerified ? <CheckIcon color='success'/> : <CloseIcon color='error'/>}
                         </TableCell>
                     </TableRow>

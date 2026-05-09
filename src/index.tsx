@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './styles/breakpoints.css';
@@ -19,9 +19,36 @@ import UserSettingsPage from './pages/UserSettingsPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
 import MuiThemeProvider from './styles/MuiTheme';
 import Sidebar from './components/Sidebar';
+import MobileAppBar from './components/MobileAppBar';
 import CookieBanner from './components/CookieBanner';
 import { Box } from '@mui/material';
 
+function AppLayout() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <MobileAppBar onMenuClick={() => setMobileOpen(true)} />
+      <Box display="flex">
+        <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
+        <Box component="main" sx={{ flexGrow: 1, mt: { xs: '56px', sm: '64px', md: 0 } }}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/journal/record/:id" element={<EditRecordPage />} />
+            <Route path="/journal/record" element={<RecordPage />} />
+            <Route path="/journal" element={<RecordsOverviewPage />} />
+            <Route path="/canyons/users/:id" element={<UserCanyonOverviewPage />} />
+            <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
+            <Route path="/canyons" element={<CanyonPage />} />
+            <Route path="/settings" element={<UserSettingsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Box>
+      </Box>
+    </Box>
+  );
+}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -32,22 +59,7 @@ root.render(
       <MuiThemeProvider>
         <CookieBanner />
         <BrowserRouter>
-          <Box display={'flex'}>
-            <Sidebar />
-          <Routes>
-            <Route path="/" element={<HomePage />} />           
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/journal/record/:id" element={<EditRecordPage />} />
-              <Route path="/journal/record" element={<RecordPage />} />
-              <Route path="/journal" element={<RecordsOverviewPage />} />
-              <Route path="/canyons/users/:id" element={<UserCanyonOverviewPage />} />
-              <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
-              <Route path="/canyons" element={<CanyonPage />} />
-              <Route path="/settings" element={<UserSettingsPage />} />
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-          </Box>
+          <AppLayout />
         </BrowserRouter>
       </MuiThemeProvider>
     </App>

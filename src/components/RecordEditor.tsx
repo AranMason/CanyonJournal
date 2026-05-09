@@ -68,7 +68,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     };
 
     return<>
-        <Box maxWidth={400} mx="auto" mt={4}>
+        <Box maxWidth={{ xs: '100%', sm: 480, md: 600 }} mx="auto" mt={4}>
                 <Formik
                     initialValues={initialFormValues}
                     validationSchema={Yup.object().shape({

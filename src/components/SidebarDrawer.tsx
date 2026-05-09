@@ -6,6 +6,8 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useMediaQuery } from '@mui/material';
+import Toolbar from '@mui/material/Toolbar';
 import { useUser } from '../App';
 
 const drawerWidth = 240;
@@ -71,28 +73,47 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 type SidebarDrawerProps = {
-    children: (isOpen: boolean) => React.ReactNode
+    children: (isOpen: boolean) => React.ReactNode;
+    mobileOpen?: boolean;
+    onMobileClose?: () => void;
 }
 
-const SidebarDrawer: React.FC<SidebarDrawerProps> = ({children}) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+const SidebarDrawer: React.FC<SidebarDrawerProps> = ({ children, mobileOpen = false, onMobileClose }) => {
+  const [desktopOpen, setDesktopOpen] = React.useState(false);
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { user } = useUser();
 
-  const handleDrawerToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  if (isMobile) {
+    return (
+      <MuiDrawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={onMobileClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          '& .MuiDrawer-paper': {
+            ...openedMixin(theme),
+            width: drawerWidth,
+          },
+        }}
+      >
+        <Toolbar />
+        {children(true)}
+      </MuiDrawer>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <Drawer variant="permanent" open={!!user && isOpen}>
+      <Drawer variant="permanent" open={!!user && desktopOpen}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerToggle} disabled={!user}>
-            {!isOpen ? <ChevronRightIcon sx={{color: theme.palette.primary.contrastText}} /> : <ChevronLeftIcon sx={{color: theme.palette.primary.contrastText}} />}
+          <IconButton onClick={() => setDesktopOpen(!desktopOpen)} disabled={!user}>
+            {!desktopOpen ? <ChevronRightIcon sx={{color: theme.palette.primary.contrastText}} /> : <ChevronLeftIcon sx={{color: theme.palette.primary.contrastText}} />}
           </IconButton>
         </DrawerHeader>
         <Divider />
-        {children(isOpen)}
+        {children(!!user && desktopOpen)}
       </Drawer>
     </Box>
   );

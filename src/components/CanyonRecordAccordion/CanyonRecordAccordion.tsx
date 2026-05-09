@@ -36,7 +36,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
             id="panel1-header"
         >
             <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
-                <Box display="flex" flexDirection="row" alignItems={"center"} maxWidth={"60%"} flex="1" justifyContent={"space-between"} mr={2} >
+                <Box display="flex" flexDirection="row" alignItems={"center"} sx={{ maxWidth: { xs: '100%', sm: '60%' } }} flex="1" justifyContent={"space-between"} mr={2} >
                     <Box>
                         <Typography component="h3">{GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown, true)} {record.Name} </Typography>
                         <Box sx={{ fontWeight: 400, color: 'grey.500', letterSpacing: 1 }}>
@@ -56,7 +56,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                     <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
                         <WaterLevelRating waterLevel={record.WaterLevel ?? WaterLevel.Unknown} />
                     </Box>
-                <Box display="flex" flexDirection="column" alignItems="flex-end" width={180}>
+                <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'flex-end', width: 180 }}>
                     <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="center" mb={0.5}>
                         <GroupsIcon sx={{ height: "1rem", width: "1rem" }} />
                         {record.TeamSize}
@@ -76,8 +76,9 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                         size="small"
                         disabled={!record.DetailUrl}
                         onClick={() => { if (record.DetailUrl) navigate(record.DetailUrl); }}
+                        sx={{ p: { xs: 1.5, sm: 1 } }}
                     ><LocationPinIcon /></IconButton>
-                    <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} ><EditIcon /></IconButton>
+                    <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} sx={{ p: { xs: 1.5, sm: 1 } }}><EditIcon /></IconButton>
                 </Box>
                 
             </Box>

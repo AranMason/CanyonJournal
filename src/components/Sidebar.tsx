@@ -13,7 +13,7 @@ import LocationPinIcon from '@mui/icons-material/LocationPin';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BugReportIcon from '@mui/icons-material/BugReport';
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = ({ mobileOpen, onMobileClose }) => {
   const { user, setUser, loading } = useUser();
 
   if (loading) return null;
@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
     window.open(`mailto:hello@canyonjournal.co.uk?subject=${subject}&body=${body}`);
   };
 
-  return <SidebarDrawer>{(isOpen) => <><Box>
+  return <SidebarDrawer mobileOpen={mobileOpen} onMobileClose={onMobileClose}>{(isOpen) => <><Box>
     <List>
       <SidebarItem
         isOpen={isOpen}

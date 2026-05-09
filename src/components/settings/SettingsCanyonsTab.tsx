@@ -117,9 +117,9 @@ const SettingsCanyonsTab: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Grade</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Region</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Type</TableCell>
+              <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Grade</TableCell>
               <TableCell>Descents</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
@@ -132,11 +132,11 @@ const SettingsCanyonsTab: React.FC = () => {
                     {canyon.Name}
                   </Link>
                 </TableCell>
-                <TableCell>{GetRegionDisplayName(canyon.Region ?? RegionType.Unknown)}</TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{GetRegionDisplayName(canyon.Region ?? RegionType.Unknown)}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                   <CanyonTypeDisplay type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} />
                 </TableCell>
-                <TableCell>
+                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
                   <CanyonRating
                     aquaticRating={canyon.AquaticRating}
                     verticalRating={canyon.VerticalRating}

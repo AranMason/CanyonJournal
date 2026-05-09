@@ -102,7 +102,7 @@ const SettingsTagsTab: React.FC = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Usage Count</TableCell>
-                <TableCell>Last Used</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Last Used</TableCell>
                 <TableCell sx={{ width: 120 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -131,26 +131,26 @@ const SettingsTagsTab: React.FC = () => {
                             </InputAdornment>
                           ),
                         }}
-                        sx={{ minWidth: 200 }}
+                        sx={{ minWidth: { xs: 140, sm: 200 } }}
                       />
                     ) : (
                       tag.Name
                     )}
                   </TableCell>
                   <TableCell>{tag.UsageCount ?? 0}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                     {tag.LastUsed
                       ? new Date(tag.LastUsed).toLocaleDateString(undefined, { dateStyle: 'medium' })
                       : '—'}
                   </TableCell>
                   <TableCell>
                     <Tooltip title="Rename">
-                      <IconButton size="small" onClick={() => startEdit(tag)} disabled={editingId !== null}>
+                      <IconButton size="small" onClick={() => startEdit(tag)} disabled={editingId !== null} sx={{ p: { xs: 1.5, sm: 1 } }}>
                         <EditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Delete">
-                      <IconButton size="small" color="error" onClick={() => setDeleteTarget(tag)} disabled={editingId !== null}>
+                      <IconButton size="small" color="error" onClick={() => setDeleteTarget(tag)} disabled={editingId !== null} sx={{ p: { xs: 1.5, sm: 1 } }}>
                         <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
