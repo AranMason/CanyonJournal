@@ -15,6 +15,7 @@ import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import {
   getRegionFilterConfig, getCanyonTypeFilterConfig,
   getVerticalRatingFilterConfig, getAquaticRatingFilterConfig, getStarRatingFilterConfig,
+  getCanyonNameFilterConfig
 } from '../helpers/filterConfigs';
 
 const minDateString: string = '1900-01-01' 
@@ -94,6 +95,7 @@ const CanyonList: React.FC = () => {
   }, [user, loading]);
 
   const filterConfig = useMemo(() => [
+    getCanyonNameFilterConfig(),
     getRegionFilterConfig(),
     getCanyonTypeFilterConfig(),
     getVerticalRatingFilterConfig(),
