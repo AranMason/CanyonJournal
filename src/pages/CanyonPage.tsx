@@ -174,7 +174,7 @@ const CanyonList: React.FC = () => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell className='hide-md'>Grade</TableCell>
-                <TableCell className='hide-md'>Region</TableCell>
+                <TableCell className='hide-md'>Country</TableCell>
                 <TableCell className='hide-md'>Type</TableCell>
                 <TableCell align="center">Your Descents</TableCell>
                 <TableCell className='hide-sm' align="center">Last Descent</TableCell>

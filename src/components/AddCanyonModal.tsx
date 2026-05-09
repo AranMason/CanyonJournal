@@ -126,10 +126,10 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.url && errors.url}
                 />
                 <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  <InputLabel id="canyon-region">Region</InputLabel>
+                  <InputLabel id="canyon-region">Country</InputLabel>
                   <Select
                     labelId="canyon-region"
-                    label="Region"
+                    label="Country"
                     value={values.canyonRegion}
                     onChange={e => setFieldValue('canyonRegion', e.target.value as number)}
                     fullWidth

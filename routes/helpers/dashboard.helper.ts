@@ -1,4 +1,5 @@
 import { getPool } from "../middleware/sqlserver";
+import sql from 'mssql';
 
 async function getCanyonCountForPeriod(userId: number, year: number): Promise<number> {
     const pool = await getPool();
@@ -30,26 +31,50 @@ export async function getRecentCanyonCount(userId: number): Promise<{ currentYea
     };
 }
 
-export async function getTotalDescentsCount(userId: number): Promise<number> {
+export async function getTotalDescentsCount(userId: number): Promise<{ total: number; regions: number }> {
     const pool = await getPool();
     const result = await pool.request()
-        .input('userId', userId)
-        .query('SELECT COUNT(*) as Total FROM CanyonRecords WHERE UserId = @userId')
+        .input('userId', sql.Int, userId)
+        .query(`
+            SELECT
+                COUNT(*) AS Total,
+                COUNT(DISTINCT CASE
+                    WHEN COALESCE(c.Region, uc.Region) IS NOT NULL AND COALESCE(c.Region, uc.Region) != 0
+                    THEN COALESCE(c.Region, uc.Region)
+                END) AS Regions
+            FROM CanyonRecords cr
+            LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+            LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
+            WHERE cr.UserId = @userId
+        `);
 
-
-    return result.recordset[0]?.Total ?? 0;
+    return {
+        total: result.recordset[0]?.Total ?? 0,
+        regions: result.recordset[0]?.Regions ?? 0,
+    };
 }
 
-export async function getUniqueCanyonsDescendedCount(userId: number): Promise<number> {
+export async function getUniqueCanyonsDescendedCount(userId: number): Promise<{ total: number; thisYear: number }> {
     const pool = await getPool();
+    const currentYear = new Date().getFullYear();
+    const yearStart = new Date(currentYear, 0, 1);
 
-    // Unique canyons = distinct CanyonId or UserCanyonId (every record is now linked to one or the other)
     const result = await pool.request()
-        .input('userId', userId)
-        .query(`SELECT COUNT(DISTINCT
-            CASE WHEN CanyonId IS NOT NULL THEN 'c' + CONVERT(varchar(20), CanyonId)
-                 WHEN UserCanyonId IS NOT NULL THEN 'u' + CONVERT(varchar(20), UserCanyonId)
-            END) AS Total FROM CanyonRecords WHERE UserId = @userId`)
+        .input('userId', sql.Int, userId)
+        .input('yearStart', yearStart)
+        .query(`
+            SELECT
+                COUNT(DISTINCT CASE WHEN CanyonId IS NOT NULL THEN 'c' + CONVERT(varchar(20), CanyonId)
+                                    WHEN UserCanyonId IS NOT NULL THEN 'u' + CONVERT(varchar(20), UserCanyonId)
+                               END) AS Total,
+                COUNT(DISTINCT CASE WHEN Date >= @yearStart AND CanyonId IS NOT NULL THEN 'c' + CONVERT(varchar(20), CanyonId)
+                                    WHEN Date >= @yearStart AND UserCanyonId IS NOT NULL THEN 'u' + CONVERT(varchar(20), UserCanyonId)
+                               END) AS ThisYear
+            FROM CanyonRecords WHERE UserId = @userId
+        `);
 
-    return result.recordset[0]?.Total ?? 0;
+    return {
+        total: result.recordset[0]?.Total ?? 0,
+        thisYear: result.recordset[0]?.ThisYear ?? 0,
+    };
 }

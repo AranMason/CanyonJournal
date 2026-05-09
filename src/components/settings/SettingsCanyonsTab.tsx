@@ -117,7 +117,7 @@ const SettingsCanyonsTab: React.FC = () => {
           <TableHead>
             <TableRow>
               <TableCell>Name</TableCell>
-              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Region</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Country</TableCell>
               <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Type</TableCell>
               <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Grade</TableCell>
               <TableCell>Descents</TableCell>

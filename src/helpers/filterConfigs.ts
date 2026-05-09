@@ -16,9 +16,9 @@ export function getRegionFilterConfig(key = 'region'): FilterConfig {
   return {
     type: 'single-select',
     key,
-    label: 'Region',
+    label: 'Country',
     labelId: 'region-filter',
-    placeholder: 'All Regions',
+    placeholder: 'All Countries',
     options: RegionTypeList.map(r => ({ value: r, label: GetRegionDisplayName(r) })),
   };
 }
