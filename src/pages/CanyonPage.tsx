@@ -94,14 +94,21 @@ const CanyonList: React.FC = () => {
     }
   }, [user, loading]);
 
-  const filterConfig = useMemo(() => [
-    getCanyonNameFilterConfig(),
-    getRegionFilterConfig(),
-    getCanyonTypeFilterConfig(),
-    getVerticalRatingFilterConfig(),
-    getAquaticRatingFilterConfig(),
-    getStarRatingFilterConfig(),
-  ], []);
+  const filterConfig = useMemo(() => {
+    const regionSet = new Set<RegionType>();
+    for (const c of canyons) {
+      if (c.Region !== undefined && c.Region !== RegionType.Unknown) regionSet.add(c.Region);
+    }
+    const usedRegions = regionSet.size > 0 ? [...regionSet].sort((a, b) => a - b) : undefined;
+    return [
+      getCanyonNameFilterConfig(),
+      getRegionFilterConfig('region', usedRegions),
+      getCanyonTypeFilterConfig(),
+      getVerticalRatingFilterConfig(),
+      getAquaticRatingFilterConfig(),
+      getStarRatingFilterConfig(),
+    ];
+  }, [canyons]);
 
   const filterFn = useCallback((canyon: CanyonListEntry, values: FilterValues) => {
     if (values.region !== '' && (canyon.Region ?? RegionType.Unknown) !== values.region) return false;

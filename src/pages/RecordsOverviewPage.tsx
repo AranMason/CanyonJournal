@@ -12,6 +12,7 @@ import {
   getCanyonNameFilterConfig, getRegionFilterConfig,
   getRopeFilterConfig, getGearFilterConfig, getTagFilterConfig,
 } from '../helpers/filterConfigs';
+import RegionType from '../types/RegionEnum';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,13 +25,24 @@ const RecordsOverviewPage: React.FC = () => {
     !loadingUser && Boolean(user)
   );
 
+  const usedRegions = useMemo(() => {
+    const regionSet = new Set<RegionType>();
+    for (const rec of records) {
+      const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : undefined;
+      const userCanyon = rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined;
+      const region = canyon?.Region ?? userCanyon?.Region ?? rec.Region;
+      if (region !== undefined && region !== RegionType.Unknown) regionSet.add(region);
+    }
+    return regionSet.size > 0 ? [...regionSet].sort((a, b) => a - b) : undefined;
+  }, [records, canyonsById, userCanyonsById]);
+
   const filterConfig = useMemo(() => [
     getCanyonNameFilterConfig(),
-    getRegionFilterConfig(),
+    getRegionFilterConfig('region', usedRegions),
     getRopeFilterConfig(),
     getGearFilterConfig(),
     getTagFilterConfig(),
-  ], []);
+  ], [usedRegions]);
 
   const filterFn = useCallback((rec: CanyonRecord, values: FilterValues) => {
     const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : undefined;

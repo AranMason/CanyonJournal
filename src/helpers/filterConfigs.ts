@@ -11,15 +11,19 @@ export function getCanyonNameFilterConfig(key = 'name'): FilterConfig {
   return { type: 'text', key, label: 'Canyon Name' };
 }
 
-/** Single-select region filter. Shows all regions. */
-export function getRegionFilterConfig(key = 'region'): FilterConfig {
+/** Single-select region filter. Pass allowedRegions to restrict to a subset. Always sorted alphabetically. */
+export function getRegionFilterConfig(key = 'region', allowedRegions?: RegionType[]): FilterConfig {
+  const regions = allowedRegions && allowedRegions.length > 0 ? allowedRegions : RegionTypeList;
+  const options = regions
+    .map(r => ({ value: r, label: GetRegionDisplayName(r) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
   return {
     type: 'single-select',
     key,
     label: 'Country',
     labelId: 'region-filter',
     placeholder: 'All Countries',
-    options: RegionTypeList.map(r => ({ value: r, label: GetRegionDisplayName(r) })),
+    options,
   };
 }
 

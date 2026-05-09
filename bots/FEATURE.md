@@ -6,7 +6,7 @@
 - They differ in one column: admin has "Verified", settings has "Descents"
 - Could share a base canyon table component with optional column slots
 
-# We should be able to report issues with a canyon on the Canyon Page
+# [Priority] We should be able to report issues with a canyon on the Canyon Page
 
 - Dropdown for common issues, like 'Incorrect Rating', or 'Broken Link', combined with a free text
 - In a modal pop-up
@@ -16,29 +16,24 @@
 - Could be a mailto: link initially, with a admin panel changes as a seperate feature work
 
 
-# Import from Rope Wiki data
+# [Low Priority] Import from Rope Wiki data
 
 - See ropewiki_*.csv files
 - Want a SQL script to create the data in the DB
 - This is a one-time sync
 
-# Add colour picker support for ropes, so we can visualize the colour of them in the UI
+# [Low] Add colour picker support for ropes, so we can visualize the colour of them in the UI
 
-# Add support for 'splitting' a rope
+# [Low] Add support for 'splitting' a rope
 
 - Sometimes in a canyon your rope will be damaged, and we will want to be able to split it into smaller pieces 
 - These pieces might sum to less than the original rope (IE: 2x30m rope from a 70m rope)
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
 
 
-# Move public website to templating engine
+# [Medium] Add Localization
 
-- Should be supported by github pages
-- Updated content
-- 
-
-# Add Localization
-
+# [Medium] Admin Audit Trails for Canyons
 
 **Implemented:** "Add Canyon" button on Admin Panel opens existing `AddCanyonModal`. Admin-created canyons are auto-verified (`IsVerified=1`).
 
@@ -48,7 +43,7 @@
 - Last updated audit field
 
 
-# Fully suppprt deleting canyons
+# [Medium] Fully suppprt deleting canyons
 - Mark IsDeleted as true
 - Should still be able to access the canyon page
 - Deleted canyons shouldn't be included in the Canyon List page, or selectable for creating Journal Entries for.
@@ -57,8 +52,17 @@
   - These user delete ones should be hidden on the user page, but still discoverable via a filter toggle such as [ ] Show Retired
   - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.
 
-  # Ability to rename tags in the Settings menu
 
-  # Set the page title based on the users current page viewed
+# [Medium] Set the page title based on the users current page viewed
 
-  # Improve dashboard overview
+# [Medium] Improve dashboard overview
+
+# [Medium] Make countries data driven
+- Stored in data
+- 
+- Each will be stored against a continent, so similar regions can be displayed next to each other.
+- When the user is creating a new Canyon we should
+  - Display thier 5 most popular regions at the top
+  - These regions should still show up in there respective category
+- Each region 'group' should be alphabetical based on the group name, and items within it should also be alphabetical
+- Each item should have an 'icon', 'display name key' and 'region'
