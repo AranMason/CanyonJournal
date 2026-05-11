@@ -2,6 +2,12 @@
 
 CanyonJournal is a web application for canyoneers to log, track, and review their canyon descents. Users can maintain a personal journal of trips, manage custom canyon entries, manage their gear inventory, tag their trips, and browse a verified canyon directory.
 
+## What we are not
+- Canyon Discoverability
+- Public recent descent records
+
+This is for platforms like CanyonLog and RopeWiki, to which we will defer to for information about a Canyon Topography, Conditions and more
+
 ---
 
 ## Tech Stack

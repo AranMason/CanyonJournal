@@ -66,3 +66,30 @@
   - These regions should still show up in there respective category
 - Each region 'group' should be alphabetical based on the group name, and items within it should also be alphabetical
 - Each item should have an 'icon', 'display name key' and 'region'
+
+# Additional Canyon Info
+- Requires Shuttle flag
+- In protected habitat / protected wildlife
+- Open/Closed status (Deleted?)
+- Could these all be tags?
+  - Is Loop, Requires Shuttle, Protected Habitat, Is Closed
+
+# [High] Refer user to create public record after Journal Entry created
+- Auto create a comment content for the user
+- Direct them to the appropriate canyon page
+
+# [High] Refer people to CanyonLog to find canyons
+- Marketting website only?
+
+# Add ability to enable to disable data sources personally
+- User settings
+
+# [High] Verified canyons should have sources — **IMPLEMENTED**
+- `CanyonSources` table: `Id`, `DisplayName`, `LogoUrl`, `WebsiteUrl`
+- `SourceId FK` added to `Canyons` table
+- `GET/POST/PATCH/DELETE /api/sources` — admin CRUD with cascade guard
+- Canyon API JOINs source fields; `CanyonPageHeader` shows source chip with logo
+- Reference link button label defaults to source name when set
+- Admin panel has a dedicated "Sources" tab (`SourcesTab.tsx`) for CRUD
+- `AddCanyonModal` has a Source dropdown (shown when `showSource` prop is set)
+

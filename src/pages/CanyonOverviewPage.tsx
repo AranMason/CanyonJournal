@@ -44,11 +44,13 @@ const CanyonOverviewPage: React.FC = () => {
       starRating={canyonData?.StarRating}
       recordUrl={`/journal/record?canyonId=${canyonId}`}
       url={canyonData?.Url}
-      urlLabel="Canyon Log"
       isVerified={canyonData?.IsVerified}
       canyonType={canyonData?.CanyonType}
+      sourceName={canyonData?.SourceName}
+      sourceLogoUrl={canyonData?.SourceLogoUrl}
     />
-    <Typography variant='h4' my={2}>
+    
+    <Typography variant='h4' my={2} fontSize={24}>
       {`Your Trips (${canyonRecords.length})`}
     </Typography>
     {canyonRecords.length === 0 ? (<div>No Records</div>) : (

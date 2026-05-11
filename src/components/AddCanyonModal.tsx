@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Divider, FormControl, InputLabel, Checkbox, FormControlLabel, Select, MenuItem } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
-import { Canyon } from '../types/Canyon';
+import { Canyon, CanyonSource } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
@@ -22,6 +22,7 @@ export interface CanyonModalFormValues {
   canyonRegion: RegionType;
   canyonType: CanyonTypeEnum;
   notes: string;
+  sourceId: number | '';
 }
 
 interface AddCanyonModalProps {
@@ -32,6 +33,7 @@ interface AddCanyonModalProps {
   title?: string;
   showNotes?: boolean;
   showCanyonType?: boolean;
+  showSource?: boolean;
   onSubmit?: (values: CanyonModalFormValues) => Promise<void>;
 }
 
@@ -40,8 +42,16 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
   title = 'Add New Canyon',
   showNotes = false,
   showCanyonType = true,
+  showSource = false,
   onSubmit: customOnSubmit,
 }) => {
+  const [sources, setSources] = useState<CanyonSource[]>([]);
+
+  useEffect(() => {
+    if (showSource && open) {
+      apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => {});
+    }
+  }, [showSource, open]);
 
   const initialValues: CanyonModalFormValues = {
     id: canyon?.Id || undefined,
@@ -55,6 +65,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
     canyonRegion: canyon?.Region || RegionType.Unknown,
     canyonType: (canyon as Canyon)?.CanyonType || CanyonTypeEnum.Unknown,
     notes: (canyon as UserCanyon)?.Notes || '',
+    sourceId: (canyon as Canyon)?.SourceId || '',
   };
 
   return (
@@ -87,6 +98,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                     verticalRating: Number(values.verticalRating),
                     starRating: Number(values.starRating),
                     commitmentRating: Number(values.commitmentRating),
+                    sourceId: values.sourceId !== '' ? Number(values.sourceId) : null,
                   }),
                 });
               }
@@ -153,6 +165,23 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                     >
                       {CanyonTypeList.map((type) => (
                         <MenuItem key={type} value={type}>{GetCanyonTypeDisplayName(type)}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                {showSource && (
+                  <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
+                    <InputLabel id="canyon-source">Source</InputLabel>
+                    <Select
+                      labelId="canyon-source"
+                      label="Source"
+                      value={values.sourceId}
+                      onChange={e => setFieldValue('sourceId', e.target.value)}
+                      fullWidth
+                    >
+                      <MenuItem value="">None</MenuItem>
+                      {sources.map(s => (
+                        <MenuItem key={s.Id} value={s.Id}>{s.DisplayName}</MenuItem>
                       ))}
                     </Select>
                   </FormControl>
@@ -246,3 +275,4 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
 };
 
 export default AddCanyonModal;
+

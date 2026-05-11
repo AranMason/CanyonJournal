@@ -7,6 +7,7 @@ import dashboard from './dashboard';
 import userCanyons from './userCanyons';
 import favourites from './favourites';
 import tags from './tags';
+import sources from './sources';
 
 const router: Router = express.Router()
 
@@ -18,5 +19,6 @@ router.use('/canyons', canyons);
 router.use('/user-canyons', userCanyons);
 router.use('/favourites', favourites);
 router.use('/tags', tags);
+router.use('/sources', sources);
 
 export default router;

@@ -45,8 +45,8 @@ const EditCanyons: React.FC = () => {
     }, []);
 
     return <>
-    <AddCanyonModal canyon={null} open={addOpen} onClose={() => setAddOpen(false)} onSuccess={refresh} title="Add New Canyon" />
-    <AddCanyonModal canyon={editCanyon} open={editCanyon != null} onClose={() => {setEditCanyon(null)}} onSuccess={refresh} />
+    <AddCanyonModal canyon={null} open={addOpen} onClose={() => setAddOpen(false)} onSuccess={refresh} title="Add New Canyon" showSource />
+    <AddCanyonModal canyon={editCanyon} open={editCanyon != null} onClose={() => {setEditCanyon(null)}} onSuccess={refresh} showSource />
     <Box display="flex" justifyContent="flex-end" sx={{ mb: 2 }}>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddOpen(true)}>
             Add Canyon

@@ -19,14 +19,18 @@ router.get('/', async (req, res) => {
           .input('userId', sql.Int, userId)
           .query(`
             SELECT c.*, 
+              cs.DisplayName AS SourceName,
+              cs.LogoUrl AS SourceLogoUrl,
+              cs.WebsiteUrl AS SourceWebsiteUrl,
               COUNT(cr.Id) AS Descents,
               MAX(cr.Date) AS LastDescentDate,
               CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
             FROM Canyons c
+            LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
             LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
             LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
             WHERE c.IsVerified = 1
-            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted, cf.Id
+            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl
             ORDER BY Descents DESC, c.Name
           `),
         pool.request()
@@ -83,6 +87,10 @@ router.get('/', async (req, res) => {
         Descents: c.Descents,
         LastDescentDate: c.LastDescentDate,
         IsFavourite: c.IsFavourite ?? false,
+        SourceId: c.SourceId ?? null,
+        SourceName: c.SourceName ?? null,
+        SourceLogoUrl: c.SourceLogoUrl ?? null,
+        SourceWebsiteUrl: c.SourceWebsiteUrl ?? null,
       }));
 
       res.json([...officialCanyons, ...userCanyons]);
@@ -182,17 +190,31 @@ router.get('/:id', async (req, res) => {
         .input('canyonId', req.params.id)
         .query(`
           SELECT c.*, 
+            cs.DisplayName AS SourceName,
+            cs.LogoUrl AS SourceLogoUrl,
+            cs.WebsiteUrl AS SourceWebsiteUrl,
             COUNT(cr.Id) AS Descents,
             MAX(cr.Date) AS LastDescentDate
           FROM Canyons c
+          LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
           LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
           WHERE c.Id = @canyonId
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.SourceId, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl
           ORDER BY Descents DESC, c.Name
         `);
       res.json(result.recordset[0]);
     } else {
-      const result = await pool.request().input('canyonId', req.params.id).query('SELECT * FROM Canyons WHERE Id = @canyonId');
+      const result = await pool.request()
+        .input('canyonId', req.params.id)
+        .query(`
+          SELECT c.*,
+            cs.DisplayName AS SourceName,
+            cs.LogoUrl AS SourceLogoUrl,
+            cs.WebsiteUrl AS SourceWebsiteUrl
+          FROM Canyons c
+          LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+          WHERE c.Id = @canyonId
+        `);
       res.json(result.recordset[0]);
     }
   } catch (err) {
@@ -203,7 +225,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/canyons - add a new canyon to SQL Server
 router.post('/', async (req, res) => {
-  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating, isUnrated, canyonRegion, canyonType } = req.body;
+  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating, isUnrated, canyonRegion, canyonType, sourceId } = req.body;
   if (!name || aquaticRating == null || verticalRating == null || starRating == null || commitmentRating == null) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -223,6 +245,7 @@ router.post('/', async (req, res) => {
       .input('isUnrated', sql.Bit, isUnrated || false)
       .input('canyonRegion', sql.Int, canyonRegion)
       .input('canyonType', sql.Int, canyonType)
+      .input('sourceId', sql.Int, sourceId || null)
 
     if (await isAdmin(req) && req.body.id > 0) {
       request.input('id', sql.Int, req.body.id);
@@ -236,7 +259,8 @@ router.post('/', async (req, res) => {
               IsVerified = 1,
               IsUnrated = @isUnrated,
               Region = @CanyonRegion,
-              CanyonType = @canyonType
+              CanyonType = @canyonType,
+              SourceId = @sourceId
               WHERE Id = @id`);
       return res.status(201).json(req.body);
     }
@@ -244,9 +268,9 @@ router.post('/', async (req, res) => {
     else {
       const isAdminUser = await isAdmin(req);
       request.input('isVerified', sql.Bit, isAdminUser ? 1 : 0);
-      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating, IsUnrated, Region, CanyonType, IsVerified, IsDeleted)
+      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating, IsUnrated, Region, CanyonType, IsVerified, IsDeleted, SourceId)
               OUTPUT INSERTED.*
-              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating, @isUnrated, @canyonRegion, @canyonType, @isVerified, 0)`);
+              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating, @isUnrated, @canyonRegion, @canyonType, @isVerified, 0, @sourceId)`);
       return res.status(201).json(result.recordset[0]);
     }
 

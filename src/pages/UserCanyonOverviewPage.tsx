@@ -48,7 +48,8 @@ const UserCanyonOverviewPage: React.FC = () => {
         isCustom
         notes={canyonData?.Notes}
       />
-      <Typography variant="h4" my={2}>
+      
+      <Typography variant="h4" my={2} fontSize={24}>
         {`Your Trips (${records.length})`}
       </Typography>
       {records.length === 0 ? (

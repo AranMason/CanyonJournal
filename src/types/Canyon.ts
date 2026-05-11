@@ -1,6 +1,13 @@
 import { CanyonTypeEnum } from "./CanyonTypeEnum";
 import RegionType from "./RegionEnum";
 
+export interface CanyonSource {
+  Id: number;
+  DisplayName: string;
+  LogoUrl?: string | null;
+  WebsiteUrl?: string | null;
+}
+
 export interface Canyon {
   Id: number | null;
   Name: string;
@@ -14,6 +21,10 @@ export interface Canyon {
   CanyonType: CanyonTypeEnum;
   IsDeleted: boolean;
   IsVerified: boolean;
+  SourceId?: number | null;
+  SourceName?: string | null;
+  SourceLogoUrl?: string | null;
+  SourceWebsiteUrl?: string | null;
 }
 
 export interface CanyonWithDescents extends Canyon {
@@ -37,4 +48,8 @@ export interface CanyonListEntry {
   Descents: number;
   LastDescentDate?: string | null;
   IsFavourite?: boolean;
+  SourceId?: number | null;
+  SourceName?: string | null;
+  SourceLogoUrl?: string | null;
+  SourceWebsiteUrl?: string | null;
 }
