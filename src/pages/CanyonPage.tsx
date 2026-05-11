@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Select, MenuItem, InputLabel } from '@mui/material';
+import { Alert, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel } from '@mui/material';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { CanyonListEntry } from '../types/Canyon';
@@ -148,6 +149,26 @@ const CanyonList: React.FC = () => {
 
   return (
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
+      <Alert
+        severity="info"
+        sx={{ mb: 2, mt: 1, py: 2 }}
+        icon={<img src="/images/canyonlog.png" alt="Canyon Log" style={{ height: 20, width: 20, objectFit: 'contain' }} />}
+        action={
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ bgcolor: 'white' }}
+            href="https://canyonlog.org/map/"
+            target="_blank"
+            rel="noopener noreferrer"
+            startIcon={<img src="/images/canyonlog.png" alt="Canyon Log" style={{ height: 16, width: 16, objectFit: 'contain' }} />}
+          >
+            Open Map
+          </Button>
+        }
+      >
+        Looking for your next adventure? Check out the Canyon Log map to discover new descents.
+      </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>
           <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
@@ -185,7 +206,7 @@ const CanyonList: React.FC = () => {
                 <TableCell className='hide-md'>Type</TableCell>
                 <TableCell align="center">Your Descents</TableCell>
                 <TableCell className='hide-sm' align="center">Last Descent</TableCell>
-                <TableCell align="center">Reference</TableCell>
+                <TableCell align="center">Topo</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -206,9 +227,23 @@ const CanyonList: React.FC = () => {
                   <TableCell align="center">{canyon.Descents}</TableCell>
                   <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />
                   <TableCell align="center">
-                    {canyon.Url ? <Button type='button' variant="outlined" href={canyon.Url} target="_blank" rel="noopener noreferrer" >
-                      Visit
-                    </Button> : '-'}
+                    {canyon.Url ? (
+                      <Button
+                        type='button'
+                        variant="outlined"
+                        size="small"
+                        href={canyon.Url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        startIcon={
+                          canyon.SourceLogoUrl
+                            ? <img src={canyon.SourceLogoUrl} alt={canyon.SourceName ?? ''} style={{ height: 16, width: 16, objectFit: 'contain' }} />
+                            : <OpenInNewIcon fontSize="small" />
+                        }
+                      >
+                        Topo
+                      </Button>
+                    ) : '-'}
                   </TableCell>
                 </TableRow>
               ))}
