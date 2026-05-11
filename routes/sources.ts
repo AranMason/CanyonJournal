@@ -38,15 +38,15 @@ router.post('/', async (req: Request, res: Response) => {
 // PATCH /api/sources/:id — update a source (admin only)
 router.patch('/:id', async (req: Request, res: Response) => {
   if (!await isAdmin(req)) return res.status(403).json({ error: 'Admin access required' });
-  const { DisplayName, LogoUrl, WebsiteUrl } = req.body;
-  if (!DisplayName) return res.status(400).json({ error: 'DisplayName is required' });
+  const { displayName, logoUrl, websiteUrl } = req.body;
+  if (!displayName) return res.status(400).json({ error: 'DisplayName is required' });
   try {
     const pool = await getPool();
     const result = await pool.request()
       .input('id', sql.Int, parseInt(req.params.id, 10))
-      .input('displayName', sql.NVarChar(200), DisplayName)
-      .input('logoUrl', sql.NVarChar(500), LogoUrl || null)
-      .input('websiteUrl', sql.NVarChar(500), WebsiteUrl || null)
+      .input('displayName', sql.NVarChar(200), displayName)
+      .input('logoUrl', sql.NVarChar(500), logoUrl || null)
+      .input('websiteUrl', sql.NVarChar(500), websiteUrl || null)
       .query('UPDATE CanyonSources SET DisplayName=@displayName, LogoUrl=@logoUrl, WebsiteUrl=@websiteUrl OUTPUT INSERTED.* WHERE Id=@id');
     if (result.recordset.length === 0) return res.status(404).json({ error: 'Source not found' });
     res.json(result.recordset[0]);
