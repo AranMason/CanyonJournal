@@ -18,7 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
-import PlaceIcon from '@mui/icons-material/LocationPin';
+import UnknownCanyonSource from '@mui/icons-material/QuestionMarkRounded';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../helpers/EnumMapper";
@@ -176,7 +176,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 ) : !selectedDisplay.isVerified ? (
                                                     <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                                                 ) : (
-                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
                                                 )}
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
@@ -240,7 +240,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 ) : !canyon.IsVerified ? (
                                                                                     <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                                                                                 ) : (
-                                                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+                                                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
@@ -269,7 +269,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 ) : !canyon.IsVerified ? (
                                                                                     <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
                                                                                 ) : (
-                                                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
+                                                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
