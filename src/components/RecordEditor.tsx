@@ -17,6 +17,8 @@ import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import EditIcon from '@mui/icons-material/Edit';
+import PersonIcon from '@mui/icons-material/Person';
+import PlaceIcon from '@mui/icons-material/LocationPin';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../helpers/EnumMapper";
@@ -169,8 +171,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     <Box border={1} borderColor="divider" borderRadius={1} p={2} mb={2}>
                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                {selectedDisplay.isVerified && selectedDisplay.canyon?.SourceLogoUrl && (
+                                                {selectedDisplay.isVerified && selectedDisplay.canyon?.SourceLogoUrl ? (
                                                     <img src={selectedDisplay.canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
+                                                ) : !selectedDisplay.isVerified ? (
+                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                                                ) : (
+                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
                                                 )}
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
@@ -229,8 +235,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                {canyon.IsVerified && canyon.SourceLogoUrl && (
+                                                                                {canyon.IsVerified && canyon.SourceLogoUrl ? (
                                                                                     <img src={canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
+                                                                                ) : !canyon.IsVerified ? (
+                                                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                                                                                ) : (
+                                                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
@@ -254,8 +264,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                {canyon.IsVerified && canyon.SourceLogoUrl && (
+                                                                                {canyon.IsVerified && canyon.SourceLogoUrl ? (
                                                                                     <img src={canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
+                                                                                ) : !canyon.IsVerified ? (
+                                                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
+                                                                                ) : (
+                                                                                    <PlaceIcon sx={{ fontSize: 14, color: "text.secondary" }} />
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>

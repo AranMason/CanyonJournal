@@ -1,17 +1,27 @@
+const CANYON_KEY_PREFIX = 'Canyon-';
+const USERCANYON_KEY_PREFIX = 'UserCanyon-';
+
 export function canyonKey(id: number): string {
-    return `Canyon-${id}`;
+    return `${CANYON_KEY_PREFIX}${id}`;
 }
 
 export function userCanyonKey(id: number): string {
-    return `UserCanyon-${id}`;
+    return `${USERCANYON_KEY_PREFIX}${id}`;
 }
 
+export function isCanyonKey(key: string): boolean {
+    return key.startsWith(CANYON_KEY_PREFIX);
+}
+export function isUserCanyonKey(key: string): boolean {
+    return key.startsWith(USERCANYON_KEY_PREFIX);
+}   
+
 export function parseCanyonKey(key: string): { canyonId?: number; userCanyonId?: number } {
-    if (key.startsWith('UserCanyon-')) {
-        return { userCanyonId: parseInt(key.slice('UserCanyon-'.length), 10) };
+    if (isUserCanyonKey(key)) {
+        return { userCanyonId: parseInt(key.slice(USERCANYON_KEY_PREFIX.length), 10) };
     }
-    if (key.startsWith('Canyon-')) {
-        return { canyonId: parseInt(key.slice('Canyon-'.length), 10) };
+    if (isCanyonKey(key)) {
+        return { canyonId: parseInt(key.slice(CANYON_KEY_PREFIX.length), 10) };
     }
     return {};
 }
