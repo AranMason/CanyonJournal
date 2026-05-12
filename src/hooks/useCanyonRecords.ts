@@ -11,6 +11,7 @@ interface UseCanyonRecordsResult {
   canyonsById: { [id: number]: Canyon };
   userCanyonsById: { [id: number]: UserCanyon };
   isLoading: boolean;
+  removeRecord: (id: number) => void;
 }
 
 export function useCanyonRecords(url: string, enabled: boolean): UseCanyonRecordsResult {
@@ -36,5 +37,7 @@ export function useCanyonRecords(url: string, enabled: boolean): UseCanyonRecord
     }).finally(() => setIsLoading(false));
   }, [url, enabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { records, canyonsById, userCanyonsById, isLoading };
+  const removeRecord = (id: number) => setRecords(prev => prev.filter(r => r.Id !== id));
+
+  return { records, canyonsById, userCanyonsById, isLoading, removeRecord };
 }

@@ -357,5 +357,32 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
   }
 });
 
+recordRouter.delete('/:id', async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserIdByRequest(req);
+    const recordId = Number(req.params.id);
+    const pool = await getPool();
+
+    const existing = await pool.request()
+      .input('Id', sql.Int, recordId)
+      .input('userId', sql.Int, userId)
+      .query('SELECT Id FROM CanyonRecords WHERE Id = @Id AND UserId = @userId');
+
+    if (existing.recordset.length === 0) {
+      return res.status(404).json({ error: 'Record not found' });
+    }
+
+    await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordGear WHERE CanyonRecordId = @Id');
+    await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordRope WHERE CanyonRecordId = @Id');
+    await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordTags WHERE CanyonRecordId = @Id');
+    await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecords WHERE Id = @Id');
+
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to delete record' });
+  }
+});
+
 export default recordRouter;
 

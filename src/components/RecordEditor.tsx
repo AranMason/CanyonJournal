@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
 import UnknownCanyonSource from '@mui/icons-material/QuestionMarkRounded';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
@@ -24,6 +25,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../helpers/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -43,6 +45,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     const [selectedDisplay, setSelectedDisplay] = useState<{ name: string; isVerified: boolean; canyon?: CanyonListEntry } | null>(null);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
     const [selectedTagNames, setSelectedTagNames] = useState<string[]>(initialValues?.Tags?.map(t => t.Name) || []);
+    const [deleteOpen, setDeleteOpen] = useState(false);
 
     useEffect(() => {
         setCanyonsLoading(true);
@@ -394,6 +397,20 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     </Button>
                                     
                                 </Box>
+                                {isEdit && (
+                                    <Box mt={3} display="flex" justifyContent="flex-end">
+                                        <Button
+                                            type="button"
+                                            variant="text"
+                                            color="error"
+                                            size="small"
+                                            startIcon={<DeleteIcon />}
+                                            onClick={() => setDeleteOpen(true)}
+                                        >
+                                            Delete Record
+                                        </Button>
+                                    </Box>
+                                )}
                                 
                             </Form>
                         );
@@ -401,6 +418,16 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                 </Formik>
             </Box>
             <SuccessSnackbar open={snackbarOpen} message="Canyon record added!" onClose={() => setSnackbarOpen(false)} />
+            <ConfirmDeleteModal
+                open={deleteOpen}
+                title="Delete trip record?"
+                message="This will permanently delete this record. This cannot be undone."
+                onConfirm={async () => {
+                    await apiFetch(`/api/record/${initialValues?.Id}`, { method: 'DELETE' });
+                    navigate('/journal');
+                }}
+                onCancel={() => setDeleteOpen(false)}
+            />
     </>
 }
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
