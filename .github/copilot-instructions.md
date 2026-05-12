@@ -50,6 +50,14 @@ See `/bots/FEATURE.md` for the current feature backlog. Please update this file 
 - Ratings (Aquatic, Vertical, Commitment, Star) follow standard canyoneering grading conventions — don't assume generic meanings.
 - Water level refers to the flow conditions in a canyon on the day of the descent, not a general property of the canyon.
 
+### UI copy conventions
+- Prefer **"trip"** over "descent" when referring to a canyon outing in UI labels, buttons, and messages. Reserve "descent" for technical contexts (e.g. API field names, sort labels like "Last Descent").
+
+### Canyon sources
+`SourceId` values are hardcoded in the frontend for source-specific logic:
+- `1` = **CanyonJournal** (own curated data)
+- `2` = **CanyonLog** (`canyonlog.org`)
+
 ---
 
 ## Project Structure (summary)
