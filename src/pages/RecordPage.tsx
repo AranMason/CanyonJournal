@@ -18,7 +18,7 @@ const RecordPage: React.FC = () => {
     } : undefined;
 
     return (
-        <PageTemplate pageTitle="Record Descent" isAuthRequired>
+        <PageTemplate pageTitle="Log Trip" isAuthRequired>
             <RecordEditor isEdit={false} initialValues={initialValues} />
         </PageTemplate>
     );

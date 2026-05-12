@@ -24,7 +24,7 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <PageTemplate pageTitle="Canyon Journal" isLoading={loading || isLoading}>
+    <PageTemplate pageTitle="Dashboard" isLoading={loading || isLoading}>
 
       <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>Record Descent</Button>
       <DashboardStats />

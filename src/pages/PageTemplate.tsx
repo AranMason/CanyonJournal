@@ -15,6 +15,11 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
 
     const { user, loading } = useUser();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = pageTitle ? `${pageTitle} — CanyonJournal` : 'CanyonJournal';
+    }, [pageTitle]);
+
     useEffect(() => {
         if (!isAuthRequired || loading) return;
 

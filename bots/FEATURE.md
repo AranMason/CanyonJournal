@@ -1,6 +1,10 @@
 
+---
+When a feature is completed, the entry and text should be removed. If there is only a partial implementation, then the title and description should be updated to reflect that.
+When asked to review, you should provide outline, priority and ease of implementation overview.
+---
 
-# [Tech] Unify canyon tables in EditCanyons and SettingsCanyonsTab
+# [Tech] Unify canyon tables display behaviour in EditCanyons and SettingsCanyonsTab etc
 
 - `EditCanyons` (admin) and `SettingsCanyonsTab` (user settings) both render a canyon table with Name, Grade, Region, Type columns
 - They differ in one column: admin has "Verified", settings has "Descents"
@@ -16,12 +20,6 @@
 - Could be a mailto: link initially, with a admin panel changes as a seperate feature work
 
 
-# [Low Priority] Import from Rope Wiki data
-
-- See ropewiki_*.csv files
-- Want a SQL script to create the data in the DB
-- This is a one-time sync
-
 # [Low] Add colour picker support for ropes, so we can visualize the colour of them in the UI
 
 # [Low] Add support for 'splitting' a rope
@@ -35,15 +33,10 @@
 
 # [Medium] Admin Audit Trails for Canyons
 
-**Implemented:** "Add Canyon" button on Admin Panel opens existing `AddCanyonModal`. Admin-created canyons are auto-verified (`IsVerified=1`).
-
-**Still pending (future work):**
-- CSV import option (out of scope for now)
-- Date added / UserId audit fields on Canyon creation
-- Last updated audit field
+- Last updated date, date created, who made the last change etc
 
 
-# [Medium] Fully suppprt deleting canyons
+# [Medium] Fully support deleting canyons
 - Mark IsDeleted as true
 - Should still be able to access the canyon page
 - Deleted canyons shouldn't be included in the Canyon List page, or selectable for creating Journal Entries for.
@@ -51,11 +44,6 @@
 - This same logic should also be extended to users custom canyons
   - These user delete ones should be hidden on the user page, but still discoverable via a filter toggle such as [ ] Show Retired
   - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.
-
-
-# [Medium] Set the page title based on the users current page viewed
-
-# [Medium] Improve dashboard overview
 
 # [Medium] Make countries data driven
 - Stored in data
@@ -67,29 +55,8 @@
 - Each region 'group' should be alphabetical based on the group name, and items within it should also be alphabetical
 - Each item should have an 'icon', 'display name key' and 'region'
 
-# Additional Canyon Info
-- Requires Shuttle flag
-- In protected habitat / protected wildlife
-- Open/Closed status (Deleted?)
-- Could these all be tags?
-  - Is Loop, Requires Shuttle, Protected Habitat, Is Closed
 
-# [High] Refer user to create public record after Journal Entry created
-- Auto create a comment content for the user
-- Direct them to the appropriate canyon page
-
-# [High] Refer people to CanyonLog to find canyons
-- Marketting website only?
-
-# Add ability to enable to disable data sources personally
-- User settings
-
-# [High] Verified canyons should have sources — **IMPLEMENTED**
-- `CanyonSources` table: `Id`, `DisplayName`, `LogoUrl`, `WebsiteUrl`
-- `SourceId FK` added to `Canyons` table
-- `GET/POST/PATCH/DELETE /api/sources` — admin CRUD with cascade guard
-- Canyon API JOINs source fields; `CanyonPageHeader` shows source chip with logo
-- Reference link button label defaults to source name when set
-- Admin panel has a dedicated "Sources" tab (`SourcesTab.tsx`) for CRUD
-- `AddCanyonModal` has a Source dropdown (shown when `showSource` prop is set)
+# [Low] Add ability to enable to disable data sources personally
+- User settings — allow a user to disable a source (e.g. CanyonLog) so canyons from that source don't appear in their lists
+- Low priority until there are more data sources
 
