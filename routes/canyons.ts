@@ -31,7 +31,6 @@ router.get('/', async (req, res) => {
             LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
             WHERE c.IsVerified = 1
             GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl
-            ORDER BY Descents DESC, c.Name
           `),
         pool.request()
           .input('userId', sql.Int, userId)

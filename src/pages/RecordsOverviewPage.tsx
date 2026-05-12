@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Collapse } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import {
   getRopeFilterConfig, getGearFilterConfig, getTagFilterConfig,
 } from '../helpers/filterConfigs';
 import RegionType from '../types/RegionEnum';
+import ReportCTAAlert from '../components/ReportCTAAlert';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -87,8 +88,17 @@ const RecordsOverviewPage: React.FC = () => {
     setSectionOpen(prev => prev === id ? null : id);
   }
 
+  const reportCanyonId = searchParams.get('reportCanyonId');
+  const reportCanyon = reportCanyonId ? canyonsById[Number(reportCanyonId)] : undefined;
+  const [reportAlertOpen, setReportAlertOpen] = useState(Boolean(reportCanyonId));
+
   return (
     <PageTemplate pageTitle="Your Journal" isAuthRequired isLoading={isLoading}>
+      <Collapse in={reportAlertOpen && Boolean(reportCanyon)}>
+        {reportCanyon && (
+          <ReportCTAAlert canyon={reportCanyon} onClose={() => setReportAlertOpen(false)} />
+        )}
+      </Collapse>
       <Box>
         <Box sx={{ mb: 2 }}>
           <Button

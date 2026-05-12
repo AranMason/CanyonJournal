@@ -98,7 +98,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             });
                             TagsDataStore.invalidate();
                             setSnackbarOpen(true);
-                            navigate('/journal');
+                            const canyon = selectedDisplay?.canyon;
+                            const { canyonId } = canyon ? parseCanyonKey(canyon.Key) : { canyonId: undefined };
+                            navigate(canyonId ? `/journal?reportCanyonId=${canyonId}` : '/journal');
                         } catch (err: any) {
                             if (err.message !== 'Unauthorized') {
                                 alert(err.message || 'Failed to record canyon.');
@@ -291,7 +293,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     sx={{ mt: 2 }}
                                                     onClick={() => setCreateDialogOpen(true)}
                                                 >
-                                                    Add New Canyon
+                                                    Create Canyon
                                                 </Button>
                                             </>
                                         )}
