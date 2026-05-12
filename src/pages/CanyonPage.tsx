@@ -151,23 +151,28 @@ const CanyonList: React.FC = () => {
     <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
       <Alert
         severity="info"
-        sx={{ mb: 2, mt: 1, py: 2 }}
-        icon={<img src="/images/canyonlog.png" alt="Canyon Log" style={{ height: 20, width: 20, objectFit: 'contain' }} />}
+        sx={{
+          mb: 2, mt: 1, py: 2,
+          alignItems: 'center',
+          '& .MuiAlert-icon': { mr: 2 },
+        }}
+        icon={<img src="/images/canyonlog/icon.png" alt="Canyon Log" style={{ height: 24, width: 24, objectFit: 'contain' }} />}
         action={
           <Button
             variant="outlined"
             size="small"
-            sx={{ bgcolor: 'white' }}
+            sx={{ bgcolor: 'white', py: 1, pr: 2, mr: 2 }}
             href="https://canyonlog.org/map/"
             target="_blank"
             rel="noopener noreferrer"
-            startIcon={<img src="/images/canyonlog.png" alt="Canyon Log" style={{ height: 16, width: 16, objectFit: 'contain' }} />}
+            aria-label="Open Canyon Log map"
+            endIcon={<OpenInNewIcon fontSize="small" />}
           >
-            Open Map
+            <img src="/images/canyonlog/side logo.png" alt="Open Canyon Log map" style={{ height: 20, width: 'auto', objectFit: 'contain', display: 'block' }} />
           </Button>
         }
       >
-        Looking for your next adventure? Check out the Canyon Log map to discover new descents.
+        Looking for your next adventure? Check out the Canyon Log map to discover new canyons.
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>
