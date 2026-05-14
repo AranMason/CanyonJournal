@@ -1,0 +1,99 @@
+{
+  "app": {
+    "name": "CanyonJournal"
+  },
+  "partners": {
+    "canyonLog": "Canyon Log"
+  },
+  "terms": {
+    "canyon": {
+      "upper_one": "Canyon",
+      "upper_other": "Canyons",
+      "lower_one": "canyon",
+      "lower_other": "canyons"
+    },
+    "record": {
+      "upper_one": "Record",
+      "upper_other": "Records",
+      "lower_one": "record",
+      "lower_other": "records"
+    },
+    "descent": {
+      "upper_one": "Descent",
+      "upper_other": "Descents",
+      "lower_one": "descent",
+      "lower_other": "descents"
+    },
+    "rope": {
+      "upper_one": "Rope",
+      "upper_other": "Ropes",
+      "lower_one": "rope",
+      "lower_other": "ropes"
+    },
+    "gear": {
+      "upper_one": "Gear",
+      "upper_other": "Gear",
+      "lower_one": "gear",
+      "lower_other": "gear"
+    },
+    "journal": {
+      "upper_one": "Journal",
+      "upper_other": "Journals",
+      "lower_one": "journal",
+      "lower_other": "journals"
+    }
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "add": "Add",
+    "create": "Create",
+    "update": "Update",
+    "remove": "Remove",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "yes": "Yes",
+    "no": "No",
+    "accept": "Accept",
+    "decline": "Decline",
+    "postReport": "Post Report",
+    "recordDescent": "$t(common:terms.record.upper, {\"count\": 1}) $t(common:terms.descent.upper, {\"count\": 1})",
+    "viewTrips": "View Trips",
+    "addFavourite": "Add to favourites",
+    "removeFavourite": "Remove from favourites"
+  },
+  "fields": {
+    "name": "Name",
+    "notes": "Notes",
+    "source": "Source",
+    "region": "Region",
+    "verified": "Verified",
+    "tags": "Tags",
+    "comments": "Comments",
+    "grade": "Grade"
+  },
+  "canyon": {
+    "sortBy": "Sort by",
+    "topo": "Topo",
+    "open": "Open",
+    "canyonType": "Type",
+    "aquatic": "Aquatic",
+    "vertical": "Vertical",
+    "commitment": "Commitment",
+    "stars": "Stars",
+    "noRating": "Unrated",
+    "urlField": "Reference URL"
+  },
+  "blank": "-",
+  "unknown": "Unknown",
+  "noData": "No Data",
+  "loading": "Loading...",
+  "noResults": "No Results",
+  "openInNew": "Open in new tab"
+}

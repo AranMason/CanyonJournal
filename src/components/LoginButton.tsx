@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useUser } from '../App';
+import { useTranslation } from 'react-i18next';
 
 interface LoginButtonProps {
   isOpen: boolean
@@ -8,6 +9,7 @@ interface LoginButtonProps {
 
 const LoginButton: React.FC<LoginButtonProps> = ({ isOpen }) => {
   const { user, loading } = useUser();
+  const { t } = useTranslation();
 
   if (loading || !user || !isOpen) return null;
 
@@ -18,7 +20,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ isOpen }) => {
         {!user.picture_url && user.first_name.charAt(0)}
       </Avatar> */}
       <Typography variant="subtitle1" color="white" fontWeight={500} >
-        Welcome {user.first_name}
+        {t('nav.welcome', { name: user.first_name })}
       </Typography>
     </Box>
   );

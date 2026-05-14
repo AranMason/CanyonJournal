@@ -4,6 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
 import Loader from '../components/Loader';
+import { useTranslation } from 'react-i18next';
 interface PageTemplateProps {
     pageTitle: string;
     isAuthRequired?: boolean;
@@ -15,10 +16,12 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
 
     const { user, loading } = useUser();
     const navigate = useNavigate();
+    const { t } = useTranslation('common');
 
     useEffect(() => {
-        document.title = pageTitle ? `${pageTitle} — CanyonJournal` : 'CanyonJournal';
-    }, [pageTitle]);
+        const appName = t('app.name');
+        document.title = pageTitle ? `${pageTitle} — ${appName}` : appName;
+    }, [pageTitle, t]);
 
     useEffect(() => {
         if (!isAuthRequired || loading) return;

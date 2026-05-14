@@ -26,6 +26,7 @@ import { GetRegionDisplayName } from "../helpers/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { useTranslation } from 'react-i18next';
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -36,6 +37,7 @@ type RecordEditorProps = {
 const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, submitString }) => {
 
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -164,12 +166,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     canyon={null}
                                     open={createDialogOpen}
                                     onClose={() => setCreateDialogOpen(false)}
-                                    title="New Canyon"
+                                    title={t('settings.newCanyon')}
                                     showNotes
                                     onSubmit={handleAddCanyonSubmit}
                                 />
 
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Canyon</Typography>
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('common:terms.canyon.upper', { count: 1 })}</Typography>
 
                                 {selectedDisplay ? (
                                     <>
@@ -209,7 +211,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 setSelectedDisplay(null);
                                                 setSearchFilter('');
                                             }}>
-                                                Change Canyon
+                                            {t('record.changeCanyon')}
                                             </Button>
                                         </Box>
                                     </>
@@ -221,17 +223,17 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                             <>
                                                 <TextField
                                                     fullWidth
-                                                    placeholder="Search by name..."
+                                                    placeholder={t('record.searchByName')}
                                                     value={searchFilter}
                                                     onChange={(e) => setSearchFilter(e.target.value)}
                                                     size="small"
                                                     sx={{ mb: 1 }}
                                                     error={canyonError}
-                                                    helperText={canyonError ? 'A canyon must be selected' : ''}
+                                                    helperText={canyonError ? t('record.canyonRequired') : ''}
                                                 />
                                                 <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
                                                     {favouriteCanyons.length > 0 && (
-                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>Favourites</ListSubheader>
+                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.favourites')}</ListSubheader>
                                                     )}
                                                     {favouriteCanyons.map((canyon) => (
                                                         <ListItem key={canyon.Key} disablePadding>
@@ -260,7 +262,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                         </ListItem>
                                                     ))}
                                                     {otherCanyons.length > 0 && (
-                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>All Canyons</ListSubheader>
+                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.allCanyons')}</ListSubheader>
                                                     )}
                                                     {otherCanyons.map(canyon => (
                                                         <ListItem key={canyon.Key} disablePadding>
@@ -296,16 +298,16 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     sx={{ mt: 2 }}
                                                     onClick={() => setCreateDialogOpen(true)}
                                                 >
-                                                    Create Canyon
+                                                    {t('record.createCanyon')}
                                                 </Button>
                                             </>
                                         )}
                                     </Box>
                                 )}
 
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Trip Information</Typography>                               
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.descentInformation')}</Typography>                               
                                 <TextField
-                                    label="Date"
+                                    label={t('record.date')}
                                     type="date"
                                     name="Date"
                                     value={values.Date}
@@ -319,7 +321,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     helperText={touched.Date && errors.Date}
                                 />
                                 <TextField
-                                    label="Team Size"
+                                    label={t('record.teamSize')}
                                     type="number"
                                     name="TeamSize"
                                     value={values.TeamSize}
@@ -334,7 +336,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 />
                                 <Box sx={{ mb: 2, mt: 2 }}>
                                     <IconPicker
-                                        label="Water Level"
+                                        label={t('record.waterLevel')}
                                         value={values.WaterLevel ?? 0}
                                         onChange={v => setFieldValue('WaterLevel', v)}
                                         icon={WaterDropIcon}
@@ -343,7 +345,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 </Box>
                                 <Box sx={{ mb: 2, mt: 2 }}>
                                     <IconPicker
-                                        label="Trip Rating"
+                                        label={t('record.descentRating')}
                                         value={values.TripRating ?? 0}
                                         onChange={v => setFieldValue('TripRating', v)}
                                         icon={StarIcon}
@@ -351,7 +353,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     />
                                 </Box>
                                 <TextField
-                                    label="Comments"
+                                    label={t('common:fields.comments')}
                                     name="Comments"
                                     value={values.Comments}
                                     onChange={handleChange}
@@ -375,10 +377,10 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                         ))
                                     }
                                     renderInput={(params) => (
-                                        <TextField {...params} label="Tags" placeholder="Add tags..." margin="normal" />
+                                        <TextField {...params} label={t('common:fields.tags')} placeholder={t('record.addTags')} margin="normal" />
                                     )}
                                 />
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>Gear & Rope Used</Typography>
+                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.gearAndRope')}</Typography>
                                 <Box display="flex" gap={2} flexDirection="column" mb={2}>
                                 <GearRopeSelector
                                     selectedRopeIds={values.RopeIds}
@@ -390,10 +392,10 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 
                                 <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
-                                        Cancel
+                                        {t('common:actions.cancel')}
                                     </Button>}
                                     <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
-                                        {submitString || "Create Record"}
+                                        {submitString || t('journal.createRecord')}
                                     </Button>
                                     
                                 </Box>
@@ -407,7 +409,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                             startIcon={<DeleteIcon />}
                                             onClick={() => setDeleteOpen(true)}
                                         >
-                                            Delete Record
+                                            {t('journal.deleteRecord')}
                                         </Button>
                                     </Box>
                                 )}
@@ -417,11 +419,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     }}
                 </Formik>
             </Box>
-            <SuccessSnackbar open={snackbarOpen} message="Canyon record added!" onClose={() => setSnackbarOpen(false)} />
+            <SuccessSnackbar open={snackbarOpen} message={t('journal.recordAdded')} onClose={() => setSnackbarOpen(false)} />
             <ConfirmDeleteModal
                 open={deleteOpen}
-                title="Delete trip record?"
-                message="This will permanently delete this record. This cannot be undone."
+                title={t('journal.deleteRecordTitle')}
+                message={t('journal.deleteRecordMessage')}
                 onConfirm={async () => {
                     await apiFetch(`/api/record/${initialValues?.Id}`, { method: 'DELETE' });
                     navigate('/journal');
@@ -432,3 +434,5 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 }
 
 export default RecordEditor;
+
+

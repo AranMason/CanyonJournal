@@ -4,16 +4,18 @@ import PageTemplate from './PageTemplate';
 import SettingsCanyonsTab from '../components/settings/SettingsCanyonsTab';
 import SettingsGearTab from '../components/settings/SettingsGearTab';
 import SettingsTagsTab from '../components/settings/SettingsTagsTab';
+import { useTranslation } from 'react-i18next';
 
 const UserSettingsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const { t } = useTranslation();
 
   return (
-    <PageTemplate pageTitle="Settings" isAuthRequired>
+    <PageTemplate pageTitle={t('settings.title')} isAuthRequired>
       <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3 }}>
-        <Tab label="Your Canyons" />
-        <Tab label="Your Gear" />
-        <Tab label="Your Tags" />
+        <Tab label={t('settings.canyons')} />
+        <Tab label={t('settings.gear')} />
+        <Tab label={t('settings.tags')} />
       </Tabs>
       {activeTab === 0 && <SettingsCanyonsTab />}
       {activeTab === 1 && <SettingsGearTab />}
@@ -23,3 +25,4 @@ const UserSettingsPage: React.FC = () => {
 };
 
 export default UserSettingsPage;
+

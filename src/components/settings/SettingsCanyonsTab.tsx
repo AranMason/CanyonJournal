@@ -17,9 +17,11 @@ import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
 import AddCanyonModal, { CanyonModalFormValues } from '../AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../../utils/canyonForm';
 import RowActions from '../RowActions';
+import { useTranslation } from 'react-i18next';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [canyons, setCanyons] = useState<UserCanyonWithDescents[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -74,9 +76,9 @@ const SettingsCanyonsTab: React.FC = () => {
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5">Your Canyons</Typography>
+        <Typography variant="h5">{t('settings.canyons')}</Typography>
         <Button variant="contained" startIcon={<AddIcon />} onClick={openCreate}>
-          New Canyon
+          {t('settings.newCanyon')}
         </Button>
       </Box>
 
@@ -85,29 +87,27 @@ const SettingsCanyonsTab: React.FC = () => {
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         onSuccess={refresh}
-        title={editingCanyon ? 'Edit Canyon' : 'New Canyon'}
+        title={editingCanyon ? t('settings.editCanyon') : t('settings.newCanyon')}
         showNotes
         onSubmit={handleSave}
       />
 
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)}>
-        <DialogTitle>Delete Custom Canyon</DialogTitle>
+        <DialogTitle>{t('settings.deleteCanyon')}</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete <strong>{deleteTarget?.Name}</strong>?
+            {t('settings.deleteCanyonConfirm', { name: deleteTarget?.Name })}
           </Typography>
           {(deleteTarget?.Descents ?? 0) > 0 && (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              This canyon has <strong>{deleteTarget?.Descents}</strong> journal{' '}
-              {deleteTarget?.Descents === 1 ? 'entry' : 'entries'} linked to it.
-              They will be unlinked but not deleted.
+              {t('settings.deleteCanyonWarning', { count: deleteTarget?.Descents })}
             </Alert>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>Cancel</Button>
+          <Button onClick={() => setDeleteTarget(null)}>{t('common:actions.cancel')}</Button>
           <Button color="error" variant="contained" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? <CircularProgress size={20} /> : 'Delete'}
+            {isDeleting ? <CircularProgress size={20} /> : t('common:actions.delete')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -116,12 +116,12 @@ const SettingsCanyonsTab: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Country</TableCell>
-              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Type</TableCell>
-              <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Grade</TableCell>
-              <TableCell>Descents</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>{t('common:fields.name')}</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.region')}</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:canyon.canyonType')}</TableCell>
+              <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('common:fields.grade')}</TableCell>
+              <TableCell>{t('canyon.totalDescents')}</TableCell>
+              <TableCell>{t('common:actions.edit')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -158,7 +158,7 @@ const SettingsCanyonsTab: React.FC = () => {
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography color="text.secondary" py={2}>
-                    No custom canyons yet. Create one to get started.
+                    {t('settings.noCustomCanyons')}
                   </Typography>
                 </TableCell>
               </TableRow>
@@ -171,3 +171,5 @@ const SettingsCanyonsTab: React.FC = () => {
 };
 
 export default SettingsCanyonsTab;
+
+

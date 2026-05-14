@@ -1,14 +1,16 @@
 import React from 'react';
 import CookieConsent from 'react-cookie-consent';
+import { useTranslation } from 'react-i18next';
 
 const CookieBanner: React.FC = () => {
+    const { t } = useTranslation();
     return (
         <CookieConsent
             location="top"
             cookieName="canyonjournal-cookie-consent"
             enableDeclineButton
-            buttonText="Accept"
-            declineButtonText="Decline"
+            buttonText={t('common:actions.accept')}
+            declineButtonText={t('common:actions.decline')}
             onDecline={() => {
                 window.location.href = '/logout';
             }}
@@ -39,12 +41,11 @@ const CookieBanner: React.FC = () => {
                 cursor: 'pointer',
             }}
         >
-            Canyon Journal uses essential cookies to keep you logged in.
-            By continuing, you agree to our{' '}
+            {t('cookie.message')}{' '}
             <a href="https://canyonjournal.co.uk/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: '#eebbc3' }}>
-                Privacy Policy
+                {t('cookie.privacyPolicy')}
             </a>
-            . If you decline, you will be logged out.
+            &#32;{t('cookie.declineWarning')}
         </CookieConsent>
     );
 };

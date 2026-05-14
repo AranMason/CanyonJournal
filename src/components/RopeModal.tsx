@@ -4,6 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, Bo
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikTextField from './FormikTextField';
+import { useTranslation } from 'react-i18next';
 
 interface RopeModalProps {
   open: boolean;
@@ -21,7 +22,7 @@ const RopeSchema = Yup.object().shape({
 });
 
 const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialValues }) => {
-  // Map initialValues from PascalCase to lowercase if editing
+  const { t } = useTranslation();
   const mappedInitialValues = initialValues
     ? {
         name: initialValues.Name ?? '',
@@ -34,7 +35,7 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{initialValues ? 'Edit Rope' : 'Add Rope'}</DialogTitle>
+      <DialogTitle>{initialValues ? t('settings.editRope') : t('gear.addRope')}</DialogTitle>
       <Formik
         initialValues={mappedInitialValues}
         validationSchema={RopeSchema}
@@ -48,19 +49,19 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
           <Form>
             <DialogContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
-                <FormikTextField<typeof values> label="Name" name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
-                <FormikTextField<typeof values> label="Diameter" name="diameter" type="number" value={values.diameter} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
-                <FormikTextField<typeof values> label="Length" name="length" type="number" value={values.length} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
-                <FormikTextField<typeof values> select label="Unit" name="unit" value={values.unit} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors}>
+                <FormikTextField<typeof values> label={t('common:fields.name')} name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> label={t('gear.diameter')} name="diameter" type="number" value={values.diameter} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> label={t('gear.length')} name="length" type="number" value={values.length} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
+                <FormikTextField<typeof values> select label={t('gear.unit')} name="unit" value={values.unit} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors}>
                   <MenuItem value={Unit.Metres}>{Unit.Metres}</MenuItem>
                   <MenuItem value={Unit.Feet}>{Unit.Feet}</MenuItem>
                 </FormikTextField>
-                <FormikTextField<typeof values> label="Notes" name="notes" value={values.notes} onChange={handleChange} onBlur={handleBlur} fullWidth multiline minRows={2} touched={touched} errors={errors} />
+                <FormikTextField<typeof values> label={t('common:fields.notes')} name="notes" value={values.notes} onChange={handleChange} onBlur={handleBlur} fullWidth multiline minRows={2} touched={touched} errors={errors} />
               </Box>
             </DialogContent>
             <DialogActions>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button type="submit" variant="contained" disabled={isSubmitting}>{initialValues ? 'Save' : 'Add'}</Button>
+              <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
+              <Button type="submit" variant="contained" disabled={isSubmitting}>{initialValues ? t('common:actions.save') : t('common:actions.add')}</Button>
             </DialogActions>
           </Form>
         )}
@@ -70,3 +71,4 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
 };
 
 export default RopeModal;
+

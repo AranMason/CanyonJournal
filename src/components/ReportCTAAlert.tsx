@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Button } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { CanyonListEntry } from '../types/Canyon';
+import { useTranslation } from 'react-i18next';
 
 interface ReportCTAAlertProps {
   canyon: CanyonListEntry;
@@ -9,12 +10,13 @@ interface ReportCTAAlertProps {
 }
 
 const CanyonLogReportAlert: React.FC<{ canyon: CanyonListEntry; onClose: () => void }> = ({ canyon, onClose }) => {
+  const { t } = useTranslation();
   const reportUrl = `${canyon.Url}#comments`;
   return (
     <Alert
       severity="success"
       sx={{ mb: 2, alignItems: 'center', py: 2, px: 3 }}
-      icon={<img src="/images/canyonlog/icon.png" alt="Canyon Log" style={{ height: 20, width: 20, objectFit: 'contain' }} />}
+      icon={<img src="/images/canyonlog/icon.png" alt={t('common:partners.canyonLog')} style={{ height: 20, width: 20, objectFit: 'contain' }} />}
       onClose={onClose}
       action={
         <Button
@@ -26,11 +28,11 @@ const CanyonLogReportAlert: React.FC<{ canyon: CanyonListEntry; onClose: () => v
           rel="noopener noreferrer"
           endIcon={<OpenInNewIcon fontSize="small" />}
         >
-          Post Report
+          {t('common:actions.postReport')}
         </Button>
       }
     >
-      Consider sharing your experience at {canyon.Name} on Canyon Log to help the community.
+      {t('journal.canyonLogCta', { name: canyon.Name })}
     </Alert>
   );
 };
@@ -45,3 +47,4 @@ const ReportCTAAlert: React.FC<ReportCTAAlertProps> = ({ canyon, onClose }) => {
 };
 
 export default ReportCTAAlert;
+

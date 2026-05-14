@@ -12,14 +12,16 @@ import LoginIcon from '@mui/icons-material/Login';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BugReportIcon from '@mui/icons-material/BugReport';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = ({ mobileOpen, onMobileClose }) => {
   const { user, setUser, loading } = useUser();
+  const { t } = useTranslation();
 
   if (loading) return null;
 
   const handleBugReport = () => {
-    const subject = encodeURIComponent('Bug Report – CanyonJournal');
+    const subject = encodeURIComponent(`Bug Report – ${t('common:app.name')}`);
     const body = encodeURIComponent(
       `Please describe the issue below:\n\n\n\n---\nPage: ${window.location.href}\nUser ID: ${user?.id ?? 'unknown'}`
     );
@@ -30,21 +32,21 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
     <List>
       <SidebarItem
         isOpen={isOpen}
-        label="Home"
+        label={t('nav.dashboard')}
         icon={<HomeIcon />}
         url='/dashboard'
         disabled={!user}
       />
       <SidebarItem
         isOpen={isOpen}
-        label="Your Journal"
+        label={t('nav.journal')}
         icon={<MenuBookIcon />}
         url='/journal'
         disabled={!user}
       />
       <SidebarItem
         isOpen={isOpen}
-        label="Record Descent"
+        label={t('common:actions.recordDescent')}
         icon={<EditNoteIcon />}
         url='/journal/record'
         disabled={!user}
@@ -52,21 +54,21 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
       <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
       <SidebarItem
         isOpen={isOpen}
-        label="Canyons"
+        label={t('nav.canyons')}
         icon={<LocationPinIcon />}
         url='/canyons'
         disabled={!user}
       />
       <SidebarItem
         isOpen={isOpen}
-        label="Settings"
+        label={t('nav.settings')}
         icon={<SettingsIcon />}
         url='/settings'
         disabled={!user}
       />
       {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
       isOpen={isOpen}
-        label="Admin"
+        label={t('nav.admin')}
         icon={<AdminPanelSettingsIcon />}
         url='/admin'
       /></>}
@@ -107,3 +109,4 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
 };
 
 export default Sidebar;
+

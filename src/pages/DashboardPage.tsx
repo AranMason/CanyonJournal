@@ -7,10 +7,12 @@ import DashboardStats from '../components/DashboardStats';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
+import { useTranslation } from 'react-i18next';
 
 const DashboardPage: React.FC = () => {
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user, loading } = useUser();
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
 
@@ -24,14 +26,14 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <PageTemplate pageTitle="Dashboard" isLoading={loading || isLoading}>
+    <PageTemplate pageTitle={t('dashboard.title')} isLoading={loading || isLoading}>
 
-      <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>Record Descent</Button>
+      <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>{t('common:actions.recordDescent')}</Button>
       <DashboardStats />
       <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
-        Recent Descents
+        {t('dashboard.recentDescents')}
       </Typography>
-      {records.length === 0 ? (<div>No Records</div>) : (
+      {records.length === 0 ? (<div>{t('journal.noRecords')}</div>) : (
 
         records.map(rec => (
           <CanyonRecordAccordion
@@ -47,3 +49,5 @@ const DashboardPage: React.FC = () => {
 };
 
 export default DashboardPage;
+
+

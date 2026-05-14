@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } from '@mui/material';
 import { GearItem, RopeItem } from '../types/types';
 import * as EquipmentDataStore from '../helpers/EquipmentDataStore';
+import { useTranslation } from 'react-i18next';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -13,6 +14,7 @@ interface GearRopeSelectorProps {
 export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRopeIds, setSelectedRopeIds, selectedGearIds, setSelectedGearIds }) => {
   const [ropes, setRopes] = useState<RopeItem[]>([]);
   const [gear, setGear] = useState<GearItem[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     EquipmentDataStore.load().then(data => {
@@ -24,10 +26,10 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   return (
     <>
       <FormControl sx={{ minWidth: 240, flex: 1 }}>
-        <InputLabel id="rope-select-label">Ropes</InputLabel>
+        <InputLabel id="rope-select-label">{t('common:terms.rope.upper', { count: 2 })}</InputLabel>
         <Select
           labelId="rope-select-label"
-          label="Select Ropes"
+          label={t('common:terms.rope.upper', { count: 2 })}
           multiple
           value={selectedRopeIds || []}
           onChange={e => setSelectedRopeIds(e.target.value as number[])}
@@ -46,10 +48,10 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
         </Select>
       </FormControl>
       <FormControl sx={{ minWidth: 240, flex: 1 }}>
-        <InputLabel id="gear-select-label">Gear</InputLabel>
+        <InputLabel id="gear-select-label">{t('common:terms.gear.upper', { count: 1 })}</InputLabel>
         <Select
           labelId="gear-select-label"
-          label="Select Gear"
+          label={t('common:terms.gear.upper', { count: 1 })}
           multiple
           value={selectedGearIds || []}
           onChange={e => setSelectedGearIds(e.target.value as number[])}
@@ -79,3 +81,4 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
     </>
   );
 };
+

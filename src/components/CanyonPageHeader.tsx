@@ -9,6 +9,7 @@ import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import RegionType from '../types/RegionEnum';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface CanyonPageHeaderProps {
   isFavourite: boolean;
@@ -48,7 +49,8 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
   notes,
 }) => {
   const navigate = useNavigate();
-  const resolvedUrlLabel = urlLabel ?? sourceName ?? 'Reference';
+  const { t } = useTranslation();
+  const resolvedUrlLabel = urlLabel ?? sourceName ?? t('common:fields.source');
 
   return (
     <>
@@ -93,7 +95,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
             </Box>
             <Box display="flex" alignItems="flex-start">
               <Button type="button" variant="contained" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
-                Record Descent
+                {t('common:actions.recordDescent')}
               </Button>
             </Box>
           </Box>
@@ -101,7 +103,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
       </Box>
       {notes && (
         <Box mb={2}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>Notes</Typography>
+          <Typography variant="subtitle2" color="text.secondary" gutterBottom>{t('common:fields.notes')}</Typography>
           <Typography variant="body2" whiteSpace="pre-line" fontStyle="italic" pl={1}>
             {notes}
           </Typography>

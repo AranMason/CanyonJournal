@@ -12,12 +12,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import { apiFetch } from '../../utils/api';
 import * as TagsDataStore from '../../helpers/TagsDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
+import { useTranslation } from 'react-i18next';
 
 const SettingsTagsTab: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Tag | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const { t } = useTranslation();
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editName, setEditName] = useState('');
@@ -91,19 +93,19 @@ const SettingsTagsTab: React.FC = () => {
   return (
     <>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Tags are created inline when logging a trip. Deleting a tag removes it from all records.
+        {t('settings.tagsDescription')}
       </Typography>
       {tags.length === 0 ? (
-        <Typography variant="body2" color="text.secondary">No tags yet. Add tags when logging a trip.</Typography>
+        <Typography variant="body2" color="text.secondary">{t('settings.noTags')}</Typography>
       ) : (
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Usage Count</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Last Used</TableCell>
-                <TableCell sx={{ width: 120 }}>Actions</TableCell>
+                <TableCell>{t('common:fields.name')}</TableCell>
+                <TableCell>{t('settings.tagUsageCount')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('settings.tagLastUsed')}</TableCell>
+                <TableCell sx={{ width: 120 }}>{t('common:actions.edit')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -144,12 +146,12 @@ const SettingsTagsTab: React.FC = () => {
                       : '—'}
                   </TableCell>
                   <TableCell>
-                    <Tooltip title="Rename">
+                    <Tooltip title={t('common:actions.edit')}>
                       <IconButton size="small" onClick={() => startEdit(tag)} disabled={editingId !== null} sx={{ p: { xs: 1.5, sm: 1 } }}>
                         <EditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Delete">
+                    <Tooltip title={t('common:actions.delete')}>
                       <IconButton size="small" color="error" onClick={() => setDeleteTarget(tag)} disabled={editingId !== null} sx={{ p: { xs: 1.5, sm: 1 } }}>
                         <DeleteIcon fontSize="small" />
                       </IconButton>
@@ -163,20 +165,20 @@ const SettingsTagsTab: React.FC = () => {
       )}
 
       <Dialog open={Boolean(deleteTarget)} onClose={() => !isDeleting && setDeleteTarget(null)}>
-        <DialogTitle>Delete Tag</DialogTitle>
+        <DialogTitle>{t('settings.deleteTag')}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Delete <strong>{deleteTarget?.Name}</strong>?
+            {t('settings.deleteTagConfirm', { name: deleteTarget?.Name })}
             {(deleteTarget?.UsageCount ?? 0) > 0 && (
-              <> This tag is used on <strong>{deleteTarget?.UsageCount}</strong> record{deleteTarget?.UsageCount !== 1 ? 's' : ''} and will be removed from all of them.</>
+              <> {t('settings.deleteTagWarning', { count: deleteTarget?.UsageCount })}</>
             )}
-            {' '}This cannot be undone.
+            {' '}{t('settings.cannotUndo')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>Cancel</Button>
+          <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>{t('common:actions.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained" disabled={isDeleting}>
-            {isDeleting ? 'Deleting…' : 'Delete'}
+            {isDeleting ? t('settings.deleting') : t('common:actions.delete')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -185,3 +187,4 @@ const SettingsTagsTab: React.FC = () => {
 };
 
 export default SettingsTagsTab;
+

@@ -16,6 +16,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../../helpers/EnumMapper";
 import RegionType from "../../types/RegionEnum";
 import IconDisplay from "../IconDisplay";
+import { useTranslation } from "react-i18next";
 
 type CanyonInfo = Canyon | UserCanyon;
 
@@ -28,6 +29,7 @@ type CanyonRecordAccordionProps = {
 
 const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, canyon, isOpen, onChange }) => {
     const navigate = useNavigate();
+    const { t } = useTranslation('common');
 
     return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
@@ -70,7 +72,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                 {canyon ? <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                     <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating}/>
                     
-                </Box> : <span>No Data</span>}
+                </Box> : <span>{t('noData')}</span>}
                 <Box sx={{ml: "auto"}}>
                     <IconButton
                         size="small"

@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { apiFetch } from '../../utils/api';
 import { CanyonSource } from '../../types/Canyon';
+import { useTranslation } from 'react-i18next';
 
 interface SourceFormValues {
   displayName: string;
@@ -24,6 +25,7 @@ const SourcesTab: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<SourceFormValues>(emptyForm);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const load = () =>
     apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => {});
@@ -78,16 +80,16 @@ const SourcesTab: React.FC = () => {
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h6">Canyon Sources</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openAdd}>Add Source</Button>
+        <Typography variant="h6">{t('admin.sources')}</Typography>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={openAdd}>{t('admin.addSource')}</Button>
       </Box>
 
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Logo</TableCell>
-            <TableCell>Display Name</TableCell>
-            <TableCell>Website</TableCell>
+            <TableCell>{t('admin.sourceLogo')}</TableCell>
+            <TableCell>{t('admin.sourceDisplayName')}</TableCell>
+            <TableCell>{t('admin.sourceWebsite')}</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -112,23 +114,23 @@ const SourcesTab: React.FC = () => {
             </TableRow>
           ))}
           {sources.length === 0 && (
-            <TableRow><TableCell colSpan={4} align="center">No sources</TableCell></TableRow>
+            <TableRow><TableCell colSpan={4} align="center">{t('common:noResults')}</TableCell></TableRow>
           )}
         </TableBody>
       </Table>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingId ? 'Edit Source' : 'Add Source'}</DialogTitle>
+        <DialogTitle>{editingId ? t('admin.editSource') : t('admin.addSource')}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
             <TextField
-              label="Display Name"
+              label={t('admin.sourceDisplayName')}
               value={form.displayName}
               onChange={e => setForm(f => ({ ...f, displayName: e.target.value }))}
               fullWidth required
             />
             <TextField
-              label="Logo URL"
+              label={t('admin.sourceLogoUrl')}
               value={form.logoUrl}
               onChange={e => setForm(f => ({ ...f, logoUrl: e.target.value }))}
               fullWidth
@@ -139,7 +141,7 @@ const SourcesTab: React.FC = () => {
               </Box>
             )}
             <TextField
-              label="Website URL"
+              label={t('admin.sourceWebsiteUrl')}
               value={form.websiteUrl}
               onChange={e => setForm(f => ({ ...f, websiteUrl: e.target.value }))}
               fullWidth
@@ -148,8 +150,8 @@ const SourcesTab: React.FC = () => {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>Save</Button>
+          <Button onClick={() => setDialogOpen(false)}>{t('common:actions.cancel')}</Button>
+          <Button variant="contained" onClick={handleSave}>{t('common:actions.save')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

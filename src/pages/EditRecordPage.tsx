@@ -5,9 +5,11 @@ import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
 import RecordEditor from "../components/RecordEditor";
 import PageTemplate from "./PageTemplate";
+import { useTranslation } from 'react-i18next';
 
 const EditRecordPage: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const { id } = useParams<{id?: string}>();
     const recordIdNum = id ? parseInt(id, 10) : undefined;
 
@@ -40,8 +42,8 @@ const EditRecordPage: React.FC = () => {
             .finally(() => setRecordLoading(false));
     }, [recordIdNum, navigate]);
 
-    return <PageTemplate pageTitle="Edit Record" isAuthRequired isLoading={isRecordLoading || !initialValues}>
-            <RecordEditor initialValues={initialValues} submitString="Save Changes" isEdit/>
+    return <PageTemplate pageTitle={t('journal.editRecord')} isAuthRequired isLoading={isRecordLoading || !initialValues}>
+            <RecordEditor initialValues={initialValues} submitString={t('journal.saveChanges')} isEdit/>
         </PageTemplate>
 }
 

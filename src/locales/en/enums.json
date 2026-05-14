@@ -1,0 +1,17 @@
+{
+  "canyonType": {
+    "unknown": "-",
+    "sports": "Sports",
+    "adventure": "Adventure",
+    "gorgeWalk": "Gorge Scramble",
+    "dry": "Dry"
+  },
+  "waterLevel": {
+    "unknown": "-",
+    "veryLow": "Very Low",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "veryHigh": "Very High"
+  }
+}

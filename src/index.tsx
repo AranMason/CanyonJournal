@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './styles/breakpoints.css';
 import './styles/mui-overrides.css';
+import './i18n';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage';

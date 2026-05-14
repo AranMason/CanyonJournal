@@ -9,6 +9,7 @@ import { UserCanyon } from '../types/UserCanyon';
 import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../helpers/EnumMapper';
+import { useTranslation } from 'react-i18next';
 
 export interface CanyonModalFormValues {
   id?: number;
@@ -39,13 +40,14 @@ interface AddCanyonModalProps {
 
 const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
   canyon, open, onClose, onSuccess,
-  title = 'Add New Canyon',
+  title,
   showNotes = false,
   showCanyonType = true,
   showSource = false,
   onSubmit: customOnSubmit,
 }) => {
   const [sources, setSources] = useState<CanyonSource[]>([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (showSource && open) {
@@ -70,7 +72,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>{title ?? t('admin.addCanyon')}</DialogTitle>
       <DialogContent>
         <Formik
           initialValues={initialValues}
@@ -117,7 +119,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
             <Form>
               <Stack spacing={2} sx={{ mt: 1 }}>
                 <TextField
-                  label="Name"
+                  label={t('common:fields.name')}
                   name="name"
                   value={values.name}
                   onChange={handleChange}
@@ -128,7 +130,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.name && errors.name}
                 />
                 <TextField
-                  label="URL (CanyonLog or similar)"
+                  label={t('common:canyon.urlField')}
                   name="url"
                   value={values.url}
                   onChange={handleChange}
@@ -138,10 +140,10 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.url && errors.url}
                 />
                 <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  <InputLabel id="canyon-region">Country</InputLabel>
+                  <InputLabel id="canyon-region">{t('common:fields.region')}</InputLabel>
                   <Select
                     labelId="canyon-region"
-                    label="Country"
+                    label={t('common:fields.region')}
                     value={values.canyonRegion}
                     onChange={e => setFieldValue('canyonRegion', e.target.value as number)}
                     fullWidth
@@ -154,10 +156,10 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                 </FormControl>
                 {showCanyonType && (
                   <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                    <InputLabel id="canyon-type">Canyon Type</InputLabel>
+                    <InputLabel id="canyon-type">{t('common:canyon.canyonType')}</InputLabel>
                     <Select
                       labelId="canyon-type"
-                      label="Canyon Type"
+                      label={t('common:canyon.canyonType')}
                       value={values.canyonType}
                       onChange={e => setFieldValue('canyonType', e.target.value as number)}
                       fullWidth
@@ -171,15 +173,15 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                 )}
                 {showSource && (
                   <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                    <InputLabel id="canyon-source">Source</InputLabel>
+                    <InputLabel id="canyon-source">{t('common:fields.source')}</InputLabel>
                     <Select
                       labelId="canyon-source"
-                      label="Source"
+                      label={t('common:fields.source')}
                       value={values.sourceId}
                       onChange={e => setFieldValue('sourceId', e.target.value)}
                       fullWidth
                     >
-                      <MenuItem value="">None</MenuItem>
+                      <MenuItem value="">{t('common:unknown')}</MenuItem>
                       {sources.map(s => (
                         <MenuItem key={s.Id} value={s.Id}>{s.DisplayName}</MenuItem>
                       ))}
@@ -194,9 +196,9 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   checked={values.isUnrated}
                   name='isUnrated'
                   onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }} />} label="Is Unrated" />
+                  inputProps={{ 'aria-label': 'controlled' }} />} label={t('common:canyon.noRating')} />
                 <TextField
-                  label="Vertical Rating"
+                  label={t('common:canyon.vertical')}
                   name="verticalRating"
                   value={values.verticalRating}
                   onChange={handleChange}
@@ -209,7 +211,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.verticalRating && errors.verticalRating}
                 />
                 <TextField
-                  label="Aquatic Rating"
+                  label={t('common:canyon.aquatic')}
                   name="aquaticRating"
                   value={values.aquaticRating}
                   onChange={handleChange}
@@ -222,7 +224,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.aquaticRating && errors.aquaticRating}
                 />
                 <TextField
-                  label="Commitment Rating"
+                  label={t('common:canyon.commitment')}
                   name="commitmentRating"
                   value={values.commitmentRating}
                   onChange={handleChange}
@@ -235,7 +237,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   helperText={touched.commitmentRating && errors.commitmentRating}
                 />
                 <TextField
-                  label="Star Rating"
+                  label={t('common:canyon.stars')}
                   name="starRating"
                   value={values.starRating}
                   onChange={handleChange}
@@ -249,7 +251,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                 />
                 {showNotes && (
                   <TextField
-                    label="Notes (optional)"
+                    label={t('canyon.notesOptional')}
                     name="notes"
                     value={values.notes}
                     onChange={handleChange}
@@ -260,11 +262,11 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   />
                 )}
                 {status?.error && <Typography color="error">{status.error}</Typography>}
-                {status?.success && <Typography color="success.main">Canyon saved!</Typography>}
+                {status?.success && <Typography color="success.main">{t('canyon.canyonSaved')}</Typography>}
               </Stack>
               <DialogActions sx={{ mt: 2 }}>
-                <Button onClick={onClose}>Cancel</Button>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>Save</Button>
+                <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
+                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>{t('common:actions.save')}</Button>
               </DialogActions>
             </Form>
           )}
@@ -275,4 +277,5 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
 };
 
 export default AddCanyonModal;
+
 

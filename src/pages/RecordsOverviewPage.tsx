@@ -14,9 +14,11 @@ import {
 } from '../helpers/filterConfigs';
 import RegionType from '../types/RegionEnum';
 import ReportCTAAlert from '../components/ReportCTAAlert';
+import { useTranslation } from 'react-i18next';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const { user, loading: loadingUser } = useUser();
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
@@ -93,7 +95,7 @@ const RecordsOverviewPage: React.FC = () => {
   const [reportAlertOpen, setReportAlertOpen] = useState(Boolean(reportCanyonId));
 
   return (
-    <PageTemplate pageTitle="Your Journal" isAuthRequired isLoading={isLoading}>
+    <PageTemplate pageTitle={t('journal.title')} isAuthRequired isLoading={isLoading}>
       <Collapse in={reportAlertOpen && Boolean(reportCanyon)}>
         {reportCanyon && (
           <ReportCTAAlert canyon={reportCanyon} onClose={() => setReportAlertOpen(false)} />
@@ -106,7 +108,7 @@ const RecordsOverviewPage: React.FC = () => {
             color="primary"
             onClick={() => navigate("/journal/record")}
             startIcon={<EditNoteIcon />}>
-              Record Descent
+              {t('common:actions.recordDescent')}
           </Button>
         </Box>
         <FilterPanel<CanyonRecord>
@@ -116,7 +118,7 @@ const RecordsOverviewPage: React.FC = () => {
           initialValues={initialValues}
         >
           {(filteredRecords) => filteredRecords.length === 0 ? (
-            <div>No Records</div>
+            <div>{t('journal.noRecords')}</div>
           ) : (
             filteredRecords.map(rec => (
               <CanyonRecordAccordion
@@ -134,3 +136,5 @@ const RecordsOverviewPage: React.FC = () => {
 };
 
 export default RecordsOverviewPage;
+
+

@@ -8,10 +8,12 @@ import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import CanyonPageHeader from '../components/CanyonPageHeader';
 import { useFavourite } from '../hooks/useFavourite';
+import { useTranslation } from 'react-i18next';
 
 const UserCanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const userCanyonId = id ? parseInt(id, 10) : undefined;
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [canyonData, setCanyonData] = useState<UserCanyonWithDescents>();
@@ -33,7 +35,7 @@ const UserCanyonOverviewPage: React.FC = () => {
   }, [userCanyonId]);
 
   return (
-    <PageTemplate pageTitle={canyonData?.Name ?? 'Canyon'} isLoading={isLoading} isAuthRequired>
+    <PageTemplate pageTitle={canyonData?.Name ?? t('common:terms.canyon.upper', { count: 1 })} isLoading={isLoading} isAuthRequired>
       <CanyonPageHeader
         isFavourite={isFavourite}
         onToggleFavourite={toggleFavourite}
@@ -50,10 +52,10 @@ const UserCanyonOverviewPage: React.FC = () => {
       />
       
       <Typography variant="h4" my={2} fontSize={24}>
-        {`Your Trips (${records.length})`}
+        {`${t('canyon.yourDescents')} (${records.length})`}
       </Typography>
       {records.length === 0 ? (
-        <div>No Records</div>
+        <div>{t('journal.noRecords')}</div>
       ) : (
         records.map(rec => (
           <CanyonRecordAccordion
@@ -69,3 +71,4 @@ const UserCanyonOverviewPage: React.FC = () => {
 };
 
 export default UserCanyonOverviewPage;
+

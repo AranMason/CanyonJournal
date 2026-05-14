@@ -29,8 +29,6 @@ When asked to review, you should provide outline, priority and ease of implement
 - I want to be able to track the history of a rope, so if a rope is cut I can see it's history when it was still a full rope.
 
 
-# [Medium] Add Localization
-
 # [Medium] Admin Audit Trails for Canyons
 
 - Last updated date, date created, who made the last change etc

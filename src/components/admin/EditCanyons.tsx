@@ -15,6 +15,7 @@ import FilterPanel, { FilterValues } from '../FilterPanel';
 import {
   getCanyonNameFilterConfig, getRegionFilterConfig, getVerifiedFilterConfig,
 } from '../../helpers/filterConfigs';
+import { useTranslation } from 'react-i18next';
 
 const EditCanyons: React.FC = () => {
 
@@ -22,6 +23,7 @@ const EditCanyons: React.FC = () => {
     const [addOpen, setAddOpen] = useState(false);
     const [canyons, setCanyons] = useState<Canyon[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const { t } = useTranslation();
 
     const refresh = () => {
         setIsLoading(true);
@@ -45,11 +47,11 @@ const EditCanyons: React.FC = () => {
     }, []);
 
     return <>
-    <AddCanyonModal canyon={null} open={addOpen} onClose={() => setAddOpen(false)} onSuccess={refresh} title="Add New Canyon" showSource />
-    <AddCanyonModal canyon={editCanyon} open={editCanyon != null} onClose={() => {setEditCanyon(null)}} onSuccess={refresh} showSource />
+    <AddCanyonModal canyon={null} open={addOpen} onClose={() => setAddOpen(false)} onSuccess={refresh} title={t('admin.addCanyon')} showSource />
+    <AddCanyonModal canyon={editCanyon} open={editCanyon != null} onClose={() => {setEditCanyon(null)}} onSuccess={refresh} title={t('settings.editCanyon')} showSource />
     <Box display="flex" justifyContent="flex-end" sx={{ mb: 2 }}>
         <Button variant="contained" startIcon={<AddIcon />} onClick={() => setAddOpen(true)}>
-            Add Canyon
+            {t('admin.addCanyon')}
         </Button>
     </Box>
     <FilterPanel<Canyon>
@@ -61,12 +63,12 @@ const EditCanyons: React.FC = () => {
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Grade</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Country</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Type</TableCell>
-                    <TableCell>Edit</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>Is Verified</TableCell>
+                    <TableCell>{t('common:fields.name')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('common:fields.grade')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.region')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:canyon.canyonType')}</TableCell>
+                    <TableCell>{t('common:actions.edit')}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>{t('common:fields.verified')}</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -101,3 +103,4 @@ const EditCanyons: React.FC = () => {
 }
 
 export default EditCanyons;
+

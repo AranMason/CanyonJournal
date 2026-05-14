@@ -1,0 +1,121 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "journal": "Your Journal",
+    "canyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
+    "settings": "Settings",
+    "admin": "Admin Panel",
+    "welcome": "Welcome {{name}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "recentDescents": "Recent $t(common:terms.descent.upper, {\"count\": 2})",
+    "totalDescents": "Total $t(common:terms.descent.upper, {\"count\": 2})",
+    "uniqueCanyons": "Unique $t(common:terms.canyon.upper, {\"count\": 2})",
+    "descentsThisYear": "$t(common:terms.descent.upper, {\"count\": 2}) This Year",
+    "regions": "regions",
+    "acrossCountry_one": "Across {{count}} country",
+    "acrossCountry_other": "Across {{count}} countries",
+    "newThisYear": "+{{count}} this year",
+    "priorYear": "{{year}}: {{count}}"
+  },
+  "journal": {
+    "title": "Your Journal",
+    "noRecords": "No $t(common:terms.record.upper, {\"count\": 2})",
+    "editRecord": "Edit $t(common:terms.record.upper, {\"count\": 1})",
+    "deleteRecord": "Delete $t(common:terms.record.upper, {\"count\": 1})",
+    "deleteRecordTitle": "Delete $t(common:terms.descent.lower, {\"count\": 1}) $t(common:terms.record.lower, {\"count\": 1})?",
+    "deleteRecordMessage": "This will permanently delete this $t(common:terms.record.lower, {\"count\": 1}). This cannot be undone.",
+    "recordAdded": "$t(common:terms.canyon.upper, {\"count\": 1}) $t(common:terms.record.lower, {\"count\": 1}) added!",
+    "saveChanges": "Save Changes",
+    "createRecord": "Create $t(common:terms.record.upper, {\"count\": 1})",
+    "descentInformation": "$t(common:terms.descent.upper, {\"count\": 1}) Information",
+    "gearAndRope": "$t(common:terms.gear.upper, {\"count\": 1}) & $t(common:terms.rope.upper, {\"count\": 1}) Used",
+    "canyonLogCta": "Consider sharing your experience at {{name}} on $t(common:partners.canyonLog) to help the community."
+  },
+  "canyon": {
+    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
+    "yourDescents": "Your $t(common:terms.descent.upper, {\"count\": 2})",
+    "lastDescent": "Last $t(common:terms.descent.upper, {\"count\": 1})",
+    "totalDescents": "$t(common:terms.descent.upper, {\"count\": 2})",
+    "findTopo": "Explore canyons on $t(common:partners.canyonLog)",
+    "findTopoSub": "Browse the map to discover your next adventure.",
+    "canyon": "$t(common:terms.canyon.upper, {\"count\": 1})",
+    "notesOptional": "Notes (optional)",
+    "canyonSaved": "$t(common:terms.canyon.upper, {\"count\": 1}) saved!"
+  },
+  "record": {
+    "date": "Date",
+    "teamSize": "Team Size",
+    "waterLevel": "Water Level",
+    "descentRating": "$t(common:terms.descent.upper, {\"count\": 1}) Rating",
+    "addTags": "Add tags",
+    "selectCanyon": "Search $t(common:terms.canyon.lower, {\"count\": 1})",
+    "changeCanyon": "Change $t(common:terms.canyon.upper, {\"count\": 1})",
+    "searchByName": "Search by name",
+    "canyonRequired": "A $t(common:terms.canyon.lower, {\"count\": 1}) must be selected",
+    "createCanyon": "Create $t(common:terms.canyon.upper, {\"count\": 1})",
+    "favourites": "Favourites",
+    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})"
+  },
+  "settings": {
+    "title": "Settings",
+    "canyons": "My $t(common:terms.canyon.upper, {\"count\": 2})",
+    "gear": "$t(common:terms.gear.upper, {\"count\": 1})",
+    "ropes": "$t(common:terms.rope.upper, {\"count\": 2})",
+    "tags": "Tags",
+    "profile": "Profile",
+    "newCanyon": "New $t(common:terms.canyon.upper, {\"count\": 1})",
+    "editCanyon": "Edit $t(common:terms.canyon.upper, {\"count\": 1})",
+    "editGear": "Edit $t(common:terms.gear.upper, {\"count\": 1})",
+    "editRope": "Edit $t(common:terms.rope.upper, {\"count\": 1})",
+    "deleteCanyon": "Delete Custom $t(common:terms.canyon.upper, {\"count\": 1})",
+    "deleteCanyonConfirm": "Are you sure you want to delete {{name}}?",
+    "deleteCanyonWarning": "This $t(common:terms.canyon.lower, {\"count\": 1}) has {{count}} journal entries linked to it. They will be unlinked but not deleted.",
+    "noCustomCanyons": "No custom $t(common:terms.canyon.lower, {\"count\": 2}) yet. Create one to get started.",
+    "tagsDescription": "Tags are created inline when logging a $t(common:terms.descent.lower, {\"count\": 1}). Deleting a tag removes it from all $t(common:terms.record.lower, {\"count\": 2}).",
+    "noTags": "No tags yet. Add tags when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
+    "tagUsageCount": "Usage Count",
+    "tagLastUsed": "Last Used",
+    "deleteTag": "Delete Tag",
+    "deleteTagConfirm": "Delete {{name}}?",
+    "deleteTagWarning": "This tag is used on {{count}} $t(common:terms.record.lower, {\"count\": 2}) and will be removed from all of them.",
+    "cannotUndo": "This cannot be undone.",
+    "deleting": "Deleting..."
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})",
+    "sources": "Sources",
+    "addCanyon": "Add $t(common:terms.canyon.upper, {\"count\": 1})",
+    "addSource": "Add Source",
+    "editSource": "Edit Source",
+    "sourceLogo": "Logo",
+    "sourceDisplayName": "Display Name",
+    "sourceWebsite": "Website",
+    "sourceLogoUrl": "Logo URL",
+    "sourceWebsiteUrl": "Website URL"
+  },
+  "gear": {
+    "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
+    "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
+    "length": "Length (m)",
+    "diameter": "Diameter (mm)",
+    "category": "Category",
+    "unit": "Unit",
+    "manufacturer": "Manufacturer"
+  },
+  "errors": {
+    "failedToLoad": "Failed to load data.",
+    "failedToSave": "Failed to save.",
+    "failedToDelete": "Failed to delete.",
+    "unauthorized": "Unauthorized",
+    "addedSuccessfully": "Added successfully!"
+  },
+  "cookie": {
+    "message": "$t(common:app.name) uses essential cookies to keep you logged in. By continuing, you agree to our",
+    "privacyPolicy": "Privacy Policy",
+    "declineWarning": "If you decline, you will be logged out."
+  }
+}
+

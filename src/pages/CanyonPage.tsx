@@ -18,6 +18,7 @@ import {
   getVerticalRatingFilterConfig, getAquaticRatingFilterConfig, getStarRatingFilterConfig,
   getCanyonNameFilterConfig
 } from '../helpers/filterConfigs';
+import { useTranslation } from 'react-i18next';
 
 const minDateString: string = '1900-01-01' 
 
@@ -78,6 +79,7 @@ const SortParams: { [key in SortOptionEnum]: {
 
 const CanyonList: React.FC = () => {
   const { user, loading } = useUser();
+  const { t } = useTranslation();
   const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState<SortOptionEnum>(SortOptionEnum.TotalDescents);
@@ -148,7 +150,7 @@ const CanyonList: React.FC = () => {
   }
 
   return (
-    <PageTemplate pageTitle="All Canyons" isAuthRequired isLoading={isLoading}>
+    <PageTemplate pageTitle={t('nav.canyons')} isAuthRequired isLoading={isLoading}>
       <Alert
         severity="info"
         sx={{
@@ -156,7 +158,7 @@ const CanyonList: React.FC = () => {
           alignItems: 'center',
           '& .MuiAlert-icon': { mr: 2 },
         }}
-        icon={<img src="/images/canyonlog/icon.png" alt="Canyon Log" style={{ height: 24, width: 24, objectFit: 'contain' }} />}
+        icon={<img src="/images/canyonlog/icon.png" alt={t('common:partners.canyonLog')} style={{ height: 24, width: 24, objectFit: 'contain' }} />}
         action={
           <Button
             variant="outlined"
@@ -165,23 +167,23 @@ const CanyonList: React.FC = () => {
             href="https://canyonlog.org/map/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open Canyon Log map"
+            aria-label={`Open ${t('common:partners.canyonLog')} map`}
             endIcon={<OpenInNewIcon fontSize="small" />}
           >
-            <img src="/images/canyonlog/side logo.png" alt="Open Canyon Log map" style={{ height: 20, width: 'auto', objectFit: 'contain', display: 'block' }} />
+            <img src="/images/canyonlog/side logo.png" alt={`Open ${t('common:partners.canyonLog')} map`} style={{ height: 20, width: 'auto', objectFit: 'contain', display: 'block' }} />
           </Button>
         }
       >
-        Looking for your next adventure? Check out the Canyon Log map to discover new canyons.
+        {t('canyon.findTopo')}
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box>
           <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
-            <InputLabel id="filter-sort-by" >Sort By</InputLabel>
+            <InputLabel id="filter-sort-by">{t('common:canyon.sortBy')}</InputLabel>
             <Select
               size='small'
               labelId="filter-sort-by"
-              label="Sort By"
+              label={t('common:canyon.sortBy')}
               style={{width: "150px"}}
               value={sort}
               onChange={e => {
@@ -205,13 +207,13 @@ const CanyonList: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell className='hide-md'>Grade</TableCell>
-                <TableCell className='hide-md'>Country</TableCell>
-                <TableCell className='hide-md'>Type</TableCell>
-                <TableCell align="center">Your Descents</TableCell>
-                <TableCell className='hide-sm' align="center">Last Descent</TableCell>
-                <TableCell align="center">Topo</TableCell>
+                <TableCell>{t('common:fields.name')}</TableCell>
+                <TableCell className='hide-md'>{t('common:fields.grade')}</TableCell>
+                <TableCell className='hide-md'>{t('common:fields.region')}</TableCell>
+                <TableCell className='hide-md'>{t('common:canyon.canyonType')}</TableCell>
+                <TableCell align="center">{t('canyon.yourDescents')}</TableCell>
+                <TableCell className='hide-sm' align="center">{t('canyon.lastDescent')}</TableCell>
+                <TableCell align="center">{t('common:canyon.topo')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -246,7 +248,7 @@ const CanyonList: React.FC = () => {
                             : <OpenInNewIcon fontSize="small" />
                         }
                       >
-                        Topo
+                        {t('common:canyon.topo')}
                       </Button>
                     ) : '-'}
                   </TableCell>
@@ -263,3 +265,6 @@ const CanyonList: React.FC = () => {
 };
 
 export default CanyonList;
+
+
+

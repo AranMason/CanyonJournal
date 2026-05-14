@@ -11,9 +11,11 @@ import RopeModal from '../RopeModal';
 import GearModal from '../GearModal';
 import SuccessSnackbar from '../SuccessSnackbar';
 import RowActions from '../RowActions';
+import { useTranslation } from 'react-i18next';
 
 const SettingsGearTab: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [ropeModalOpen, setRopeModalOpen] = useState(false);
   const [gearModalOpen, setGearModalOpen] = useState(false);
   const [ropes, setRopes] = useState<RopeItem[]>([]);
@@ -68,18 +70,18 @@ const SettingsGearTab: React.FC = () => {
       {/* Rope */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h6">Rope</Typography>
-          <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>Add Rope</Button>
+          <Typography variant="h6">{t('common:terms.rope.upper', { count: 1 })}</Typography>
+          <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Diameter</TableCell>
-                <TableCell>Length</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Notes</TableCell>
-                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
+                <TableCell>{t('common:fields.name')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.diameter')}</TableCell>
+                <TableCell>{t('gear.length')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.notes')}</TableCell>
+                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>{t('common:actions.edit')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -133,17 +135,17 @@ const SettingsGearTab: React.FC = () => {
       {/* Gear */}
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
-          <Typography variant="h6">Gear</Typography>
-          <Button variant="outlined" color="primary" onClick={() => setGearModalOpen(true)}>Add Gear</Button>
+          <Typography variant="h6">{t('common:terms.gear.upper', { count: 1 })}</Typography>
+          <Button variant="outlined" color="primary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>Notes</TableCell>
-                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>Actions</TableCell>
+                <TableCell>{t('common:fields.name')}</TableCell>
+                <TableCell>{t('gear.category')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.notes')}</TableCell>
+                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>{t('common:actions.edit')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -193,9 +195,11 @@ const SettingsGearTab: React.FC = () => {
         />
       </Box>
 
-      <SuccessSnackbar open={snackbarOpen} message="Added successfully!" onClose={() => setSnackbarOpen(false)} />
+      <SuccessSnackbar open={snackbarOpen} message={t('errors.addedSuccessfully')} onClose={() => setSnackbarOpen(false)} />
     </>
   );
 };
 
 export default SettingsGearTab;
+
+
