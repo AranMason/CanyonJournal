@@ -13,5 +13,16 @@
     "medium": "Medium",
     "high": "High",
     "veryHigh": "Very High"
+  },
+  "reportIssueType": {
+    "brokenLink": "Broken Link",
+    "incorrectData": "Incorrect Data",
+    "other": "Other"
+  },
+  "reportStatus": {
+    "pending": "Pending",
+    "tbd": "TBD",
+    "reviewed": "Reviewed",
+    "rejected": "Rejected"
   }
 }

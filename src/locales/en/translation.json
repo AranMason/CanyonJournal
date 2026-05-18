@@ -87,6 +87,7 @@
     "title": "Admin Panel",
     "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})",
     "sources": "Sources",
+    "reports": "Reports",
     "addCanyon": "Add $t(common:terms.canyon.upper, {\"count\": 1})",
     "addSource": "Add Source",
     "editSource": "Edit Source",
@@ -94,7 +95,14 @@
     "sourceDisplayName": "Display Name",
     "sourceWebsite": "Website",
     "sourceLogoUrl": "Logo URL",
-    "sourceWebsiteUrl": "Website URL"
+    "sourceWebsiteUrl": "Website URL",
+    "reportedBy": "Reported By",
+    "dateReported": "Date Reported",
+    "adminNotes": "Admin Notes",
+    "showResolved": "Show resolved",
+    "saveNotes": "$t(common:actions.save)",
+    "noReports": "No reports to review.",
+    "editCanyon": "Edit $t(common:terms.canyon.upper, {\"count\": 1})"
   },
   "gear": {
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
@@ -104,6 +112,19 @@
     "category": "Category",
     "unit": "Unit",
     "manufacturer": "Manufacturer"
+  },
+  "report": {
+    "title": "Report Issue",
+    "scope": "For reports about canyon access or current conditions, please report publically.",
+    "subtitle": "Report a problem with {{name}}",
+    "issueType": "Issue Type",
+    "description": "Description",
+    "descriptionOptional": "Description (optional)",
+    "descriptionHint": "Please describe the issue",
+    "descriptionRequired": "Description is required for Other issues",
+    "submit": "Submit Report",
+    "successMessage": "Report submitted — thank you!",
+    "button": "Report Issue"
   },
   "errors": {
     "failedToLoad": "Failed to load data.",

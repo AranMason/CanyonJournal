@@ -112,6 +112,9 @@ All routes are mounted under `/api/` and require the user to be authenticated. U
 | `tags.ts` | `GET /api/tags` | List all user tags with `UsageCount` and `LastUsed` stats |
 | `tags.ts` | `PATCH /api/tags/:id` | Rename a tag (conflict-checked; 409 if name already exists) |
 | `tags.ts` | `DELETE /api/tags/:id` | Delete a tag and cascade-remove from all records |
+| `reports.ts` | `POST /api/reports` | Submit an issue report for a verified canyon |
+| `reports.ts` | `GET /api/reports` | **Admin only** — list all reports with canyon and reporter info |
+| `reports.ts` | `PATCH /api/reports/:id` | **Admin only** — update report status and/or admin notes |
 
 ### Auth Routes (on `index.ts`, outside `/api/`, handled by `express-openid-connect`)
 - `GET /login` — Initiates Auth0 OAuth flow (always shows login screen via `prompt=login`)

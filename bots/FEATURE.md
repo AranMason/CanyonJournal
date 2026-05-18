@@ -10,16 +10,6 @@ When asked to review, you should provide outline, priority and ease of implement
 - They differ in one column: admin has "Verified", settings has "Descents"
 - Could share a base canyon table component with optional column slots
 
-# [Priority] We should be able to report issues with a canyon on the Canyon Page
-
-- Dropdown for common issues, like 'Incorrect Rating', or 'Broken Link', combined with a free text
-- In a modal pop-up
-- Add to the admin only area to review, mark a report as reviewed, rejected or tbd - And allow us to edit the canyon in question, this will likely be seperated by Tabs
-- We want an report state style flag (could be an enum flag, with different states) and Admin notes as well for documentation. As well as a date reviewed, and who reviewed it.
-- By default we shouldn't show resolved reports, but we should be able to still discover them if need be.
-- Could be a mailto: link initially, with a admin panel changes as a seperate feature work
-
-
 # [Low] Add colour picker support for ropes, so we can visualize the colour of them in the UI
 
 # [Low] Add support for 'splitting' a rope
@@ -58,3 +48,6 @@ When asked to review, you should provide outline, priority and ease of implement
 - User settings — allow a user to disable a source (e.g. CanyonLog) so canyons from that source don't appear in their lists
 - Low priority until there are more data sources
 
+# [Low] Support Trips that span multiple days
+
+# 
