@@ -198,7 +198,8 @@ FROM UserCanyons uc
 JOIN EnumMap em ON em.enumVal = uc.Region
 WHERE uc.Region IS NOT NULL AND uc.Region != 0;
 
--- ─── 7. Drop old Region INT columns ──────────────────────────────────────────
+-- ─── 7. Retire old Region INT columns (renamed for recovery, not dropped) ────
+-- Use sp_rename to preserve data while making clear these columns are no longer active.
 
-ALTER TABLE Canyons DROP COLUMN Region;
-ALTER TABLE UserCanyons DROP COLUMN Region;
+EXEC sp_rename 'Canyons.Region',     'zzz_Region_Legacy', 'COLUMN';
+EXEC sp_rename 'UserCanyons.Region', 'zzz_Region_Legacy', 'COLUMN';
