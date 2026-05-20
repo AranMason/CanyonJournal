@@ -256,7 +256,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
               </Stack>
               <DialogActions sx={{ mt: 2 }}>
                 <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
-                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>{t('common:actions.save')}</Button>
+                <Button type="submit" variant="contained" color="tertiary" disabled={isSubmitting}>{t('common:actions.save')}</Button>
               </DialogActions>
             </Form>
           )}

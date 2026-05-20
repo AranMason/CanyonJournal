@@ -349,7 +349,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                         value={values.TripRating ?? 0}
                                         onChange={v => setFieldValue('TripRating', v)}
                                         icon={StarIcon}
-                                        activeColor="warning"
+                                        activeColor="secondary"
                                     />
                                 </Box>
                                 <TextField
@@ -394,7 +394,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         {t('common:actions.cancel')}
                                     </Button>}
-                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
+                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="tertiary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
                                         {submitString || t('journal.createRecord')}
                                     </Button>
                                     

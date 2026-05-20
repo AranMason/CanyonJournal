@@ -37,6 +37,7 @@ This is for platforms like CanyonLog and RopeWiki, to which we will defer to for
 │   ├── record.ts         # Canyon descent records CRUD (includes tag upsert logic)
 │   ├── gear.ts           # Gear and rope inventory CRUD
 │   ├── favourites.ts     # Canyon favourites toggle
+│   ├── regions.ts        # Hierarchical region tree CRUD (admin-gated writes)
 │   ├── tags.ts           # User tags CRUD (GET with stats, PATCH rename, DELETE)
 │   ├── helpers/
 │   │   ├── user.helper.ts       # getUserIdByRequest, isAdmin utilities
@@ -48,24 +49,28 @@ This is for platforms like CanyonLog and RopeWiki, to which we will defer to for
 │   ├── pages/            # Page-level components
 │   ├── components/       # Shared/reusable components
 │   │   ├── settings/     # SettingsCanyonsTab, SettingsGearTab, SettingsTagsTab
-│   │   ├── admin/        # EditCanyons, EditUserCanyons
+│   │   ├── admin/        # EditCanyons, EditUserCanyons, RegionsTab
 │   │   ├── table/        # Shared table cell components (CanyonNameCell, CanyonTypeCell)
 │   │   ├── CanyonRecordAccordion/  # Journal entry accordion
 │   │   ├── FilterPanel.tsx         # Config-driven filter panel (see below)
 │   │   ├── MobileAppBar.tsx        # Hamburger AppBar shown on mobile only
 │   │   ├── RecordEditor.tsx        # Shared form for creating/editing descent records
 │   │   ├── GearRopeSelector.tsx    # Gear and rope multi-select for record editor
+│   │   ├── RegionTreeView.tsx      # Reusable MUI SimpleTreeView wrapper for region trees
+│   │   ├── RegionTreePicker.tsx    # Dialog-based region picker (with prune/elevate logic)
 │   │   └── IconPicker.tsx          # Generic icon-based value picker (ratings, water level)
-│   ├── helpers/          # Frontend data helpers
+│   ├── helpers/
 │   │   ├── CanyonDataStore.ts      # Promise cache for /api/canyons
 │   │   ├── EquipmentDataStore.ts   # Promise cache for /api/equipment
 │   │   ├── UserCanyonDataStore.ts  # Promise cache for /api/user-canyons
 │   │   ├── FavouritesDataStore.ts  # Promise cache for /api/favourites
 │   │   ├── TagsDataStore.ts        # Promise cache for /api/tags
+│   │   ├── RegionDataStore.ts      # Promise cache for /api/regions; resolves display names from i18n
 │   │   ├── filterConfigs.ts        # Atomic FilterConfig builder functions (single source of truth)
 │   │   └── EnumMapper.ts           # Display name / colour helpers for enums
 │   ├── types/            # TypeScript types and enums
 │   ├── utils/            # Frontend utility functions (api, canyonKey)
+│   ├── locales/          # i18n translation files (en/, cy/ etc.) — regions.json keyed by slug
 │   └── styles/           # Global styles (MuiTheme, breakpoints, overrides)
 ├── public/               # CRA app shell (index.html etc.) — NOT the marketing site
 ├── docs/                 # Static marketing website (GitHub Pages) — index.html, privacy.html, contact.html
@@ -112,6 +117,11 @@ All routes are mounted under `/api/` and require the user to be authenticated. U
 | `tags.ts` | `GET /api/tags` | List all user tags with `UsageCount` and `LastUsed` stats |
 | `tags.ts` | `PATCH /api/tags/:id` | Rename a tag (conflict-checked; 409 if name already exists) |
 | `tags.ts` | `DELETE /api/tags/:id` | Delete a tag and cascade-remove from all records |
+| `regions.ts` | `GET /api/regions` | Returns full nested region tree (`Id`, `ParentId`, `Slug`, `Symbol`, `SortOrder`, `Children[]`) |
+| `regions.ts` | `GET /api/regions/:id` | **Admin only** — single region detail (`RegionAdmin` shape incl. `IsActive`) |
+| `regions.ts` | `POST /api/regions` | **Admin only** — create a region (409 if slug exists) |
+| `regions.ts` | `PUT /api/regions/:id` | **Admin only** — update a region; 400 if `parentId` would create a circular reference |
+| `regions.ts` | `DELETE /api/regions/:id` | **Admin only** — delete a region; 409 if region has children or assigned canyons |
 | `reports.ts` | `POST /api/reports` | Submit an issue report for a verified canyon |
 | `reports.ts` | `GET /api/reports` | **Admin only** — list all reports with canyon and reporter info |
 | `reports.ts` | `PATCH /api/reports/:id` | **Admin only** — update report status and/or admin notes |
@@ -183,6 +193,20 @@ SQL Server. Scripts are in `/sql/`. Migration files are named `YYYYMMDD_Descript
 | `ProfilePicture` | NVARCHAR(255) | |
 | `IsAdmin` | BIT | Admin flag |
 
+### `Regions`
+Hierarchical region tree replacing the old flat `Region` INT enum.
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `Id` | INT IDENTITY PK | |
+| `ParentId` | INT NULL FK → Regions | Self-referencing; `NULL` = continent/top-level |
+| `Slug` | NVARCHAR(100) UNIQUE | Kebab-case key matching `src/locales/*/regions.json` |
+| `Symbol` | NVARCHAR(20) NULL | Optional flag emoji |
+| `SortOrder` | INT | Controls display order within a parent |
+| `IsActive` | BIT | Inactive regions are hidden from the tree |
+
+> Display names are **not** stored in the DB — they are resolved client-side from `src/locales/{lang}/regions.json` using the `Slug` as the key. To add a new language, create the corresponding JSON file and register the namespace in `src/i18n.ts`.
+
 ### `Canyons`
 | Column | Type | Notes |
 |--------|------|-------|
@@ -195,9 +219,10 @@ SQL Server. Scripts are in `/sql/`. Migration files are named `YYYYMMDD_Descript
 | `StarRating` | INT | |
 | `IsVerified` | BIT | Only verified canyons appear in public listings |
 | `IsUnrated` | BIT | |
-| `Region` | INT | FK to region enum |
+| `RegionId` | INT NULL FK → Regions | Replaced old `Region` INT enum |
 | `CanyonType` | INT | FK to `CanyonTypeEnum` |
 | `IsDeleted` | BIT | Soft delete |
+| `zzz_Region_Legacy` | INT NULL | Retired column — original flat enum value kept for recovery |
 
 ### `UserCanyons`
 User-created canyon entries (custom canyons not in the verified directory).
@@ -208,7 +233,7 @@ User-created canyon entries (custom canyons not in the verified directory).
 | `UserId` | INT FK → Users | |
 | `Name` | NVARCHAR(200) | |
 | `Url` | NVARCHAR(255) NULL | Optional reference link |
-| `Region` | INT NULL | FK to region enum |
+| `RegionId` | INT NULL FK → Regions | Replaced old `Region` INT enum |
 | `CanyonType` | INT NULL | FK to `CanyonTypeEnum` |
 | `AquaticRating` | INT | |
 | `VerticalRating` | INT | |
@@ -217,6 +242,7 @@ User-created canyon entries (custom canyons not in the verified directory).
 | `IsUnrated` | BIT | |
 | `Notes` | NVARCHAR(1000) NULL | Personal notes about the canyon |
 | `Created` / `Updated` | DATETIME | |
+| `zzz_Region_Legacy` | INT NULL | Retired column — original flat enum value kept for recovery |
 
 ### `CanyonRecords`
 | Column | Type | Notes |
@@ -288,6 +314,8 @@ Stores which canyons a user has favourited.
 
 ## Key Enums
 
+> **Regions are no longer an enum.** The old `Region` INT enum has been replaced by the `Regions` table (hierarchical tree). Display names come from `src/locales/{lang}/regions.json` keyed by slug. See `RegionDataStore` and `RegionTreePicker` for usage.
+
 ### `CanyonTypeEnum`
 | Value | Name | Icon | Colour |
 |-------|------|------|--------|
@@ -326,8 +354,11 @@ Stores which canyons a user has favourited.
 ### Frontend
 - **Canyon composite key:** The frontend uses a composite key (`canyon:123` or `usercanyon:456`) to distinguish verified vs custom canyons in shared list components. Use `parseCanyonKey` / `canyonKey` / `userCanyonKey` from `src/utils/canyonKey.ts`.
 - **`DetailUrl` field:** Computed by the API on all `CanyonRecord` and `CanyonListEntry` responses. The frontend never constructs `/canyons/...` URLs itself.
-- **DataStore pattern:** Module-level `var loadPromise: Promise<T> | null = null`. Uses `??=` to deduplicate concurrent calls. On error, sets `loadPromise = null` so the next call retries. `invalidate()` simply sets it to `null`. All follow `CanyonDataStore.ts` as the reference. DataStores: `CanyonDataStore`, `EquipmentDataStore`, `UserCanyonDataStore`, `FavouritesDataStore`, `TagsDataStore`.
-- **FilterPanel:** `src/components/FilterPanel.tsx` — config-driven filter component. All filter configs are defined as atomic builder functions in `src/helpers/filterConfigs.ts` (e.g. `getCanyonNameFilterConfig()`, `getTagFilterConfig()`). Async filters (`async-multi-select`) are disabled when options are empty or loading.
+- **DataStore pattern:** Module-level `var loadPromise: Promise<T> | null = null`. Uses `??=` to deduplicate concurrent calls. On error, sets `loadPromise = null` so the next call retries. `invalidate()` simply sets it to `null`. All follow `CanyonDataStore.ts` as the reference. DataStores: `CanyonDataStore`, `EquipmentDataStore`, `UserCanyonDataStore`, `FavouritesDataStore`, `TagsDataStore`, `RegionDataStore`.
+- **FilterPanel:** `src/components/FilterPanel.tsx` — config-driven filter component. All filter configs are defined as atomic builder functions in `src/helpers/filterConfigs.ts` (e.g. `getCanyonNameFilterConfig()`, `getTagFilterConfig()`). The `region-tree` filter type accepts an optional `availableRegionIds` to scope the picker to regions the user has data in. Async filters (`async-multi-select`) are disabled when options are empty or loading.
+- **Region display names:** Resolved client-side from `src/locales/{lang}/regions.json` keyed by `RegionSlug`. Use `GetRegionDisplayName(slug, symbol)` from `EnumMapper.ts`. Never stored in the DB.
+- **`RegionTreePicker`** — `src/components/RegionTreePicker.tsx`. Dialog-based region selector. Pass `availableRegionIds` to scope the tree; the component automatically prunes unreachable branches and elevates the root past single-branch grouping ancestors. Uses `RegionTreeView` internally.
+- **`RegionTreeView`** — `src/components/RegionTreeView.tsx`. Reusable `SimpleTreeView` wrapper. Accepts optional `renderActions` for per-node buttons (used by admin `RegionsTab`).
 - **`CanyonTypeDisplay`** — from `src/components/CanyonTypeDisplay.tsx`. Use to render canyon type with icon and label.
 - **`IconPicker`** — from `src/components/IconPicker.tsx`. Use for any integer 1–N rating UI (water level, star rating, etc.).
 - **Enums:** live in `src/types/`. `CanyonTypeEnum` values: Unknown=0, Sports=1, Adventure=2, GorgeWalk=3, Dry=4. `WaterLevel` values: Unknown=0 … VeryHigh=5.

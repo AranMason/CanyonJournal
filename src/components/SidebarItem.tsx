@@ -21,6 +21,7 @@ const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   },
   "&.Mui-selected": {
     backgroundColor: `color-mix(in oklab, ${theme.palette.primary.main}, white 20%)`,
+    borderLeft: `3px solid ${theme.palette.secondary.main}`,
   }
 }));
 

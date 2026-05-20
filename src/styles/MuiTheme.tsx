@@ -1,48 +1,34 @@
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 
+// Extend MUI palette to support a tertiary colour
+declare module '@mui/material/styles' {
+  interface Palette { tertiary: Palette['primary']; }
+  interface PaletteOptions { tertiary?: PaletteOptions['primary']; }
+}
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides { tertiary: true; }
+}
+
+// Brand tokens (shared with /docs/src/styles.css):
+//   navy:     #232946  (primary — structure & chrome)
+//   orange:   #ff6b35  (secondary — accents, stars, sidebar active)
+//   teal:     #25606e  (tertiary — CTA buttons)
 const canyoningTheme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#232946', 
+      main: '#232946',
       contrastText: '#FFFFFF',
     },
     secondary: {
-      main: '#eebbc3',
+      main: '#ff6b35',
       contrastText: '#FFFFFF',
     },
-    // background: {
-    //   default: '#E5EBE9', // Mist Grey
-    //   paper: '#FFFFFF',
-    // },
-    // text: {
-    //   primary: '#1B1D1B', // Deep Forest Black
-    //   secondary: '#6E7B75', // Pebble Grey
-    // },
-    // success: {
-    //   main: '#A4C686', // Alpine Lime
-    //   contrastText: '#1B1D1B',
-    // },
-    // warning: {
-    //   main: '#FFC107', // Optional: standard amber for visibility
-    //   contrastText: '#1B1D1B',
-    // },
-    // error: {
-    //   main: '#B85C5C', // Canyon Red
-    //   contrastText: '#FFFFFF',
-    // },
-    // info: {
-    //   main: '#6C9A8B', // Fern Green — used for neutral highlights or info
-    //   contrastText: '#FFFFFF',
-    // },
-    // grey: {
-    //   100: '#F2F4F3',
-    //   200: '#E0E4E2',
-    //   300: '#C5CBC8',
-    //   500: '#6E7B75',  // reused Pebble Grey
-    //   800: '#2F3E46',  // Wet Slate
-    // },
+    tertiary: {
+      main: '#232946', // Used for CTA and buttons primarily
+      contrastText: '#FFFFFF',
+    },
   },
   typography: {
     fontFamily: `'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif`,

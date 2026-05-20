@@ -53,7 +53,7 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
             </DialogContent>
             <DialogActions>
               <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
-              <Button type="submit" variant="contained" disabled={isSubmitting}>{initialValues ? t('common:actions.save') : t('common:actions.add')}</Button>
+              <Button type="submit" variant="contained" color="tertiary" disabled={isSubmitting}>{initialValues ? t('common:actions.save') : t('common:actions.add')}</Button>
             </DialogActions>
           </Form>
         )}

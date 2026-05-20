@@ -113,7 +113,7 @@ const RecordsOverviewPage: React.FC = () => {
         <Box sx={{ mb: 2 }}>
           <Button
             variant="contained"
-            color="primary"
+            color="tertiary"
             onClick={() => navigate("/journal/record")}
             startIcon={<EditNoteIcon />}>
               {t('common:actions.recordDescent')}

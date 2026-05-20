@@ -95,7 +95,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
             <FavouriteButton isFavourite={isFavourite} onToggle={onToggleFavourite} />
             </Box>
             <Box display="flex" alignItems="flex-start">
-              <Button type="button" variant="contained" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
+              <Button type="button" variant="contained" color="tertiary" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
                 {t('common:actions.recordDescent')}
               </Button>
             </Box>

@@ -48,7 +48,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                 </Box>
                 <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
                         {record.TripRating
-                          ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="warning" />
+                          ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="secondary" />
                           : <Typography variant="body2" color="text.secondary">-</Typography>}
                     </Box>
                     {/* <Box width={80} className="hide-sm">

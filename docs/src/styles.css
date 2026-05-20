@@ -1,7 +1,7 @@
 /* Simple responsive styles for Canyon Journal static homepage */
 :root{
-  --bg:#0f1724; /* dark slate */
-  --card:#0b1220;
+  --bg:#232946; /* dark navy — matches app theme */
+  --card:#0f1724;
   --accent:#ff6b35;
   --muted:#94a3b8;
   --text:#ffffff;
@@ -9,7 +9,7 @@
 a {color:var(--accent);text-decoration:none}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:rgb(35, 41, 70); color:var(--text); -webkit-font-smoothing:antialiased}
+body{margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased}
 .container{height:100vh;margin:0 auto; display: flex; flex-direction: column;}
 .header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px;flex-wrap: wrap;}
 .brand{display:flex;align-items:center;gap:12px;flex:1;min-width: 400px;}

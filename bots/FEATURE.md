@@ -33,17 +33,6 @@ When asked to review, you should provide outline, priority and ease of implement
   - These user delete ones should be hidden on the user page, but still discoverable via a filter toggle such as [ ] Show Retired
   - Users we should use terms like retired, rather than deleted. We should also include a tooltip for what this means to the user.
 
-# [Medium] Make countries data driven
-- Stored in data
-- 
-- Each will be stored against a continent, so similar regions can be displayed next to each other.
-- When the user is creating a new Canyon we should
-  - Display thier 5 most popular regions at the top
-  - These regions should still show up in there respective category
-- Each region 'group' should be alphabetical based on the group name, and items within it should also be alphabetical
-- Each item should have an 'icon', 'display name key' and 'region'
-
-
 # [Low] Add ability to enable to disable data sources personally
 - User settings — allow a user to disable a source (e.g. CanyonLog) so canyons from that source don't appear in their lists
 - Low priority until there are more data sources

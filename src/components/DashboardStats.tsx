@@ -25,7 +25,7 @@ const DashboardStats: React.FC = () => {
 
     return (
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 2, mb: 4 }}>
-            <StatCard title={t('dashboard.totalDescents')} getData={loadTotalDescents} icon={TerrainIcon} color="primary.main">
+            <StatCard title={t('dashboard.totalDescents')} getData={loadTotalDescents} icon={TerrainIcon} color="secondary.main">
                 {(data) => (
                     <Box sx={{ textAlign: 'center' }}>
                         <Typography variant="h2" sx={{ fontWeight: 700 }}>

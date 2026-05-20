@@ -76,7 +76,7 @@ const SettingsCanyonsTab: React.FC = () => {
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5">{t('settings.canyons')}</Typography>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={openCreate}>
+        <Button variant="contained" color="tertiary" startIcon={<AddIcon />} onClick={openCreate}>
           {t('settings.newCanyon')}
         </Button>
       </Box>
