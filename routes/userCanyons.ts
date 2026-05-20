@@ -12,13 +12,19 @@ userCanyonsRouter.get('/', async (req: Request, res: Response) => {
     const result = await pool.request()
       .input('userId', sql.Int, userId)
       .query(`
-        SELECT uc.*,
+        SELECT uc.Id, uc.UserId, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+          rgn.Symbol AS RegionSymbol,
+          rgn.Slug AS RegionSlug,
+          uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
+          uc.StarRating, uc.IsUnrated, uc.Notes, uc.Created, uc.Updated,
           COUNT(cr.Id) AS Descents,
           MAX(cr.Date) AS LastDescentDate
         FROM UserCanyons uc
         LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
+        LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
         WHERE uc.UserId = @userId
-        GROUP BY uc.Id, uc.UserId, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+        GROUP BY uc.Id, uc.UserId, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+                 rgn.Symbol, rgn.Slug,
                  uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
                  uc.StarRating, uc.IsUnrated, uc.Notes, uc.Created, uc.Updated
         ORDER BY uc.Name
@@ -39,13 +45,19 @@ userCanyonsRouter.get('/:id', async (req: Request, res: Response) => {
       .input('userId', sql.Int, userId)
       .input('id', sql.Int, parseInt(req.params.id, 10))
       .query(`
-        SELECT uc.*,
+        SELECT uc.Id, uc.UserId, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+          rgn.Symbol AS RegionSymbol,
+          rgn.Slug AS RegionSlug,
+          uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
+          uc.StarRating, uc.IsUnrated, uc.Notes, uc.Created, uc.Updated,
           COUNT(cr.Id) AS Descents,
           MAX(cr.Date) AS LastDescentDate
         FROM UserCanyons uc
         LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
+        LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
         WHERE uc.Id = @id AND uc.UserId = @userId
-        GROUP BY uc.Id, uc.UserId, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+        GROUP BY uc.Id, uc.UserId, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+                 rgn.Symbol, rgn.Slug,
                  uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
                  uc.StarRating, uc.IsUnrated, uc.Notes, uc.Created, uc.Updated
       `);
@@ -59,7 +71,7 @@ userCanyonsRouter.get('/:id', async (req: Request, res: Response) => {
 
 // POST /api/user-canyons - create a new custom canyon
 userCanyonsRouter.post('/', async (req: Request, res: Response) => {
-  const { Name, Url, Region, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes } = req.body;
+  const { Name, Url, RegionId, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes } = req.body;
   if (!Name) return res.status(400).json({ error: 'Name is required' });
   try {
     const userId = await getUserIdByRequest(req);
@@ -68,7 +80,7 @@ userCanyonsRouter.post('/', async (req: Request, res: Response) => {
       .input('userId', sql.Int, userId)
       .input('name', sql.NVarChar(200), Name)
       .input('url', sql.NVarChar(255), Url || null)
-      .input('region', sql.Int, Region ?? null)
+      .input('regionId', sql.Int, RegionId ?? null)
       .input('canyonType', sql.Int, CanyonType ?? null)
       .input('aquaticRating', sql.Int, AquaticRating ?? 0)
       .input('verticalRating', sql.Int, VerticalRating ?? 0)
@@ -77,9 +89,9 @@ userCanyonsRouter.post('/', async (req: Request, res: Response) => {
       .input('isUnrated', sql.Bit, IsUnrated ?? true)
       .input('notes', sql.NVarChar(1000), Notes || null)
       .query(`
-        INSERT INTO UserCanyons (UserId, Name, Url, Region, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes)
+        INSERT INTO UserCanyons (UserId, Name, Url, RegionId, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes)
         OUTPUT INSERTED.*
-        VALUES (@userId, @name, @url, @region, @canyonType, @aquaticRating, @verticalRating, @commitmentRating, @starRating, @isUnrated, @notes)
+        VALUES (@userId, @name, @url, @regionId, @canyonType, @aquaticRating, @verticalRating, @commitmentRating, @starRating, @isUnrated, @notes)
       `);
     res.status(201).json(result.recordset[0]);
   } catch (err) {
@@ -90,7 +102,7 @@ userCanyonsRouter.post('/', async (req: Request, res: Response) => {
 
 // PATCH /api/user-canyons/:id - update a custom canyon (must belong to user)
 userCanyonsRouter.patch('/:id', async (req: Request, res: Response) => {
-  const { Name, Url, Region, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes } = req.body;
+  const { Name, Url, RegionId, CanyonType, AquaticRating, VerticalRating, CommitmentRating, StarRating, IsUnrated, Notes } = req.body;
   if (!Name) return res.status(400).json({ error: 'Name is required' });
   try {
     const userId = await getUserIdByRequest(req);
@@ -100,7 +112,7 @@ userCanyonsRouter.patch('/:id', async (req: Request, res: Response) => {
       .input('id', sql.Int, parseInt(req.params.id, 10))
       .input('name', sql.NVarChar(200), Name)
       .input('url', sql.NVarChar(255), Url || null)
-      .input('region', sql.Int, Region ?? null)
+      .input('regionId', sql.Int, RegionId ?? null)
       .input('canyonType', sql.Int, CanyonType ?? null)
       .input('aquaticRating', sql.Int, AquaticRating ?? 0)
       .input('verticalRating', sql.Int, VerticalRating ?? 0)
@@ -110,7 +122,7 @@ userCanyonsRouter.patch('/:id', async (req: Request, res: Response) => {
       .input('notes', sql.NVarChar(1000), Notes || null)
       .query(`
         UPDATE UserCanyons
-        SET Name = @name, Url = @url, Region = @region, CanyonType = @canyonType,
+        SET Name = @name, Url = @url, RegionId = @regionId, CanyonType = @canyonType,
             AquaticRating = @aquaticRating, VerticalRating = @verticalRating,
             CommitmentRating = @commitmentRating, StarRating = @starRating,
             IsUnrated = @isUnrated, Notes = @notes,

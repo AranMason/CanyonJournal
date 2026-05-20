@@ -3,7 +3,7 @@ import { CanyonModalFormValues } from '../components/AddCanyonModal';
 export interface CanyonApiBody {
   Name: string;
   Url: string | null;
-  Region: number;
+  RegionId: number | null;
   CanyonType: number;
   AquaticRating: number;
   VerticalRating: number;
@@ -17,7 +17,7 @@ export function mapCanyonFormToApiBody(values: CanyonModalFormValues): CanyonApi
   return {
     Name: values.name,
     Url: values.url || null,
-    Region: values.canyonRegion,
+    RegionId: values.canyonRegionId,
     CanyonType: values.canyonType,
     AquaticRating: Number(values.aquaticRating),
     VerticalRating: Number(values.verticalRating),

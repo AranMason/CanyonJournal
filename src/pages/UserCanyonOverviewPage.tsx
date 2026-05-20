@@ -39,7 +39,8 @@ const UserCanyonOverviewPage: React.FC = () => {
       <CanyonPageHeader
         isFavourite={isFavourite}
         onToggleFavourite={toggleFavourite}
-        region={canyonData?.Region}
+        regionSlug={canyonData?.RegionSlug}
+        regionSymbol={canyonData?.RegionSymbol}
         verticalRating={canyonData?.VerticalRating}
         aquaticRating={canyonData?.AquaticRating}
         commitmentRating={canyonData?.CommitmentRating}

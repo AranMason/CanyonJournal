@@ -14,7 +14,6 @@ import { UserCanyon } from "../../types/UserCanyon";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import StarIcon from '@mui/icons-material/Star';
 import { GetRegionDisplayName } from "../../helpers/EnumMapper";
-import RegionType from "../../types/RegionEnum";
 import IconDisplay from "../IconDisplay";
 import { useTranslation } from "react-i18next";
 
@@ -40,7 +39,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
             <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
                 <Box display="flex" flexDirection="row" alignItems={"center"} sx={{ maxWidth: { xs: '100%', sm: '60%' } }} flex="1" justifyContent={"space-between"} mr={2} >
                     <Box>
-                        <Typography component="h3">{GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown, true)} {record.Name} </Typography>
+                        <Typography component="h3">{GetRegionDisplayName(canyon?.RegionSlug ?? record?.RegionSlug, canyon?.RegionSymbol ?? undefined, true)} {record.Name} </Typography>
                         <Box sx={{ fontWeight: 400, color: 'grey.500', letterSpacing: 1 }}>
                             {new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}
                         </Box>

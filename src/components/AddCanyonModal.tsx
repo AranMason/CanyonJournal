@@ -6,9 +6,9 @@ import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
 import { Canyon, CanyonSource } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
-import RegionType, { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from '../helpers/EnumMapper';
+import { GetCanyonTypeDisplayName } from '../helpers/EnumMapper';
+import RegionTreePicker from './RegionTreePicker';
 import { useTranslation } from 'react-i18next';
 
 export interface CanyonModalFormValues {
@@ -20,7 +20,7 @@ export interface CanyonModalFormValues {
   starRating: number;
   commitmentRating: number;
   isUnrated: boolean;
-  canyonRegion: RegionType;
+  canyonRegionId: number | null;
   canyonType: CanyonTypeEnum;
   notes: string;
   sourceId: number | '';
@@ -64,7 +64,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
     starRating: canyon?.StarRating || 0,
     commitmentRating: canyon?.CommitmentRating || 0,
     isUnrated: canyon?.IsUnrated || false,
-    canyonRegion: canyon?.Region || RegionType.Unknown,
+    canyonRegionId: (canyon as Canyon)?.RegionId ?? (canyon as UserCanyon)?.RegionId ?? null,
     canyonType: (canyon as Canyon)?.CanyonType || CanyonTypeEnum.Unknown,
     notes: (canyon as UserCanyon)?.Notes || '',
     sourceId: (canyon as Canyon)?.SourceId || '',
@@ -139,21 +139,11 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   error={touched.url && Boolean(errors.url)}
                   helperText={touched.url && errors.url}
                 />
-                <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
-                  <InputLabel id="canyon-region">{t('common:fields.region')}</InputLabel>
-                  <Select
-                    labelId="canyon-region"
-                    label={t('common:fields.region')}
-                    value={values.canyonRegion}
-                    onChange={e => setFieldValue('canyonRegion', e.target.value as number)}
-                    fullWidth
-                    error={touched.canyonRegion && Boolean(errors.canyonRegion)}
-                  >
-                    {RegionTypeList.map((region) => (
-                      <MenuItem key={region} value={region}>{GetRegionDisplayName(region)}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <RegionTreePicker
+                  value={values.canyonRegionId}
+                  onChange={v => setFieldValue('canyonRegionId', v)}
+                  allowClear
+                />
                 {showCanyonType && (
                   <FormControl fullWidth sx={{ mb: 2, mt: 2 }}>
                     <InputLabel id="canyon-type">{t('common:canyon.canyonType')}</InputLabel>

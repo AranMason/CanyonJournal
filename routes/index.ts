@@ -9,6 +9,7 @@ import favourites from './favourites';
 import tags from './tags';
 import sources from './sources';
 import reports from './reports';
+import regions from './regions';
 
 const router: Router = express.Router()
 
@@ -22,5 +23,6 @@ router.use('/favourites', favourites);
 router.use('/tags', tags);
 router.use('/sources', sources);
 router.use('/reports', reports);
+router.use('/regions', regions);
 
 export default router;

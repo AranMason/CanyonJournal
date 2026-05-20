@@ -18,7 +18,11 @@ router.get('/', async (req, res) => {
         pool.request()
           .input('userId', sql.Int, userId)
           .query(`
-            SELECT c.*, 
+            SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
+              c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
+              c.SourceId, c.RegionId,
+              rgn.Symbol AS RegionSymbol,
+              rgn.Slug AS RegionSlug,
               cs.DisplayName AS SourceName,
               cs.LogoUrl AS SourceLogoUrl,
               cs.WebsiteUrl AS SourceWebsiteUrl,
@@ -29,13 +33,16 @@ router.get('/', async (req, res) => {
             LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
             LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
             LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
+            LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
             WHERE c.IsVerified = 1
-            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl
+            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
           `),
         pool.request()
           .input('userId', sql.Int, userId)
           .query(`
-            SELECT uc.Id, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+            SELECT uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+                   rgn.Symbol AS RegionSymbol,
+                   rgn.Slug AS RegionSlug,
                    uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
                    uc.StarRating, uc.IsUnrated,
                    COUNT(cr.Id) AS Descents,
@@ -44,8 +51,10 @@ router.get('/', async (req, res) => {
             FROM UserCanyons uc
             LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
             LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
+            LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
             WHERE uc.UserId = @userId
-            GROUP BY uc.Id, uc.Name, uc.Url, uc.Region, uc.CanyonType,
+            GROUP BY uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+                     rgn.Symbol, rgn.Slug,
                      uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
                      uc.StarRating, uc.IsUnrated, cf.Id
             ORDER BY Descents DESC, uc.Name
@@ -63,7 +72,9 @@ router.get('/', async (req, res) => {
         StarRating: uc.StarRating,
         IsVerified: false,
         IsUnrated: uc.IsUnrated,
-        Region: uc.Region,
+        RegionId: uc.RegionId ?? null,
+        RegionSlug: uc.RegionSlug ?? null,
+        RegionSymbol: uc.RegionSymbol ?? null,
         CanyonType: uc.CanyonType ?? null,
         Descents: uc.Descents,
         LastDescentDate: uc.LastDescentDate,
@@ -81,7 +92,9 @@ router.get('/', async (req, res) => {
         StarRating: c.StarRating,
         IsVerified: c.IsVerified,
         IsUnrated: c.IsUnrated,
-        Region: c.Region,
+        RegionId: c.RegionId ?? null,
+        RegionSlug: c.RegionSlug ?? null,
+        RegionSymbol: c.RegionSymbol ?? null,
         CanyonType: c.CanyonType,
         Descents: c.Descents,
         LastDescentDate: c.LastDescentDate,
@@ -188,7 +201,11 @@ router.get('/:id', async (req, res) => {
         .input('userId', sql.Int, userId)
         .input('canyonId', req.params.id)
         .query(`
-          SELECT c.*, 
+          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
+            c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
+            c.SourceId, c.RegionId,
+            rgn.Symbol AS RegionSymbol,
+            rgn.Slug AS RegionSlug,
             cs.DisplayName AS SourceName,
             cs.LogoUrl AS SourceLogoUrl,
             cs.WebsiteUrl AS SourceWebsiteUrl,
@@ -197,8 +214,9 @@ router.get('/:id', async (req, res) => {
           FROM Canyons c
           LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
           LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+          LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
           WHERE c.Id = @canyonId
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.Region, c.CanyonType, c.SourceId, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl
+          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
           ORDER BY Descents DESC, c.Name
         `);
       res.json(result.recordset[0]);
@@ -206,12 +224,17 @@ router.get('/:id', async (req, res) => {
       const result = await pool.request()
         .input('canyonId', req.params.id)
         .query(`
-          SELECT c.*,
+          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
+            c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
+            c.SourceId, c.RegionId,
+            rgn.Symbol AS RegionSymbol,
+            rgn.Slug AS RegionSlug,
             cs.DisplayName AS SourceName,
             cs.LogoUrl AS SourceLogoUrl,
             cs.WebsiteUrl AS SourceWebsiteUrl
           FROM Canyons c
           LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+          LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
           WHERE c.Id = @canyonId
         `);
       res.json(result.recordset[0]);
@@ -224,7 +247,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/canyons - add a new canyon to SQL Server
 router.post('/', async (req, res) => {
-  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating, isUnrated, canyonRegion, canyonType, sourceId } = req.body;
+  const { name, url, aquaticRating, verticalRating, starRating, commitmentRating, isUnrated, canyonRegionId, canyonType, sourceId } = req.body;
   if (!name || aquaticRating == null || verticalRating == null || starRating == null || commitmentRating == null) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
@@ -242,7 +265,7 @@ router.post('/', async (req, res) => {
       .input('starRating', sql.Int, starRating)
       .input('commitmentRating', sql.Int, commitmentRating)
       .input('isUnrated', sql.Bit, isUnrated || false)
-      .input('canyonRegion', sql.Int, canyonRegion)
+      .input('canyonRegionId', sql.Int, canyonRegionId ?? null)
       .input('canyonType', sql.Int, canyonType)
       .input('sourceId', sql.Int, sourceId || null)
 
@@ -257,7 +280,7 @@ router.post('/', async (req, res) => {
               CommitmentRating = @commitmentRating,
               IsVerified = 1,
               IsUnrated = @isUnrated,
-              Region = @CanyonRegion,
+              RegionId = @canyonRegionId,
               CanyonType = @canyonType,
               SourceId = @sourceId
               WHERE Id = @id`);
@@ -267,9 +290,9 @@ router.post('/', async (req, res) => {
     else {
       const isAdminUser = await isAdmin(req);
       request.input('isVerified', sql.Bit, isAdminUser ? 1 : 0);
-      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating, IsUnrated, Region, CanyonType, IsVerified, IsDeleted, SourceId)
+      var result = await request.query(`INSERT INTO Canyons (Name, Url, AquaticRating, VerticalRating, StarRating, CommitmentRating, IsUnrated, RegionId, CanyonType, IsVerified, IsDeleted, SourceId)
               OUTPUT INSERTED.*
-              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating, @isUnrated, @canyonRegion, @canyonType, @isVerified, 0, @sourceId)`);
+              VALUES (@name, @url, @aquaticRating, @verticalRating, @starRating, @commitmentRating, @isUnrated, @canyonRegionId, @canyonType, @isVerified, 0, @sourceId)`);
       return res.status(201).json(result.recordset[0]);
     }
 

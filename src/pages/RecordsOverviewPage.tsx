@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Collapse } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
@@ -12,7 +12,8 @@ import {
   getCanyonNameFilterConfig, getRegionFilterConfig,
   getRopeFilterConfig, getGearFilterConfig, getTagFilterConfig,
 } from '../helpers/filterConfigs';
-import RegionType from '../types/RegionEnum';
+import * as RegionDataStore from '../helpers/RegionDataStore';
+import { Region } from '../types/Region';
 import ReportCTAAlert from '../components/ReportCTAAlert';
 import { useTranslation } from 'react-i18next';
 
@@ -22,41 +23,48 @@ const RecordsOverviewPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { user, loading: loadingUser } = useUser();
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
+  const [flatRegions, setFlatRegions] = useState<Region[]>([]);
 
   const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
     '/api/record',
     !loadingUser && Boolean(user)
   );
 
-  const usedRegions = useMemo(() => {
-    const regionSet = new Set<RegionType>();
-    for (const rec of records) {
+  useEffect(() => {
+    RegionDataStore.load().then(setFlatRegions);
+  }, []);
+
+  const usedRegionIds = useMemo(() => {
+    const ids = records.map(rec => {
       const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : undefined;
       const userCanyon = rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined;
-      const region = canyon?.Region ?? userCanyon?.Region ?? rec.Region;
-      if (region !== undefined && region !== RegionType.Unknown) regionSet.add(region);
-    }
-    return regionSet.size > 0 ? [...regionSet].sort((a, b) => a - b) : undefined;
+      return canyon?.RegionId ?? userCanyon?.RegionId ?? rec.RegionId ?? null;
+    });
+    return [...new Set(ids.filter((id): id is number => id != null))];
   }, [records, canyonsById, userCanyonsById]);
 
   const filterConfig = useMemo(() => [
     getCanyonNameFilterConfig(),
-    getRegionFilterConfig('region', usedRegions),
+    getRegionFilterConfig('region', usedRegionIds),
     getRopeFilterConfig(),
     getGearFilterConfig(),
     getTagFilterConfig(),
-  ], [usedRegions]);
+  ], [usedRegionIds]);
 
   const filterFn = useCallback((rec: CanyonRecord, values: FilterValues) => {
     const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : undefined;
     const userCanyon = rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined;
     const canyonName = canyon?.Name ?? userCanyon?.Name ?? rec.Name ?? '';
-    const region = canyon?.Region ?? userCanyon?.Region ?? rec.Region;
+    const regionId = canyon?.RegionId ?? userCanyon?.RegionId ?? rec.RegionId ?? null;
 
     const nf = (values.name as string).trim().toLowerCase();
     if (nf && !canyonName.toLowerCase().includes(nf)) return false;
 
-    if (values.region !== '' && region !== values.region) return false;
+    if (values.region != null) {
+      if (regionId == null) return false;
+      const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
+      if (!ids.includes(regionId)) return false;
+    }
 
     const gearFilter = values.gear as number[];
     if (gearFilter.length > 0) {
@@ -75,7 +83,7 @@ const RecordsOverviewPage: React.FC = () => {
     }
 
     return true;
-  }, [canyonsById, userCanyonsById]);
+  }, [canyonsById, userCanyonsById, flatRegions]);
 
   const initialValues = useMemo(() => {
     const gearId = searchParams.get('gearId');

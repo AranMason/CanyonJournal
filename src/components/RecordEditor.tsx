@@ -188,7 +188,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
                                             <Typography variant="body2">
-                                                {selectedDisplay.canyon ? GetRegionDisplayName(selectedDisplay.canyon.Region) : ''}
+                                                {selectedDisplay.canyon ? GetRegionDisplayName(selectedDisplay.canyon.RegionSlug, selectedDisplay.canyon.RegionSymbol) : ''}
                                             </Typography>
                                         </Box>
                                         {selectedDisplay.canyon && (
@@ -251,7 +251,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
-                                                                            <span>{GetRegionDisplayName(canyon.Region, true)}</span>
+                                                                            <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
                                                                         </Box>
                                                                     }
                                                                     secondary={
@@ -280,7 +280,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
-                                                                            <span>{GetRegionDisplayName(canyon.Region, true)}</span>
+                                                                            <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
                                                                         </Box>
                                                                     }
                                                                     secondary={

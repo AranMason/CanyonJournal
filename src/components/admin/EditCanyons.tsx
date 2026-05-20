@@ -40,7 +40,7 @@ const EditCanyons: React.FC = () => {
 
     const filterFn = useCallback((canyon: Canyon, values: FilterValues) => {
         if (values.name && !canyon.Name.toLowerCase().includes((values.name as string).toLowerCase())) return false;
-        if (values.region !== '' && canyon.Region !== values.region) return false;
+        if (values.region !== null && canyon.RegionId !== values.region) return false;
         if (values.verified === 'verified' && !canyon.IsVerified) return false;
         if (values.verified === 'unverified' && canyon.IsVerified) return false;
         return true;
@@ -85,7 +85,7 @@ const EditCanyons: React.FC = () => {
                             />
                         </TableCell>
                         <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                            {GetRegionDisplayName(canyon.Region)}
+                            {GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}
                         </TableCell>
                         <CanyonTypeTableCell type={canyon.CanyonType} sx={{ display: { xs: 'none', sm: 'table-cell' } }} />
                         <TableCell>

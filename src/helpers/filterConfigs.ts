@@ -1,9 +1,8 @@
 import { FilterConfig } from '../components/FilterPanel';
 import * as EquipmentDataStore from './EquipmentDataStore';
 import * as TagsDataStore from './TagsDataStore';
-import { RegionTypeList } from '../types/RegionEnum';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
-import { GetCanyonTypeDisplayName, GetRegionDisplayName } from './EnumMapper';
+import { GetCanyonTypeDisplayName } from './EnumMapper';
 
 // ─── Individual filter building blocks ────────────────────────────────────────
 
@@ -11,20 +10,9 @@ export function getCanyonNameFilterConfig(key = 'name'): FilterConfig {
   return { type: 'text', key, label: 'Canyon Name' };
 }
 
-/** Single-select region filter. Pass allowedRegions to restrict to a subset. Always sorted alphabetically. */
-export function getRegionFilterConfig(key = 'region', allowedRegions?: RegionType[]): FilterConfig {
-  const regions = allowedRegions && allowedRegions.length > 0 ? allowedRegions : RegionTypeList;
-  const options = regions
-    .map(r => ({ value: r, label: GetRegionDisplayName(r) }))
-    .sort((a, b) => a.label.localeCompare(b.label));
-  return {
-    type: 'single-select',
-    key,
-    label: 'Country',
-    labelId: 'region-filter',
-    placeholder: 'All Countries',
-    options,
-  };
+/** Region tree filter — uses RegionTreePicker dialog in FilterPanel. */
+export function getRegionFilterConfig(key = 'region', availableRegionIds?: number[]): FilterConfig {
+  return { type: 'region-tree', key, availableRegionIds };
 }
 
 export function getCanyonTypeFilterConfig(key = 'type'): FilterConfig {

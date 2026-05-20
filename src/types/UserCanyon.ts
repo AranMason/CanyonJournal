@@ -1,4 +1,3 @@
-import RegionType from './RegionEnum';
 import { CanyonTypeEnum } from './CanyonTypeEnum';
 
 export interface UserCanyon {
@@ -6,7 +5,9 @@ export interface UserCanyon {
   UserId?: number;
   Name: string;
   Url?: string;
-  Region?: RegionType;
+  RegionId?: number | null;
+  RegionSlug?: string | null;
+  RegionSymbol?: string | null;
   CanyonType?: CanyonTypeEnum | null;
   AquaticRating: number;
   VerticalRating: number;

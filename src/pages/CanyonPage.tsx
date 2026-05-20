@@ -11,13 +11,14 @@ import FilterPanel, { FilterValues } from '../components/FilterPanel';
 import DateTableCell from '../components/table/DateTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';
 import CanyonTypeTableCell from '../components/table/CanyonTypeCell';
-import RegionType from '../types/RegionEnum';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import {
   getRegionFilterConfig, getCanyonTypeFilterConfig,
   getVerticalRatingFilterConfig, getAquaticRatingFilterConfig, getStarRatingFilterConfig,
   getCanyonNameFilterConfig
 } from '../helpers/filterConfigs';
+import * as RegionDataStore from '../helpers/RegionDataStore';
+import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
 
 const minDateString: string = '1900-01-01' 
@@ -83,6 +84,7 @@ const CanyonList: React.FC = () => {
   const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState<SortOptionEnum>(SortOptionEnum.TotalDescents);
+  const [flatRegions, setFlatRegions] = useState<Region[]>([]);
 
   const refresh = () => {
     setIsLoading(true);
@@ -94,27 +96,31 @@ const CanyonList: React.FC = () => {
   useEffect(() => {
     if (!loading && user) {
       refresh();
+      RegionDataStore.load().then(setFlatRegions);
     }
   }, [user, loading]);
 
-  const filterConfig = useMemo(() => {
-    const regionSet = new Set<RegionType>();
-    for (const c of canyons) {
-      if (c.Region !== undefined && c.Region !== RegionType.Unknown) regionSet.add(c.Region);
-    }
-    const usedRegions = regionSet.size > 0 ? [...regionSet].sort((a, b) => a - b) : undefined;
-    return [
-      getCanyonNameFilterConfig(),
-      getRegionFilterConfig('region', usedRegions),
-      getCanyonTypeFilterConfig(),
-      getVerticalRatingFilterConfig(),
-      getAquaticRatingFilterConfig(),
-      getStarRatingFilterConfig(),
-    ];
-  }, [canyons]);
+  const usedRegionIds = useMemo(
+    () => [...new Set(canyons.map(c => c.RegionId).filter((id): id is number => id != null))],
+    [canyons]
+  );
+
+  const filterConfig = useMemo(() => [
+    getCanyonNameFilterConfig(),
+    getRegionFilterConfig('region', usedRegionIds),
+    getCanyonTypeFilterConfig(),
+    getVerticalRatingFilterConfig(),
+    getAquaticRatingFilterConfig(),
+    getStarRatingFilterConfig(),
+  ], [usedRegionIds]);
 
   const filterFn = useCallback((canyon: CanyonListEntry, values: FilterValues) => {
-    if (values.region !== '' && (canyon.Region ?? RegionType.Unknown) !== values.region) return false;
+    if (values.region != null && canyon.RegionId != null) {
+      const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
+      if (!ids.includes(canyon.RegionId)) return false;
+    } else if (values.region != null && canyon.RegionId == null) {
+      return false;
+    }
 
     const typeFilter = values.type as CanyonTypeEnum[];
     if (typeFilter.length > 0) {
@@ -134,7 +140,7 @@ const CanyonList: React.FC = () => {
     if (starFilter.length > 0 && !starFilter.includes(canyon.StarRating ?? 0)) return false;
 
     return true;
-  }, []);
+  }, [flatRegions]);
 
   function getSortedCanyons(filteredCanyons: CanyonListEntry[]): CanyonListEntry[] {
 
@@ -229,7 +235,7 @@ const CanyonList: React.FC = () => {
                       isUnrated={canyon.IsUnrated}
                     />
                   </TableCell>
-                  <TableCell className='hide-md'>{GetRegionDisplayName(canyon.Region)}</TableCell>
+                  <TableCell className='hide-md'>{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
                   <CanyonTypeTableCell type={canyon.CanyonType} className='hide-md'/>
                   <TableCell align="center">{canyon.Descents}</TableCell>
                   <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />

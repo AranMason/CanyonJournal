@@ -224,10 +224,13 @@ recordRouter.get('/', async (req: Request, res: Response) => {
         cr.Timestamp,
         COALESCE(c.Name, uc.Name) AS Name,
         COALESCE(c.Url, uc.Url) AS Url,
-        COALESCE(c.Region, uc.Region) AS Region
+        COALESCE(c.RegionId, uc.RegionId) AS RegionId,
+        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
       LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
+      LEFT JOIN Regions crgn ON c.RegionId = crgn.Id
+      LEFT JOIN Regions ucrgn ON uc.RegionId = ucrgn.Id
       WHERE cr.UserId = @userId
     `;
 
@@ -318,10 +321,13 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
         cr.Timestamp,
         COALESCE(c.Name, uc.Name) AS Name,
         COALESCE(c.Url, uc.Url) AS Url,
-        COALESCE(c.Region, uc.Region) AS Region
+        COALESCE(c.RegionId, uc.RegionId) AS RegionId,
+        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
       LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
+      LEFT JOIN Regions crgn ON c.RegionId = crgn.Id
+      LEFT JOIN Regions ucrgn ON uc.RegionId = ucrgn.Id
       WHERE cr.Id = @Id AND cr.UserId = @userId
     `;
     const userId = await getUserIdByRequest(req);

@@ -39,8 +39,8 @@ export async function getTotalDescentsCount(userId: number): Promise<{ total: nu
             SELECT
                 COUNT(*) AS Total,
                 COUNT(DISTINCT CASE
-                    WHEN COALESCE(c.Region, uc.Region) IS NOT NULL AND COALESCE(c.Region, uc.Region) != 0
-                    THEN COALESCE(c.Region, uc.Region)
+                    WHEN COALESCE(c.RegionId, uc.RegionId) IS NOT NULL
+                    THEN COALESCE(c.RegionId, uc.RegionId)
                 END) AS Regions
             FROM CanyonRecords cr
             LEFT JOIN Canyons c ON cr.CanyonId = c.Id

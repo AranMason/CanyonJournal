@@ -7,14 +7,14 @@ import CanyonRating from './CanyonRating';
 import CanyonTypeDisplay from './CanyonTypeDisplay';
 import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
-import RegionType from '../types/RegionEnum';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 interface CanyonPageHeaderProps {
   isFavourite: boolean;
   onToggleFavourite: () => void;
-  region?: RegionType;
+  regionSlug?: string | null;
+  regionSymbol?: string | null;
   verticalRating?: number;
   aquaticRating?: number;
   commitmentRating?: number;
@@ -34,7 +34,8 @@ interface CanyonPageHeaderProps {
 const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
   isFavourite,
   onToggleFavourite,
-  region,
+  regionSlug,
+  regionSymbol,
   verticalRating,
   aquaticRating,
   commitmentRating,
@@ -69,7 +70,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
               <CanyonTypeDisplay type={canyonType} />
             )}
             &nbsp;|&nbsp;
-            <Typography variant="body1">{GetRegionDisplayName(region ?? RegionType.Unknown)}</Typography>
+            <Typography variant="body1">{GetRegionDisplayName(regionSlug, regionSymbol)}</Typography>
             
           </Box>
 

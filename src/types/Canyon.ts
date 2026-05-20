@@ -1,5 +1,4 @@
 import { CanyonTypeEnum } from "./CanyonTypeEnum";
-import RegionType from "./RegionEnum";
 
 export interface CanyonSource {
   Id: number;
@@ -17,10 +16,12 @@ export interface Canyon {
   CommitmentRating: number;
   StarRating: number;
   IsUnrated: boolean;
-  Region: RegionType;
   CanyonType: CanyonTypeEnum;
   IsDeleted: boolean;
   IsVerified: boolean;
+  RegionId?: number | null;
+  RegionSlug?: string | null;
+  RegionSymbol?: string | null;
   SourceId?: number | null;
   SourceName?: string | null;
   SourceLogoUrl?: string | null;
@@ -37,7 +38,9 @@ export interface CanyonListEntry {
   DetailUrl: string;
   Name: string;
   Url: string;
-  Region: RegionType;
+  RegionId?: number | null;
+  RegionSlug?: string | null;
+  RegionSymbol?: string | null;
   AquaticRating: number;
   VerticalRating: number;
   CommitmentRating: number;

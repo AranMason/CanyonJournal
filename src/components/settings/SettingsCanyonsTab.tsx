@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
-import RegionType from '../../types/RegionEnum';
 import { GetRegionDisplayName } from '../../helpers/EnumMapper';
 import CanyonRating from '../CanyonRating';
 import CanyonTypeDisplay from '../CanyonTypeDisplay';
@@ -132,7 +131,7 @@ const SettingsCanyonsTab: React.FC = () => {
                     {canyon.Name}
                   </Link>
                 </TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{GetRegionDisplayName(canyon.Region ?? RegionType.Unknown)}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                   <CanyonTypeDisplay type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} />
                 </TableCell>

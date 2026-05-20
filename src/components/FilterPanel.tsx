@@ -4,6 +4,7 @@ import {
   MenuItem, Select, TextField, ToggleButton, ToggleButtonGroup,
 } from '@mui/material';
 import MultiSelectChipFilter from './MultiSelectChipFilter';
+import RegionTreePicker from './RegionTreePicker';
 
 export type TextFilterConfig = {
   type: 'text';
@@ -44,12 +45,21 @@ export type AsyncMultiSelectFilterConfig = {
   loadOptions: () => Promise<{ value: number; label: string; group?: string }[]>;
 };
 
+export type RegionTreeFilterConfig = {
+  type: 'region-tree';
+  key: string;
+  label?: string;
+  /** When provided, only regions the user has canyons in (and their ancestors) are shown. */
+  availableRegionIds?: number[];
+};
+
 export type FilterConfig =
   | TextFilterConfig
   | MultiSelectFilterConfig<any>
   | SingleSelectFilterConfig<any>
   | ExclusiveToggleFilterConfig
-  | AsyncMultiSelectFilterConfig;
+  | AsyncMultiSelectFilterConfig
+  | RegionTreeFilterConfig;
 
 export type FilterValues = Record<string, any>;
 
@@ -60,6 +70,7 @@ function getDefaultValue(config: FilterConfig): any {
     case 'single-select': return '';
     case 'exclusive-toggle': return config.options[0]?.value ?? '';
     case 'async-multi-select': return [];
+    case 'region-tree': return null;
   }
 }
 
@@ -164,7 +175,6 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
       case 'async-multi-select': {
         const loaded = asyncOptions[c.key] !== undefined;
         const options = asyncOptions[c.key] ?? [];
-        const disabled = !loaded || options.length === 0;
         const selected: number[] = values[c.key] ?? [];
         const hasGroups = options.some(o => o.group);
         const grouped = hasGroups
@@ -177,7 +187,7 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
           : null;
 
         return (
-          <FormControl key={c.key} sx={{ flex: 1, minWidth: 240 }} disabled={disabled}>
+          <FormControl key={c.key} sx={{ flex: 1, minWidth: 240 }} disabled={!loaded}>
             <InputLabel id={c.labelId}>
               {!loaded ? `${c.label} (Loading…)` : c.label}
             </InputLabel>
@@ -211,6 +221,19 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
           </FormControl>
         );
       }
+
+      case 'region-tree':
+        return (
+          <Box key={c.key} sx={{ flex: 1, minWidth: 200 }}>
+            <RegionTreePicker
+              value={values[c.key] ?? null}
+              onChange={v => setValue(c.key, v)}
+              label={c.label}
+              availableRegionIds={c.availableRegionIds}
+              allowClear
+            />
+          </Box>
+        );
     }
   };
 

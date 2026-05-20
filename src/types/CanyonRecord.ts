@@ -1,4 +1,3 @@
-import RegionType from './RegionEnum';
 
 export interface CanyonRecord {
     Id?: number;
@@ -14,7 +13,9 @@ export interface CanyonRecord {
     CanyonId?: number;
     UserCanyonId?: number;
     /** Read-only — returned by API via JOIN from Canyon or UserCanyon */
-    Region?: RegionType;
+    RegionId?: number | null;
+    /** Read-only — region slug, resolved to display name via i18n 'regions' namespace */
+    RegionSlug?: string | null;
     Timestamp?: string;
     RopeIds: number[];
     GearIds: number[];
