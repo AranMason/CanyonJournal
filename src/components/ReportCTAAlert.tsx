@@ -11,7 +11,7 @@ interface ReportCTAAlertProps {
 
 const CanyonLogReportAlert: React.FC<{ canyon: CanyonListEntry; onClose: () => void }> = ({ canyon, onClose }) => {
   const { t } = useTranslation();
-  const reportUrl = `${canyon.Url}#comments`;
+  const reportUrl = canyon.Url ? `${canyon.Url}#comments` : undefined;
   return (
     <Alert
       severity="success"
@@ -19,22 +19,24 @@ const CanyonLogReportAlert: React.FC<{ canyon: CanyonListEntry; onClose: () => v
       icon={<img src="/images/canyonlog/icon.png" alt={t('common:partners.canyonLog')} style={{ height: 20, width: 20, objectFit: 'contain' }} />}
       onClose={onClose}
       action={
-        <Button
-          variant="outlined"
-          size="small"
-          sx={{ bgcolor: 'white', whiteSpace: 'nowrap' }}
-          href={reportUrl}
-          target="_blank"
+        reportUrl && (
+          <Button
+            variant="outlined"
+            size="small"
+            sx={{ bgcolor: 'white', whiteSpace: 'nowrap' }}
+            href={reportUrl}
+            target="_blank"
           rel="noopener noreferrer"
           endIcon={<OpenInNewIcon fontSize="small" />}
         >
           {t('common:actions.postReport')}
         </Button>
-      }
-    >
-      {t('journal.canyonLogCta', { name: canyon.Name })}
-    </Alert>
-  );
+      )
+    }
+  >
+    {t('journal.canyonLogCta', { name: canyon.Name })}
+  </Alert>
+);
 };
 
 const ReportCTAAlert: React.FC<ReportCTAAlertProps> = ({ canyon, onClose }) => {
