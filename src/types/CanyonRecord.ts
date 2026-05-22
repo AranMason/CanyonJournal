@@ -16,6 +16,8 @@ export interface CanyonRecord {
     RegionId?: number | null;
     /** Read-only — region slug, resolved to display name via i18n 'regions' namespace */
     RegionSlug?: string | null;
+    /** Read-only — region symbol/emoji, used for short display */
+    RegionSymbol?: string | null;
     Timestamp?: string;
     RopeIds: number[];
     GearIds: number[];

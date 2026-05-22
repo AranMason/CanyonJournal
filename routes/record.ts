@@ -225,7 +225,8 @@ recordRouter.get('/', async (req: Request, res: Response) => {
         COALESCE(c.Name, uc.Name) AS Name,
         COALESCE(c.Url, uc.Url) AS Url,
         COALESCE(c.RegionId, uc.RegionId) AS RegionId,
-        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug
+        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug,
+        COALESCE(crgn.Symbol, ucrgn.Symbol) AS RegionSymbol
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
       LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
@@ -322,7 +323,8 @@ recordRouter.get('/:id', async (req: Request, res: Response) => {
         COALESCE(c.Name, uc.Name) AS Name,
         COALESCE(c.Url, uc.Url) AS Url,
         COALESCE(c.RegionId, uc.RegionId) AS RegionId,
-        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug
+        COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug,
+        COALESCE(crgn.Symbol, ucrgn.Symbol) AS RegionSymbol
       FROM CanyonRecords cr
       LEFT JOIN Canyons c ON cr.CanyonId = c.Id
       LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
