@@ -1,6 +1,6 @@
-# CanyonJournal — Copilot Instructions
+# Handlines — Copilot Instructions
 
-CanyonJournal is a canyoneering trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
+Handlines is a canyoneering trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
 
 See `/bots/APP_OVERVIEW.md` for full architecture, API, and database documentation.
 See `/bots/FEATURE.md` for the current feature backlog. Please update this file as you work on features, to remove actioned items. If you think of a new feature, request user permission to add that to the document.
@@ -85,7 +85,7 @@ bots/            AI-facing documentation
 
 Served via **GitHub Pages** (configured to serve from `docs/` on `main`). Completely independent of the React SPA and Express backend — pure HTML/CSS, no build step.
 
-- `index.html` — Landing page with features and call-to-action linking to `https://app.canyonjournal.co.uk`
+- `index.html` — Landing page with features and call-to-action linking to `https://app.handlinne.co.uk`
 - `privacy.html` — Privacy statement
 - `contact.html` — Contact page
 - `styles.css` — Standalone styles (no framework)

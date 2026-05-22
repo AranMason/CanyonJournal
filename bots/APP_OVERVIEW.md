@@ -163,9 +163,9 @@ Visit **http://localhost:3000**. `setupProxy.js` proxies `/api`, `/login`, and `
 > ⚠️ **Common mistake:** Testing auth on port 3000 without `watch:server` running — `/login` and `/logout` will serve blank React pages.
 
 ### Auth0 Dashboard Settings (required)
-- **Allowed Callback URLs:** `http://localhost:8000/api/callback`, `https://app.canyonjournal.co.uk/api/callback`
-- **Allowed Logout URLs:** `http://localhost:8000`, `https://app.canyonjournal.co.uk`
-- **Allowed Web Origins:** `http://localhost:8000`, `https://app.canyonjournal.co.uk`
+- **Allowed Callback URLs:** `http://localhost:8000/api/callback`, `https://app.handlinne.co.uk/api/callback`
+- **Allowed Logout URLs:** `http://localhost:8000`, `https://app.handlinne.co.uk`
+- **Allowed Web Origins:** `http://localhost:8000`, `https://app.handlinne.co.uk`
 
 ### Environment Variables (`.env`)
 | Variable | Description |
@@ -364,7 +364,7 @@ Stores which canyons a user has favourited.
 - **Enums:** live in `src/types/`. `CanyonTypeEnum` values: Unknown=0, Sports=1, Adventure=2, GorgeWalk=3, Dry=4. `WaterLevel` values: Unknown=0 … VeryHigh=5.
 - **Display name / colour helpers:** in `src/helpers/EnumMapper.ts`.
 - **Mobile layout:** On `xs`/`sm`, a `MobileAppBar` with a hamburger button is shown. The sidebar switches to `variant="temporary"` (overlay drawer). On `md+`, the permanent mini/expanded drawer is used. Content area is offset by toolbar height on mobile.
-- **Bug report:** Sidebar includes a "Report a Bug" item that opens `mailto:hello@canyonjournal.co.uk` pre-filled with the user's ID and current page URL.
+- **Bug report:** Sidebar includes a "Report a Bug" item that opens `mailto:hello@handlinne.co.uk` pre-filled with the user's ID and current page URL.
 
 ---
 
@@ -372,9 +372,9 @@ Stores which canyons a user has favourited.
 
 Served via **GitHub Pages** (configured to serve from `docs/` on `main`). Completely independent of the React SPA and Express backend — pure HTML/CSS, no build step.
 
-- `index.html` — Landing page with features and call-to-action linking to `https://app.canyonjournal.co.uk`
+- `index.html` — Landing page with features and call-to-action linking to `https://app.handlinne.co.uk`
 - `privacy.html` — Privacy statement
-- `contact.html` — Contact page (`hello@canyonjournal.co.uk`)
+- `contact.html` — Contact page (`hello@handlinne.co.uk`)
 - `styles.css` — Standalone styles (no framework)
 
 > Do not confuse `/docs/` with `/public/` — `/public/` is the CRA template folder for the React SPA app shell.

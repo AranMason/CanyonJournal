@@ -25,7 +25,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
     const body = encodeURIComponent(
       `Please describe the issue below:\n\n\n\n---\nPage: ${window.location.href}\nUser ID: ${user?.id ?? 'unknown'}`
     );
-    window.open(`mailto:hello@canyonjournal.co.uk?subject=${subject}&body=${body}`);
+    window.open(`mailto:hello@handlinne.co.uk?subject=${subject}&body=${body}`);
   };
 
   return <SidebarDrawer mobileOpen={mobileOpen} onMobileClose={onMobileClose}>{(isOpen) => <><Box>

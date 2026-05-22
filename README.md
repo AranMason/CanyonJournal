@@ -17,6 +17,6 @@
  To build for production: `npm run build` then `npm start
 
 ## Useful Links
-[Home Page](www.canyonjournal.co.uk)
+[Home Page](www.handlinne.co.uk)
 
-[App](app.canyonjournal.co.uk)
+[App](app.handlinne.co.uk)

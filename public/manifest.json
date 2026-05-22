@@ -1,6 +1,6 @@
 {
-  "short_name": "CanyonJrnl",
-  "name": "Canyon Journal",
+  "short_name": "Hand Linne",
+  "name": "Hand Linne",
   "icons": [
     {
       "src": "favicon.svg",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#757575",
-  "background_color": "#757575"
+  "theme_color": "#232946",
+  "background_color": "#232946"
 }
