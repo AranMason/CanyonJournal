@@ -1,6 +1,6 @@
-# Handlines — Copilot Instructions
+# Hand Linne — Copilot Instructions
 
-Handlines is a canyoneering trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
+Hand Linne is a canyoneering trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
 
 See `/bots/APP_OVERVIEW.md` for full architecture, API, and database documentation.
 See `/bots/FEATURE.md` for the current feature backlog. Please update this file as you work on features, to remove actioned items. If you think of a new feature, request user permission to add that to the document.

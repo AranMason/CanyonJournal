@@ -141,9 +141,9 @@ Shortlist of potential new names (format: Name — rationale):
 12. ~~**PourOver** — Water pours over a drop; "pour over your notes"; memorable and unusual, no competitor overlap~~
 13. ~~**TheSpill** — "Spill the details"; strongly implies personal storytelling; bold and distinctive~~
 14. ~~**Handliner**~~
-15. **Handlines** — handlines (fixed ropes used in canyons) + hand-lines (written lines in a journal); clean, canyoneering-specific, no competitor overlap
+15. **Hand Linne** — handlines (fixed ropes used in canyons) + hand-lines (written lines in a journal); clean, canyoneering-specific, no competitor overlap
 
 # Final Decision
 
-**Handlines**
+**Hand Linne**
 

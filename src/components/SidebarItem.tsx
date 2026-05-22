@@ -8,6 +8,7 @@ interface SidebarItemProps {
   icon: React.ReactNode;
   url?: string;
   onClick?: () => void;
+  onClose?: () => void;
   disabled?: boolean;
 }
 
@@ -31,7 +32,7 @@ const SidebarIcon = styled(ListItemIcon)(() => ({
   justifyContent: 'center',
 }));
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ isOpen, label, icon, url, onClick, disabled }) => {
+const SidebarItem: React.FC<SidebarItemProps> = ({ isOpen, label, icon, url, onClick, onClose, disabled }) => {
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ isOpen, label, icon, url, onC
       onClick={() => {
         url && navigate(url);
         onClick && onClick();
+        onClose && onClose();
       }}
       sx={[
         {

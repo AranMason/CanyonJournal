@@ -36,6 +36,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         icon={<HomeIcon />}
         url='/dashboard'
         disabled={!user}
+        onClose={onMobileClose}
       />
       <SidebarItem
         isOpen={isOpen}
@@ -43,6 +44,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         icon={<MenuBookIcon />}
         url='/journal'
         disabled={!user}
+        onClose={onMobileClose}
       />
       <SidebarItem
         isOpen={isOpen}
@@ -50,6 +52,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         icon={<EditNoteIcon />}
         url='/journal/record'
         disabled={!user}
+        onClose={onMobileClose}
       />
       <Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider>
       <SidebarItem
@@ -58,6 +61,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         icon={<LocationPinIcon />}
         url='/canyons'
         disabled={!user}
+        onClose={onMobileClose}
       />
       <SidebarItem
         isOpen={isOpen}
@@ -65,12 +69,14 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         icon={<SettingsIcon />}
         url='/settings'
         disabled={!user}
+        onClose={onMobileClose}
       />
       {user && user.isAdmin && <><Divider sx={{ my: 2, borderColor: "white", opacity: 0.15 }}></Divider><SidebarItem
       isOpen={isOpen}
         label={t('nav.admin')}
         icon={<AdminPanelSettingsIcon />}
         url='/admin'
+        onClose={onMobileClose}
       /></>}
     </List>
   </Box>    
@@ -81,6 +87,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
           label="Report a Bug"
           icon={<BugReportIcon />}
           onClick={handleBugReport}
+          onClose={onMobileClose}
         />
         {user  && <SidebarItem
           isOpen={isOpen}
@@ -90,6 +97,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
             setUser(null);
             window.location.href = '/logout';
           }}
+          onClose={onMobileClose}
         />}
         {!user  && <SidebarItem
           isOpen={isOpen}
@@ -98,6 +106,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
           onClick={() => {
             window.location.href = '/login';
           }}
+          onClose={onMobileClose}
         />}
       </List>
     </Box>
