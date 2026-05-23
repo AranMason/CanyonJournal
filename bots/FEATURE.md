@@ -4,6 +4,14 @@ When a feature is completed, the entry and text should be removed. If there is o
 When asked to review, you should provide outline, priority and ease of implementation overview.
 ---
 
+# [Brand] Get a new Logo
+Need a Logo that represents 'Hand Linne', something that ideally invokes some mixture of Ropes, Writing and Deep Water/Waterfalls in a minimalist way. 
+
+External Clients that will need to be updated are:
+- Update Auth0
+- Update Facebook
+- Add a Logo to Google
+
 # [Tech] Unify canyon tables display behaviour in EditCanyons and SettingsCanyonsTab etc
 
 - `EditCanyons` (admin) and `SettingsCanyonsTab` (user settings) both render a canyon table with Name, Grade, Region, Type columns
@@ -39,4 +47,7 @@ When asked to review, you should provide outline, priority and ease of implement
 
 # [Low] Support Trips that span multiple days
 
-# 
+# [Goals] Add Support for the following Goals
+- All Canyons in Region X (Include children regions, need to reason if User Custom Canyons count? Probably do)
+- X Unique Regions (Nodes in the tree count as 1)
+- X Canyons in Region Y (Include Children, Y could be Y + Z as well potentially)

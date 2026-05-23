@@ -4,6 +4,7 @@ import { Button, Typography } from '@mui/material';
 import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import DashboardStats from '../components/DashboardStats';
+import GoalsWidget from '../components/GoalsWidget';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
@@ -30,6 +31,7 @@ const DashboardPage: React.FC = () => {
 
       <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>{t('common:actions.recordDescent')}</Button>
       <DashboardStats />
+      <GoalsWidget />
       <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
         {t('dashboard.recentDescents')}
       </Typography>

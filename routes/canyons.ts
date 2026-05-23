@@ -108,7 +108,21 @@ router.get('/', async (req, res) => {
       res.json([...officialCanyons, ...userCanyons]);
     } else {
       const pool = await getPool();
-      const result = await pool.request().query('SELECT * FROM Canyons WHERE IsVerified = 1 ORDER BY Name');
+      const result = await pool.request().query(`
+        SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
+               c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
+               c.SourceId, c.RegionId,
+               rgn.Symbol AS RegionSymbol,
+               rgn.Slug AS RegionSlug,
+               cs.DisplayName AS SourceName,
+               cs.LogoUrl AS SourceLogoUrl,
+               cs.WebsiteUrl AS SourceWebsiteUrl
+        FROM Canyons c
+        LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
+        LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+        WHERE c.IsVerified = 1
+        ORDER BY c.Name
+      `);
       res.json(result.recordset);
     }
   } catch (err) {

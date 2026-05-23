@@ -4,7 +4,31 @@ import { getUserIdByRequest } from './helpers/user.helper';
 
 const tagRouter: Router = express.Router();
 
-// GET /api/tags — return all tags for the current user with usage stats
+// POST /api/tags — create a new tag (or return existing if name already taken)
+tagRouter.post('/', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
+    const { Name } = req.body as { Name?: string };
+    if (!Name?.trim()) return res.status(400).json({ error: 'Name is required' });
+    const trimmed = Name.trim();
+    const result = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('name', sql.NVarChar(100), trimmed)
+      .query(`
+        MERGE Tags AS target
+        USING (SELECT @userId AS UserId, @name AS Name) AS source
+        ON target.UserId = source.UserId AND target.Name = source.Name
+        WHEN NOT MATCHED THEN INSERT (UserId, Name) VALUES (source.UserId, source.Name);
+        SELECT Id, Name FROM Tags WHERE UserId = @userId AND Name = @name;
+      `);
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to create tag' });
+  }
+});
 tagRouter.get('/', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();

@@ -20,3 +20,13 @@ export function load(): Promise<Tag[]> {
 export function invalidate(): void {
   loadPromise = null;
 }
+
+export async function create(name: string): Promise<Tag> {
+  const tag = await apiFetch<Tag>('/api/tags', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ Name: name }),
+  });
+  invalidate();
+  return tag;
+}

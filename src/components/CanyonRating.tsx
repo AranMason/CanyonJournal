@@ -6,20 +6,27 @@ interface CanyonRatingProps {
   commitmentRating?: number;
   starRating?: number;
   isUnrated?: boolean;
+  /** When true, omits any segment whose value is undefined rather than showing '?'. */
+  hideUnknown?: boolean;
 }
 
-const ratings = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+export const COMMITMENT_RATINGS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 
-const CanyonRating: React.FC<CanyonRatingProps> = ({ aquaticRating, verticalRating, commitmentRating, starRating, isUnrated }) => {
+const CanyonRating: React.FC<CanyonRatingProps> = ({ aquaticRating, verticalRating, commitmentRating, starRating, isUnrated, hideUnknown }) => {
 
-  if(isUnrated) {
-    return "Ungraded"
+  if (isUnrated) {
+    return "Ungraded";
   }
 
+  const vertical   = verticalRating   != null ? `V${verticalRating}`   : hideUnknown ? null : 'V?';
+  const aquatic    = aquaticRating    != null ? `A${aquaticRating}`    : hideUnknown ? null : 'A?';
+  const commitment = commitmentRating ? COMMITMENT_RATINGS[commitmentRating - 1] : null;
+  const stars      = starRating ? '★'.repeat(starRating) : null;
+
+  const parts = [vertical, aquatic, commitment, stars].filter(Boolean);
+
   return (
-    <span>
-        V{verticalRating ?? "?"} A{aquaticRating ?? "?"} {commitmentRating && ratings[commitmentRating-1]} {'★'.repeat(starRating ?? 0)}
-    </span>
+    <span>{parts.join(' ')}</span>
   );
 };
 

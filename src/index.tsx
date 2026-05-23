@@ -18,6 +18,7 @@ import CanyonOverviewPage from './pages/CanyonOverviewPage';
 import UserCanyonOverviewPage from './pages/UserCanyonOverviewPage';
 import UserSettingsPage from './pages/UserSettingsPage';
 import RecordsOverviewPage from './pages/RecordsOverviewPage';
+import GoalTripsPage from './pages/GoalTripsPage';
 import MuiThemeProvider from './styles/MuiTheme';
 import Sidebar from './components/Sidebar';
 import MobileAppBar from './components/MobileAppBar';
@@ -37,6 +38,7 @@ function AppLayout() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/journal/record/:id" element={<EditRecordPage />} />
             <Route path="/journal/record" element={<RecordPage />} />
+            <Route path="/journal/goals/:goalId" element={<GoalTripsPage />} />
             <Route path="/journal" element={<RecordsOverviewPage />} />
             <Route path="/canyons/users/:id" element={<UserCanyonOverviewPage />} />
             <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
