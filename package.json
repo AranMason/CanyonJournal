@@ -1,5 +1,5 @@
 {
-  "name": "CanyonJournal",
+  "name": "handlinne",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -64,6 +64,7 @@
     "@types/node": "^18.11.18",
     "@types/passport": "^1.0.17",
     "@types/passport-auth0": "^1.0.9",
+    "baseline-browser-mapping": "^2.10.32",
     "http-server": "^14.1.1",
     "nodemon": "^2.0.19",
     "typescript": "^4.9.4"

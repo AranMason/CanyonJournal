@@ -51,3 +51,14 @@ External Clients that will need to be updated are:
 - All Canyons in Region X (Include children regions, need to reason if User Custom Canyons count? Probably do)
 - X Unique Regions (Nodes in the tree count as 1)
 - X Canyons in Region Y (Include Children, Y could be Y + Z as well potentially)
+- X new Canyons, that have not been done previously
+- Also set a time frame that the Canyons have to be done, currently we have since X, but we might want 'in the last X years/months/days'
+- When Logging Unique Canyons, we will want to get the canyon information 'With Descents' style, so we group the same Canyon together. This is both in the summary, and the Goal Page itself as well.
+
+# [Goals] We should only load Completed Goals when they're requested to be shown in the settings
+
+# [Marketting] Include the fact that you can set Goals - Personal or Professional
+
+# [Goals] Default Goals
+- New User should get a 'Descend 5 Canyons Goal' to teach them the system.
+- Default Goal Packs for various standards (IE: UKCA) - Don't know what other ones there are TBH
