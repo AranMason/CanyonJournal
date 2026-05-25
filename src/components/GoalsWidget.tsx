@@ -13,7 +13,9 @@ import CanyonRating from './CanyonRating';
 import * as TagsDataStore from '../helpers/TagsDataStore';
 import * as CanyonDataStore from '../helpers/CanyonDataStore';
 import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
+import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Tag } from '../helpers/TagsDataStore';
+import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
 import AppModal from './AppModal';
 
@@ -24,6 +26,7 @@ const GoalsWidget: React.FC = () => {
   const navigate = useNavigate();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [flatRegions, setFlatRegions] = useState<Region[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [completingId, setCompletingId] = useState<number | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<Goal | null>(null);
@@ -33,8 +36,8 @@ const GoalsWidget: React.FC = () => {
   const [auditLoading, setAuditLoading] = useState<Record<number, boolean>>({});
 
   const loadGoals = () =>
-    Promise.all([apiFetch<Goal[]>('/api/goals'), TagsDataStore.load()])
-      .then(([gs, tgs]) => { setGoals(gs); setTags(tgs); })
+    Promise.all([apiFetch<Goal[]>('/api/goals'), TagsDataStore.load(), RegionDataStore.load()])
+      .then(([gs, tgs, regions]) => { setGoals(gs); setTags(tgs); setFlatRegions(regions); })
       .catch(() => {})
       .finally(() => setIsLoading(false));
 
@@ -82,6 +85,10 @@ const GoalsWidget: React.FC = () => {
       .map(id => tags.find(tg => tg.Id === id)?.Name)
       .filter((n): n is string => Boolean(n));
 
+  const regionNames: Record<number, string> = Object.fromEntries(
+    flatRegions.map(r => [r.Id, r.Name])
+  );
+
   if (isLoading) return <Box display="flex" justifyContent="center" p={2}><CircularProgress size={24} /></Box>;
   if (goals.length === 0) return null;
 
@@ -102,6 +109,7 @@ const GoalsWidget: React.FC = () => {
                   <GoalProgressBar
                     requirement={goal}
                     tagNames={goalTagNames(goal)}
+                    regionNames={regionNames}
                     onMarkComplete={() => setConfirmTarget(goal)}
                     isCompleting={completingId === goal.Id}
                     onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}
