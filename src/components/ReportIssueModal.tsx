@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  Alert, Button, DialogActions, DialogContent,
   FormControl, InputLabel, Link, MenuItem, Select, TextField, Typography,
 } from '@mui/material';
 import { Formik, Form } from 'formik';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { apiFetch } from '../utils/api';
 import { ReportIssueType, ReportIssueTypeList } from '../types/ReportIssueType';
 import { GetReportIssueTypeDisplayName } from '../helpers/EnumMapper';
+import AppModal from './AppModal';
 
 interface ReportIssueModalProps {
   canyonId: number;
@@ -33,8 +34,7 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ canyonId, canyonNam
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>{t('report.title')}</DialogTitle>
+    <AppModal open={open} onClose={onClose} title={t('report.title')} maxWidth="xs">
       <Formik
         initialValues={initialValues}
         enableReinitialize
@@ -122,7 +122,7 @@ const ReportIssueModal: React.FC<ReportIssueModalProps> = ({ canyonId, canyonNam
           </Form>
         )}
       </Formik>
-    </Dialog>
+    </AppModal>
   );
 };
 

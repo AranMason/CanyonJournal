@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Button, DialogContent, DialogContentText } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import AppModal from './AppModal';
 
 interface ConfirmDeleteModalProps {
   open: boolean;
@@ -13,16 +14,22 @@ interface ConfirmDeleteModalProps {
 const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ open, title, message, onConfirm, onCancel }) => {
   const { t } = useTranslation('common');
   return (
-    <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>
-      <DialogTitle>{title}</DialogTitle>
+    <AppModal
+      open={open}
+      onClose={onCancel}
+      title={title}
+      maxWidth="xs"
+      actions={
+        <>
+          <Button onClick={onCancel}>{t('actions.cancel')}</Button>
+          <Button onClick={onConfirm} color="error" variant="contained">{t('actions.delete')}</Button>
+        </>
+      }
+    >
       <DialogContent>
         <DialogContentText>{message}</DialogContentText>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel}>{t('actions.cancel')}</Button>
-        <Button onClick={onConfirm} color="error" variant="contained">{t('actions.delete')}</Button>
-      </DialogActions>
-    </Dialog>
+    </AppModal>
   );
 };
 

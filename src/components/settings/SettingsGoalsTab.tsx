@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Autocomplete, Box, Button, Chip, CircularProgress, Collapse, Dialog, DialogActions,
-  DialogContent, DialogTitle, Divider, FormControl, FormHelperText, IconButton,
-  InputLabel, Link, MenuItem, Select, TextField, Tooltip, Typography,
+  Autocomplete, Box, Button, Chip, CircularProgress, Collapse, DialogActions,
+  DialogContent, Divider, FormControl, FormHelperText, IconButton,
+  InputLabel, MenuItem, Select, TextField, Tooltip, Typography,
 } from '@mui/material';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,12 +22,13 @@ import * as TagsDataStore from '../../helpers/TagsDataStore';
 import * as CanyonDataStore from '../../helpers/CanyonDataStore';
 import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
+import AppModal from '../AppModal';
 
 const PREVIEW_COUNT = 5;
 
 const EMPTY_FORM = (): Partial<Goal> => ({
   Label: '',
-  MinCount: 10,
+  MinCount: undefined,
   CountMode: 'records',
   MinVerticalRating: null,
   MinAquaticRating: null,
@@ -363,8 +364,13 @@ const SettingsGoalsTab: React.FC = () => {
       )}
 
       {/* Add / Edit dialog */}
-      <Dialog open={dialogOpen} onClose={() => !isSaving && setDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingId != null ? t('goals.editRequirement') : t('goals.addRequirement')}</DialogTitle>
+      <AppModal
+        open={dialogOpen}
+        onClose={() => !isSaving && setDialogOpen(false)}
+        title={editingId != null ? t('goals.editRequirement') : t('goals.addRequirement')}
+        maxWidth="xs"
+        disableClose={isSaving}
+      >
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} pt={1}>
             {errors.general && (
@@ -496,37 +502,50 @@ const SettingsGoalsTab: React.FC = () => {
             {isSaving ? t('settings.saving') : t('common:actions.save')}
           </Button>
         </DialogActions>
-      </Dialog>
+      </AppModal>
 
       {/* Delete confirmation */}
-      <Dialog open={Boolean(deleteTarget)} onClose={() => !isDeleting && setDeleteTarget(null)}>
-        <DialogTitle>{t('goals.deleteRequirement')}</DialogTitle>
+      <AppModal
+        open={Boolean(deleteTarget)}
+        onClose={() => !isDeleting && setDeleteTarget(null)}
+        title={t('goals.deleteRequirement')}
+        maxWidth="xs"
+        disableClose={isDeleting}
+        actions={
+          <>
+            <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>{t('common:actions.cancel')}</Button>
+            <Button onClick={handleDelete} color="error" variant="contained" disabled={isDeleting}>
+              {isDeleting ? t('settings.deleting') : t('common:actions.delete')}
+            </Button>
+          </>
+        }
+      >
         <DialogContent>
           <Typography>{t('goals.deleteConfirm')}</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>{t('common:actions.cancel')}</Button>
-          <Button onClick={handleDelete} color="error" variant="contained" disabled={isDeleting}>
-            {isDeleting ? t('settings.deleting') : t('common:actions.delete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </AppModal>
 
       {/* Mark complete confirmation */}
-      <Dialog open={Boolean(completeConfirmTarget)} onClose={() => setCompleteConfirmTarget(null)} maxWidth="xs" fullWidth>
-        <DialogTitle>{t('goals.markCompleteConfirmTitle')}</DialogTitle>
+      <AppModal
+        open={Boolean(completeConfirmTarget)}
+        onClose={() => setCompleteConfirmTarget(null)}
+        title={t('goals.markCompleteConfirmTitle')}
+        maxWidth="xs"
+        actions={
+          <>
+            <Button onClick={() => setCompleteConfirmTarget(null)}>{t('common:actions.cancel')}</Button>
+            <Button variant="contained" color="success"
+              disabled={completingId === completeConfirmTarget?.Id}
+              onClick={() => { if (completeConfirmTarget) { setCompleteConfirmTarget(null); handleMarkComplete(completeConfirmTarget); } }}>
+              {t('goals.markComplete')}
+            </Button>
+          </>
+        }
+      >
         <DialogContent>
           <Typography>{t('goals.markCompleteConfirmMessage', { label: completeConfirmTarget?.Label })}</Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setCompleteConfirmTarget(null)}>{t('common:actions.cancel')}</Button>
-          <Button variant="contained" color="success"
-            disabled={completingId === completeConfirmTarget?.Id}
-            onClick={() => { if (completeConfirmTarget) { setCompleteConfirmTarget(null); handleMarkComplete(completeConfirmTarget); } }}>
-            {t('goals.markComplete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </AppModal>
     </>
   );
 };

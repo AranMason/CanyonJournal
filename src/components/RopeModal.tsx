@@ -1,10 +1,11 @@
 import { RopeItem, Unit } from '../types/types';
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, MenuItem, Box } from '@mui/material';
+import { DialogContent, DialogActions, Button, MenuItem, Box } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikTextField from './FormikTextField';
 import { useTranslation } from 'react-i18next';
+import AppModal from './AppModal';
 
 interface RopeModalProps {
   open: boolean;
@@ -34,8 +35,7 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
     : { name: '', diameter: '', length: '', unit: Unit.Metres, notes: '' };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{initialValues ? t('settings.editRope') : t('gear.addRope')}</DialogTitle>
+    <AppModal open={open} onClose={onClose} title={initialValues ? t('settings.editRope') : t('gear.addRope')}>
       <Formik
         initialValues={mappedInitialValues}
         validationSchema={RopeSchema}
@@ -66,7 +66,7 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
           </Form>
         )}
       </Formik>
-    </Dialog>
+    </AppModal>
   );
 };
 

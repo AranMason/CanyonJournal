@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Box, Button, CircularProgress, Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle, IconButton, InputAdornment, Paper,
+  Box, Button, CircularProgress, DialogActions, DialogContent,
+  DialogContentText, IconButton, InputAdornment, Paper,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   TextField, Tooltip, Typography,
 } from '@mui/material';
@@ -13,6 +13,7 @@ import { apiFetch } from '../../utils/api';
 import * as TagsDataStore from '../../helpers/TagsDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
 import { useTranslation } from 'react-i18next';
+import AppModal from '../AppModal';
 
 const SettingsTagsTab: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -164,8 +165,21 @@ const SettingsTagsTab: React.FC = () => {
         </TableContainer>
       )}
 
-      <Dialog open={Boolean(deleteTarget)} onClose={() => !isDeleting && setDeleteTarget(null)}>
-        <DialogTitle>{t('settings.deleteTag')}</DialogTitle>
+      <AppModal
+        open={Boolean(deleteTarget)}
+        onClose={() => !isDeleting && setDeleteTarget(null)}
+        title={t('settings.deleteTag')}
+        disableClose={isDeleting}
+        maxWidth="xs"
+        actions={
+          <>
+            <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>{t('common:actions.cancel')}</Button>
+            <Button onClick={handleDelete} color="error" variant="contained" disabled={isDeleting}>
+              {isDeleting ? t('settings.deleting') : t('common:actions.delete')}
+            </Button>
+          </>
+        }
+      >
         <DialogContent>
           <DialogContentText>
             {t('settings.deleteTagConfirm', { name: deleteTarget?.Name })}
@@ -175,13 +189,7 @@ const SettingsTagsTab: React.FC = () => {
             {' '}{t('settings.cannotUndo')}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)} disabled={isDeleting}>{t('common:actions.cancel')}</Button>
-          <Button onClick={handleDelete} color="error" variant="contained" disabled={isDeleting}>
-            {isDeleting ? t('settings.deleting') : t('common:actions.delete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </AppModal>
     </>
   );
 };

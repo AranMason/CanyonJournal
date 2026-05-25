@@ -3,9 +3,7 @@ import {
   Box,
   Button,
   CircularProgress,
-  Dialog,
   DialogContent,
-  DialogTitle,
   FormControl,
   FormHelperText,
   IconButton,
@@ -17,6 +15,7 @@ import { Region } from '../types/Region';
 import * as RegionDataStore from '../helpers/RegionDataStore';
 import { useTranslation } from 'react-i18next';
 import RegionTreeView from './RegionTreeView';
+import AppModal from './AppModal';
 
 interface RegionTreePickerProps {
   value: number | null;
@@ -108,13 +107,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
         {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </FormControl>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
-          {resolvedLabel}
-          <IconButton size="small" onClick={() => setOpen(false)} aria-label="close">
-            <ClearIcon fontSize="small" />
-          </IconButton>
-        </DialogTitle>
+      <AppModal open={open} onClose={() => setOpen(false)} title={resolvedLabel} maxWidth="xs">
         <DialogContent>
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', py: 3 }}>
@@ -135,7 +128,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
             </Button>
           )}
         </DialogContent>
-      </Dialog>
+      </AppModal>
     </>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  Box, Button, DialogActions, DialogContent,
   IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow,
   TextField, Typography,
 } from '@mui/material';
@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { apiFetch } from '../../utils/api';
 import { CanyonSource } from '../../types/Canyon';
 import { useTranslation } from 'react-i18next';
+import AppModal from '../AppModal';
 
 interface SourceFormValues {
   displayName: string;
@@ -119,8 +120,7 @@ const SourcesTab: React.FC = () => {
         </TableBody>
       </Table>
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingId ? t('admin.editSource') : t('admin.addSource')}</DialogTitle>
+      <AppModal open={dialogOpen} onClose={() => setDialogOpen(false)} title={editingId ? t('admin.editSource') : t('admin.addSource')} maxWidth="xs">
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
             <TextField
@@ -153,7 +153,7 @@ const SourcesTab: React.FC = () => {
           <Button onClick={() => setDialogOpen(false)}>{t('common:actions.cancel')}</Button>
           <Button variant="contained" onClick={handleSave}>{t('common:actions.save')}</Button>
         </DialogActions>
-      </Dialog>
+      </AppModal>
     </Box>
   );
 };

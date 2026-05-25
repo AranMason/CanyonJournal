@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { GearItem } from '../types/types';
 import FormikTextField from './FormikTextField';
 import { useTranslation } from 'react-i18next';
+import AppModal from './AppModal';
 
 interface GearModalProps {
   open: boolean;
@@ -31,8 +32,7 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
     : { name: '', category: '', notes: '' };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{initialValues ? t('settings.editGear') : t('gear.addGear')}</DialogTitle>
+    <AppModal open={open} onClose={onClose} title={initialValues ? t('settings.editGear') : t('gear.addGear')}>
       <Formik
         initialValues={mappedInitialValues}
         validationSchema={GearSchema}
@@ -58,7 +58,7 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
           </Form>
         )}
       </Formik>
-    </Dialog>
+    </AppModal>
   );
 };
 

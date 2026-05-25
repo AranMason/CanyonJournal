@@ -17,6 +17,9 @@ declare module '@mui/material/Button' {
 const canyoningTheme = createTheme({
   palette: {
     mode: 'light',
+    background: {
+      default: '#f4f8fd',
+    },
     primary: {
       main: '#232946',
       contrastText: '#FFFFFF',

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  Box, Button, DialogActions, DialogContent,
   IconButton, Stack, TextField, Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,6 +11,7 @@ import { Region, RegionAdmin } from '../../types/Region';
 import RegionTreePicker from '../RegionTreePicker';
 import RegionTreeView from '../RegionTreeView';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
+import AppModal from '../AppModal';
 
 interface RegionFormValues {
   parentId: number | null;
@@ -131,8 +132,7 @@ const RegionsTab: React.FC = () => {
         sx={{ '& .MuiTreeItem-root': { mb: 0.5 } }}
       />
 
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="xs" fullWidth>
-        <DialogTitle>{editingId ? 'Edit Region' : 'Add Region'}</DialogTitle>
+      <AppModal open={dialogOpen} onClose={() => setDialogOpen(false)} title={editingId ? 'Edit Region' : 'Add Region'} maxWidth="xs">
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 1 }}>
             <RegionTreePicker
@@ -170,7 +170,7 @@ const RegionsTab: React.FC = () => {
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
           <Button variant="contained" onClick={handleSave}>Save</Button>
         </DialogActions>
-      </Dialog>
+      </AppModal>
     </Box>
   );
 };

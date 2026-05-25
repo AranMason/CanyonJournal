@@ -115,6 +115,11 @@ const CanyonList: React.FC = () => {
   ], [usedRegionIds]);
 
   const filterFn = useCallback((canyon: CanyonListEntry, values: FilterValues) => {
+    if (values.name) {
+      const nf = (values.name as string).trim().toLowerCase();
+      if (nf && !canyon.Name.toLowerCase().includes(nf)) return false;
+    }
+
     if (values.region != null && canyon.RegionId != null) {
       const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
       if (!ids.includes(canyon.RegionId)) return false;

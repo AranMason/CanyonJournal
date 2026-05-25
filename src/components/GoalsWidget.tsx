@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, CircularProgress, Collapse, Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle, Divider, IconButton, Tooltip, Typography,
+  Box, Button, CircularProgress, Collapse, DialogContent,
+  DialogContentText, Divider, IconButton, Tooltip, Typography,
 } from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +15,7 @@ import * as CanyonDataStore from '../helpers/CanyonDataStore';
 import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
 import { Tag } from '../helpers/TagsDataStore';
 import { useTranslation } from 'react-i18next';
+import AppModal from './AppModal';
 
 const PREVIEW_COUNT = 5;
 
@@ -84,7 +84,7 @@ const GoalsWidget: React.FC = () => {
   return (
     <Box sx={{ mb: 3 }}>
       <Typography variant="h6" sx={{ mb: 1 }}>{t('goals.progress')}</Typography>
-      <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, pt: 2, pb: 1 }}>
+      <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, pt: 2, pb: 1, backgroundColor: 'background.paper' }}>
         {goals.map((goal, i) => {
           const trips = auditTrips[goal.Id!];
           const previewTrips = trips?.slice(0, PREVIEW_COUNT);
@@ -169,20 +169,27 @@ const GoalsWidget: React.FC = () => {
         })}
       </Box>
 
-      <Dialog open={Boolean(confirmTarget)} onClose={() => setConfirmTarget(null)} maxWidth="xs" fullWidth>
-        <DialogTitle>{t('goals.markCompleteConfirmTitle')}</DialogTitle>
+      <AppModal
+        open={Boolean(confirmTarget)}
+        onClose={() => setConfirmTarget(null)}
+        title={t('goals.markCompleteConfirmTitle')}
+        maxWidth="xs"
+        actions={
+          <>
+            <Button onClick={() => setConfirmTarget(null)}>{t('common:actions.cancel')}</Button>
+            <Button variant="contained" color="success"
+              onClick={() => confirmTarget && handleMarkComplete(confirmTarget)}>
+              {t('goals.markComplete')}
+            </Button>
+          </>
+        }
+      >
         <DialogContent>
           <DialogContentText>
             {t('goals.markCompleteConfirmMessage', { label: confirmTarget?.Label })}
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConfirmTarget(null)}>{t('common:actions.cancel')}</Button>
-          <Button variant="contained" color="success" onClick={() => confirmTarget && handleMarkComplete(confirmTarget)}>
-            {t('goals.markComplete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </AppModal>
     </Box>
   );
 };

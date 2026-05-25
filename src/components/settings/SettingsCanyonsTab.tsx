@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  Box, Button, CircularProgress, Dialog, DialogActions, DialogContent,
-  DialogTitle, Alert, Link, Paper, Table, TableBody, TableCell,
+  Box, Button, CircularProgress, DialogActions, DialogContent,
+  Alert, Link, Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -21,6 +21,7 @@ import RowActions from '../RowActions';
 import FilterPanel, { FilterValues } from '../FilterPanel';
 import { getCanyonNameFilterConfig, getRegionFilterConfig, getCanyonTypeFilterConfig } from '../../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
+import AppModal from '../AppModal';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
@@ -125,8 +126,20 @@ const SettingsCanyonsTab: React.FC = () => {
         onSubmit={handleSave}
       />
 
-      <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)}>
-        <DialogTitle>{t('settings.deleteCanyon')}</DialogTitle>
+      <AppModal
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        title={t('settings.deleteCanyon')}
+        maxWidth="xs"
+        actions={
+          <>
+            <Button onClick={() => setDeleteTarget(null)}>{t('common:actions.cancel')}</Button>
+            <Button color="error" variant="contained" onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? <CircularProgress size={20} /> : t('common:actions.delete')}
+            </Button>
+          </>
+        }
+      >
         <DialogContent>
           <Typography>
             {t('settings.deleteCanyonConfirm', { name: deleteTarget?.Name })}
@@ -137,13 +150,7 @@ const SettingsCanyonsTab: React.FC = () => {
             </Alert>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteTarget(null)}>{t('common:actions.cancel')}</Button>
-          <Button color="error" variant="contained" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? <CircularProgress size={20} /> : t('common:actions.delete')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      </AppModal>
 
       <FilterPanel<UserCanyonWithDescents>
         items={canyons}

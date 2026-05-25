@@ -54,6 +54,9 @@ External Clients that will need to be updated are:
 - X new Canyons, that have not been done previously
 - Also set a time frame that the Canyons have to be done, currently we have since X, but we might want 'in the last X years/months/days'
 - When Logging Unique Canyons, we will want to get the canyon information 'With Descents' style, so we group the same Canyon together. This is both in the summary, and the Goal Page itself as well.
+- Rule for Excluding Regions as well (IE: X Trips over seas)
+- Could we review the current implementation, and maybe have 1:Many 'Rules' table (GoalId, RuleType, ConfigSettings, IsExclusion)
+- Feature by Type (Gorge Walk/Sport/Adventure etc. Could be multiple types)
 
 # [Goals] We should only load Completed Goals when they're requested to be shown in the settings
 
@@ -62,3 +65,9 @@ External Clients that will need to be updated are:
 # [Goals] Default Goals
 - New User should get a 'Descend 5 Canyons Goal' to teach them the system.
 - Default Goal Packs for various standards (IE: UKCA) - Don't know what other ones there are TBH
+
+# [General] Add a Change Log
+- Available from the corner, pop-up when someone logs in and something has changed.
+
+# [General] New User Pop-up with a Application Overview
+- Also potentially starting new Users with a Goal of 'Do X Canyons'

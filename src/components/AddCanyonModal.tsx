@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Typography, Stack, Dialog, DialogTitle, DialogContent, DialogActions, Divider, FormControl, InputLabel, Checkbox, FormControlLabel, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Stack, DialogContent, DialogActions, Divider, FormControl, InputLabel, Checkbox, FormControlLabel, Select, MenuItem } from '@mui/material';
 import { apiFetch } from '../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from '../helpers/EnumMapper';
 import RegionTreePicker from './RegionTreePicker';
 import { useTranslation } from 'react-i18next';
+import AppModal from './AppModal';
 
 export interface CanyonModalFormValues {
   id?: number;
@@ -71,8 +72,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
-      <DialogTitle>{title ?? t('admin.addCanyon')}</DialogTitle>
+    <AppModal open={open} onClose={onClose} title={title ?? t('admin.addCanyon')} maxWidth="xs">
       <DialogContent>
         <Formik
           initialValues={initialValues}
@@ -178,15 +178,22 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                     </Select>
                   </FormControl>
                 )}
+                {showNotes && (
+                  <TextField
+                    label={t('canyon.notesOptional')}
+                    name="notes"
+                    value={values.notes}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    fullWidth
+                    multiline
+                    minRows={2}
+                  />
+                )}
                 <Divider />
                 <Typography my={2} align='center' variant='h6'>
                   <CanyonRating aquaticRating={values.aquaticRating} verticalRating={values.verticalRating} commitmentRating={values.commitmentRating} starRating={values.starRating} isUnrated={values.isUnrated} />
                 </Typography>
-                <FormControlLabel control={<Checkbox
-                  checked={values.isUnrated}
-                  name='isUnrated'
-                  onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }} />} label={t('common:canyon.noRating')} />
                 <TextField
                   label={t('common:canyon.vertical')}
                   name="verticalRating"
@@ -239,18 +246,11 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   error={touched.starRating && Boolean(errors.starRating)}
                   helperText={touched.starRating && errors.starRating}
                 />
-                {showNotes && (
-                  <TextField
-                    label={t('canyon.notesOptional')}
-                    name="notes"
-                    value={values.notes}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth
-                    multiline
-                    minRows={2}
-                  />
-                )}
+                <FormControlLabel control={<Checkbox
+                  checked={values.isUnrated}
+                  name='isUnrated'
+                  onChange={handleChange}
+                  inputProps={{ 'aria-label': 'controlled' }} />} label={t('common:canyon.noRating')} />
                 {status?.error && <Typography color="error">{status.error}</Typography>}
                 {status?.success && <Typography color="success.main">{t('canyon.canyonSaved')}</Typography>}
               </Stack>
@@ -262,7 +262,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
           )}
         </Formik>
       </DialogContent>
-    </Dialog>
+    </AppModal>
   );
 };
 
