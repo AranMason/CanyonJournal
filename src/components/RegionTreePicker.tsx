@@ -25,6 +25,7 @@ interface RegionTreePickerProps {
   allowClear?: boolean;
   error?: boolean;
   helperText?: string;
+  size?: 'small' | 'medium';
   /** When provided, prunes the tree to only regions the user has data in (and their ancestors). */
   availableRegionIds?: number[];
 }
@@ -37,6 +38,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   allowClear = true,
   error,
   helperText,
+  size = 'small',
   availableRegionIds,
 }) => {
   const { t } = useTranslation('common');
@@ -85,10 +87,11 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
 
   return (
     <>
-      <FormControl fullWidth error={error} onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
+      <FormControl fullWidth error={error} size={size} onClick={() => setOpen(true)} sx={{ cursor: 'pointer' }}>
         <InputLabel shrink={!!selectedRegion || open}>{resolvedLabel}</InputLabel>
         <OutlinedInput
           readOnly
+          size={size}
           notched={!!selectedRegion || open}
           label={resolvedLabel}
           value={displayValue}

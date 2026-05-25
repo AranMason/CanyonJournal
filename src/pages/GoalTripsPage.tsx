@@ -55,8 +55,20 @@ const GoalTripsPage: React.FC = () => {
       .finally(() => setIsLoading(false));
   }, [goalId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const tagNames = (ids: number[]) =>
-    ids.map(id => tags.find(tg => tg.Id === id)?.Name).filter((n): n is string => Boolean(n));
+  const goalTagNames = useMemo((): string[] => {
+    if (!goal) return [];
+    return (goal.Rules ?? [])
+      .filter(r => r.RuleType === 'tag' && !r.IsExclusion)
+      .flatMap(r => (r.IntValues ?? '').split(',').map(Number).filter(n => !isNaN(n) && n > 0))
+      .map(id => tags.find(tg => tg.Id === id)?.Name)
+      .filter((n): n is string => Boolean(n));
+  }, [goal, tags]);
+
+  const goalRegionNames = useMemo((): Record<number, string> => {
+    if (!goal?.RegionId) return {};
+    const region = flatRegions.find(r => r.Id === goal.RegionId);
+    return region ? { [region.Id]: region.Name } : {};
+  }, [goal, flatRegions]);
 
   const usedRegionIds = useMemo(
     () => [...new Set(trips.map(t => t.RegionId).filter((id): id is number => id != null))],
@@ -123,7 +135,7 @@ const GoalTripsPage: React.FC = () => {
       {goal && (
         <Box sx={{ mb: 3 }}>
           <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, py: 2 }}>
-            <GoalProgressBar requirement={goal} tagNames={tagNames(goal.RequiredTagIds)} />
+            <GoalProgressBar requirement={goal} tagNames={goalTagNames} regionNames={goalRegionNames} />
           </Box>
         </Box>
       )}

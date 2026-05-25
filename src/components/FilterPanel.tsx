@@ -231,6 +231,7 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
               label={c.label}
               availableRegionIds={c.availableRegionIds}
               allowClear
+              size="medium"
             />
           </Box>
         );

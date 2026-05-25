@@ -75,8 +75,12 @@ const GoalsWidget: React.FC = () => {
     }
   };
 
-  const tagNames = (ids: number[]) =>
-    ids.map(id => tags.find(t => t.Id === id)?.Name).filter((n): n is string => Boolean(n));
+  const goalTagNames = (goal: Goal): string[] =>
+    (goal.Rules ?? [])
+      .filter(r => r.RuleType === 'tag' && !r.IsExclusion)
+      .flatMap(r => (r.IntValues ?? '').split(',').map(Number).filter(n => !isNaN(n) && n > 0))
+      .map(id => tags.find(tg => tg.Id === id)?.Name)
+      .filter((n): n is string => Boolean(n));
 
   if (isLoading) return <Box display="flex" justifyContent="center" p={2}><CircularProgress size={24} /></Box>;
   if (goals.length === 0) return null;
@@ -97,7 +101,7 @@ const GoalsWidget: React.FC = () => {
                 <Box flex={1} minWidth={0}>
                   <GoalProgressBar
                     requirement={goal}
-                    tagNames={tagNames(goal.RequiredTagIds)}
+                    tagNames={goalTagNames(goal)}
                     onMarkComplete={() => setConfirmTarget(goal)}
                     isCompleting={completingId === goal.Id}
                     onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}

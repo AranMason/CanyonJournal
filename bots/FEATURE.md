@@ -48,17 +48,11 @@ External Clients that will need to be updated are:
 # [Low] Support Trips that span multiple days
 
 # [Goals] Add Support for the following Goals
-- All Canyons in Region X (Include children regions, need to reason if User Custom Canyons count? Probably do)
-- X Unique Regions (Nodes in the tree count as 1)
-- X Canyons in Region Y (Include Children, Y could be Y + Z as well potentially)
-- X new Canyons, that have not been done previously
-- Also set a time frame that the Canyons have to be done, currently we have since X, but we might want 'in the last X years/months/days'
-- When Logging Unique Canyons, we will want to get the canyon information 'With Descents' style, so we group the same Canyon together. This is both in the summary, and the Goal Page itself as well.
-- Rule for Excluding Regions as well (IE: X Trips over seas)
-- Could we review the current implementation, and maybe have 1:Many 'Rules' table (GoalId, RuleType, ConfigSettings, IsExclusion)
-- Feature by Type (Gorge Walk/Sport/Adventure etc. Could be multiple types)
+- [ ] When Logging Unique Canyons, group same canyon together in audit trip list (both summary and Goal Page)
+- **Implemented**: Region rules, distinct regions, all-in-region, canyon type filter, min rating rules, first-time rule, rolling time window, tag rules, exclusion rules — all via GoalRules table.
 
 # [Goals] We should only load Completed Goals when they're requested to be shown in the settings
+- **Partially done**: Active vs Completed goals are loaded separately. The completed goals list is still fetched eagerly on load via `?includeCompleted=true`. Defer this fetch until the user clicks "Show Completed".
 
 # [Marketting] Include the fact that you can set Goals - Personal or Professional
 

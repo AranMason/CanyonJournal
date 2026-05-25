@@ -4,45 +4,65 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Goal } from '../types/Goal';
 import CanyonRating from './CanyonRating';
 import { useTranslation } from 'react-i18next';
+import { GetCanyonTypeDisplayName } from '../helpers/EnumMapper';
 
 interface GoalProgressBarProps {
   requirement: Goal;
+  /** Human-readable names for tag rules, resolved by parent from goal.Rules */
   tagNames?: string[];
+  /** Region name lookup: regionId → display name, resolved by parent from goal.Rules */
+  regionNames?: Record<number, string>;
   onMarkComplete?: () => void;
   isCompleting?: boolean;
   onTitleClick?: () => void;
 }
 
-const GoalProgressBar: React.FC<GoalProgressBarProps> = ({ requirement, tagNames, onMarkComplete, isCompleting, onTitleClick }) => {
+const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
+  requirement,
+  tagNames,
+  regionNames,
+  onMarkComplete,
+  isCompleting,
+  onTitleClick,
+}) => {
   const { t } = useTranslation();
 
-  const progress = Math.min(((requirement.CurrentCount ?? 0) / requirement.MinCount) * 100, 100);
+  const target = requirement.TargetCount ?? requirement.MinCount ?? 0;
+  const progress = target > 0 ? Math.min(((requirement.CurrentCount ?? 0) / target) * 100, 100) : 0;
   const isComplete = progress >= 100;
 
   let unitLabel: string;
   if (requirement.CountMode === 'days') unitLabel = t('goals.daysLabel');
   else if (requirement.CountMode === 'distinct_canyons') unitLabel = t('common:terms.canyon.lower', { count: 2 });
+  else if (requirement.CountMode === 'distinct_regions') unitLabel = t('goals.regionsLabel');
+  else if (requirement.CountMode === 'all_in_region') unitLabel = t('common:terms.canyon.lower', { count: 2 });
   else unitLabel = t('goals.tripsLabel');
 
-  // Criteria items — each is a ReactNode rendered inline with ' · ' separators
+  // Criteria items derived from Rules
   const criteriaItems: { key: string; node: ReactNode }[] = [];
 
   // Count mode label
   if (requirement.CountMode === 'days') criteriaItems.push({ key: 'mode', node: t('goals.countModeDays') });
   else if (requirement.CountMode === 'distinct_canyons') criteriaItems.push({ key: 'mode', node: t('goals.countModeDistinctCanyons') });
+  else if (requirement.CountMode === 'distinct_regions') criteriaItems.push({ key: 'mode', node: t('goals.countModeDistinctRegions') });
+  else if (requirement.CountMode === 'all_in_region') criteriaItems.push({ key: 'mode', node: t('goals.countModeAllCanyonsInRegion') });
   else criteriaItems.push({ key: 'mode', node: t('goals.countModeRecords') });
 
-  // Rating — use CanyonRating with hideUnknown so only set minimums appear
-  const hasRating = requirement.MinVerticalRating || requirement.MinAquaticRating || requirement.MinCommitmentRating;
-  if (hasRating) {
+  const rules = requirement.Rules ?? [];
+
+  // Derive ratings from rules
+  const minV = rules.find(r => r.RuleType === 'min_vertical' && !r.IsExclusion)?.IntValue;
+  const minA = rules.find(r => r.RuleType === 'min_aquatic' && !r.IsExclusion)?.IntValue;
+  const minC = rules.find(r => r.RuleType === 'min_commitment' && !r.IsExclusion)?.IntValue;
+  if (minV || minA || minC) {
     criteriaItems.push({
       key: 'rating',
       node: (
         <>
           <CanyonRating
-            verticalRating={requirement.MinVerticalRating ?? undefined}
-            aquaticRating={requirement.MinAquaticRating ?? undefined}
-            commitmentRating={requirement.MinCommitmentRating ?? undefined}
+            verticalRating={minV ?? undefined}
+            aquaticRating={minA ?? undefined}
+            commitmentRating={minC ?? undefined}
             hideUnknown
           />+
         </>
@@ -50,10 +70,32 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({ requirement, tagNames
     });
   }
 
-  if (requirement.StartDate) {
+  // Canyon type rules
+  const typeRule = rules.find(r => r.RuleType === 'canyon_type' && !r.IsExclusion);
+  if (typeRule?.IntValues) {
+    const types = typeRule.IntValues.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
+    const label = types.map(n => GetCanyonTypeDisplayName(n as any)).join(', ');
+    criteriaItems.push({ key: 'type', node: label });
+  }
+
+  // First-time rule
+  if (rules.some(r => r.RuleType === 'first_time' && !r.IsExclusion)) {
+    criteriaItems.push({ key: 'firsttime', node: t('goals.firstTimeOnly') });
+  }
+
+  // Region scope (from Goals.RegionId, not rules)
+  if (requirement.RegionId != null) {
+    const name = regionNames?.[requirement.RegionId] ?? `Region ${requirement.RegionId}`;
+    criteriaItems.push({ key: 'region', node: name });
+  }
+
+  // Time window
+  if (requirement.RollingDays) {
+    criteriaItems.push({ key: 'rolling', node: t('goals.lastNDays', { days: requirement.RollingDays }) });
+  } else if (requirement.StartDate) {
     criteriaItems.push({
       key: 'date',
-      node: `from ${new Date(requirement.StartDate).toLocaleDateString(undefined, { dateStyle: 'medium' })}`,
+      node: t('goals.dateFrom', { date: new Date(requirement.StartDate).toLocaleDateString(undefined, { dateStyle: 'medium' }) }),
     });
   }
 
@@ -136,7 +178,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({ requirement, tagNames
 
       {/* Count */}
       <Typography variant="caption" color="text.secondary" sx={{ flex: '0 0 auto', minWidth: 80, textAlign: 'right', whiteSpace: 'nowrap' }}>
-        {requirement.CurrentCount ?? 0} / {requirement.MinCount} {unitLabel}
+        {requirement.CurrentCount ?? 0} / {target} {unitLabel}
       </Typography>
     </Box>
   );

@@ -1,22 +1,47 @@
 import { Canyon } from './Canyon';
 import { UserCanyon } from './UserCanyon';
 
-export type CountMode = 'records' | 'days' | 'distinct_canyons' | 'all_canyons_in_region' | 'distinct_regions';
+export type CountMode = 'records' | 'days' | 'distinct_canyons' | 'distinct_regions' | 'all_in_region';
+
+export type GoalRuleType =
+  | 'canyon_type'
+  | 'min_vertical'
+  | 'min_aquatic'
+  | 'min_commitment'
+  | 'tag'
+  | 'first_time';
+
+export interface GoalRule {
+  Id?: number;
+  RuleType: GoalRuleType;
+  /** Single integer value: regionId / minRating / tagId / single canyon type */
+  IntValue?: number | null;
+  /** Comma-separated values for multi-value rules (canyon_type: "1,2,3") */
+  IntValues?: string | null;
+  /** false = trip must match; true = trip must NOT match */
+  IsExclusion: boolean;
+}
 
 export interface Goal {
   Id?: number;
   Label: string;
-  MinCount: number;
-  MinVerticalRating?: number | null;
-  MinAquaticRating?: number | null;
-  MinCommitmentRating?: number | null;
-  RequiredTagIds: number[];
+  /** Target count. Null for 'all_in_region' where the target is dynamic. */
+  MinCount?: number | null;
   CountMode: CountMode;
-  StartDate?: string | null;   // ISO date string (YYYY-MM-DD), null = all-time
-  CompletedAt?: string | null; // ISO datetime string, null = active
+  /** Region scope — required for 'all_in_region', optional filter for other modes. */
+  RegionId?: number | null;
+  /** Filter rules — replaces MinVerticalRating/AquaticRating/CommitmentRating/RequiredTagIds */
+  Rules: GoalRule[];
+  /** Absolute start date (YYYY-MM-DD). Mutually exclusive with RollingDays. */
+  StartDate?: string | null;
+  /** Rolling time window in days (e.g. 365 = last year). Mutually exclusive with StartDate. */
+  RollingDays?: number | null;
+  CompletedAt?: string | null;
   SortOrder?: number;
   // Computed by API
   CurrentCount?: number;
+  /** For 'all_in_region': total canyons in the region. For all other modes: equals MinCount. */
+  TargetCount?: number | null;
 }
 
 /** Raw trip returned by GET /api/goals/:id/trips — trip fields only. */
