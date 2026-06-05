@@ -1,13 +1,14 @@
 import { apiFetch } from '../utils/api';
 import { Region } from '../types/Region';
 import i18n from '../i18n';
+import { GetRegionDisplayName } from './EnumMapper';
 
 let cache: Promise<Region[]> | null = null;
 
 function resolveNames(nodes: any[]): Region[] {
   return nodes.map(n => ({
     ...n,
-    Name: i18n.t(`regions:${n.Slug}`, { defaultValue: n.Slug }),
+    Name: GetRegionDisplayName(n.Slug),
     Children: resolveNames(n.Children ?? []),
   }));
 }

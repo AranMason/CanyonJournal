@@ -4,6 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import enCommon from './locales/en/common.json';
 import enRegions from './locales/en/regions.json';
+import enRegionsLegacy from './locales/en/regions-legacy.json';
 import enEnums from './locales/en/enums.json';
 import enTranslation from './locales/en/translation.json';
 
@@ -13,12 +14,13 @@ i18n
   .init({
     fallbackLng: 'en',
     defaultNS: 'translation',
-    ns: ['translation', 'common', 'regions', 'enums'],
+    ns: ['translation', 'common', 'regions', 'regions-legacy', 'enums'],
     resources: {
       en: {
         translation: enTranslation,
         common: enCommon,
         regions: enRegions,
+        'regions-legacy': enRegionsLegacy, // For backward compatibility with old region keys
         enums: enEnums,
       },
     },
