@@ -60,7 +60,7 @@
   },
   "settings": {
     "title": "Settings",
-    "canyons": "My $t(common:terms.canyon.upper, {\"count\": 2})",
+    "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})",
     "gear": "$t(common:terms.gear.upper, {\"count\": 1})",
     "ropes": "$t(common:terms.rope.upper, {\"count\": 2})",
     "tags": "Tags",
