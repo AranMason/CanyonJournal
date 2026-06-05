@@ -35,7 +35,7 @@ export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {
 export function GetRegionDisplayName(regionSlug?: string | null, regionSymbol?: string | null, isShort: boolean = false): string {
     if (!regionSlug && !regionSymbol) return '';
     if (isShort) return regionSymbol ?? '';
-    let name = i18n.t(`regions:${regionSlug}.name`, { defaultValue: regionSlug, returnObjects: false });
+    let name = i18n.t(`regions:${regionSlug}`, { defaultValue: regionSlug, returnObjects: false });
 
     if(name === regionSlug) {
         // If the region slug is not found in the 'regions' namespace, try the 'regions-legacy' namespace for backward compatibility
