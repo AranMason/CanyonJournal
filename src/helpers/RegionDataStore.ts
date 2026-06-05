@@ -1,16 +1,17 @@
 import { apiFetch } from '../utils/api';
 import { Region } from '../types/Region';
-import i18n from '../i18n';
 import { GetRegionDisplayName } from './EnumMapper';
 
 let cache: Promise<Region[]> | null = null;
 
 function resolveNames(nodes: any[]): Region[] {
-  return nodes.map(n => ({
-    ...n,
-    Name: GetRegionDisplayName(n.Slug),
-    Children: resolveNames(n.Children ?? []),
-  }));
+  return nodes
+    .map(n => ({
+      ...n,
+      Name: GetRegionDisplayName(n.Slug),
+      Children: resolveNames(n.Children ?? []),
+    }))
+    .sort((a, b) => a.SortOrder - b.SortOrder || a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 }
 
 /** Returns the full region tree (nested) from the API, cached for the session. */

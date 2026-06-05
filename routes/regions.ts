@@ -34,7 +34,7 @@ router.get('/', async (req: Request, res: Response) => {
       SELECT r.Id, r.ParentId, r.Slug, r.Symbol, r.SortOrder
       FROM Regions r
       WHERE r.IsActive = 1
-      ORDER BY r.SortOrder, r.Id
+      ORDER BY r.Id
     `);
     res.json(buildTree(result.recordset));
   } catch (err) {
