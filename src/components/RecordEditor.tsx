@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../types/CanyonRecord";
 import { apiFetch } from "../utils/api";
+import * as CanyonDataStore from "../helpers/CanyonDataStore";
 import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
 import * as TagsDataStore from '../helpers/TagsDataStore';
 import { GearRopeSelector } from "./GearRopeSelector";
@@ -10,7 +11,7 @@ import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
 import { CanyonListEntry } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
-import { parseCanyonKey } from '../utils/canyonKey';
+import { canyonKey, parseCanyonKey, userCanyonKey } from '../utils/canyonKey';
 import AddCanyonModal, { CanyonModalFormValues } from './AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../utils/canyonForm';
 import * as Yup from 'yup';
@@ -51,20 +52,50 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
     useEffect(() => {
         setCanyonsLoading(true);
-        apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=1')
-            .then(data => {
-                setCanyons(data);
-                // Restore display info for edit mode using parseCanyonKey
-                if (initialValues?.CanyonId) {
-                    const match = data.find(c => parseCanyonKey(c.Key).canyonId === initialValues.CanyonId);
-                    if (match) setSelectedDisplay({ name: match.Name, isVerified: true, canyon: match });
-                } else if (initialValues?.UserCanyonId) {
-                    const match = data.find(c => parseCanyonKey(c.Key).userCanyonId === initialValues.UserCanyonId);
-                    if (match) setSelectedDisplay({ name: match.Name, isVerified: false, canyon: match });
-                }
-            })
-            .finally(() => setCanyonsLoading(false));
-        TagsDataStore.load().then(tags => setAvailableTags(tags.map(t => t.Name)));
+
+        var loadBaseCayons = CanyonDataStore.load()
+        var loadUserCanyons = UserCanyonDataStore.load()
+        var loadTags = TagsDataStore.load()
+
+        Promise.all([loadBaseCayons, loadUserCanyons, loadTags]).then(([baseCanyons, userCanyons, tags]) => {
+
+            setAvailableTags(tags.map(t => t.Name));
+
+            setCanyons([
+                ...baseCanyons.filter(c => c.IsVerified).map((c): CanyonListEntry => ({
+                    ...c, 
+                    Key: canyonKey(c.Id ?? -1),
+                    DetailUrl: "",
+                    Descents: 0
+                })),
+                ...userCanyons.map((c): CanyonListEntry => ({
+                    ...c, 
+                    IsVerified: true,
+                    Key: userCanyonKey(c.Id),
+                    DetailUrl: "",
+                    Url: c.Url ?? "",
+                    CanyonType: c.CanyonType ?? null,
+                    Descents: 0
+                }))
+            ])
+
+            // const userCanyonEntries: CanyonListEntry[] = userCanyons.map(uc => ({
+
+        }).finally(() => setCanyonsLoading(false));
+
+        // apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=0')
+        //     .then(data => {
+        //         setCanyons(data);
+        //         // Restore display info for edit mode using parseCanyonKey
+        //         if (initialValues?.CanyonId) {
+        //             const match = data.find(c => parseCanyonKey(c.Key).canyonId === initialValues.CanyonId);
+        //             if (match) setSelectedDisplay({ name: match.Name, isVerified: true, canyon: match });
+        //         } else if (initialValues?.UserCanyonId) {
+        //             const match = data.find(c => parseCanyonKey(c.Key).userCanyonId === initialValues.UserCanyonId);
+        //             if (match) setSelectedDisplay({ name: match.Name, isVerified: false, canyon: match });
+        //         }
+        //     })
+        //     .finally(() => setCanyonsLoading(false));
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const initialFormValues: CanyonRecord = initialValues || {
@@ -154,7 +185,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
                         const otherCanyons = canyons
-                            .filter(c => !c.IsFavourite && (c.IsVerified || c.Descents > 0) && matchesFilter(c.Name, c.Url))
+                            .filter(c => !c.IsFavourite && (c.IsVerified) && matchesFilter(c.Name, c.Url))
                             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
                         const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
@@ -188,6 +219,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
                                             <Typography variant="body2">
+                                                // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it
                                                 {selectedDisplay.canyon ? GetRegionDisplayName(selectedDisplay.canyon.RegionSlug, selectedDisplay.canyon.RegionSymbol) : ''}
                                             </Typography>
                                         </Box>
@@ -251,6 +283,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
+                                                                            {/* // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it */}
                                                                             <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
                                                                         </Box>
                                                                     }
@@ -280,6 +313,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
+                                                                            {/* // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it */}
                                                                             <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
                                                                         </Box>
                                                                     }
