@@ -1,6 +1,6 @@
 # Hand Linne — Copilot Instructions
 
-Hand Linne is a canyoneering trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
+Hand Linne is a canyoning trip journal web app. Users log descents, manage custom canyon entries, track gear/ropes, and browse a verified canyon directory.
 
 See `/bots/APP_OVERVIEW.md` for full architecture, API, and database documentation.
 See `/bots/FEATURE.md` for the current feature backlog. Please update this file as you work on features, to remove actioned items. If you think of a new feature, request user permission to add that to the document.
@@ -45,9 +45,9 @@ See `/bots/FEATURE.md` for the current feature backlog. Please update this file 
 - Enums live in `src/types/`. `CanyonTypeEnum` values: Unknown=0, Sports=1, Adventure=2, GorgeWalk=3, Dry=4. `WaterLevel` values: Unknown=0 … VeryHigh=5.
 - Display name / colour helpers are in `src/helpers/EnumMapper.ts`.
 
-### Canyoneering domain notes
-- **Canyoneering** is the sport of descending canyons — don't conflate with hiking or climbing.
-- Ratings (Aquatic, Vertical, Commitment, Star) follow standard canyoneering grading conventions — don't assume generic meanings.
+### Canyoning domain notes
+- **Canyoning** is the sport of descending canyons — don't conflate with hiking or climbing.
+- Ratings (Aquatic, Vertical, Commitment, Star) follow standard canyoning grading conventions — don't assume generic meanings.
 - Water level refers to the flow conditions in a canyon on the day of the descent, not a general property of the canyon.
 
 ### UI copy conventions
