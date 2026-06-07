@@ -49,3 +49,15 @@ When asked to review, you should provide outline, priority and ease of implement
 
 # [General] New User Pop-up with a Application Overview
 - Also potentially starting new Users with a Goal of 'Do X Canyons'
+
+# [Goal] Region Completion lists more relevent trips
+
+When listing all trips for Regional Completion, we show all recent trips currently, this isn't useful.
+We should introduce Tabs to the Goal Summary
+- Trips - This is what we currently display
+- Canyons 
+  - For regional completion. Breakdown of which Canyons have been completed, and which are still needing to be done.
+  - For Unique Canyons - Show List of Canyons Already done.
+- Regions
+  - For Unqiue Regions show which regions have already been done, with descent counts
+  - Have a link to 'All Canyons' page prefiltered to the appropriate region.

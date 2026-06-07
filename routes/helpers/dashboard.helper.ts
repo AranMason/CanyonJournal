@@ -38,19 +38,13 @@ export async function getTotalDescentsCount(userId: number): Promise<{ total: nu
         .query(`
             SELECT
                 COUNT(*) AS Total,
-                COUNT(DISTINCT CASE
-                    WHEN COALESCE(c.RegionId, uc.RegionId) IS NOT NULL
-                    THEN COALESCE(c.RegionId, uc.RegionId)
-                END) AS Regions
             FROM CanyonRecords cr
-            LEFT JOIN Canyons c ON cr.CanyonId = c.Id
-            LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
             WHERE cr.UserId = @userId
         `);
 
     return {
         total: result.recordset[0]?.Total ?? 0,
-        regions: result.recordset[0]?.Regions ?? 0,
+        regions: 0, // Too complicated at the moment - Due to tree traversal. Just going to hide it for now.
     };
 }
 
