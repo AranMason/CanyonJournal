@@ -37,7 +37,7 @@ export async function getTotalDescentsCount(userId: number): Promise<{ total: nu
         .input('userId', sql.Int, userId)
         .query(`
             SELECT
-                COUNT(*) AS Total,
+                COUNT(*) AS Total
             FROM CanyonRecords cr
             WHERE cr.UserId = @userId
         `);
