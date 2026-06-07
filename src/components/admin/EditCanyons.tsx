@@ -45,7 +45,6 @@ const EditCanyons: React.FC = () => {
         if (values.verified === 'verified' && !canyon.IsVerified) return false;
         if (values.verified === 'unverified' && canyon.IsVerified) return false;
         if (values.dataSource?.length > 0 && !values.dataSource.includes(canyon.SourceId)) {
-            console.log(values.dataSource, canyon.SourceId);
             return false;
         };
         return true;

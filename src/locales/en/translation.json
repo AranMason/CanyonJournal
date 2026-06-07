@@ -208,6 +208,23 @@
     "message": "$t(common:app.name) uses essential cookies to keep you logged in. By continuing, you agree to our",
     "privacyPolicy": "Privacy Policy",
     "declineWarning": "If you decline, you will be logged out."
+  },
+  "filters": {
+    "canyonType": "$t(common:canyon.canyonType)",
+    "region": "$t(common:fields.region)",
+    "dataSource": "$t(common:fields.source)",
+    "tag": "$t(common:fields.tags)",
+    "starRating": "$t(common:canyon.stars)",
+    "verticalRating": "$t(common:canyon.vertical)",
+    "aquaticRating": "$t(common:canyon.aquatic)",
+    "commitmentRating": "$t(common:canyon.commitment)",
+    "ropes": "$t(common:terms.rope.upper, {\"count\": 2})",
+    "gear": "$t(common:terms.gear.upper, {\"count\": 2})",
+    "verified": {
+      "all": "All",
+      "verified": "Verified",
+      "unverified": "Unverified"
+    }
   }
 }
 

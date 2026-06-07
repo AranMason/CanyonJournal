@@ -6,6 +6,8 @@ import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from './EnumMapper';
 import { apiFetch } from '../utils/api';
 import { DataSource } from '../types/DataSource';
+import i18n from '../i18n';
+import { COMMITMENT_RATINGS } from '../components/CanyonRating';
 
 // ─── Individual filter building blocks ────────────────────────────────────────
 
@@ -22,7 +24,7 @@ export function getCanyonTypeFilterConfig(key = 'type'): FilterConfig {
   return {
     type: 'multi-select',
     key,
-    label: 'Canyon Type',
+    label: i18n.t('filters.canyonType'),
     labelId: 'canyon-type-filter',
     options: CanyonTypeList.map(t => ({ value: t, label: GetCanyonTypeDisplayName(t) })),
   };
@@ -32,7 +34,7 @@ export function getVerticalRatingFilterConfig(key = 'verticalRating'): FilterCon
   return {
     type: 'multi-select',
     key,
-    label: 'Vertical Rating',
+    label: i18n.t('filters.verticalRating'),
     labelId: 'vertical-rating-filter',
     options: [...Array(7).keys()].map(i => ({ value: i + 1, label: `V${i + 1}` })),
   };
@@ -42,7 +44,7 @@ export function getAquaticRatingFilterConfig(key = 'aquaRating'): FilterConfig {
   return {
     type: 'multi-select',
     key,
-    label: 'Aquatic Rating',
+    label: i18n.t('filters.aquaticRating'),
     labelId: 'aquatic-rating-filter',
     options: [...Array(7).keys()].map(i => ({ value: i + 1, label: `A${i + 1}` })),
   };
@@ -52,9 +54,19 @@ export function getStarRatingFilterConfig(key = 'starRating'): FilterConfig {
   return {
     type: 'multi-select',
     key,
-    label: 'Star Rating',
+    label: i18n.t('filters.starRating'),
     labelId: 'star-rating-filter',
     options: [...Array(6).keys()].map(i => ({ value: i, label: i > 0 ? '★'.repeat(i) : 'None' })),
+  };
+}
+
+export function getCommitmentRatingFilterConfig(key = 'commitmentRating'): FilterConfig {
+  return {
+    type: 'multi-select',
+    key,
+    label: i18n.t('filters.commitmentRating'),
+    labelId: 'commitment-rating-filter',
+    options: [...Array(7).keys()].map(i => ({ value: i+1, label: COMMITMENT_RATINGS[i] })),
   };
 }
 
@@ -62,7 +74,7 @@ export function getRopeFilterConfig(key = 'ropes'): FilterConfig {
   return {
     type: 'async-multi-select',
     key,
-    label: 'Ropes',
+    label: i18n.t('filters.ropes'),
     labelId: 'rope-filter',
     loadOptions: () => EquipmentDataStore.load()
       .then(d => d.ropes.map(r => ({ value: r.Id, label: `${r.Name} - ${r.Length} ${r.Unit}` }))),
@@ -73,7 +85,7 @@ export function getGearFilterConfig(key = 'gear'): FilterConfig {
   return {
     type: 'async-multi-select',
     key,
-    label: 'Gear',
+    label: i18n.t('filters.gear'),
     labelId: 'gear-filter',
     loadOptions: () => EquipmentDataStore.load()
       .then(d => d.gear.map(g => ({ value: g.Id, label: g.Name, group: g.Category }))),
@@ -85,9 +97,9 @@ export function getVerifiedFilterConfig(key = 'verified'): FilterConfig {
     type: 'exclusive-toggle',
     key,
     options: [
-      { value: 'all', label: 'All' },
-      { value: 'verified', label: 'Verified' },
-      { value: 'unverified', label: 'Unverified' },
+      { value: 'all', label: i18n.t('filters.verified.all') },
+      { value: 'verified', label: i18n.t('filters.verified.verified') },
+      { value: 'unverified', label: i18n.t('filters.verified.unverified') },
     ],
   };
 }
@@ -96,7 +108,7 @@ export function getTagFilterConfig(key = 'tags'): FilterConfig {
   return {
     type: 'async-multi-select',
     key,
-    label: 'Tags',
+    label: i18n.t('filters.tag'),
     labelId: 'tag-filter',
     loadOptions: () => TagsDataStore.load()
       .then(tags => tags.map(t => ({ value: t.Id, label: t.Name }))),
@@ -107,7 +119,7 @@ export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
   return {
     type: 'async-multi-select',
     key,
-    label: 'Data Source',
+    label: i18n.t('filters.dataSource'),
     labelId: 'data-source-filter',
     loadOptions: () => apiFetch<DataSource[]>('/api/sources', {
       method: 'GET'

@@ -14,7 +14,8 @@ import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import {
   getRegionFilterConfig, getCanyonTypeFilterConfig,
   getVerticalRatingFilterConfig, getAquaticRatingFilterConfig, getStarRatingFilterConfig,
-  getCanyonNameFilterConfig
+  getCanyonNameFilterConfig,
+  getCommitmentRatingFilterConfig
 } from '../helpers/filterConfigs';
 import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Region } from '../types/Region';
@@ -113,6 +114,7 @@ const CanyonList: React.FC = () => {
     getVerticalRatingFilterConfig(),
     getAquaticRatingFilterConfig(),
     getStarRatingFilterConfig(),
+    getCommitmentRatingFilterConfig(),
   ], [usedRegionIds]);
 
   const filterFn = useCallback((canyon: CanyonListEntry, values: FilterValues) => {
@@ -137,13 +139,15 @@ const CanyonList: React.FC = () => {
     const vertFilter = values.verticalRating as number[];
     const aquaFilter = values.aquaRating as number[];
     const starFilter = values.starRating as number[];
+    const commitmentFilter = values.commitmentRating as number[];
 
-    if (vertFilter.length > 0 || aquaFilter.length > 0 || starFilter.length > 0) {
+    if (vertFilter.length > 0 || aquaFilter.length > 0 || starFilter.length > 0 || commitmentFilter.length > 0) {
       if (canyon.IsUnrated) return false;
     }
     if (vertFilter.length > 0 && !vertFilter.includes(canyon.VerticalRating ?? 0)) return false;
     if (aquaFilter.length > 0 && !aquaFilter.includes(canyon.AquaticRating ?? 0)) return false;
     if (starFilter.length > 0 && !starFilter.includes(canyon.StarRating ?? 0)) return false;
+    if (commitmentFilter.length > 0 && !commitmentFilter.includes(canyon.CommitmentRating ?? 0)) return false;
 
     return true;
   }, [flatRegions]);
