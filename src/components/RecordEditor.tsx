@@ -19,15 +19,12 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PersonIcon from '@mui/icons-material/Person';
-import UnknownCanyonSource from '@mui/icons-material/Person';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import StarIcon from '@mui/icons-material/Star';
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { useTranslation } from 'react-i18next';
-import { GetRegionDisplayName } from "../helpers/RegionHelper";
 import RegionIcon from "./RegionIcon";
 import SourceIcon from "./SourceIcon";
 

@@ -4,20 +4,6 @@ When a feature is completed, the entry and text should be removed. If there is o
 When asked to review, you should provide outline, priority and ease of implementation overview.
 ---
 
-# [Brand] Get a new Logo
-Need a Logo that represents 'Hand Linne', something that ideally invokes some mixture of Ropes, Writing and Deep Water/Waterfalls in a minimalist way. 
-
-External Clients that will need to be updated are:
-- Update Auth0
-- Update Facebook
-- Add a Logo to Google
-
-# [Tech] Unify canyon tables display behaviour in EditCanyons and SettingsCanyonsTab etc
-
-- `EditCanyons` (admin) and `SettingsCanyonsTab` (user settings) both render a canyon table with Name, Grade, Region, Type columns
-- They differ in one column: admin has "Verified", settings has "Descents"
-- Could share a base canyon table component with optional column slots
-
 # [Low] Add colour picker support for ropes, so we can visualize the colour of them in the UI
 
 # [Low] Add support for 'splitting' a rope
@@ -53,8 +39,6 @@ External Clients that will need to be updated are:
 
 # [Goals] We should only load Completed Goals when they're requested to be shown in the settings
 - **Partially done**: Active vs Completed goals are loaded separately. The completed goals list is still fetched eagerly on load via `?includeCompleted=true`. Defer this fetch until the user clicks "Show Completed".
-
-# [Marketing] Include the fact that you can set Goals - Personal or Professional
 
 # [Goals] Default Goals
 - New User should get a 'Descend 5 Canyons Goal' to teach them the system.

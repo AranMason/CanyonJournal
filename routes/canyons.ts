@@ -143,8 +143,18 @@ router.get('/verify', async (req, res) => {
 
     const result = await pool.request()
       .query(`
-          SELECT c.*
-          FROM Canyons c
+          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
+               c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
+               c.SourceId, c.RegionId,
+               rgn.Symbol AS RegionSymbol,
+               rgn.Slug AS RegionSlug,
+               cs.DisplayName AS SourceName,
+               cs.LogoUrl AS SourceLogoUrl,
+               cs.WebsiteUrl AS SourceWebsiteUrl
+        FROM Canyons c
+        LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
+        LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+        ORDER BY c.Name
         `);
     res.json(result.recordset);
 
