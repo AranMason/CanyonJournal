@@ -11,7 +11,7 @@ import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
 import { CanyonListEntry } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
-import { canyonKey, parseCanyonKey, userCanyonKey } from '../utils/canyonKey';
+import { canyonKey, isUserCanyonKey, parseCanyonKey, userCanyonKey } from '../utils/canyonKey';
 import AddCanyonModal, { CanyonModalFormValues } from './AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../utils/canyonForm';
 import * as Yup from 'yup';
@@ -29,6 +29,7 @@ import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { useTranslation } from 'react-i18next';
 import { GetRegionDisplayName } from "../helpers/RegionHelper";
 import RegionIcon from "./RegionIcon";
+import SourceIcon from "./SourceIcon";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -197,18 +198,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     <Box border={1} borderColor="divider" borderRadius={1} p={2} mb={2}>
                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                {selectedDisplay.isVerified && selectedDisplay.canyon?.SourceLogoUrl ? (
-                                                    <img src={selectedDisplay.canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
-                                                ) : !selectedDisplay.isVerified ? (
-                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                                                ) : (
-                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
-                                                )}
+                                                <RegionIcon regionSlug={selectedDisplay.canyon?.RegionSlug ?? ''} regionSymbol={selectedDisplay.canyon?.RegionSymbol} size={16} />
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
                                             <Typography variant="body2">
-                                                <RegionIcon regionSlug={selectedDisplay.canyon?.RegionSlug ?? ''} regionSymbol={selectedDisplay.canyon?.RegionSymbol} size={16} />
-                                                {selectedDisplay.canyon?.RegionSlug ? GetRegionDisplayName(selectedDisplay.canyon.RegionSlug) : ''}
+                                                <SourceIcon sourceLogoUrl={selectedDisplay.canyon?.SourceLogoUrl} isUserCanyon={isUserCanyonKey(selectedDisplay.canyon?.Key)} size={20} />
                                             </Typography>
                                         </Box>
                                         {selectedDisplay.canyon && (
@@ -262,17 +256,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                {canyon.IsVerified && canyon.SourceLogoUrl ? (
-                                                                                    <img src={canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
-                                                                                ) : !canyon.IsVerified ? (
-                                                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                                                                                ) : (
-                                                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
-                                                                                )}
+                                                                                <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
                                                                             
-                                                                            <span><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} /></span>
+                                                                            <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
                                                                         </Box>
                                                                     }
                                                                     secondary={
@@ -292,16 +280,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                                                             <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                {canyon.IsVerified && canyon.SourceLogoUrl ? (
-                                                                                    <img src={canyon.SourceLogoUrl} alt="source" style={{ height: 14, width: 14, objectFit: 'contain' }} />
-                                                                                ) : !canyon.IsVerified ? (
-                                                                                    <PersonIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-                                                                                ) : (
-                                                                                    <UnknownCanyonSource sx={{ fontSize: 14, color: "text.secondary" }} />
-                                                                                )}
+                                                                                <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
+                                                                                
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
-                                                                            <span><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} /></span>
+                                                                            <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
                                                                         </Box>
                                                                     }
                                                                     secondary={

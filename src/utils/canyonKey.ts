@@ -9,11 +9,11 @@ export function userCanyonKey(id: number): string {
     return `${USERCANYON_KEY_PREFIX}${id}`;
 }
 
-export function isCanyonKey(key: string): boolean {
-    return key.startsWith(CANYON_KEY_PREFIX);
+export function isCanyonKey(key?: string): boolean {
+    return key?.startsWith(CANYON_KEY_PREFIX) ?? false;
 }
-export function isUserCanyonKey(key: string): boolean {
-    return key.startsWith(USERCANYON_KEY_PREFIX);
+export function isUserCanyonKey(key?: string): boolean {
+    return key?.startsWith(USERCANYON_KEY_PREFIX) ?? false;
 }   
 
 export function parseCanyonKey(key: string): { canyonId?: number; userCanyonId?: number } {
