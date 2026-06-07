@@ -149,6 +149,7 @@
     "ruleTypeMinVertical": "$t(common:canyon.vertical)",
     "ruleTypeMinAquatic": "$t(common:canyon.aquatic)",
     "ruleTypeMinCommitment": "$t(common:canyon.commitment)",
+    "ruleTypeMinStars": "$t(common:canyon.stars)",
     "ruleTypeTag": "Tag(s)",
     "ruleTypeFirstTime": "First time only",
     "ruleInclude": "Include",

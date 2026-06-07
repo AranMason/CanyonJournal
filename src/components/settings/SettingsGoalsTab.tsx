@@ -274,7 +274,7 @@ const SettingsGoalsTab: React.FC = () => {
       min_vertical: t('goals.ruleTypeMinVertical'),
       min_aquatic: t('goals.ruleTypeMinAquatic'),
       min_commitment: t('goals.ruleTypeMinCommitment'),
-      min_star: t('goals.ruleTypeMinStar'),
+      min_star: t('goals.ruleTypeMinStars'),
       tag: t('goals.ruleTypeTag'),
       first_time: t('goals.ruleTypeFirstTime'),
     };
