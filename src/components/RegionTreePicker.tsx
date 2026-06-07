@@ -38,7 +38,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   allowClear = true,
   error,
   helperText,
-  size = 'small',
+  size = 'medium',
   availableRegionIds,
 }) => {
   const { t } = useTranslation('common');
