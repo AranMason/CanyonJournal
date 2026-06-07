@@ -9,6 +9,7 @@ import {
   IconButton,
   InputLabel,
   OutlinedInput,
+  TextField,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Region } from '../types/Region';
@@ -45,6 +46,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   const [open, setOpen] = useState(false);
   const [tree, setTree] = useState<Region[]>([]);
   const [flat, setFlat] = useState<Region[]>([]);
+  const [textFilter, setTextFilter] = useState('');
   const [loading, setLoading] = useState(false);
 
   const resolvedLabel = label ?? t('fields.region');
@@ -74,8 +76,8 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   const visibleTree = useMemo(() => {
     if (!availableRegionIds) return tree;
     const available = new Set(availableRegionIds);
-    return elevateTree(pruneTree(tree, available), available);
-  }, [tree, availableRegionIds]);
+    return elevateTree(pruneTree(tree, available, textFilter), available);
+  }, [tree, availableRegionIds, textFilter]);
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -86,9 +88,9 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   // if the visible tree is small, expand everything for convenience.
   const expandedIds = useMemo(() => {
     const allVisibleIds = collectAllIds(visibleTree);
-    if (allVisibleIds.length < 10) return allVisibleIds;
+    if (allVisibleIds.length < 10 || textFilter !== '') return allVisibleIds;
     return value != null ? getAncestorIds(value, flat).map(String) : [];
-  }, [visibleTree, value, flat]);
+  }, [visibleTree, value, flat, textFilter]);
 
   return (
     <>
@@ -122,6 +124,13 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
               <CircularProgress />
             </Box>
           ) : (
+            <>
+            <TextField fullWidth
+              placeholder={t('common:actions.search', 'Search')}
+              value={textFilter}
+              size="small"
+              onChange={(e) => setTextFilter(e.target.value)}
+              sx={{ mb: 1 }} />
             <RegionTreeView
               nodes={visibleTree}
               selectedId={value}
@@ -129,6 +138,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
               onSelect={id => { onChange(id); setOpen(false); }}
               sx={{ maxHeight: 400, overflowY: 'auto' }}
             />
+            </>
           )}
           {allowClear && value != null && (
             <Button onClick={() => { onChange(null); setOpen(false); }} size="small" sx={{ mt: 1 }}>
@@ -158,10 +168,13 @@ function collectAllIds(nodes: Region[]): string[] {
 }
 
 /** Prune the tree to only nodes whose subtree contains at least one available ID. */
-function pruneTree(nodes: Region[], available: Set<number>): Region[] {
+function pruneTree(nodes: Region[], available: Set<number>, textFilter: string): Region[] {
+  const filterText = textFilter.toLowerCase();
   return nodes.reduce<Region[]>((acc, node) => {
-    const prunedChildren = pruneTree(node.Children ?? [], available);
-    if (available.has(node.Id) || prunedChildren.length > 0) {
+    const prunedChildren = pruneTree(node.Children ?? [], available, textFilter);
+    const matchesFilter = filterText === '' || node.Name.toLowerCase().includes(filterText);
+    const hasMatchingDescendant = prunedChildren.length > 0;
+    if ((available.has(node.Id) || hasMatchingDescendant) && (matchesFilter || hasMatchingDescendant)) {
       acc.push({ ...node, Children: prunedChildren });
     }
     return acc;
