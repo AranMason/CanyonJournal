@@ -55,7 +55,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
   const minA = rules.find(r => r.RuleType === 'min_aquatic' && !r.IsExclusion)?.IntValue;
   const minC = rules.find(r => r.RuleType === 'min_commitment' && !r.IsExclusion)?.IntValue;
   const minS = rules.find(r => r.RuleType === 'min_star' && !r.IsExclusion)?.IntValue;
-  if (minV || minA || minC) {
+  if (minV || minA || minC || minS) {
     criteriaItems.push({
       key: 'rating',
       node: (
@@ -66,7 +66,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
             commitmentRating={minC ?? undefined}
             starRating={minS ?? undefined}
             hideUnknown
-          />+
+          />&nbsp;+
         </>
       ),
     });
