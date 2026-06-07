@@ -11,7 +11,6 @@ import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import { Region } from '../../types/Region';
-import { GetRegionDisplayName } from '../../helpers/EnumMapper';
 import CanyonRating from '../CanyonRating';
 import CanyonTypeDisplay from '../CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
@@ -22,6 +21,8 @@ import FilterPanel, { FilterValues } from '../FilterPanel';
 import { getCanyonNameFilterConfig, getRegionFilterConfig, getCanyonTypeFilterConfig } from '../../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
+import { GetRegionDisplayName } from '../../helpers/RegionHelper';
+import RegionIcon from '../RegionIcon';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
@@ -178,7 +179,10 @@ const SettingsCanyonsTab: React.FC = () => {
                         {canyon.Name}
                       </Link>
                     </TableCell>
-                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
+                    <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
+                      &nbsp;{GetRegionDisplayName(canyon.RegionSlug)}
+                    </TableCell>
                     <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                       <CanyonTypeDisplay type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} />
                     </TableCell>

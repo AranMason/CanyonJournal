@@ -6,3 +6,4 @@ Link to territories https://github.com/unicode-org/cldr-json/blob/a79b499916d486
 
 Link to subdivisions https://github.com/unicode-org/cldr-json/blob/a79b499916d486dca4b0f74fe423ea457705fdd9/cldr-json/cldr-subdivisions-full/subdivisions/en/en.json
 
+Hierarchy Breakdown https://www.unicode.org/cldr/charts/48/supplemental/territory_containment_un_m_49.html

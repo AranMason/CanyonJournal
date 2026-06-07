@@ -5,10 +5,11 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import FavouriteButton from './FavouriteButton';
 import CanyonRating from './CanyonRating';
 import CanyonTypeDisplay from './CanyonTypeDisplay';
-import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { GetRegionDisplayName } from '../helpers/RegionHelper';
+import RegionIcon from './RegionIcon';
 
 interface CanyonPageHeaderProps {
   isFavourite: boolean;
@@ -70,8 +71,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
               <CanyonTypeDisplay type={canyonType} />
             )}
             &nbsp;|&nbsp;
-            <Typography variant="body1">{GetRegionDisplayName(regionSlug, regionSymbol)}</Typography>
-            
+            <Typography variant="body1"><RegionIcon regionSlug={regionSlug ?? ''} regionSymbol={regionSymbol} size={16} />&nbsp;{GetRegionDisplayName(regionSlug)}</Typography> 
           </Box>
 
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ mb: 1, mt: 3 }}>

@@ -62,9 +62,14 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   }, []);
 
   const selectedRegion = useMemo(() => flat.find(r => r.Id === value) ?? null, [flat, value]);
-  const displayValue = selectedRegion
-    ? (selectedRegion.Symbol ? `${selectedRegion.Symbol} ${selectedRegion.Name}` : selectedRegion.Name)
-    : '';
+  const displayValue: string = getDisplayValue(selectedRegion)
+
+  function getDisplayValue(region: Region | null): string {
+
+    if(!region) return '';
+
+    return region.Name;
+  }
 
   const visibleTree = useMemo(() => {
     if (!availableRegionIds) return tree;

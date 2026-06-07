@@ -1,6 +1,6 @@
 import { apiFetch } from '../utils/api';
 import { Region } from '../types/Region';
-import { GetRegionDisplayName } from './EnumMapper';
+import { GetRegionDisplayName } from './RegionHelper';
 
 let cache: Promise<Region[]> | null = null;
 

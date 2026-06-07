@@ -6,7 +6,6 @@ import { apiFetch } from '../utils/api';
 import { CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
-import { GetRegionDisplayName } from '../helpers/EnumMapper';
 import FilterPanel, { FilterValues } from '../components/FilterPanel';
 import DateTableCell from '../components/table/DateTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';
@@ -20,6 +19,8 @@ import {
 import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
+import { GetRegionDisplayName } from '../helpers/RegionHelper';
+import RegionIcon from '../components/RegionIcon';
 
 const minDateString: string = '1900-01-01' 
 
@@ -240,7 +241,7 @@ const CanyonList: React.FC = () => {
                       isUnrated={canyon.IsUnrated}
                     />
                   </TableCell>
-                  <TableCell className='hide-md'>{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
+                  <TableCell className='hide-md'><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
                   <CanyonTypeTableCell type={canyon.CanyonType} className='hide-md'/>
                   <TableCell align="center">{canyon.Descents}</TableCell>
                   <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />

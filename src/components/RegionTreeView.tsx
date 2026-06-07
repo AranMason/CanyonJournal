@@ -2,10 +2,10 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import FlagIcon from '@mui/icons-material/Flag';
 import { SimpleTreeView } from '@mui/x-tree-view';
 import { TreeItem } from '@mui/x-tree-view';
 import { Region } from '../types/Region';
+import RegionIcon from './RegionIcon';
 
 interface RegionTreeViewProps {
   nodes: Region[];
@@ -32,10 +32,7 @@ const RegionTreeView: React.FC<RegionTreeViewProps> = ({
         itemId={String(node.Id)}
         label={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, py: 0.25 }}>
-            {node.Symbol
-              ? <span>{node.Symbol}</span>
-              : <FlagIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
-            }
+            <RegionIcon regionSlug={node.Slug ?? ''} regionSymbol={node.Symbol} size={16} />
             <Typography variant="body2" sx={{ flexGrow: 1 }}>{node.Name}</Typography>
             {renderActions?.(node)}
           </Box>

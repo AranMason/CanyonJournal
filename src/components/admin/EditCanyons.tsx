@@ -5,7 +5,6 @@ import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody
 import CanyonRating from '../CanyonRating';
 import AddCanyonModal from '../AddCanyonModal';
 import RowActions from '../RowActions';
-import { GetRegionDisplayName } from '../../helpers/EnumMapper';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import AddIcon from '@mui/icons-material/Add';
@@ -16,6 +15,8 @@ import {
   getCanyonNameFilterConfig, getRegionFilterConfig, getVerifiedFilterConfig,
 } from '../../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
+import { GetRegionDisplayName } from '../../helpers/RegionHelper';
+import RegionIcon from '../RegionIcon';
 
 const EditCanyons: React.FC = () => {
 
@@ -85,7 +86,7 @@ const EditCanyons: React.FC = () => {
                             />
                         </TableCell>
                         <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
-                            {GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}
+                            <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug)}
                         </TableCell>
                         <CanyonTypeTableCell type={canyon.CanyonType} sx={{ display: { xs: 'none', sm: 'table-cell' } }} />
                         <TableCell>

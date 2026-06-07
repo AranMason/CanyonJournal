@@ -20,14 +20,15 @@ import SaveAsIcon from '@mui/icons-material/SaveAs';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonIcon from '@mui/icons-material/Person';
-import UnknownCanyonSource from '@mui/icons-material/QuestionMarkRounded';
+import UnknownCanyonSource from '@mui/icons-material/Person';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import StarIcon from '@mui/icons-material/Star';
-import { GetRegionDisplayName } from "../helpers/EnumMapper";
 import CanyonRating from "./CanyonRating";
 import IconPicker from "./IconPicker";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import { useTranslation } from 'react-i18next';
+import { GetRegionDisplayName } from "../helpers/RegionHelper";
+import RegionIcon from "./RegionIcon";
 
 type RecordEditorProps = {
     isEdit: boolean,
@@ -53,11 +54,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     useEffect(() => {
         setCanyonsLoading(true);
 
-        var loadBaseCayons = CanyonDataStore.load()
-        var loadUserCanyons = UserCanyonDataStore.load()
-        var loadTags = TagsDataStore.load()
 
-        Promise.all([loadBaseCayons, loadUserCanyons, loadTags]).then(([baseCanyons, userCanyons, tags]) => {
+        Promise.all([
+            CanyonDataStore.load(),
+             UserCanyonDataStore.load(),
+              TagsDataStore.load()
+            ]).then(([baseCanyons, userCanyons, tags]) => {
 
             setAvailableTags(tags.map(t => t.Name));
 
@@ -82,20 +84,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
             // const userCanyonEntries: CanyonListEntry[] = userCanyons.map(uc => ({
 
         }).finally(() => setCanyonsLoading(false));
-
-        // apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=0')
-        //     .then(data => {
-        //         setCanyons(data);
-        //         // Restore display info for edit mode using parseCanyonKey
-        //         if (initialValues?.CanyonId) {
-        //             const match = data.find(c => parseCanyonKey(c.Key).canyonId === initialValues.CanyonId);
-        //             if (match) setSelectedDisplay({ name: match.Name, isVerified: true, canyon: match });
-        //         } else if (initialValues?.UserCanyonId) {
-        //             const match = data.find(c => parseCanyonKey(c.Key).userCanyonId === initialValues.UserCanyonId);
-        //             if (match) setSelectedDisplay({ name: match.Name, isVerified: false, canyon: match });
-        //         }
-        //     })
-        //     .finally(() => setCanyonsLoading(false));
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const initialFormValues: CanyonRecord = initialValues || {
@@ -219,8 +207,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 <Typography variant="subtitle1" fontWeight={600}>{selectedDisplay.name}</Typography>
                                             </Box>
                                             <Typography variant="body2">
-                                                // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it
-                                                {selectedDisplay.canyon ? GetRegionDisplayName(selectedDisplay.canyon.RegionSlug, selectedDisplay.canyon.RegionSymbol) : ''}
+                                                <RegionIcon regionSlug={selectedDisplay.canyon?.RegionSlug ?? ''} regionSymbol={selectedDisplay.canyon?.RegionSymbol} size={16} />
+                                                {selectedDisplay.canyon?.RegionSlug ? GetRegionDisplayName(selectedDisplay.canyon.RegionSlug) : ''}
                                             </Typography>
                                         </Box>
                                         {selectedDisplay.canyon && (
@@ -283,8 +271,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
-                                                                            {/* // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it */}
-                                                                            <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
+                                                                            
+                                                                            <span><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} /></span>
                                                                         </Box>
                                                                     }
                                                                     secondary={
@@ -313,8 +301,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                                                 )}
                                                                                 <span>{canyon.Name}</span>
                                                                             </Box>
-                                                                            {/* // TODO: We should probably resolve the RegionId to a name here instead of relying on the API to provide it */}
-                                                                            <span>{GetRegionDisplayName(canyon.RegionName, canyon.RegionSymbol, true)}</span>
+                                                                            <span><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} /></span>
                                                                         </Box>
                                                                     }
                                                                     secondary={

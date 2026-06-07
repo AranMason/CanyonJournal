@@ -54,7 +54,7 @@ External Clients that will need to be updated are:
 # [Goals] We should only load Completed Goals when they're requested to be shown in the settings
 - **Partially done**: Active vs Completed goals are loaded separately. The completed goals list is still fetched eagerly on load via `?includeCompleted=true`. Defer this fetch until the user clicks "Show Completed".
 
-# [Marketting] Include the fact that you can set Goals - Personal or Professional
+# [Marketing] Include the fact that you can set Goals - Personal or Professional
 
 # [Goals] Default Goals
 - New User should get a 'Descend 5 Canyons Goal' to teach them the system.

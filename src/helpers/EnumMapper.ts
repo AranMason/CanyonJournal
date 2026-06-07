@@ -26,24 +26,7 @@ export function GetCanyonTypeDisplayName(type: CanyonTypeEnum): string {
     return i18n.t(`enums:canyonType.${key}`);
 }
 
-/**
- * Returns the display string for a region using the slug (looked up via i18n) and symbol.
- * @param regionSlug  Region slug key (e.g. "scotland") — resolved via the 'regions' i18n namespace
- * @param regionSymbol  Emoji flag (e.g. "🏴󠁧󠁢󠁳󠁣󠁴󠁿")
- * @param isShort  If true, returns only the symbol
- */
-export function GetRegionDisplayName(regionSlug?: string | null, regionSymbol?: string | null, isShort: boolean = false): string {
-    if (!regionSlug && !regionSymbol) return '';
-    if (isShort) return regionSymbol ?? '';
-    let name = i18n.t(`regions:${regionSlug}`, { defaultValue: regionSlug, returnObjects: false });
 
-    if(name === regionSlug) {
-        // If the region slug is not found in the 'regions' namespace, try the 'regions-legacy' namespace for backward compatibility
-        name = i18n.t(`regions-legacy:${regionSlug}`, { defaultValue: regionSlug })
-    }
-
-    return regionSymbol ? `${regionSymbol} ${name}` : name;
-}
 
 export function GetWaterLevelDisplayName(type: WaterLevel): string {
     const key = waterLevelKey[type ?? WaterLevel.Unknown];
