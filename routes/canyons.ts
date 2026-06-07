@@ -292,6 +292,7 @@ router.post('/', async (req, res) => {
       .input('canyonRegionId', sql.Int, canyonRegionId ?? null)
       .input('canyonType', sql.Int, canyonType)
       .input('sourceId', sql.Int, sourceId || null)
+      .input('lastUpdated', sql.DateTime, new Date().toUTCString());
 
     if (await isAdmin(req) && req.body.id > 0) {
       request.input('id', sql.Int, req.body.id);
@@ -306,7 +307,8 @@ router.post('/', async (req, res) => {
               IsUnrated = @isUnrated,
               RegionId = @canyonRegionId,
               CanyonType = @canyonType,
-              SourceId = @sourceId
+              SourceId = @sourceId,
+              LastUpdated = @lastUpdated
               WHERE Id = @id`);
       return res.status(201).json(req.body);
     }

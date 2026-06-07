@@ -246,7 +246,7 @@ const CanyonList: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell className='hide-md'><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug, canyon.RegionSymbol)}</TableCell>
-                  <CanyonTypeTableCell type={canyon.CanyonType} className='hide-md'/>
+                  <CanyonTypeTableCell type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} className='hide-md'/>
                   <TableCell align="center">{canyon.Descents}</TableCell>
                   <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />
                   <TableCell align="center">
