@@ -33,7 +33,7 @@ const AppModal: React.FC<AppModalProps> = ({
       maxWidth={maxWidth}
       fullWidth={fullWidth}
       slotProps={{
-        paper: { sx: { borderLeft: '4px solid', borderColor: 'secondary.main', pb: 1, borderRadius: '0 4px 4px 0' } },
+        paper: { sx: { borderLeft: '4px solid', borderColor: 'secondary.main', pb: 1, borderRadius: '0 4px 4px 0', minHeight: '400px' } },
       }}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
