@@ -12,7 +12,7 @@ import CanyonTypeTableCell from '../table/CanyonTypeCell';
 import CanyonNameTableCell from '../table/CanyonNameCell';
 import FilterPanel, { FilterValues } from '../FilterPanel';
 import {
-  getCanyonNameFilterConfig, getRegionFilterConfig, getVerifiedFilterConfig,
+  getCanyonNameFilterConfig, getDataSourceConfig, getRegionFilterConfig, getVerifiedFilterConfig,
 } from '../../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
 import { GetRegionDisplayName } from '../../helpers/RegionHelper';
@@ -44,6 +44,10 @@ const EditCanyons: React.FC = () => {
         if (values.region !== null && canyon.RegionId !== values.region) return false;
         if (values.verified === 'verified' && !canyon.IsVerified) return false;
         if (values.verified === 'unverified' && canyon.IsVerified) return false;
+        if (values.dataSource?.length > 0 && !values.dataSource.includes(canyon.SourceId)) {
+            console.log(values.dataSource, canyon.SourceId);
+            return false;
+        };
         return true;
     }, []);
 
@@ -57,7 +61,7 @@ const EditCanyons: React.FC = () => {
     </Box>
     <FilterPanel<Canyon>
         items={canyons}
-        config={[getCanyonNameFilterConfig(), getRegionFilterConfig(), getVerifiedFilterConfig()]}
+        config={[getCanyonNameFilterConfig(), getRegionFilterConfig(),  getDataSourceConfig(), getVerifiedFilterConfig(),]}
         filterFn={filterFn}
     >
         {(filteredCanyons) => <TableContainer component={Paper}>

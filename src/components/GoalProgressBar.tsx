@@ -177,7 +177,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
       </Box>
 
       {/* Count */}
-      <Typography variant="caption" color="text.secondary" sx={{ flex: '0 0 auto', width: 100, textAlign: 'right', whiteSpace: 'nowrap', textAlign: 'left', marginLeft: 1 }}>
+      <Typography variant="caption" color="text.secondary" sx={{ flex: '0 0 auto', width: 100, textAlign: 'right', whiteSpace: 'nowrap', marginLeft: 1 }}>
         {requirement.CurrentCount ?? 0} / {target} {unitLabel}
       </Typography>
     </Box>

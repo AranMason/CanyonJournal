@@ -1,8 +1,11 @@
 import { FilterConfig } from '../components/FilterPanel';
 import * as EquipmentDataStore from './EquipmentDataStore';
 import * as TagsDataStore from './TagsDataStore';
+import * as CanyonDataStore from './CanyonDataStore';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from './EnumMapper';
+import { apiFetch } from '../utils/api';
+import { DataSource } from '../types/DataSource';
 
 // ─── Individual filter building blocks ────────────────────────────────────────
 
@@ -97,6 +100,19 @@ export function getTagFilterConfig(key = 'tags'): FilterConfig {
     labelId: 'tag-filter',
     loadOptions: () => TagsDataStore.load()
       .then(tags => tags.map(t => ({ value: t.Id, label: t.Name }))),
+  };
+}
+
+export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
+  return {
+    type: 'async-multi-select',
+    key,
+    label: 'Data Source',
+    labelId: 'data-source-filter',
+    loadOptions: () => apiFetch<DataSource[]>('/api/sources', {
+      method: 'GET'
+    })
+      .then(sources => sources.map(s => ({ value: s.Id, label: s.DisplayName }))),
   };
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
+import { DialogContent, DialogActions, Button, Box } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { GearItem } from '../types/types';

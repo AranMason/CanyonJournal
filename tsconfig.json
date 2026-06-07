@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs", /* Specify what module code is generated. */
+    "module": "nodenext", /* Specify what module code is generated. */
     "target": "es2016",
     "lib": [
       "dom",
@@ -14,7 +14,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
