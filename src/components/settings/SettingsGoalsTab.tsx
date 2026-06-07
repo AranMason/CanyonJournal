@@ -267,13 +267,14 @@ const SettingsGoalsTab: React.FC = () => {
 
   const renderRuleRow = (rule: GoalRule, index: number) => {
     const ruleTypes: GoalRuleType[] = [
-      'canyon_type', 'min_vertical', 'min_aquatic', 'min_commitment', 'tag', 'first_time',
+      'canyon_type', 'min_vertical', 'min_aquatic', 'min_commitment', 'min_star', 'tag', 'first_time',
     ];
     const ruleTypeLabel: Record<GoalRuleType, string> = {
       canyon_type: t('goals.ruleTypeCanyonType'),
       min_vertical: t('goals.ruleTypeMinVertical'),
       min_aquatic: t('goals.ruleTypeMinAquatic'),
       min_commitment: t('goals.ruleTypeMinCommitment'),
+      min_star: t('goals.ruleTypeMinStar'),
       tag: t('goals.ruleTypeTag'),
       first_time: t('goals.ruleTypeFirstTime'),
     };
@@ -336,6 +337,17 @@ const SettingsGoalsTab: React.FC = () => {
               label={t('goals.minRating')}
               value={rule.IntValue ?? ''}
               inputProps={{ min: 0, max: 6 }}
+              onChange={e => updateRule(index, { IntValue: e.target.value === '' ? null : parseInt(e.target.value, 10) })}
+            />
+          )}
+          {rule.RuleType === 'min_star' && (
+            <TextField
+              size="small"
+              fullWidth
+              type="number"
+              label={t('goals.minRating')}
+              value={rule.IntValue ?? ''}
+              inputProps={{ min: 0, max: 5 }}
               onChange={e => updateRule(index, { IntValue: e.target.value === '' ? null : parseInt(e.target.value, 10) })}
             />
           )}

@@ -84,8 +84,9 @@ async function buildRuleConditions(
   pool: any,
   rules: GoalRuleRow[],
   paramOffset = 0
-): Promise<{ conditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
+): Promise<{ conditions: string[]; totalConditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
   const conditions: string[] = [];
+  const totalConditions: string[] = [];
   const bindings: { name: string; type: any; value: any }[] = [];
   let idx = paramOffset;
 
@@ -93,34 +94,55 @@ async function buildRuleConditions(
     const pn = (suffix: string) => `rp${idx}_${suffix}`;
     const negate = rule.IsExclusion;
 
+    function buildContainsCondition(field: string, inList: string, negate: boolean, bonusConditions: string[] = []): string {
+      const condition = `${field} IN (${inList})`;
+      const allConditions = [condition, ...bonusConditions].join(' AND ');
+      return negate ? `NOT (${allConditions})` : allConditions;
+    }
+
     switch (rule.RuleType) {
       case 'canyon_type': {
         const typeIds = (rule.IntValues ?? '').split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n));
         if (typeIds.length === 0) break;
         const inList = typeIds.join(',');
-        const condition = `COALESCE(c.CanyonType, uc.CanyonType) IN (${inList})`;
-        conditions.push(negate ? `NOT (${condition})` : condition);
+        conditions.push(buildContainsCondition('COALESCE(c.CanyonType, uc.CanyonType)', inList, negate));
+        totalConditions.push(buildContainsCondition('all_canyons.CanyonType', inList, negate));
         break;
       }
       case 'min_vertical': {
         const p = pn('minV');
         bindings.push({ name: p, type: sql.Int, value: rule.IntValue });
-        const condition = `COALESCE(c.VerticalRating, uc.VerticalRating) >= @${p}`;
+        const condition = `COALESCE(c.VerticalRating, uc.VerticalRating) >= @${p} AND COALESCE(c.IsUnrated, uc.IsUnrated) = 0`;
         conditions.push(negate ? `NOT (${condition})` : condition);
+        const totalCondition = `all_canyons.VerticalRating >= @${p} AND all_canyons.IsUnrated = 0`;
+        totalConditions.push(negate ? `NOT (${totalCondition})` : totalCondition);
         break;
       }
       case 'min_aquatic': {
         const p = pn('minA');
         bindings.push({ name: p, type: sql.Int, value: rule.IntValue });
-        const condition = `COALESCE(c.AquaticRating, uc.AquaticRating) >= @${p}`;
+        const condition = `COALESCE(c.AquaticRating, uc.AquaticRating) >= @${p} AND COALESCE(c.IsUnrated, uc.IsUnrated) = 0`;
         conditions.push(negate ? `NOT (${condition})` : condition);
+        const totalCondition = `all_canyons.AquaticRating >= @${p} AND all_canyons.IsUnrated = 0`;
+        totalConditions.push(negate ? `NOT (${totalCondition})` : totalCondition);
         break;
       }
       case 'min_commitment': {
         const p = pn('minC');
         bindings.push({ name: p, type: sql.Int, value: rule.IntValue });
-        const condition = `COALESCE(c.CommitmentRating, uc.CommitmentRating) >= @${p}`;
+        const condition = `COALESCE(c.CommitmentRating, uc.CommitmentRating) >= @${p} AND COALESCE(c.IsUnrated, uc.IsUnrated) = 0`;
         conditions.push(negate ? `NOT (${condition})` : condition);
+        const totalCondition = `all_canyons.CommitmentRating >= @${p} AND all_canyons.IsUnrated = 0`;
+        totalConditions.push(negate ? `NOT (${totalCondition})` : totalCondition);
+        break;
+      }
+      case 'min_star': {
+        const p = pn('minS');
+        bindings.push({ name: p, type: sql.Int, value: rule.IntValue });
+        const condition = `COALESCE(c.StarRating, uc.StarRating) >= @${p} AND COALESCE(c.IsUnrated, uc.IsUnrated) = 0`;
+        conditions.push(negate ? `NOT (${condition})` : condition);
+        const totalCondition = `all_canyons.StarRating >= @${p} AND all_canyons.IsUnrated = 0`;
+        totalConditions.push(negate ? `NOT (${totalCondition})` : totalCondition);
         break;
       }
       case 'tag': {
@@ -155,7 +177,7 @@ async function buildRuleConditions(
     idx++;
   }
 
-  return { conditions, bindings };
+  return { conditions, totalConditions, bindings };
 }
 
 /** Resolve all descendant region IDs (inclusive) for a given region using the Regions table. */
@@ -179,18 +201,18 @@ async function buildGoalConditions(
   pool: any,
   goal: GoalRow,
   rules: GoalRuleRow[]
-): Promise<{ conditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
-  const { conditions: ruleConditions, bindings } = await buildRuleConditions(pool, rules);
+): Promise<{ conditions: string[]; totalConditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
+  const { conditions: ruleConditions, totalConditions, bindings } = await buildRuleConditions(pool, rules);
 
   if (goal.RegionId != null) {
     const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
     if (regionIds.length > 0) {
       const regionCondition = `COALESCE(c.RegionId, uc.RegionId) IN (${regionIds.join(',')})`;
-      return { conditions: [regionCondition, ...ruleConditions], bindings };
+      return { conditions: [regionCondition, ...ruleConditions], totalConditions, bindings };
     }
   }
 
-  return { conditions: ruleConditions, bindings };
+  return { conditions: ruleConditions, totalConditions, bindings };
 }
 
 /**
@@ -232,7 +254,7 @@ async function computeProgress(
 ): Promise<{ currentCount: number; targetCount: number | null }> {
   const effectiveStartDate = resolveStartDate(goal.StartDate, goal.RollingDays);
 
-  const { conditions: allConditions, bindings } = await buildGoalConditions(pool, goal, rules);
+  const { conditions: allConditions, totalConditions, bindings } = await buildGoalConditions(pool, goal, rules);
   const baseQuery = buildBaseQuery(allConditions);
 
   const req = pool.request()
@@ -259,14 +281,28 @@ async function computeProgress(
     if (goal.RegionId != null) {
       const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
       const inList = regionIds.join(',');
-      const totalResult = await pool.request().query(`
-        SELECT COUNT(*) AS Total FROM (
-          SELECT Id FROM Canyons WHERE RegionId IN (${inList})
+      const totalReq = pool.request()
+        .input('userId', sql.Int, userId);
+      for (const b of bindings) totalReq.input(b.name, b.type, b.value);
+
+      const totalWhere = totalConditions.length > 0
+        ? `WHERE ${totalConditions.join(' AND ')}`
+        : '';
+
+      const totalResult = await totalReq.query(`
+        SELECT COUNT(*) AS Total
+        FROM (
+          SELECT c.Id, c.CanyonType, c.VerticalRating, c.AquaticRating, c.CommitmentRating, c.StarRating, c.IsUnrated
+          FROM Canyons c
+          WHERE c.RegionId IN (${inList}) AND c.IsVerified = 1
           UNION ALL
-          SELECT Id FROM UserCanyons WHERE RegionId IN (${inList})
+          SELECT uc.Id, uc.CanyonType, uc.VerticalRating, uc.AquaticRating, uc.CommitmentRating, uc.StarRating, uc.IsUnrated
+          FROM UserCanyons uc
+          WHERE uc.RegionId IN (${inList}) AND uc.UserId = @userId
         ) all_canyons
+        ${totalWhere}
       `);
-      targetCount = totalResult.recordset[0].Total;
+      targetCount = totalResult.recordset[0]?.Total ?? 0;
     }
   } else {
     const result = await req.query(`

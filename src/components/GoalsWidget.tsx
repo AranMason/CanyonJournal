@@ -156,6 +156,7 @@ const GoalsWidget: React.FC = () => {
                                 verticalRating={trip.VerticalRating ?? undefined}
                                 aquaticRating={trip.AquaticRating ?? undefined}
                                 commitmentRating={trip.CommitmentRating ?? undefined}
+                                starRating={trip.StarRating ?? undefined}
                                 isUnrated={trip.IsUnrated ?? undefined}
                               />
                             </Typography>

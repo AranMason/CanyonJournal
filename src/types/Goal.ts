@@ -8,6 +8,7 @@ export type GoalRuleType =
   | 'min_vertical'
   | 'min_aquatic'
   | 'min_commitment'
+  | 'min_star'
   | 'tag'
   | 'first_time';
 
