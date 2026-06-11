@@ -18,6 +18,7 @@ import { Tag } from '../helpers/TagsDataStore';
 import { Region } from '../types/Region';
 import { getCanyonNameFilterConfig, getRegionFilterConfig } from '../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
+import GoalCanyons from '../components/GoalCanyons';
 
 const GoalTripsPage: React.FC = () => {
   const { goalId } = useParams<{ goalId: string }>();
@@ -142,6 +143,16 @@ const GoalTripsPage: React.FC = () => {
 
       <Divider sx={{ mb: 2 }} />
 
+      {(goal?.CountMode == 'all_in_region' || goal?.Rules.some(r => r.RuleType === 'first_time')) && (
+        <>
+          <GoalCanyons goal={goal} />
+          <Divider sx={{ mb: 2 }} />
+        </>
+      )}
+
+      <Typography variant="h6" gutterBottom>
+        {t('goals.trips')}
+      </Typography>
       <FilterPanel<EnrichedAuditTrip>
         items={trips}
         config={filterConfig}

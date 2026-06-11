@@ -114,10 +114,10 @@
     "reopen": "Reopen",
     "showCompleted": "Show completed $t(common:terms.goal.lower, {\"count\": 2})",
     "completedGoals": "Completed $t(common:terms.goal.upper, {\"count\": 2})",
-    "viewTrips": "View matching trips",
-    "matchingTrips": "Matching trips",
+    "viewTrips": "View matching $t(common:terms.descent.lower, {\"count\": 2})",
+    "matchingTrips": "Matching $t(common:terms.descent.lower, {\"count\": 2})",
     "noMatchingTrips": "No trips match this $t(common:terms.goal.lower, {\"count\": 1}) yet.",
-    "viewAllTrips": "View all {{count}} matching trips",
+    "viewAllTrips": "View all {{count}} matching $t(common:terms.descent.lower, {\"count\": 2})",
     "firstTimeOnly": "First time only",
     "lastNDays": "Last {{days}} days",
     "rollingWindow": "Rolling window",
@@ -153,7 +153,8 @@
     "ruleTypeTag": "Tag(s)",
     "ruleTypeFirstTime": "First time only",
     "ruleInclude": "Include",
-    "ruleExclude": "Exclude"
+    "ruleExclude": "Exclude",
+    "trips": "$t(common:terms.descent.upper, {\"count\": 2})"
   },
   "admin": {
     "title": "Admin Panel",

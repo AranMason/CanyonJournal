@@ -1,5 +1,5 @@
-const CANYON_KEY_PREFIX = 'Canyon-';
-const USERCANYON_KEY_PREFIX = 'UserCanyon-';
+export const CANYON_KEY_PREFIX = 'Canyon-';
+export const USERCANYON_KEY_PREFIX = 'UserCanyon-';
 
 export function canyonKey(id: number): string {
     return `${CANYON_KEY_PREFIX}${id}`;

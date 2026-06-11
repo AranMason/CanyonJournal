@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
 import { canyonDetailUrl } from './helpers/urlHelper';
+import { CANYON_KEY_PREFIX, canyonKey, USERCANYON_KEY_PREFIX, userCanyonKey } from '../src/utils/canyonKey';
 
 const goalsRouter: Router = express.Router();
 
@@ -27,6 +28,30 @@ interface GoalRow {
   RollingDays: number | null;
   CompletedAt: string | null;
   SortOrder: number;
+}
+
+export interface CanyonListEntry {
+  Key: string;
+  DetailUrl: string | null;
+  Name: string;
+  Url: string;
+  RegionId?: number | null;
+  RegionSlug?: string | null;
+  RegionSymbol?: string | null;
+  AquaticRating: number;
+  VerticalRating: number;
+  CommitmentRating: number;
+  StarRating: number;
+  IsUnrated: boolean;
+  IsVerified: boolean;
+  CanyonType: number | null;
+  Descents: number;
+  LastDescentDate?: string | null;
+  IsFavourite?: boolean;
+  SourceId?: number | null;
+  SourceName?: string | null;
+  SourceLogoUrl?: string | null;
+  SourceWebsiteUrl?: string | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -81,7 +106,6 @@ async function replaceRules(pool: any, goalId: number, rules: any[]): Promise<vo
  * Region scope (Goals.RegionId) is handled separately by the caller — not a rule.
  */
 async function buildRuleConditions(
-  pool: any,
   rules: GoalRuleRow[],
   paramOffset = 0
 ): Promise<{ conditions: string[]; totalConditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
@@ -202,7 +226,7 @@ async function buildGoalConditions(
   goal: GoalRow,
   rules: GoalRuleRow[]
 ): Promise<{ conditions: string[]; totalConditions: string[]; bindings: { name: string; type: any; value: any }[] }> {
-  const { conditions: ruleConditions, totalConditions, bindings } = await buildRuleConditions(pool, rules);
+  const { conditions: ruleConditions, totalConditions, bindings } = await buildRuleConditions(rules);
 
   if (goal.RegionId != null) {
     const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
@@ -244,11 +268,111 @@ function resolveStartDate(startDate: string | null, rollingDays: number | null):
   return startDate ?? null;
 }
 
+async function computeGoalCanyonsWithDescents(
+  pool: any,
+  userId: number,
+  goal: GoalRow,
+  rules: GoalRuleRow[]
+): Promise<CanyonListEntry[]> {
+
+  // If it's not a region-based goal, we don't need to find all the valid canyons.
+  if (!(goal.CountMode == 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
+
+  const { totalConditions } = await buildGoalConditions(pool, goal, rules);
+
+  if(goal.RegionId != null) {
+    const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
+    const inList = regionIds.join(',');
+    totalConditions.push(`all_canyons.RegionId IN (${inList})`);
+  }
+
+  if(rules.some(r => r.RuleType === 'first_time')) {
+    totalConditions.push(`all_canyons.Descents = 0`);
+  }
+  
+
+  const totalWhere = totalConditions.length > 0
+        ? `WHERE ${totalConditions.join(' AND ')}`
+        : '';
+
+  const all_canyons =
+        await pool.request()
+          .input('userId', sql.Int, userId)
+          .query(`
+            WITH all_canyons AS (
+              SELECT CONCAT('${CANYON_KEY_PREFIX}', c.Id) as Id,
+                c.Name,
+                c.Url,
+                c.AquaticRating,
+                c.VerticalRating, 
+                c.StarRating,
+                c.CommitmentRating, 
+                c.IsVerified, 
+                c.IsUnrated, 
+                c.CanyonType, 
+                c.IsDeleted,
+                c.SourceId, 
+                c.RegionId,
+                rgn.Symbol AS RegionSymbol,
+                rgn.Slug AS RegionSlug,
+                cs.DisplayName AS SourceName,
+                cs.LogoUrl AS SourceLogoUrl,
+                cs.WebsiteUrl AS SourceWebsiteUrl,
+                COUNT(cr.Id) AS Descents,
+                MAX(cr.Date) AS LastDescentDate,
+                CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
+              FROM Canyons c
+              LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+              LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
+              LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
+              LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
+              WHERE c.IsVerified = 1
+              GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
+              UNION ALL
+              SELECT CONCAT('${USERCANYON_KEY_PREFIX}', uc.Id) as Id,
+                   uc.Name, 
+                   uc.Url, 
+                   uc.AquaticRating, 
+                   uc.VerticalRating, 
+                   uc.StarRating, 
+                   uc.CommitmentRating, 
+                   NULL AS IsVerified, 
+                   uc.IsUnrated, 
+                   uc.CanyonType,
+                   0 AS IsDeleted,
+                   NULL AS SourceId,
+                   uc.RegionId,
+                    rgn.Symbol AS RegionSymbol,
+                    rgn.Slug AS RegionSlug,
+                    NULL as SourceName,
+                    NULL as SourceLogoUrl,
+                    NULL as SourceWebsiteUrl,
+                    COUNT(cr.Id) AS Descents,
+                    MAX(cr.Date) AS LastDescentDate,
+                    CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
+              FROM UserCanyons uc
+              LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
+              LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
+              LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
+              WHERE uc.UserId = @userId
+              GROUP BY uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
+                      rgn.Symbol, rgn.Slug,
+                      uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
+                      uc.StarRating, uc.IsUnrated, cf.Id
+          )
+           SELECT * FROM all_canyons ${totalWhere}
+          `);
+
+          console.log(all_canyons);
+  
+  return all_canyons.recordset;
+
+}
+
 /** Compute progress for a goal, returning { currentCount, targetCount }. */
 async function computeProgress(
   pool: any,
   userId: number,
-  goalId: number,
   goal: GoalRow,
   rules: GoalRuleRow[]
 ): Promise<{ currentCount: number; targetCount: number | null }> {
@@ -292,11 +416,11 @@ async function computeProgress(
       const totalResult = await totalReq.query(`
         SELECT COUNT(*) AS Total
         FROM (
-          SELECT c.Id, c.CanyonType, c.VerticalRating, c.AquaticRating, c.CommitmentRating, c.StarRating, c.IsUnrated
+          SELECT CONCAT('c', c.Id) as Id, c.CanyonType, c.VerticalRating, c.AquaticRating, c.CommitmentRating, c.StarRating, c.IsUnrated
           FROM Canyons c
           WHERE c.RegionId IN (${inList}) AND c.IsVerified = 1
           UNION ALL
-          SELECT uc.Id, uc.CanyonType, uc.VerticalRating, uc.AquaticRating, uc.CommitmentRating, uc.StarRating, uc.IsUnrated
+          SELECT CONCAT('u', uc.Id) as Id, uc.CanyonType, uc.VerticalRating, uc.AquaticRating, uc.CommitmentRating, uc.StarRating, uc.IsUnrated
           FROM UserCanyons uc
           WHERE uc.RegionId IN (${inList}) AND uc.UserId = @userId
         ) all_canyons
@@ -357,7 +481,7 @@ goalsRouter.get('/', async (req: Request, res: Response) => {
     const goals = await Promise.all(
       rows.map(async (row) => {
         const rules = rulesMap[row.Id] ?? [];
-        const { currentCount, targetCount } = await computeProgress(pool, userId, row.Id, row, rules);
+        const { currentCount, targetCount } = await computeProgress(pool, userId, row, rules);
         return {
           ...row,
           Rules: rules,
@@ -419,6 +543,39 @@ goalsRouter.get('/:id/trips', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/goals/:id/canyons — matching canyons with descents for auditability
+goalsRouter.get('/:id/canyons', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
+
+    // Load the Goal
+    const id = Number(req.params.id);
+    const goal = await pool.request()
+      .input('id', sql.Int, id)
+      .input('userId', sql.Int, userId)
+      .query('SELECT Id, Label, MinCount, CountMode, RegionId, StartDate, RollingDays, CompletedAt, SortOrder FROM Goals WHERE Id = @id AND UserId = @userId')
+      .then(r => r.recordset[0] as GoalRow | undefined);
+    if (!goal) return res.status(404).json({ error: 'Not found' });
+
+    if(goal.RegionId == null) {
+      return res.status(400).json({ error: 'Only regional completion goals are supported' });
+    }
+
+    // Load Rules for the Goal
+    const rulesMap = await loadRules(pool, [id]);
+    const rules = rulesMap[id] ?? [];
+
+    // Get the Canyons that Apply to the Goal, along with descent counts and last descent date for the user, for auditability.
+    res.json(await computeGoalCanyonsWithDescents(pool, userId, goal, rules));
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch matching canyons' });
+  }
+});
+
 // GET /api/goals/:id
 goalsRouter.get('/:id', async (req: Request, res: Response) => {
   try {
@@ -439,7 +596,7 @@ goalsRouter.get('/:id', async (req: Request, res: Response) => {
     const goal: GoalRow = result.recordset[0];
     const rulesMap = await loadRules(pool, [id]);
     const rules = rulesMap[id] ?? [];
-    const { currentCount, targetCount } = await computeProgress(pool, userId, id, goal, rules);
+    const { currentCount, targetCount } = await computeProgress(pool, userId, goal, rules);
 
     res.json({ ...goal, Rules: rules, CurrentCount: currentCount, TargetCount: targetCount });
   } catch (err) {
