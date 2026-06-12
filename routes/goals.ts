@@ -278,7 +278,7 @@ async function computeGoalCanyonsWithDescents(
   // If it's not a region-based goal, we don't need to find all the valid canyons.
   if (!(goal.CountMode == 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
 
-  const { totalConditions } = await buildGoalConditions(pool, goal, rules);
+  const { totalConditions, bindings } = await buildGoalConditions(pool, goal, rules);
 
   if(goal.RegionId != null) {
     const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
@@ -295,9 +295,14 @@ async function computeGoalCanyonsWithDescents(
         ? `WHERE ${totalConditions.join(' AND ')}`
         : '';
 
+  const effectiveStartDate = resolveStartDate(goal.StartDate, goal.RollingDays);
+  const req = pool.request()
+    .input('userId', sql.Int, userId)
+    .input('startDate', sql.Date, effectiveStartDate);
+  for (const b of bindings) req.input(b.name, b.type, b.value);
+
   const all_canyons =
-        await pool.request()
-          .input('userId', sql.Int, userId)
+        await req
           .query(`
             WITH all_canyons AS (
               SELECT CONCAT('${CANYON_KEY_PREFIX}', c.Id) as Id,
