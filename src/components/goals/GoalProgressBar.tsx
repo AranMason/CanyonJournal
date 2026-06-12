@@ -1,10 +1,10 @@
 import React, { ReactNode } from 'react';
 import { Box, Chip, CircularProgress, IconButton, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { Goal } from '../types/Goal';
-import CanyonRating from './CanyonRating';
+import { Goal } from '../../types/Goal';
+import CanyonRating from '../CanyonRating';
 import { useTranslation } from 'react-i18next';
-import { GetCanyonTypeDisplayName } from '../helpers/EnumMapper';
+import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
 
 interface GoalProgressBarProps {
   requirement: Goal;

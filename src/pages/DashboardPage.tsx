@@ -4,7 +4,7 @@ import { Button, Typography } from '@mui/material';
 import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import DashboardStats from '../components/DashboardStats';
-import GoalsWidget from '../components/GoalsWidget';
+import GoalsWidget from '../components/goals/GoalsWidget';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';

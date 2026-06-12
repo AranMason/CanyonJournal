@@ -367,8 +367,6 @@ async function computeGoalCanyonsWithDescents(
           )
            SELECT * FROM all_canyons ${totalWhere}
           `);
-
-          console.log(all_canyons);
   
   return all_canyons.recordset;
 

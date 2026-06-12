@@ -1,7 +1,6 @@
 import { FilterConfig } from '../components/FilterPanel';
 import * as EquipmentDataStore from './EquipmentDataStore';
 import * as TagsDataStore from './TagsDataStore';
-import * as CanyonDataStore from './CanyonDataStore';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from './EnumMapper';
 import { apiFetch } from '../utils/api';
@@ -128,3 +127,15 @@ export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
   };
 }
 
+export function getHasCanyonDescentsFilterConfig(key = 'hasDescents'): FilterConfig {
+  return {
+    type: 'exclusive-toggle',
+    key,  
+    options: [
+      { value: 'all', label: i18n.t('filters.hasDescents.all') },
+      { value: 'yes', label: i18n.t('filters.hasDescents.yes') },
+      { value: 'no', label: i18n.t('filters.hasDescents.no') }
+      
+    ],
+  };
+}

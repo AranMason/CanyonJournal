@@ -15,7 +15,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import { Goal, GoalRule, GoalRuleType, AuditTrip, EnrichedAuditTrip, enrichAuditTrips } from '../../types/Goal';
-import GoalProgressBar from '../GoalProgressBar';
+import GoalProgressBar from '../goals/GoalProgressBar';
 import CanyonRating from '../CanyonRating';
 import RegionTreePicker from '../RegionTreePicker';
 import { useTranslation } from 'react-i18next';

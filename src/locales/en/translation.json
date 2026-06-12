@@ -154,7 +154,8 @@
     "ruleTypeFirstTime": "First time only",
     "ruleInclude": "Include",
     "ruleExclude": "Exclude",
-    "trips": "$t(common:terms.descent.upper, {\"count\": 2})"
+    "trips": "$t(common:terms.descent.upper, {\"count\": 2})",
+    "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})"
   },
   "admin": {
     "title": "Admin Panel",
@@ -226,6 +227,11 @@
       "all": "All",
       "verified": "Verified",
       "unverified": "Unverified"
+    },
+    "hasDescents": {
+      "all": "All",
+      "yes": "With $t(common:terms.descent.lower, {\"count\": 1})",
+      "no": "Without $t(common:terms.descent.lower, {\"count\": 1})"
     }
   }
 }

@@ -6,18 +6,18 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useNavigate } from 'react-router-dom';
-import { apiFetch } from '../utils/api';
-import { Goal, AuditTrip, EnrichedAuditTrip, enrichAuditTrips } from '../types/Goal';
+import { apiFetch } from '../../utils/api';
+import { Goal, AuditTrip, EnrichedAuditTrip, enrichAuditTrips } from '../../types/Goal';
 import GoalProgressBar from './GoalProgressBar';
-import CanyonRating from './CanyonRating';
-import * as TagsDataStore from '../helpers/TagsDataStore';
-import * as CanyonDataStore from '../helpers/CanyonDataStore';
-import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
-import * as RegionDataStore from '../helpers/RegionDataStore';
-import { Tag } from '../helpers/TagsDataStore';
-import { Region } from '../types/Region';
+import CanyonRating from '../CanyonRating';
+import * as TagsDataStore from '../../helpers/TagsDataStore';
+import * as CanyonDataStore from '../../helpers/CanyonDataStore';
+import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
+import * as RegionDataStore from '../../helpers/RegionDataStore';
+import { Tag } from '../../helpers/TagsDataStore';
+import { Region } from '../../types/Region';
 import { useTranslation } from 'react-i18next';
-import AppModal from './AppModal';
+import AppModal from '../AppModal';
 
 const PREVIEW_COUNT = 5;
 
