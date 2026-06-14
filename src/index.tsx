@@ -24,6 +24,8 @@ import Sidebar from './components/Sidebar';
 import MobileAppBar from './components/MobileAppBar';
 import CookieBanner from './components/CookieBanner';
 import { Box } from '@mui/material';
+import GearSettingPage from './pages/GearSettingPage';
+import GoalSettingPage from './pages/GoalSettingPage';
 
 function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -44,6 +46,8 @@ function AppLayout() {
             <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
             <Route path="/canyons" element={<CanyonPage />} />
             <Route path="/settings" element={<UserSettingsPage />} />
+            <Route path="/settings/gear" element={<GearSettingPage />} />
+            <Route path="/settings/goals" element={<GoalSettingPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

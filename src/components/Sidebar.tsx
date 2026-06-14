@@ -69,7 +69,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         isOpen={isOpen}
         label={t('nav.goals')}
         icon={<ChecklistIcon />}
-        url='/settings?tab=0'
+        url='/settings/goals'
         disabled={!user}
         onClose={onMobileClose}
       />
@@ -77,7 +77,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         isOpen={isOpen}
         label={t('nav.gear')}
         icon={<BuildIcon />}
-        url='/settings?tab=2'
+        url='/settings/gear'
         disabled={!user}
         onClose={onMobileClose}
       />

@@ -182,6 +182,8 @@
     "editCanyon": "Edit $t(common:terms.canyon.upper, {\"count\": 1})"
   },
   "gear": {
+    "title": "Ropes and Gear",
+    "descriptionText": "Manage your ropes and gear here. Track usage and lifespan of your equipment, and add them to your $t(common:terms.record.lower, {\"count\": 2}) when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
     "length": "$t(common:fields.length) (m)",

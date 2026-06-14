@@ -87,14 +87,27 @@ const SettingsGoalsTab: React.FC = () => {
   const [auditTrips, setAuditTrips] = useState<Record<number, EnrichedAuditTrip[] | undefined>>({});
   const [auditLoading, setAuditLoading] = useState<Record<number, boolean>>({});
 
+  const goalProgressPercentage = (goal: Goal): number => {
+    const target = goal.TargetCount ?? goal.MinCount ?? 0;
+    return target > 0 ? Math.min(((goal.CurrentCount ?? 0) / target) * 100, 100) : 0;
+  };
+
+  const sortGoals = (goal_a: Goal, goal_b: Goal): number => {
+    var delta = goalProgressPercentage(goal_b) - goalProgressPercentage(goal_a);
+
+    if(delta === 0) {
+      delta = goal_a.Id! - goal_b.Id!;
+    }
+    return delta;
+  }
+
   const loadGoals = async () => {
-    const [active, completed, tgs, regions] = await Promise.all([
-      apiFetch<Goal[]>('/api/goals'),
+    const [completed, tgs, regions] = await Promise.all([
       apiFetch<Goal[]>('/api/goals?includeCompleted=true'),
       TagsDataStore.load(),
       RegionDataStore.load(),
     ]);
-    setActiveGoals(active);
+    setActiveGoals(completed.filter(g => !g.CompletedAt).sort(sortGoals));
     setCompletedGoals(completed.filter(g => g.CompletedAt));
     setTags(tgs);
     setFlatRegions(regions);
