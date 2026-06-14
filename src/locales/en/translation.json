@@ -229,6 +229,7 @@
       "unverified": "Unverified"
     },
     "hasDescents": {
+      "label": "Has $t(common:terms.descent.lower, {\"count\": 2})",
       "all": "All",
       "yes": "With $t(common:terms.descent.lower, {\"count\": 1})",
       "no": "Without $t(common:terms.descent.lower, {\"count\": 1})"

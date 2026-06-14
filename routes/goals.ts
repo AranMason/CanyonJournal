@@ -1,8 +1,16 @@
 import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
-import { canyonDetailUrl } from './helpers/urlHelper';
-import { CANYON_KEY_PREFIX, canyonKey, USERCANYON_KEY_PREFIX, userCanyonKey } from '../src/utils/canyonKey';
+import { canyonKey,  userCanyonKey } from '../src/utils/canyonKey';
+import { GoalBuilder, GoalRuleField } from './helpers/goals.builder';
+import { mapRowToGoalRule } from './helpers/goals.helper';
+import { CanyonListEntry } from '../src/types/Canyon';
+import { CanyonRecord } from '../src/types/CanyonRecord';
+import { ApiReturnType } from '../src/types/ApiReturnType';
+import { loadTagsForDescents } from './helpers/tags.helper';
+import { Tags } from '../src/types/Tag';
+import { loadGearForDescent, loadRopesForDescent } from './helpers/gear.helper';
+import { GearItem, RopeItem } from '../src/types/types';
 
 const goalsRouter: Router = express.Router();
 
@@ -10,7 +18,7 @@ const VALID_COUNT_MODES = ['records', 'days', 'distinct_canyons', 'distinct_regi
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface GoalRuleRow {
+export interface GoalRuleRow {
   Id: number;
   RuleType: string;
   IntValue: number | null;
@@ -30,29 +38,6 @@ interface GoalRow {
   SortOrder: number;
 }
 
-export interface CanyonListEntry {
-  Key: string;
-  DetailUrl: string | null;
-  Name: string;
-  Url: string;
-  RegionId?: number | null;
-  RegionSlug?: string | null;
-  RegionSymbol?: string | null;
-  AquaticRating: number;
-  VerticalRating: number;
-  CommitmentRating: number;
-  StarRating: number;
-  IsUnrated: boolean;
-  IsVerified: boolean;
-  CanyonType: number | null;
-  Descents: number;
-  LastDescentDate?: string | null;
-  IsFavourite?: boolean;
-  SourceId?: number | null;
-  SourceName?: string | null;
-  SourceLogoUrl?: string | null;
-  SourceWebsiteUrl?: string | null;
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -268,8 +253,25 @@ function resolveStartDate(startDate: string | null, rollingDays: number | null):
   return startDate ?? null;
 }
 
-async function computeGoalCanyonsWithDescents(
-  pool: any,
+
+async function buildGoalBuilder(pool: sql.ConnectionPool, userId: number, goal: GoalRow, rules: GoalRuleRow[]): Promise<GoalBuilder> {
+  var goalBuilder = new GoalBuilder(userId);
+
+  await goalBuilder.addStartDate(goal.StartDate, goal.RollingDays, true);
+
+  if (goal.RegionId != null) {
+    const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
+    await goalBuilder.addRegion(regionIds);
+  }
+
+  for (const rule of rules) {
+    await goalBuilder.addRule(mapRowToGoalRule(rule));
+  }
+  return goalBuilder;
+}
+
+async function getPotentialGoalCanyonsWithDescents(
+  pool: sql.ConnectionPool,
   userId: number,
   goal: GoalRow,
   rules: GoalRuleRow[]
@@ -278,103 +280,157 @@ async function computeGoalCanyonsWithDescents(
   // If it's not a region-based goal, we don't need to find all the valid canyons.
   if (!(goal.CountMode == 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
 
-  const { totalConditions, bindings } = await buildGoalConditions(pool, goal, rules);
+  var goalBuilder = await buildGoalBuilder(pool, userId, goal, rules);
 
-  if(goal.RegionId != null) {
-    const regionIds = await resolveRegionDescendants(pool, goal.RegionId);
-    const inList = regionIds.join(',');
-    totalConditions.push(`all_canyons.RegionId IN (${inList})`);
+  var { query, bindings } = goalBuilder.buildQuery(
+    [
+      GoalRuleField.IsUserCanyon,
+      GoalRuleField.Id, 
+      GoalRuleField.CanyonId, 
+      GoalRuleField.Name, 
+      GoalRuleField.DetailsUrl, 
+      GoalRuleField.RegionId, 
+      GoalRuleField.RegionSlug, 
+      GoalRuleField.RegionSymbol, 
+      GoalRuleField.AquaticRating, 
+      GoalRuleField.VerticalRating, 
+      GoalRuleField.CommitmentRating, 
+      GoalRuleField.StarRating, 
+      GoalRuleField.IsUnrated, 
+      GoalRuleField.IsVerified, 
+      GoalRuleField.CanyonType,
+      GoalRuleField.SourceId,
+      GoalRuleField.SourceLogoUrl,
+      GoalRuleField.SourceName,
+      GoalRuleField.SourceWebsiteUrl,
+    ],
+    [],
+    [{
+      clause: `COUNT(DISTINCT ${GoalRuleField.DescentId})`,
+      inputFields: [GoalRuleField.DescentId],
+      outputField: 'Descents',
+    }, {
+      clause: `MAX(${GoalRuleField.DescentDate})`,
+      inputFields: [GoalRuleField.DescentDate],
+      outputField: 'LastDescentDate',
+    }],
+  );
+
+  var request = pool.request();
+  for (const b of bindings) {
+    console.log(`Binding: ${b.name} = ${b.value}`);
+    request.input(b.name, b.type, b.value);
+  };
+  var result = await request.query(query);
+
+  return result.recordset.map((row: any): CanyonListEntry => ({
+    Key: row.IsUserCanyon ? userCanyonKey(row.Id) : canyonKey(row.Id),
+    DetailUrl: row.DetailsUrl,
+    Name: row.Name,
+    Url: row.TopoUrl,
+    AquaticRating: row.AquaticRating,
+    VerticalRating: row.VerticalRating,
+    CommitmentRating: row.CommitmentRating,
+    StarRating: row.StarRating,
+    IsUnrated: row.IsUnrated,
+    IsVerified: row.IsVerified,
+    CanyonType: row.CanyonType,
+    Descents: row.Descents,
+    IsFavourite: row.IsFavourite,
+    LastDescentDate: row.LastDescentDate,
+    RegionId: row.RegionId,
+    RegionSlug: row.RegionSlug,
+    RegionSymbol: row.RegionSymbol,
+    SourceId: row.SourceId,
+    SourceLogoUrl: row.SourceLogoUrl,
+    SourceName: row.SourceName,
+    SourceWebsiteUrl: row.SourceWebsiteUrl,
   }
 
-  if(rules.some(r => r.RuleType === 'first_time')) {
-    totalConditions.push(`all_canyons.Descents = 0`);
+  ));
+}
+
+async function getGoalTrips(
+  pool: sql.ConnectionPool,
+  userId: number,
+  goal: GoalRow,
+  rules: GoalRuleRow[]
+): Promise<CanyonRecord[]> {
+
+  var goalBuilder = await buildGoalBuilder(pool, userId, goal, rules);
+
+  var { query, bindings } = goalBuilder.buildQuery(
+    [
+      GoalRuleField.DescentId,
+      // Canyon Info
+      GoalRuleField.CanyonId, 
+      GoalRuleField.UserCanyonId,
+      GoalRuleField.Name, 
+      GoalRuleField.DetailsUrl, 
+      GoalRuleField.TopoUrl,
+
+      // Trip Info
+      GoalRuleField.Comments,
+      GoalRuleField.WaterLevel,
+      GoalRuleField.TripRating,
+      GoalRuleField.DescentDate,
+      // Region Info
+      GoalRuleField.RegionId, 
+      GoalRuleField.RegionSlug, 
+      GoalRuleField.RegionSymbol
+    ],
+    [`${GoalRuleField.DescentId} IS NOT NULL`],
+    [],
+    [`${GoalRuleField.DescentDate} DESC`, `${GoalRuleField.DescentId} DESC`]
+  );
+
+  var request = pool.request();
+  for (const b of bindings) {
+    console.log(`Binding: ${b.name} = ${b.value}`);
+    request.input(b.name, b.type, b.value);
+  };
+  var result = await request.query(query);
+
+  var tagsByDescentId: Record<number, Tags[]> = loadTagsForDescents(result.recordset.map((row: any) => row.DescentId));
+  var ropesByDescentId: Record<number, RopeItem[]> = loadRopesForDescent(result.recordset.map((row: any) => row.DescentId));
+  var gearByDescentId: Record<number, GearItem[]> = loadGearForDescent(result.recordset.map((row: any) => row.DescentId));
+
+  await Promise.allSettled([
+    tagsByDescentId,
+    ropesByDescentId,
+    gearByDescentId
+  ]);
+
+  return result.recordset.map((row: any): CanyonRecord => ({
+    Id: row.DescentId,
+    // Canyon Info
+    CanyonId: row.CanyonId,
+    UserCanyonId: row.UserCanyonId,
+    DetailUrl: row.DetailsUrl,
+    Name: row.Name,
+    Url: row.TopoUrl,
+    // Trip Info
+    Comments: row.Comments,
+    WaterLevel: row.WaterLevel,
+    TripRating: row.TripRating,
+    Timestamp: row.DescentDate,
+    RopeIds: ropesByDescentId[row.DescentId]?.map(r => r.Id) ?? [],
+    GearIds: gearByDescentId[row.DescentId]?.map(g => g.Id) ?? [],
+    Tags: tagsByDescentId[row.DescentId] ?? [],
+    // Region Info
+    RegionId: row.RegionId,
+    RegionSlug: row.RegionSlug,
+    RegionSymbol: row.RegionSymbol,
+    Date: row.DescentDate,
+    // TODO: Get GearIds and RopeIds for the descent. This will require secondary queries
   }
-  
 
-  const totalWhere = totalConditions.length > 0
-        ? `WHERE ${totalConditions.join(' AND ')}`
-        : '';
-
-  const effectiveStartDate = resolveStartDate(goal.StartDate, goal.RollingDays);
-  const req = pool.request()
-    .input('userId', sql.Int, userId)
-    .input('startDate', sql.Date, effectiveStartDate);
-  for (const b of bindings) req.input(b.name, b.type, b.value);
-
-  const all_canyons =
-        await req
-          .query(`
-            WITH all_canyons AS (
-              SELECT CONCAT('${CANYON_KEY_PREFIX}', c.Id) as Id,
-                c.Name,
-                c.Url,
-                c.AquaticRating,
-                c.VerticalRating, 
-                c.StarRating,
-                c.CommitmentRating, 
-                c.IsVerified, 
-                c.IsUnrated, 
-                c.CanyonType, 
-                c.IsDeleted,
-                c.SourceId, 
-                c.RegionId,
-                rgn.Symbol AS RegionSymbol,
-                rgn.Slug AS RegionSlug,
-                cs.DisplayName AS SourceName,
-                cs.LogoUrl AS SourceLogoUrl,
-                cs.WebsiteUrl AS SourceWebsiteUrl,
-                COUNT(cr.Id) AS Descents,
-                MAX(cr.Date) AS LastDescentDate,
-                CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
-              FROM Canyons c
-              LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-              LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
-              LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
-              LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-              WHERE c.IsVerified = 1
-              GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
-              UNION ALL
-              SELECT CONCAT('${USERCANYON_KEY_PREFIX}', uc.Id) as Id,
-                   uc.Name, 
-                   uc.Url, 
-                   uc.AquaticRating, 
-                   uc.VerticalRating, 
-                   uc.StarRating, 
-                   uc.CommitmentRating, 
-                   NULL AS IsVerified, 
-                   uc.IsUnrated, 
-                   uc.CanyonType,
-                   0 AS IsDeleted,
-                   NULL AS SourceId,
-                   uc.RegionId,
-                    rgn.Symbol AS RegionSymbol,
-                    rgn.Slug AS RegionSlug,
-                    NULL as SourceName,
-                    NULL as SourceLogoUrl,
-                    NULL as SourceWebsiteUrl,
-                    COUNT(cr.Id) AS Descents,
-                    MAX(cr.Date) AS LastDescentDate,
-                    CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
-              FROM UserCanyons uc
-              LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
-              LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
-              LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
-              WHERE uc.UserId = @userId
-              GROUP BY uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
-                      rgn.Symbol, rgn.Slug,
-                      uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                      uc.StarRating, uc.IsUnrated, cf.Id
-          )
-           SELECT * FROM all_canyons ${totalWhere}
-          `);
-  
-  return all_canyons.recordset;
-
+  ));
 }
 
 /** Compute progress for a goal, returning { currentCount, targetCount }. */
 async function computeProgress(
-  pool: any,
+  pool: sql.ConnectionPool,
   userId: number,
   goal: GoalRow,
   rules: GoalRuleRow[]
@@ -458,7 +514,7 @@ async function computeProgress(
 // ─── Routes ───────────────────────────────────────────────────────────────────
 
 // GET /api/goals — list goals with computed progress
-goalsRouter.get('/', async (req: Request, res: Response) => {
+goalsRouter.get('/', async (req: Request, res: Response): ApiReturnType<GoalRow[]> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -502,8 +558,9 @@ goalsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 // GET /api/goals/:id/trips — matching trips for auditability
-goalsRouter.get('/:id/trips', async (req: Request, res: Response) => {
+goalsRouter.get('/:id/trips', async (req: Request, res: Response): ApiReturnType<CanyonRecord[]> => {
   try {
+
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
     if (!userId) return res.status(401).json({ error: 'Unauthenticated' });
@@ -515,31 +572,14 @@ goalsRouter.get('/:id/trips', async (req: Request, res: Response) => {
       .query('SELECT Id, Label, MinCount, CountMode, RegionId, StartDate, RollingDays, CompletedAt, SortOrder FROM Goals WHERE Id = @id AND UserId = @userId');
     if (goalResult.recordset.length === 0) return res.status(404).json({ error: 'Not found' });
 
+
     const goal: GoalRow = goalResult.recordset[0];
     const rulesMap = await loadRules(pool, [id]);
     const rules = rulesMap[id] ?? [];
 
-    const effectiveStartDate = resolveStartDate(goal.StartDate, goal.RollingDays);
-    const { conditions, bindings } = await buildGoalConditions(pool, goal, rules);
-    const baseQuery = buildBaseQuery(conditions);
+    var trips = await getGoalTrips(pool, userId, goal, rules);
 
-    const tripReq = pool.request()
-      .input('userId', sql.Int, userId)
-      .input('startDate', sql.Date, effectiveStartDate);
-    for (const b of bindings) tripReq.input(b.name, b.type, b.value);
-
-    const result = await tripReq.query(`
-      SELECT
-        cr.Id, cr.Date, cr.TripRating, cr.WaterLevel, cr.TeamSize,
-        cr.CanyonId, cr.UserCanyonId
-      ${baseQuery}
-      ORDER BY cr.Date DESC
-    `);
-
-    res.json(result.recordset.map((row: any) => ({
-      ...row,
-      DetailUrl: canyonDetailUrl(row.CanyonId, row.UserCanyonId),
-    })));
+    res.json(trips);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to fetch matching trips' });
@@ -547,7 +587,7 @@ goalsRouter.get('/:id/trips', async (req: Request, res: Response) => {
 });
 
 // GET /api/goals/:id/canyons — matching canyons with descents for auditability
-goalsRouter.get('/:id/canyons', async (req: Request, res: Response) => {
+goalsRouter.get('/:id/canyons', async (req: Request, res: Response): ApiReturnType<CanyonRecord[]> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -562,7 +602,7 @@ goalsRouter.get('/:id/canyons', async (req: Request, res: Response) => {
       .then(r => r.recordset[0] as GoalRow | undefined);
     if (!goal) return res.status(404).json({ error: 'Not found' });
 
-    if(goal.RegionId == null) {
+    if (goal.RegionId == null) {
       return res.status(400).json({ error: 'Only regional completion goals are supported' });
     }
 
@@ -571,7 +611,7 @@ goalsRouter.get('/:id/canyons', async (req: Request, res: Response) => {
     const rules = rulesMap[id] ?? [];
 
     // Get the Canyons that Apply to the Goal, along with descent counts and last descent date for the user, for auditability.
-    res.json(await computeGoalCanyonsWithDescents(pool, userId, goal, rules));
+    res.json(await getPotentialGoalCanyonsWithDescents(pool, userId, goal, rules));
 
   } catch (err) {
     console.error(err);
@@ -580,7 +620,7 @@ goalsRouter.get('/:id/canyons', async (req: Request, res: Response) => {
 });
 
 // GET /api/goals/:id
-goalsRouter.get('/:id', async (req: Request, res: Response) => {
+goalsRouter.get('/:id', async (req: Request, res: Response): ApiReturnType<GoalRow> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -609,7 +649,7 @@ goalsRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // POST /api/goals
-goalsRouter.post('/', async (req: Request, res: Response) => {
+goalsRouter.post('/', async (req: Request, res: Response): ApiReturnType<{ Id: number }> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -652,7 +692,7 @@ goalsRouter.post('/', async (req: Request, res: Response) => {
 });
 
 // PUT /api/goals/:id
-goalsRouter.put('/:id', async (req: Request, res: Response) => {
+goalsRouter.put('/:id', async (req: Request, res: Response): ApiReturnType<{ Id: number }> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -699,7 +739,7 @@ goalsRouter.put('/:id', async (req: Request, res: Response) => {
 });
 
 // PATCH /api/goals/:id/complete
-goalsRouter.patch('/:id/complete', async (req: Request, res: Response) => {
+goalsRouter.patch('/:id/complete', async (req: Request, res: Response): ApiReturnType<{ Id: number }> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -724,7 +764,7 @@ goalsRouter.patch('/:id/complete', async (req: Request, res: Response) => {
 });
 
 // PATCH /api/goals/:id/reopen
-goalsRouter.patch('/:id/reopen', async (req: Request, res: Response) => {
+goalsRouter.patch('/:id/reopen', async (req: Request, res: Response): ApiReturnType<{ Id: number }> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
@@ -749,7 +789,7 @@ goalsRouter.patch('/:id/reopen', async (req: Request, res: Response) => {
 });
 
 // DELETE /api/goals/:id
-goalsRouter.delete('/:id', async (req: Request, res: Response) => {
+goalsRouter.delete('/:id', async (req: Request, res: Response): ApiReturnType<void> => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);

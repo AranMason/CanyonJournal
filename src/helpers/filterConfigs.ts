@@ -129,13 +129,14 @@ export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
 
 export function getHasCanyonDescentsFilterConfig(key = 'hasDescents'): FilterConfig {
   return {
-    type: 'exclusive-toggle',
+    type: 'single-select',
     key,  
+    label: i18n.t('filters.hasDescents.label'),
+    labelId: 'has-descents-filter',
+    placeholder: i18n.t('filters.hasDescents.all'),
     options: [
-      { value: 'all', label: i18n.t('filters.hasDescents.all') },
       { value: 'yes', label: i18n.t('filters.hasDescents.yes') },
       { value: 'no', label: i18n.t('filters.hasDescents.no') }
-      
     ],
   };
 }

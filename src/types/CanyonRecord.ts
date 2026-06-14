@@ -1,3 +1,4 @@
+import {Tags} from './Tag';
 
 export interface CanyonRecord {
     Id?: number;
@@ -24,7 +25,7 @@ export interface CanyonRecord {
     WaterLevel?: WaterLevel;
     TripRating?: number;
     /** Tags attached to this trip record */
-    Tags?: { Id: number; Name: string }[];
+    Tags?: Tags[];
 }
 
 export enum WaterLevel {

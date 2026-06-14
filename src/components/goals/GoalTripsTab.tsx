@@ -59,6 +59,7 @@ const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
     DetailUrl: trip.DetailUrl ?? null,
     RopeIds: [],
     GearIds: [],
+    Comments: trip.Comments ?? undefined,
   });
 
 

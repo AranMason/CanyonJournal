@@ -69,6 +69,7 @@ export interface EnrichedAuditTrip extends AuditTrip {
   RegionId?: number | null;
   RegionSlug?: string | null;
   RegionSymbol?: string | null;
+  Comments?: string | null;
 }
 
 /** Merges lean API trips with local canyon cache to produce enriched display data. */

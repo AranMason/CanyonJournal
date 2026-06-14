@@ -28,9 +28,7 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
 
   const usedRegionIds = useMemo(
       () => {
-        var newIds = [...new Set(canyons.map(c => c.RegionId).filter((id): id is number => id != null))];
-        console.log('Derived used region ids from canyons:', newIds);
-        return newIds;
+        return [...new Set(canyons.map(c => c.RegionId).filter((id): id is number => id != null))];
       },
       [canyons]
     );
@@ -52,7 +50,6 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
       apiFetch<CanyonListEntry[]>(`/api/goals/${goal!.Id}/canyons`),
       RegionDataStore.load(),
     ]).then(([canyons, regions]) => {
-      console.log('Loaded canyons for goal:', canyons, regions);
       setCanyons(canyons);
       setFlatRegions(regions);
       setIsLoading(false);
