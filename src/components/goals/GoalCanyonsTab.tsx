@@ -77,7 +77,7 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
     return true;
   }, [flatRegions]);
 
-  if (!isValid) return <Alert severity="error">Goal Does not support Canyons Tab!</Alert>;
+  if (!isValid) return <Alert severity="error">This Goal Does not support Canyons Tab!</Alert>;
 
   return (
     <Loader isLoading={isLoading} >

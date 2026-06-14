@@ -69,7 +69,7 @@ const GoalTripsPage: React.FC = () => {
               <GoalProgressBar requirement={goal} tagNames={goalTagNames} regionNames={goalRegionNames} />
             </Box>
           </Box>
-          <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3 }}>
+          <Tabs value={activeTab} indicatorColor='secondary' onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3 }} >
             <Tab label={t('goals.trips')} />
             <Tab label={t('goals.canyons')} disabled={!(goal.RegionId != null || goal.Rules.some(r => r.RuleType === 'first_time'))} />
           </Tabs>

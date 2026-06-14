@@ -5,7 +5,7 @@ import PageTemplate from './PageTemplate';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import CreateIcon from '@mui/icons-material/Create';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import FilterPanel, { FilterValues } from '../components/FilterPanel';
 import {
@@ -115,7 +115,7 @@ const RecordsOverviewPage: React.FC = () => {
             variant="contained"
             color="tertiary"
             onClick={() => navigate("/journal/record")}
-            startIcon={<EditNoteIcon />}>
+            startIcon={<CreateIcon />}>
               {t('common:actions.recordDescent')}
           </Button>
         </Box>

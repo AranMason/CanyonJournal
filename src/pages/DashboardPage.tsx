@@ -5,7 +5,7 @@ import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import DashboardStats from '../components/DashboardStats';
 import GoalsWidget from '../components/goals/GoalsWidget';
-import EditNoteIcon from '@mui/icons-material/EditNote';
+import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
   return (
     <PageTemplate pageTitle={t('dashboard.title')} isLoading={loading || isLoading}>
 
-      <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<EditNoteIcon/>}>{t('common:actions.recordDescent')}</Button>
+      <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<CreateIcon/>}>{t('common:actions.recordDescent')}</Button>
       <DashboardStats />
       <GoalsWidget />
       <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>

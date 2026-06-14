@@ -61,3 +61,7 @@ We should introduce Tabs to the Goal Summary
 - Regions
   - For Unqiue Regions show which regions have already been done, with descent counts
   - Have a link to 'All Canyons' page prefiltered to the appropriate region.
+
+# [Goals] Goals should be it's own featured page, rather than hidden in settings
+
+# [Navigation] On mobile, the top bar should display the icon, and link to the home page (/dashboard) for the app.

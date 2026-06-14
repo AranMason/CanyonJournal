@@ -2,9 +2,11 @@
   "nav": {
     "dashboard": "Dashboard",
     "journal": "Your Journal",
-    "canyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
+    "canyons": "$t(common:terms.canyon.upper, {\"count\": 2}) List",
     "settings": "Settings",
     "admin": "Admin Panel",
+    "goals": "$t(common:terms.goal.upper, {\"count\": 2})",
+    "gear": "Ropes and $t(common:terms.gear.upper, {\"count\": 2})",
     "welcome": "Welcome {{name}}"
   },
   "dashboard": {
@@ -42,7 +44,8 @@
     "findTopoSub": "Browse the map to discover your next adventure.",
     "canyon": "$t(common:terms.canyon.upper, {\"count\": 1})",
     "notesOptional": "Notes (optional)",
-    "canyonSaved": "$t(common:terms.canyon.upper, {\"count\": 1}) saved!"
+    "canyonSaved": "$t(common:terms.canyon.upper, {\"count\": 1}) saved!",
+    "createUserCanyon": "Manage $t(common:terms.canyon.upper, {\"count\": 2})"
   },
   "record": {
     "date": "$t(common:fields.date)",

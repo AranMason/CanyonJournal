@@ -22,6 +22,8 @@ import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
 import { GetRegionDisplayName } from '../helpers/RegionHelper';
 import RegionIcon from '../components/RegionIcon';
+import { useNavigate } from 'react-router-dom';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const minDateString: string = '1900-01-01' 
 
@@ -87,6 +89,7 @@ const CanyonList: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [sort, setSort] = useState<SortOptionEnum>(SortOptionEnum.TotalDescents);
   const [flatRegions, setFlatRegions] = useState<Region[]>([]);
+  const navigate = useNavigate();
 
   const refresh = () => {
     setIsLoading(true);
@@ -170,7 +173,7 @@ const CanyonList: React.FC = () => {
       <Alert
         severity="info"
         sx={{
-          mb: 2, mt: 1, py: 2,
+          mb: 3, mt: 1, py: 2,
           alignItems: 'center',
           '& .MuiAlert-icon': { mr: 2 },
         }}
@@ -193,7 +196,8 @@ const CanyonList: React.FC = () => {
         {t('canyon.findTopo')}
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
-        <Box>
+        <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between" flex={1} mb={1}>
+          <Button variant="contained" color="tertiary" onClick={() => navigate("/settings?tab=1")} startIcon={<AddLocationAltIcon/>}>{t('translation:canyon.createUserCanyon')}</Button>
           <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
             <InputLabel id="filter-sort-by">{t('common:canyon.sortBy')}</InputLabel>
             <Select
