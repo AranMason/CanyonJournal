@@ -135,18 +135,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     {({ errors, touched, handleChange, handleBlur, values, setFieldValue, setFieldTouched, isSubmitting }) => {
 
                         const handleCanyonSelect = (canyon: CanyonListEntry) => {
-                            const { canyonId } = parseCanyonKey(canyon.Key);
-                            setFieldValue('CanyonId', canyonId);
-                            setFieldValue('UserCanyonId', undefined);
-                            setSelectedDisplay({ name: canyon.Name, isVerified: true, canyon });
-                            setSearchFilter('');
-                        };
 
-                        const handleUserCanyonSelect = (canyon: CanyonListEntry) => {
-                            const { userCanyonId } = parseCanyonKey(canyon.Key);
+                            const { canyonId, userCanyonId } = parseCanyonKey(canyon.Key);
+                            setFieldValue('CanyonId', canyonId);
                             setFieldValue('UserCanyonId', userCanyonId);
-                            setFieldValue('CanyonId', undefined);
-                            setSelectedDisplay({ name: canyon.Name, isVerified: false, canyon });
+                            setSelectedDisplay({ name: canyon.Name, isVerified: canyonId !== undefined, canyon });
                             setSearchFilter('');
                         };
 
@@ -248,7 +241,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     )}
                                                     {favouriteCanyons.map((canyon) => (
                                                         <ListItem key={canyon.Key} disablePadding>
-                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleUserCanyonSelect(canyon)}>
+                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
                                                                 <ListItemText
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -272,7 +265,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     )}
                                                     {otherCanyons.map(canyon => (
                                                         <ListItem key={canyon.Key} disablePadding>
-                                                            <ListItemButton onClick={() => canyon.IsVerified ? handleCanyonSelect(canyon) : handleUserCanyonSelect(canyon)}>
+                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
                                                                 <ListItemText
                                                                     primary={
                                                                         <Box display="flex" justifyContent="space-between" alignItems="center">
