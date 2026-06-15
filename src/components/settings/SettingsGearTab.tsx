@@ -7,11 +7,12 @@ import {
 import { apiFetch } from '../../utils/api';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { GearItem, RopeItem } from '../../types/types';
-import RopeModal from '../RopeModal';
-import GearModal from '../GearModal';
+import RopeModal from '../gear/RopeModal';
+import GearModal from '../gear/GearModal';
 import SuccessSnackbar from '../SuccessSnackbar';
 import RowActions from '../RowActions';
 import { useTranslation } from 'react-i18next';
+import GearServiceModal from '../gear/GearServiceModal';
 
 const SettingsGearTab: React.FC = () => {
   const navigate = useNavigate();
@@ -21,8 +22,9 @@ const SettingsGearTab: React.FC = () => {
   const [ropes, setRopes] = useState<RopeItem[]>([]);
   const [gear, setGear] = useState<GearItem[]>([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [editRopeId, setEditRopeId] = useState<Number | null>(null);
-  const [editGearId, setEditGearId] = useState<Number | null>(null);
+  const [editRopeId, setEditRopeId] = useState<number | null>(null);
+  const [editGearId, setEditGearId] = useState<number | null>(null);
+  const [serviceModalForGearId, setServiceModalForGearId] = useState<number | null>(null);
 
   useEffect(() => {
     EquipmentDataStore.load()
@@ -71,7 +73,7 @@ const SettingsGearTab: React.FC = () => {
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">{t('common:terms.rope.upper', { count: 1 })}</Typography>
-          <Button variant="contained" color="tertiary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
+          <Button variant="contained" color="primary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
@@ -133,7 +135,7 @@ const SettingsGearTab: React.FC = () => {
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">{t('common:terms.gear.upper', { count: 1 })}</Typography>
-          <Button variant="contained" color="tertiary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
+          <Button variant="contained" color="primary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
@@ -158,6 +160,7 @@ const SettingsGearTab: React.FC = () => {
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
                     <RowActions
                       onEdit={async () => setEditGearId(row.Id)}
+                      onService={async () => setServiceModalForGearId(row.Id)}
                     />
                   </TableCell>
                 </TableRow>
@@ -165,6 +168,7 @@ const SettingsGearTab: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        <GearServiceModal gearId={serviceModalForGearId} open={serviceModalForGearId !== null} onClose={() => setServiceModalForGearId(null)}/>
         <GearModal
           open={gearModalOpen || editGearId !== null}
           onClose={() => { setGearModalOpen(false); setEditGearId(null); }}

@@ -24,16 +24,13 @@ const UserSettingsPage: React.FC = () => {
   return (
     <PageTemplate pageTitle={t('settings.title')} isAuthRequired>
       <Tabs value={activeTab} indicatorColor='secondary' onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3 }}>
-        <Tab label={t('settings.goals')} />
+
         <Tab label={t('settings.canyons')} />
-        <Tab label={t('settings.gear')} />
         <Tab label={t('settings.tags')} />
         
       </Tabs>
-      {activeTab === 0 && <SettingsGoalsTab />}
-      {activeTab === 1 && <SettingsCanyonsTab />}
-      {activeTab === 2 && <SettingsGearTab />}
-      {activeTab === 3 && <SettingsTagsTab />}
+      {activeTab === 0 && <SettingsCanyonsTab />}
+      {activeTab === 1 && <SettingsTagsTab />}
     </PageTemplate>
   );
 };

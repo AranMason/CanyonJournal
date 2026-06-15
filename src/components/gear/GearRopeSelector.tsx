@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } from '@mui/material';
-import { GearItem, RopeItem } from '../types/types';
-import * as EquipmentDataStore from '../helpers/EquipmentDataStore';
+import { GearItem, RopeItem } from '../../types/types';
+import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useTranslation } from 'react-i18next';
 
 interface GearRopeSelectorProps {

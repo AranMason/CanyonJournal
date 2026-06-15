@@ -28,15 +28,15 @@ const toBit = (value: unknown): boolean => {
 
 // Get all gear and ropes for the user
 router.get('/', async (req: Request, res: Response) => {
-  console.log("In /api/equipment route");
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
     console.log("userId in /api/equipment:", userId);
-    const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM GearItems WHERE UserId = @userId');
+    const gearRes = await pool.request().input('userId', sql.Int, userId).query('SELECT *, (SELECT MAX(ServiceDate) FROM GearServiceRecords gsr WHERE gsr.GearItemId = GearItems.Id AND gsr.ServiceType = 1) AS LastServicedDate, (SELECT MAX(ServiceDate) FROM GearServiceRecords gsr WHERE gsr.GearItemId = GearItems.Id AND gsr.ServiceType = 2) AS LastInspectionDate FROM GearItems WHERE GearItems.UserId = @userId');
     const ropeRes = await pool.request().input('userId', sql.Int, userId).query('SELECT * FROM RopeItems WHERE UserId = @userId');
     res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch gear/ropes' });
   }
 });
@@ -57,8 +57,6 @@ router.post('/gear', async (req: Request, res: Response) => {
       retirementDate,
       serialNumber,
       model,
-      lastInspectionDate,
-      lastServicedDate,
       weightGrams
     } = req.body;
 
@@ -74,8 +72,6 @@ router.post('/gear', async (req: Request, res: Response) => {
       .input('retirementDate', sql.Date, toNullableDate(retirementDate))
       .input('serialNumber', sql.NVarChar(255), toNullableString(serialNumber))
       .input('model', sql.NVarChar(255), toNullableString(model))
-      .input('lastInspectionDate', sql.Date, toNullableDate(lastInspectionDate))
-      .input('lastServicedDate', sql.Date, toNullableDate(lastServicedDate))
       .input('weightGrams', sql.Float, toNullableNumber(weightGrams))
       .query(`INSERT INTO GearItems (
                 UserId,
@@ -89,8 +85,6 @@ router.post('/gear', async (req: Request, res: Response) => {
                 RetirementDate,
                 SerialNumber,
                 model,
-                LastInspectionDate,
-                LastServicedDate,
                 WeightGrams,
                 Created,
                 Updated
@@ -108,8 +102,6 @@ router.post('/gear', async (req: Request, res: Response) => {
                 @retirementDate,
                 @serialNumber,
                 @model,
-                @lastInspectionDate,
-                @lastServicedDate,
                 @weightGrams,
                 GETDATE(),
                 GETDATE()
@@ -137,8 +129,6 @@ router.put('/gear/:id', async (req: Request, res: Response) => {
       retirementDate,
       serialNumber,
       model,
-      lastInspectionDate,
-      lastServicedDate,
       weightGrams
     } = req.body;
 
@@ -155,8 +145,6 @@ router.put('/gear/:id', async (req: Request, res: Response) => {
       .input('retirementDate', sql.Date, toNullableDate(retirementDate))
       .input('serialNumber', sql.NVarChar(255), toNullableString(serialNumber))
       .input('model', sql.NVarChar(255), toNullableString(model))
-      .input('lastInspectionDate', sql.Date, toNullableDate(lastInspectionDate))
-      .input('lastServicedDate', sql.Date, toNullableDate(lastServicedDate))
       .input('weightGrams', sql.Float, toNullableNumber(weightGrams))
       .query(`UPDATE GearItems SET
                 Name=@name,
@@ -169,8 +157,6 @@ router.put('/gear/:id', async (req: Request, res: Response) => {
                 RetirementDate=@retirementDate,
                 SerialNumber=@serialNumber,
                 model=@model,
-                LastInspectionDate=@lastInspectionDate,
-                LastServicedDate=@lastServicedDate,
                 WeightGrams=@weightGrams,
                 Updated=GETDATE()
               OUTPUT INSERTED.*
@@ -213,8 +199,6 @@ router.post('/rope', async (req: Request, res: Response) => {
       retirementDate,
       serialNumber,
       model,
-      lastInspectionDate,
-      lastServicedDate,
       weightGrams,
       parentRopeItemsId
     } = req.body;
@@ -245,8 +229,6 @@ router.post('/rope', async (req: Request, res: Response) => {
       .input('retirementDate', sql.Date, toNullableDate(retirementDate))
       .input('serialNumber', sql.NVarChar(255), toNullableString(serialNumber))
       .input('model', sql.NVarChar(255), toNullableString(model))
-      .input('lastInspectionDate', sql.Date, toNullableDate(lastInspectionDate))
-      .input('lastServicedDate', sql.Date, toNullableDate(lastServicedDate))
       .input('weightGrams', sql.Float, toNullableNumber(weightGrams))
       .input('parentRopeItemsId', sql.Int, parsedParentRopeId)
       .query(`INSERT INTO RopeItems (
@@ -263,8 +245,6 @@ router.post('/rope', async (req: Request, res: Response) => {
                 RetirementDate,
                 SerialNumber,
                 model,
-                LastInspectionDate,
-                LastServicedDate,
                 WeightGrams,
                 ParentRopeItemsId,
                 Created,
@@ -285,8 +265,6 @@ router.post('/rope', async (req: Request, res: Response) => {
                 @retirementDate,
                 @serialNumber,
                 @model,
-                @lastInspectionDate,
-                @lastServicedDate,
                 @weightGrams,
                 @parentRopeItemsId,
                 GETDATE(),
@@ -318,8 +296,6 @@ router.put('/rope/:id', async (req: Request, res: Response) => {
       retirementDate,
       serialNumber,
       model,
-      lastInspectionDate,
-      lastServicedDate,
       weightGrams,
       parentRopeItemsId
     } = req.body;
@@ -355,8 +331,6 @@ router.put('/rope/:id', async (req: Request, res: Response) => {
       .input('retirementDate', sql.Date, toNullableDate(retirementDate))
       .input('serialNumber', sql.NVarChar(255), toNullableString(serialNumber))
       .input('model', sql.NVarChar(255), toNullableString(model))
-      .input('lastInspectionDate', sql.Date, toNullableDate(lastInspectionDate))
-      .input('lastServicedDate', sql.Date, toNullableDate(lastServicedDate))
       .input('weightGrams', sql.Float, toNullableNumber(weightGrams))
       .input('parentRopeItemsId', sql.Int, parsedParentRopeId)
       .query(`UPDATE RopeItems SET
@@ -372,8 +346,6 @@ router.put('/rope/:id', async (req: Request, res: Response) => {
                 RetirementDate=@retirementDate,
                 SerialNumber=@serialNumber,
                 Model=@model,
-                LastInspectionDate=@lastInspectionDate,
-                LastServicedDate=@lastServicedDate,
                 WeightGrams=@weightGrams,
                 ParentRopeItemsId=@parentRopeItemsId,
                 Updated=GETDATE()
@@ -397,6 +369,39 @@ router.delete('/rope/:id', async (req: Request, res: Response) => {
     res.status(204).end();
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete rope' });
+  }
+});
+
+router.post('/gear/:id/service', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    const gearId = Number(req.params.id);
+    const { serviceType, serviceDate, notes } = req.body;
+
+    await pool.request()
+      .input('gearId', sql.Int, gearId)
+      .input('userId', sql.Int, userId)
+      .input('serviceType', sql.Int, serviceType)
+      .input('serviceDate', sql.Date, toNullableDate(serviceDate))
+      .input('notes', sql.NVarChar(500), toNullableString(notes))
+      .query(`INSERT INTO GearServiceRecords (
+                GearItemId,
+                UserId,
+                ServiceType,
+                ServiceDate,
+                Notes
+              ) VALUES (
+                @gearId,
+                @userId,
+                @serviceType,
+                @serviceDate,
+                @notes
+              )`);
+    res.status(201).json({ message: 'Service record added successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add service record' });
   }
 });
 

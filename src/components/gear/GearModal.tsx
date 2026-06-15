@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormControlLabel } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { GearItem } from '../types/types';
-import FormikTextField from './FormikTextField';
+import { GearItem } from '../../types/types';
+import FormikTextField from '../FormikTextField';
 import { useTranslation } from 'react-i18next';
-import AppModal from './AppModal';
+import AppModal from '../AppModal';
 
 interface GearModalProps {
   open: boolean;
@@ -26,7 +26,6 @@ const GearSchema = Yup.object().shape({
   serialNumber: Yup.string().nullable(),
   model: Yup.string().nullable(),
   lastInspectionDate: Yup.date().nullable(),
-  lastServicedDate: Yup.date().nullable(),
   weightGrams: Yup.number().nullable(),
 });
 
@@ -45,8 +44,6 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
     retirementDate: initialValues?.RetirementDate?.substring(0, 10) ?? '',
     serialNumber: initialValues?.SerialNumber ?? '',
     model: initialValues?.Model ?? '',
-    lastInspectionDate: initialValues?.LastInspectionDate?.substring(0, 10) ?? '',
-    lastServicedDate: initialValues?.LastServicedDate?.substring(0, 10) ?? '',
     weightGrams: initialValues?.WeightGrams ?? '',
   }
 
@@ -91,8 +88,6 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
                   <FormikTextField<typeof values> label={t('gear.serialNumber')} name="serialNumber" value={values.serialNumber} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} />
                   <FormikTextField<typeof values> label={t('gear.manufactureDate')} name="manufactureDate" type="date" value={values.manufactureDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
                   <FormikTextField<typeof values> label={t('gear.retirementDate')} name="retirementDate" type="date" value={values.retirementDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
-                  <FormikTextField<typeof values> label={t('gear.lastInspectionDate')} name="lastInspectionDate" type="date" value={values.lastInspectionDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
-                  <FormikTextField<typeof values> label={t('gear.lastServicedDate')} name="lastServicedDate" type="date" value={values.lastServicedDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
                 </Box>
               )}
             </DialogContent>

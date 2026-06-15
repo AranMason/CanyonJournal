@@ -184,8 +184,8 @@
   "gear": {
     "title": "Ropes and Gear",
     "descriptionText": "Manage your ropes and gear here. Track usage and lifespan of your equipment, and add them to your $t(common:terms.record.lower, {\"count\": 2}) when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
-    "showAdvancedMode": "Show Service Information",
-    "hideAdvancedMode": "Hide Service Information",
+    "showAdvancedMode": "Show Additional Fields",
+    "hideAdvancedMode": "Hide Additional Fields",
     "model": "Model",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
@@ -197,8 +197,6 @@
     "manufactureDate": "Manufacture Date",
     "inServiceDate": "Purchase Date",
     "retirementDate": "Retirement Date",
-    "lastInspectionDate": "Last Inspection Date",
-    "lastServicedDate": "Last Serviced Date",
     "weightGrams": "Weight (g)",
     "weightGramsRope": "Weight (g/m)",
     "isRetired": "Retired",
@@ -220,6 +218,16 @@
       "date_acquired": {
         "title":"$t(gear.inServiceDate)"
       }
+    },
+    "serviceModal": {
+      "title": "Add Service Record",
+      "description": "Record a service or inspection for this $t(common:terms.gear.lower, {\"count\": 1}). This will update the Last Inspection and Last Service dates for this item.",
+      "serviceDateLabel": "Date of Service",
+      "notes": "$t(common:fields.notes) (optional)",
+      "serviceTypeLabel": "Service Type",
+      "serviceType_0": "Other",
+      "serviceType_1": "Service",
+      "serviceType_2": "Inspection"
     }
   },
   "report": {

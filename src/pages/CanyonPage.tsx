@@ -197,7 +197,7 @@ const CanyonList: React.FC = () => {
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between" flex={1} mb={1}>
-          <Button variant="contained" color="tertiary" onClick={() => navigate("/settings?tab=1")} startIcon={<AddLocationAltIcon/>}>{t('translation:canyon.createUserCanyon')}</Button>
+          <Button variant="contained" color="primary" onClick={() => navigate("/settings?tab=0")} startIcon={<AddLocationAltIcon/>}>{t('translation:canyon.createUserCanyon')}</Button>
           <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
             <InputLabel id="filter-sort-by">{t('common:canyon.sortBy')}</InputLabel>
             <Select

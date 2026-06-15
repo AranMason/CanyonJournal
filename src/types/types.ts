@@ -9,6 +9,12 @@ export interface User {
   isAdmin: boolean;
 }
 
+export enum ServiceType {
+  Other = 0,
+  Service = 1,
+  Inspection = 2
+}
+
 export interface BaseItem {
   Id: number;
   Name: string;
@@ -19,8 +25,6 @@ export interface BaseItem {
   RetirementDate?: string;
   SerialNumber?: string;
   Model?: string;
-  LastInspectionDate?: string;
-  LastServicedDate?: string;
   WeightGrams?: number;
   Notes?: string;
   Created: string;
@@ -29,6 +33,8 @@ export interface BaseItem {
 
 export interface GearItem extends BaseItem {
   Category: string;
+  LastInspectionDate?: string;
+  LastServiceDate?: string;
 }
 
 export interface RopeItem extends BaseItem {

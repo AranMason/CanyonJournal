@@ -1,11 +1,11 @@
-import { RopeItem, Unit } from '../types/types';
+import { RopeItem, Unit } from '../../types/types';
 import React, { useState } from 'react';
 import { DialogContent, DialogActions, Button, MenuItem, Box, Divider, Checkbox, FormControlLabel, Typography } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import FormikTextField from './FormikTextField';
+import FormikTextField from '../FormikTextField';
 import { useTranslation } from 'react-i18next';
-import AppModal from './AppModal';
+import AppModal from '../AppModal';
 
 interface RopeModalProps {
   open: boolean;
@@ -27,16 +27,14 @@ const RopeSchema = Yup.object().shape({
   retirementDate: Yup.date().nullable(),
   serialNumber: Yup.string().nullable(),
   model: Yup.string().nullable(),
-  lastInspectionDate: Yup.date().nullable(),
-  lastServicedDate: Yup.date().nullable(),
   weightGrams: Yup.number().nullable(),
   parentRopeItemsId: Yup.number().nullable(),
 });
 
 const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialValues }) => {
+  const isEditing = !!initialValues;
   const { t } = useTranslation();
   const [isAdvancedModeOpen, setIsAdvancedModeOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(!!initialValues);
   const mappedInitialValues = initialValues
     ? {
         name: initialValues.Name ?? '',
@@ -50,8 +48,6 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
         retirementDate: initialValues.RetirementDate?.substring(0, 10) ?? '',
         serialNumber: initialValues.SerialNumber ?? '',
         model: initialValues.Model ?? '',
-        lastInspectionDate: initialValues.LastInspectionDate?.substring(0, 10) ?? '',
-        lastServicedDate: initialValues.LastServicedDate?.substring(0, 10) ?? '',
         weightGrams: initialValues.WeightGrams ?? '',
         parentRopeItemsId: initialValues.ParentRopeItemsId ?? '',
         notes: initialValues.Notes ?? '',
@@ -75,6 +71,7 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
         notes: ''
       };
 
+
   return (
     <AppModal open={open} onClose={onClose} title={isEditing ? t('settings.editRope') : t('gear.addRope')}>
       <Formik
@@ -89,8 +86,8 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
             weightGrams: values.weightGrams === '' ? null : Number(values.weightGrams),
             parentRopeItemsId: values.parentRopeItemsId === '' ? null : Number(values.parentRopeItemsId),
           });
-          resetForm();
           onClose();
+          resetForm();
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (
@@ -123,8 +120,6 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, my: 2 }}>
                   <FormikTextField<typeof values> label={t('gear.serialNumber')} name="serialNumber" value={values.serialNumber} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} />
                   <FormikTextField<typeof values> label={t('gear.manufactureDate')} name="manufactureDate" type="date" value={values.manufactureDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
-                  <FormikTextField<typeof values> label={t('gear.lastInspectionDate')} name="lastInspectionDate" type="date" value={values.lastInspectionDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
-                  <FormikTextField<typeof values> label={t('gear.lastServicedDate')} name="lastServicedDate" type="date" value={values.lastServicedDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
                   <FormikTextField<typeof values> label={t('gear.retirementDate')} name="retirementDate" type="date" value={values.retirementDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />
                 </Box>  
                   
@@ -132,7 +127,7 @@ const RopeModal: React.FC<RopeModalProps> = ({ open, onClose, onSubmit, initialV
             </DialogContent>
             <DialogActions>
               <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
-              <Button type="submit" variant="contained" color="tertiary" disabled={isSubmitting}>{initialValues ? t('common:actions.save') : t('common:actions.add')}</Button>
+              <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>{initialValues ? t('common:actions.save') : t('common:actions.add')}</Button>
             </DialogActions>
           </Form>
         )}

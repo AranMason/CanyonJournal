@@ -6,7 +6,7 @@ import { apiFetch } from "../utils/api";
 import * as CanyonDataStore from "../helpers/CanyonDataStore";
 import * as UserCanyonDataStore from '../helpers/UserCanyonDataStore';
 import * as TagsDataStore from '../helpers/TagsDataStore';
-import { GearRopeSelector } from "./GearRopeSelector";
+import { GearRopeSelector } from "./gear/GearRopeSelector";
 import SuccessSnackbar from "./SuccessSnackbar";
 import React, { useEffect, useState } from "react";
 import { CanyonListEntry } from '../types/Canyon';
@@ -388,7 +388,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
                                         {t('common:actions.cancel')}
                                     </Button>}
-                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="tertiary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
+                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
                                         {submitString || t('journal.createRecord')}
                                     </Button>
                                     

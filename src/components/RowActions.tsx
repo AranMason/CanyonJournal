@@ -9,14 +9,20 @@ interface RowActionsProps {
   onEdit?: () => Promise<void> | void;
   onDelete?: () => Promise<void> | void;
   onViewTrips?: () => void;
+  onService?: () => Promise<void> | void;
 }
 
-const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete, onViewTrips }) => {
+const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete, onViewTrips, onService }) => {
   const { t } = useTranslation('common');
   return (
     <>
       {onViewTrips && <Tooltip title={t('actions.viewTrips')}>
         <IconButton size="small" onClick={onViewTrips} sx={{ color: 'grey.500' }}>
+          <HistoryIcon />
+        </IconButton>
+      </Tooltip>}
+      {onService && <Tooltip title={t('actions.service')}>
+        <IconButton size="small" onClick={onService} sx={{ color: 'grey.500' }}>
           <HistoryIcon />
         </IconButton>
       </Tooltip>}
