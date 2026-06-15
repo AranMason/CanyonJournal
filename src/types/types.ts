@@ -8,22 +8,32 @@ export interface User {
   id: Number,
   isAdmin: boolean;
 }
-export interface GearItem {
+
+export interface BaseItem {
   Id: number;
   Name: string;
-  Category: string;
+  IsRetired: boolean;
+  Manufacturer?: string;
+  ManufactureDate?: string;
+  InServiceDate?: string;
+  RetirementDate?: string;
+  SerialNumber?: string;
+  Model?: string;
+  LastInspectionDate?: string;
+  LastServicedDate?: string;
+  WeightGrams?: number;
   Notes?: string;
   Created: string;
   Updated: string;
 }
 
-export interface RopeItem {
-  Id: number;
-  Name: string;
-  Diameter: number;
-  Length: number;
+export interface GearItem extends BaseItem {
+  Category: string;
+}
+
+export interface RopeItem extends BaseItem {
+  Diameter?: number;
+  Length?: number;
   Unit: string;
-  Notes?: string;
-  Created: string;
-  Updated: string;
+  ParentRopeItemsId?: number;
 }

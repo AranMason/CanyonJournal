@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
 const UserSettingsPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams();
   const [activeTab, setActiveTab] = useState(0);
   const { t } = useTranslation();
 

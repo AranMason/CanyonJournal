@@ -20,7 +20,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
 
     useEffect(() => {
         const appName = t('app.name');
-        document.title = pageTitle ? `${pageTitle} — ${appName}` : appName;
+        document.title = pageTitle ? `${pageTitle} - ${appName}` : appName;
     }, [pageTitle, t]);
 
     useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box, Button, Paper, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Typography,
+  TableHead, TableRow, Typography, Link
 } from '@mui/material';
 import { apiFetch } from '../../utils/api';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
@@ -71,35 +71,32 @@ const SettingsGearTab: React.FC = () => {
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">{t('common:terms.rope.upper', { count: 1 })}</Typography>
-          <Button variant="outlined" color="primary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
+          <Button variant="contained" color="tertiary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>{t('common:fields.name')}</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.diameter')}</TableCell>
-                <TableCell>{t('gear.length')}</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.notes')}</TableCell>
-                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>{t('common:actions.edit')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.item.title')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.rope_size.title')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.date_acquired.title')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.notes.title')}</TableCell>
+                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {ropes.map(row => (
                 <TableRow key={row.Id}>
-                  <TableCell>{row.Name}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Diameter}</TableCell>
-                  <TableCell>{row.Length}{row.Unit === 'Metres' ? 'm' : row.Unit === 'Feet' ? 'ft' : row.Unit}</TableCell>
+                  <TableCell><Link component="a" color="textPrimary" onClick={() => navigate(`/journal?ropeId=${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link></TableCell>
+                  {/* TODO: We can probably find a better way of handling this */}
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Manufacturer} {row.Model}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t(`gear.table.rope_size.cell_${row.Unit.toLowerCase()}`, { diameter: row.Diameter, length: row.Length })}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.InServiceDate ? new Date(row.InServiceDate).toLocaleDateString() : ''}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
                     <RowActions
-                      onViewTrips={() => navigate(`/journal?ropeId=${row.Id}`)}
                       onEdit={async () => setEditRopeId(row.Id)}
-                      onDelete={async () => {
-                        await apiFetch(`/api/equipment/rope/${row.Id}`, { method: 'DELETE' });
-                        setRopes(prev => prev.filter(r => r.Id !== row.Id));
-                        EquipmentDataStore.invalidate();
-                      }}
                     />
                   </TableCell>
                 </TableRow>
@@ -136,33 +133,31 @@ const SettingsGearTab: React.FC = () => {
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
           <Typography variant="h6">{t('common:terms.gear.upper', { count: 1 })}</Typography>
-          <Button variant="outlined" color="primary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
+          <Button variant="contained" color="tertiary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
         </Box>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell>{t('common:fields.name')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.item.title')}</TableCell>
                 <TableCell>{t('gear.category')}</TableCell>
+                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.date_acquired.title')}</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('common:fields.notes')}</TableCell>
-                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}>{t('common:actions.edit')}</TableCell>
+                <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {gear.map(row => (
                 <TableRow key={row.Id}>
-                  <TableCell>{row.Name}</TableCell>
+                  <TableCell><Link component="a" color="textPrimary" onClick={() => navigate(`/journal?gearId=${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link></TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Manufacturer} {row.Model}</TableCell>
                   <TableCell>{row.Category}</TableCell>
+                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.InServiceDate ? new Date(row.InServiceDate).toLocaleDateString() : ''}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
                     <RowActions
-                      onViewTrips={() => navigate(`/journal?gearId=${row.Id}`)}
                       onEdit={async () => setEditGearId(row.Id)}
-                      onDelete={async () => {
-                        await apiFetch(`/api/equipment/gear/${row.Id}`, { method: 'DELETE' });
-                        setGear(prev => prev.filter(g => g.Id !== row.Id));
-                        EquipmentDataStore.invalidate();
-                      }}
                     />
                   </TableCell>
                 </TableRow>

@@ -184,13 +184,43 @@
   "gear": {
     "title": "Ropes and Gear",
     "descriptionText": "Manage your ropes and gear here. Track usage and lifespan of your equipment, and add them to your $t(common:terms.record.lower, {\"count\": 2}) when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
+    "showAdvancedMode": "Show Service Information",
+    "hideAdvancedMode": "Hide Service Information",
+    "model": "Model",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
     "length": "$t(common:fields.length) (m)",
     "diameter": "$t(common:fields.diameter) (mm)",
     "category": "$t(common:fields.category)",
     "unit": "$t(common:fields.unit)",
-    "manufacturer": "$t(common:fields.manufacturer)"
+    "manufacturer": "Manufacturer",
+    "manufactureDate": "Manufacture Date",
+    "inServiceDate": "Purchase Date",
+    "retirementDate": "Retirement Date",
+    "lastInspectionDate": "Last Inspection Date",
+    "lastServicedDate": "Last Serviced Date",
+    "weightGrams": "Weight (g)",
+    "weightGramsRope": "Weight (g/m)",
+    "isRetired": "Retired",
+    "parentRopeItemsId": "Parent Rope",
+    "serialNumber": "Serial Number",
+    "identifier": "Identifier",
+    "table": {
+      "item": {
+        "title":"Item"
+      },
+      "rope_size": {
+        "title":"Size",
+        "cell_metres": "{{length}} m ({{diameter}} mm)",
+        "cell_feet": "{{length}} ft ({{diameter}} mm)"
+      },
+      "notes": {
+        "title":"$t(common:fields.notes)"
+      },
+      "date_acquired": {
+        "title":"$t(gear.inServiceDate)"
+      }
+    }
   },
   "report": {
     "title": "Report Issue",
