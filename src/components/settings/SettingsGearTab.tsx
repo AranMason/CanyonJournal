@@ -79,7 +79,7 @@ const SettingsGearTab: React.FC = () => {
               <TableRow>
                 <TableCell>{t('common:fields.name')}</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.item.title')}</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.rope_size.title')}</TableCell>
+                <TableCell sx={{ display: { sm: 'table-cell' } }}>{t('gear.table.rope_size.title')}</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.date_acquired.title')}</TableCell>
                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('gear.table.notes.title')}</TableCell>
                 <TableCell sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 80 }}></TableCell>
@@ -91,7 +91,7 @@ const SettingsGearTab: React.FC = () => {
                   <TableCell><Link component="a" color="textPrimary" onClick={() => navigate(`/journal?ropeId=${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link></TableCell>
                   {/* TODO: We can probably find a better way of handling this */}
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Manufacturer} {row.Model}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t(`gear.table.rope_size.cell_${row.Unit.toLowerCase()}`, { diameter: row.Diameter, length: row.Length })}</TableCell>
+                  <TableCell sx={{ display: { sm: 'table-cell' } }}>{t(`gear.table.rope_size.cell_${row.Unit.toLowerCase()}`, { diameter: row.Diameter, length: row.Length })}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.InServiceDate ? new Date(row.InServiceDate).toLocaleDateString() : ''}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Notes}</TableCell>
                   <TableCell align="right" sx={{ position: 'sticky', right: 0, background: '#fff', zIndex: 1, width: 120 }}>
