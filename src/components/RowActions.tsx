@@ -21,7 +21,7 @@ const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete, onViewTrips, 
           <HistoryIcon />
         </IconButton>
       </Tooltip>}
-      {onService && <Tooltip title={t('actions.service')}>
+      {onService && <Tooltip title={t('translation:gear.addServiceToolTip')}>
         <IconButton size="small" onClick={onService} sx={{ color: 'grey.500' }}>
           <HistoryIcon />
         </IconButton>

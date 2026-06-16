@@ -186,6 +186,7 @@
     "descriptionText": "Manage your ropes and gear here. Track usage and lifespan of your equipment, and add them to your $t(common:terms.record.lower, {\"count\": 2}) when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
     "showAdvancedMode": "Show Additional Fields",
     "hideAdvancedMode": "Hide Additional Fields",
+    "addServiceToolTip": "Add Service Record",
     "model": "Model",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
@@ -219,15 +220,25 @@
         "title":"$t(gear.inServiceDate)"
       }
     },
+    "serviceType_0": "Other",
+    "serviceType_1": "Service",
+    "serviceType_2": "Inspection",
     "serviceModal": {
       "title": "Add Service Record",
       "description": "Record a service or inspection for this $t(common:terms.gear.lower, {\"count\": 1}). This will update the Last Inspection and Last Service dates for this item.",
       "serviceDateLabel": "Date of Service",
       "notes": "$t(common:fields.notes) (optional)",
-      "serviceTypeLabel": "Service Type",
-      "serviceType_0": "Other",
-      "serviceType_1": "Service",
-      "serviceType_2": "Inspection"
+      "serviceTypeLabel": "Service Type"
+    },
+    "itemPage": {
+      "title": "$t(common:terms.gear.upper, {\"count\": 1}) Details",
+      "canyonHistoryTab": "$t(common:terms.descent.upper, {\"count\": 2}) History",
+      "serviceHistoryTab": "Service History",
+      "noHistory": "No history",
+      "serviceType": "Service Type",
+      "serviceDate": "Service Date",
+      "notes": "Notes",
+      "addServiceButton": "Add Service Record"
     }
   },
   "report": {

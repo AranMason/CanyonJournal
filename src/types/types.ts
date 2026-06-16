@@ -15,6 +15,22 @@ export enum ServiceType {
   Inspection = 2
 }
 
+export interface GearServiceHistoryItem {
+  Id: number;
+  GearId: number;
+  ServiceType: ServiceType;
+  ServiceDate: string;
+  Notes?: string;
+}
+
+export interface RopeServiceHistoryItem {
+  Id: number;
+  RopeId: number;
+  ServiceType: ServiceType;
+  ServiceDate: string;
+  Notes?: string;
+}
+
 export interface BaseItem {
   Id: number;
   Name: string;

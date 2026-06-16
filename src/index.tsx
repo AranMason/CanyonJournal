@@ -26,6 +26,7 @@ import CookieBanner from './components/CookieBanner';
 import { Box } from '@mui/material';
 import GearSettingPage from './pages/GearSettingPage';
 import GoalSettingPage from './pages/GoalSettingPage';
+import GearHistoryPage from './pages/GearHistoryPage';
 
 function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -38,14 +39,18 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            {/* Journal */}
             <Route path="/journal/record/:id" element={<EditRecordPage />} />
             <Route path="/journal/record" element={<RecordPage />} />
             <Route path="/journal/goals/:goalId" element={<GoalTripsPage />} />
             <Route path="/journal" element={<RecordsOverviewPage />} />
+            {/* Canyons */}
             <Route path="/canyons/users/:id" element={<UserCanyonOverviewPage />} />
             <Route path="/canyons/:id" element={<CanyonOverviewPage />} />
             <Route path="/canyons" element={<CanyonPage />} />
+            {/* Settings */}
             <Route path="/settings" element={<UserSettingsPage />} />
+            <Route path="/settings/gear/:id" element={<GearHistoryPage />} />
             <Route path="/settings/gear" element={<GearSettingPage />} />
             <Route path="/settings/goals" element={<GoalSettingPage />} />
             <Route path="/admin" element={<AdminPage />} />

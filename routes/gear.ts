@@ -1,6 +1,7 @@
 import { Router, Response, Request } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
+import { getRecordsByGearId } from './helpers/records.data';
 
 const router = Router();
 
@@ -109,6 +110,56 @@ router.post('/gear', async (req: Request, res: Response) => {
     res.status(201).json(result.recordset[0]);
   } catch (err) {
     res.status(500).json({ error: 'Failed to add gear' });
+  }
+});
+
+router.get('/gear/:id/service', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    const gearId = Number(req.params.id);
+
+    const historyRes = await pool.request()
+      .input('userId', sql.Int, userId)
+      .input('gearId', sql.Int, gearId)
+      .query('SELECT * FROM GearServiceRecords WHERE GearItemId = @gearId AND UserId = @userId ORDER BY ServiceDate DESC');
+    res.json(historyRes.recordset);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch gear service history' });
+  }
+});
+
+router.get('/gear/:id/descents', async (req: Request, res: Response) => {
+  try {
+    const userId = await getUserIdByRequest(req);
+    if(!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const gearId = Number(req.params.id);
+
+    const pool = await getPool();
+    const records = await getRecordsByGearId(pool, userId, gearId);
+    res.json(records);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch gear service history' });
+  }
+});
+
+// GET /api/equipment/gear/:gearId/descents - get all canyon records using this gear
+router.get('/gear/:gearId/descents', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const gearId = Number(req.params.gearId);
+    const records = await getRecordsByGearId(pool, userId, gearId);
+    res.json(records);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch descents' });
   }
 });
 

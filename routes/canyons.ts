@@ -4,6 +4,16 @@ import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
 import { } from '../src/types/express-session';
 import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
 import { canyonDetailUrl } from './helpers/urlHelper';
+import { 
+  getBaseCanyonDataWithoutDescents,
+  getAdminCanyonList,
+  getBaseCanyonDataWithDescents,
+  getUserCanyonDataWithDescents,
+  getSpecificCanyon,
+  getSpecificCanyonWithDescents,
+  getCanyonRecordCount,
+  deleteCanyonWithCascade
+} from './helpers/canyons.data';
 
 const router = express.Router();
 
@@ -15,53 +25,11 @@ router.get('/', async (req, res) => {
     if (req.query.withDescents === '1' && userId) {
       const pool = await getPool();
       const [verifiedResult, userCanyonsResult] = await Promise.all([
-        pool.request()
-          .input('userId', sql.Int, userId)
-          .query(`
-            SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-              c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-              c.SourceId, c.RegionId,
-              rgn.Symbol AS RegionSymbol,
-              rgn.Slug AS RegionSlug,
-              cs.DisplayName AS SourceName,
-              cs.LogoUrl AS SourceLogoUrl,
-              cs.WebsiteUrl AS SourceWebsiteUrl,
-              COUNT(cr.Id) AS Descents,
-              MAX(cr.Date) AS LastDescentDate,
-              CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
-            FROM Canyons c
-            LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-            LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
-            LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
-            LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-            WHERE c.IsVerified = 1
-            GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
-          `),
-        pool.request()
-          .input('userId', sql.Int, userId)
-          .query(`
-            SELECT uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
-                   rgn.Symbol AS RegionSymbol,
-                   rgn.Slug AS RegionSlug,
-                   uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                   uc.StarRating, uc.IsUnrated,
-                   COUNT(cr.Id) AS Descents,
-                   MAX(cr.Date) AS LastDescentDate,
-                   CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
-            FROM UserCanyons uc
-            LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
-            LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
-            LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
-            WHERE uc.UserId = @userId
-            GROUP BY uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
-                     rgn.Symbol, rgn.Slug,
-                     uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                     uc.StarRating, uc.IsUnrated, cf.Id
-            ORDER BY Descents DESC, uc.Name
-          `)
+        getBaseCanyonDataWithDescents(pool, userId),
+        getUserCanyonDataWithDescents(pool, userId)
       ]);
 
-      const userCanyons = userCanyonsResult.recordset.map((uc: any) => ({
+      const userCanyons = userCanyonsResult.map((uc) => ({
         Key: userCanyonKey(uc.Id),
         DetailUrl: canyonDetailUrl(null, uc.Id),
         Name: uc.Name,
@@ -81,7 +49,7 @@ router.get('/', async (req, res) => {
         IsFavourite: uc.IsFavourite ?? false,
       }));
 
-      const officialCanyons = verifiedResult.recordset.map((c: any) => ({
+      const officialCanyons = verifiedResult.map((c) => ({
         Key: canyonKey(c.Id),
         DetailUrl: canyonDetailUrl(c.Id),
         Name: c.Name,
@@ -108,22 +76,8 @@ router.get('/', async (req, res) => {
       res.json([...officialCanyons, ...userCanyons]);
     } else {
       const pool = await getPool();
-      const result = await pool.request().query(`
-        SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-               c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-               c.SourceId, c.RegionId,
-               rgn.Symbol AS RegionSymbol,
-               rgn.Slug AS RegionSlug,
-               cs.DisplayName AS SourceName,
-               cs.LogoUrl AS SourceLogoUrl,
-               cs.WebsiteUrl AS SourceWebsiteUrl
-        FROM Canyons c
-        LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-        LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-        WHERE c.IsVerified = 1
-        ORDER BY c.Name
-      `);
-      res.json(result.recordset);
+      const result = await getBaseCanyonDataWithoutDescents(pool);
+      res.json(result);
     }
   } catch (err) {
     console.log(err);
@@ -140,24 +94,8 @@ router.get('/verify', async (req, res) => {
 
   try {
     const pool = await getPool();
-
-    const result = await pool.request()
-      .query(`
-          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-               c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-               c.SourceId, c.RegionId,
-               rgn.Symbol AS RegionSymbol,
-               rgn.Slug AS RegionSlug,
-               cs.DisplayName AS SourceName,
-               cs.LogoUrl AS SourceLogoUrl,
-               cs.WebsiteUrl AS SourceWebsiteUrl
-        FROM Canyons c
-        LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-        LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-        ORDER BY c.Name
-        `);
-    res.json(result.recordset);
-
+    const result = await getAdminCanyonList(pool);
+    res.json(result);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to fetch canyons' });
@@ -171,10 +109,8 @@ router.get('/:id/record-count', async (req, res) => {
   }
   try {
     const pool = await getPool();
-    const result = await pool.request()
-      .input('canyonId', sql.Int, parseInt(req.params.id, 10))
-      .query('SELECT COUNT(*) AS Count FROM CanyonRecords WHERE CanyonId = @canyonId');
-    res.json({ count: result.recordset[0].Count });
+    const count = await getCanyonRecordCount(pool, parseInt(req.params.id, 10));
+    res.json({ count });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to count records' });
@@ -189,24 +125,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const pool = await getPool();
     const canyonId = parseInt(req.params.id, 10);
-
-    // Cascade: remove gear/rope junction rows, then records, then canyon
-    await pool.request()
-      .input('canyonId', sql.Int, canyonId)
-      .query(`
-        DELETE crg FROM CanyonRecordGear crg
-        JOIN CanyonRecords cr ON crg.CanyonRecordId = cr.Id
-        WHERE cr.CanyonId = @canyonId;
-
-        DELETE crr FROM CanyonRecordRope crr
-        JOIN CanyonRecords cr ON crr.CanyonRecordId = cr.Id
-        WHERE cr.CanyonId = @canyonId;
-
-        DELETE FROM CanyonRecords WHERE CanyonId = @canyonId;
-
-        DELETE FROM Canyons WHERE Id = @canyonId;
-      `);
-
+    await deleteCanyonWithCascade(pool, canyonId);
     res.status(204).send();
   } catch (err) {
     console.log(err);
@@ -220,48 +139,14 @@ router.get('/:id', async (req, res) => {
     const pool = await getPool();
     // If withDescents=1, join with CanyonRecords for user-specific count
     const userId = await getUserIdByRequest(req);
+    const canyonId = parseInt(req.params.id, 10);
+    
     if (req.query.withDescents === '1' && userId) {
-      const result = await pool.request()
-        .input('userId', sql.Int, userId)
-        .input('canyonId', req.params.id)
-        .query(`
-          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-            c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-            c.SourceId, c.RegionId,
-            rgn.Symbol AS RegionSymbol,
-            rgn.Slug AS RegionSlug,
-            cs.DisplayName AS SourceName,
-            cs.LogoUrl AS SourceLogoUrl,
-            cs.WebsiteUrl AS SourceWebsiteUrl,
-            COUNT(cr.Id) AS Descents,
-            MAX(cr.Date) AS LastDescentDate
-          FROM Canyons c
-          LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-          LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
-          LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-          WHERE c.Id = @canyonId
-          GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
-          ORDER BY Descents DESC, c.Name
-        `);
-      res.json(result.recordset[0]);
+      const result = await getSpecificCanyonWithDescents(pool, canyonId, userId);
+      res.json(result);
     } else {
-      const result = await pool.request()
-        .input('canyonId', req.params.id)
-        .query(`
-          SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-            c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-            c.SourceId, c.RegionId,
-            rgn.Symbol AS RegionSymbol,
-            rgn.Slug AS RegionSlug,
-            cs.DisplayName AS SourceName,
-            cs.LogoUrl AS SourceLogoUrl,
-            cs.WebsiteUrl AS SourceWebsiteUrl
-          FROM Canyons c
-          LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
-          LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-          WHERE c.Id = @canyonId
-        `);
-      res.json(result.recordset[0]);
+      const result = await getSpecificCanyon(pool, canyonId);
+      res.json(result);
     }
   } catch (err) {
     console.log(err);

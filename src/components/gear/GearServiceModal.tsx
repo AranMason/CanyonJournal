@@ -59,7 +59,7 @@ const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClo
                         >
                             {[ServiceType.Service, ServiceType.Inspection, ServiceType.Other].map((type) => (
                                 <MenuItem key={type} value={type}>
-                                    {t('gear.serviceModal.serviceType', { context: type })}
+                                    {t('gear.serviceType', { context: type })}
                                 </MenuItem>
                             ))}
                         </FormikTextField>

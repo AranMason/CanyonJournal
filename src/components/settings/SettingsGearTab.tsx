@@ -152,7 +152,7 @@ const SettingsGearTab: React.FC = () => {
             <TableBody>
               {gear.map(row => (
                 <TableRow key={row.Id}>
-                  <TableCell><Link component="a" color="textPrimary" onClick={() => navigate(`/journal?gearId=${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link></TableCell>
+                  <TableCell><Link component="a" color="textPrimary" onClick={() => navigate(`/settings/gear/${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link></TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.Manufacturer} {row.Model}</TableCell>
                   <TableCell>{row.Category}</TableCell>
                   <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.InServiceDate ? new Date(row.InServiceDate).toLocaleDateString() : ''}</TableCell>

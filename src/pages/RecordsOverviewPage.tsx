@@ -16,6 +16,7 @@ import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Region } from '../types/Region';
 import ReportCTAAlert from '../components/ReportCTAAlert';
 import { useTranslation } from 'react-i18next';
+import { getRecords } from '../helpers/RecordDataStore';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const RecordsOverviewPage: React.FC = () => {
   const [flatRegions, setFlatRegions] = useState<Region[]>([]);
 
   const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
-    '/api/record',
+    getRecords,
     !loadingUser && Boolean(user)
   );
 

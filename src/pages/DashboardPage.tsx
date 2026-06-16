@@ -9,6 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
+import { getRecordsForDashboard } from '../helpers/RecordDataStore';
 
 const DashboardPage: React.FC = () => {
 
@@ -18,7 +19,7 @@ const DashboardPage: React.FC = () => {
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
 
   const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
-    '/api/record?max=10',
+    getRecordsForDashboard,
     !loading && Boolean(user)
   );
 
