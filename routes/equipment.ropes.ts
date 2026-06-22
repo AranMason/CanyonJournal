@@ -125,7 +125,7 @@ router.post('/:id/service', async (req: Request, res: Response) => {
                 ServiceDate,
                 Notes
               ) VALUES (
-                @gearId,
+                @ropeId,
                 @userId,
                 @serviceType,
                 @serviceDate,

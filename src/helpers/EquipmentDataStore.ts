@@ -13,7 +13,8 @@ var loadPromise: Promise<Equipment> | null = null;
 var loadPromiseForGearServices: Record<number, Promise<GearServiceHistoryItem[]>> = {};
 var loadPromiseForGearDescents: Record<number, Promise<CanyonRecord[]>> = {};
 // Rope
-var loadPromiseForRope: Record<number, Promise<RopeServiceHistoryItem[]>> = {};
+var loadPromiseForRopeServices: Record<number, Promise<RopeServiceHistoryItem[]>> = {};
+var loadPromiseForRopeDescents: Record<number, Promise<CanyonRecord[]>> = {};
 
 export function loadGearHistory(gearId: number): Promise<GearServiceHistoryItem[]> {
   if (!loadPromiseForGearServices[gearId]) {
@@ -36,13 +37,23 @@ export function loadGearDescents(gearId: number): Promise<CanyonRecord[]> {
 }
 
 export function loadRopeHistory(ropeId: number): Promise<RopeServiceHistoryItem[]> {
-  if (!loadPromiseForRope[ropeId]) {
-    loadPromiseForRope[ropeId] = apiFetch<RopeServiceHistoryItem[]>(`/api/equipment/rope/${ropeId}/service`).catch(err => {
-      delete loadPromiseForRope[ropeId];
+  if (!loadPromiseForRopeServices[ropeId]) {
+    loadPromiseForRopeServices[ropeId] = apiFetch<RopeServiceHistoryItem[]>(`/api/equipment/rope/${ropeId}/service`).catch(err => {
+      delete loadPromiseForRopeServices[ropeId];
       throw err;
     });
   }
-  return loadPromiseForRope[ropeId];
+  return loadPromiseForRopeServices[ropeId];
+}
+
+export function loadRopeDescents(ropeId: number): Promise<CanyonRecord[]> {
+  if (!loadPromiseForRopeDescents[ropeId]) {
+    loadPromiseForRopeDescents[ropeId] = apiFetch<CanyonRecord[]>(`/api/equipment/rope/${ropeId}/descents`).catch(err => {
+      delete loadPromiseForRopeDescents[ropeId];
+      throw err;
+    });
+  }
+  return loadPromiseForRopeDescents[ropeId];
 }
 
 
@@ -58,7 +69,8 @@ export function invalidate(): void {
   loadPromise = null;
   loadPromiseForGearServices = {};
   loadPromiseForGearDescents = {};
-  loadPromiseForRope = {};
+  loadPromiseForRopeServices = {};
+  loadPromiseForRopeDescents = {}
 }
 
 export async function addRope(rope: RopeItem): Promise<void> {

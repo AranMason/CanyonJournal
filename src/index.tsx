@@ -27,6 +27,7 @@ import { Box } from '@mui/material';
 import GearSettingPage from './pages/GearSettingPage';
 import GoalSettingPage from './pages/GoalSettingPage';
 import GearHistoryPage from './pages/GearHistoryPage';
+import RopeHistoryPage from './pages/RopeHistoryPage';
 
 function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -51,6 +52,7 @@ function AppLayout() {
             {/* Settings */}
             <Route path="/settings" element={<UserSettingsPage />} />
             <Route path="/settings/gear/:id" element={<GearHistoryPage />} />
+            <Route path="/settings/rope/:id" element={<RopeHistoryPage />} />
             <Route path="/settings/gear" element={<GearSettingPage />} />
             <Route path="/settings/goals" element={<GoalSettingPage />} />
             <Route path="/admin" element={<AdminPage />} />
