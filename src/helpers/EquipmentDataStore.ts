@@ -58,4 +58,21 @@ export function invalidate(): void {
   loadPromise = null;
   loadPromiseForGearServices = {};
   loadPromiseForGearDescents = {};
+  loadPromiseForRope = {};
+}
+
+export async function addRope(rope: RopeItem): Promise<void> {
+  await apiFetch<void>('/api/equipment/rope', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(rope),
+      });
+}
+
+export async function addGear(gear: GearItem): Promise<void> {
+  await apiFetch<void>('/api/equipment/gear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(gear),
+      });
 }

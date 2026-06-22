@@ -6,7 +6,7 @@
     "settings": "Settings",
     "admin": "Admin Panel",
     "goals": "$t(common:terms.goal.upper, {\"count\": 2})",
-    "gear": "Ropes and $t(common:terms.gear.upper, {\"count\": 2})",
+    "gear": "Equipment",
     "welcome": "Welcome {{name}}"
   },
   "dashboard": {
@@ -182,7 +182,7 @@
     "editCanyon": "Edit $t(common:terms.canyon.upper, {\"count\": 1})"
   },
   "gear": {
-    "title": "Ropes and Gear",
+    "title": "Equipment",
     "descriptionText": "Manage your ropes and gear here. Track usage and lifespan of your equipment, and add them to your $t(common:terms.record.lower, {\"count\": 2}) when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
     "showAdvancedMode": "Show Additional Fields",
     "hideAdvancedMode": "Hide Additional Fields",
@@ -212,6 +212,11 @@
         "title":"Size",
         "cell_metres": "{{length}} m ({{diameter}} mm)",
         "cell_feet": "{{length}} ft ({{diameter}} mm)"
+      },
+      "weight": {
+        "title":"Weight",
+        "cell": "{{weight}} g",
+        "cellSubtext": "{{weightPerUnit}} g/m"
       },
       "notes": {
         "title":"$t(common:fields.notes)"

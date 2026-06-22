@@ -52,7 +52,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     useEffect(() => {
         setCanyonsLoading(true);
 
-
         Promise.all([
             CanyonDataStore.load(),
              UserCanyonDataStore.load(),
@@ -61,7 +60,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
             setAvailableTags(tags.map(t => t.Name));
 
-            setCanyons([
+            var canyonList: CanyonListEntry[] = [
                 ...baseCanyons.filter(c => c.IsVerified).map((c): CanyonListEntry => ({
                     ...c, 
                     Key: canyonKey(c.Id ?? -1),
@@ -77,7 +76,32 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     CanyonType: c.CanyonType ?? null,
                     Descents: 0
                 }))
-            ])
+            ]
+
+            setCanyons(canyonList)
+
+            if (isEdit && initialValues && (initialValues.CanyonId == null || initialValues.UserCanyonId == null)) {
+
+                var currentCanyon: CanyonListEntry | undefined = undefined;
+
+                if(initialValues.CanyonId != null) {
+                    var key = canyonKey(initialValues.CanyonId);
+                    currentCanyon = canyonList.find(c => c.Key === key);
+                }
+                else if (initialValues.UserCanyonId != null) {
+                    var key = userCanyonKey(initialValues.UserCanyonId);
+                    currentCanyon = canyonList.find(c => c.Key === key);
+                }
+
+                if(currentCanyon) {
+                    setSelectedDisplay({
+                    name: currentCanyon.Name,
+                    isVerified: currentCanyon.IsVerified,
+                    canyon: currentCanyon
+                });
+                                
+            }
+        }
 
             // const userCanyonEntries: CanyonListEntry[] = userCanyons.map(uc => ({
 

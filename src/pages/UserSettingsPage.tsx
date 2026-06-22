@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import PageTemplate from './PageTemplate';
 import SettingsCanyonsTab from '../components/settings/SettingsCanyonsTab';
-import SettingsGearTab from '../components/settings/SettingsGearTab';
 import SettingsTagsTab from '../components/settings/SettingsTagsTab';
-import SettingsGoalsTab from '../components/settings/SettingsGoalsTab';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 
 const UserSettingsPage: React.FC = () => {
-  const [searchParams, _] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(0);
   const { t } = useTranslation();
 
@@ -29,8 +27,11 @@ const UserSettingsPage: React.FC = () => {
         <Tab label={t('settings.tags')} />
         
       </Tabs>
-      {activeTab === 0 && <SettingsCanyonsTab />}
+      <Box sx={{ mt: 4 }}>
+        {activeTab === 0 && <SettingsCanyonsTab />}
       {activeTab === 1 && <SettingsTagsTab />}
+      </Box>
+      
     </PageTemplate>
   );
 };

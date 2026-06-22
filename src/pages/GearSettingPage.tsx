@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
-import SettingsGearTab from "../components/settings/SettingsGearTab"
 import PageTemplate from "./PageTemplate"
 import { useTranslation } from "react-i18next"
+import GearOverview from "../components/gear/GearOverview";
 
 const GearSettingPage = () => {
 
@@ -12,7 +12,7 @@ const GearSettingPage = () => {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                     {t('gear.descriptionText')}
                   </Typography>
-            <SettingsGearTab />
+            <GearOverview />
         </PageTemplate>
     )
 }

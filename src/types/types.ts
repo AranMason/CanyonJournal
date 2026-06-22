@@ -56,6 +56,6 @@ export interface GearItem extends BaseItem {
 export interface RopeItem extends BaseItem {
   Diameter?: number;
   Length?: number;
-  Unit: string;
+  Unit: Unit;
   ParentRopeItemsId?: number;
 }

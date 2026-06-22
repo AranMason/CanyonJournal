@@ -25,6 +25,7 @@ const EditRecordPage: React.FC = () => {
         setRecordLoading(true);
         apiFetch<CanyonRecord>('/api/record/' + recordIdNum)
             .then(data => {
+                console.log(data)
                 setInitialValues({
                     Id: data.Id,
                     Date: data.Date.split('T')[0],
