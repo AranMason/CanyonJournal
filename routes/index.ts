@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import user from './user'
 import record from './record'
-import gear from './gear'
+import equipment from './equipment'
 import canyons from './canyons'
 import dashboard from './dashboard';
 import userCanyons from './userCanyons';
@@ -17,7 +17,7 @@ const router: Router = express.Router()
 router.use('/', user);
 router.use('/dashboard', dashboard);
 router.use('/record', record);
-router.use('/equipment', gear);
+router.use('/equipment', equipment);
 router.use('/canyons', canyons);
 router.use('/user-canyons', userCanyons);
 router.use('/favourites', favourites);

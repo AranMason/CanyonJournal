@@ -3,7 +3,7 @@ import { CanyonRecord } from '../../src/types/CanyonRecord';
 import { canyonDetailUrl } from './urlHelper';
 
 /** Upsert a list of tag names for a user, returning their IDs. */
-export async function upsertTags(pool: any, userId: number, tagNames: string[]): Promise<number[]> {
+export async function upsertTags(pool: sql.ConnectionPool, userId: number, tagNames: string[]): Promise<number[]> {
   const ids: number[] = [];
   for (const name of tagNames) {
     const trimmed = name.trim();
@@ -329,7 +329,7 @@ export async function getCanyonRecordById(pool: any, userId: number, recordId: n
 }
 
 /** Get all canyon records that use a specific gear item. */
-export async function getRecordsByGearId(pool: any, userId: number, gearId: number): Promise<CanyonRecord[]> {
+export async function getRecordsByGearId(pool: sql.ConnectionPool, userId: number, gearId: number): Promise<CanyonRecord[]> {
   const query = `
     SELECT DISTINCT
       cr.Id,
@@ -365,8 +365,75 @@ export async function getRecordsByGearId(pool: any, userId: number, gearId: numb
   const records = result.recordset as any[];
 
   // Attach GearIds, RopeIds, and Tags for each record
-  if (records.length > 0) {
-    const ids = records.map(r => r.Id);
+  await attachGearRopeTags(pool, records)
+  return records;
+}
+
+/** Get all canyon records that use a specific rope item. */
+export async function getRecordsByRopeId(pool: sql.ConnectionPool, userId: number, ropeId: number): Promise<CanyonRecord[]> {
+  const query = `
+    SELECT DISTINCT
+      cr.Id,
+      cr.UserId,
+      cr.Date,
+      cr.TeamSize,
+      cr.Comments,
+      cr.CanyonId,
+      cr.UserCanyonId,
+      cr.WaterLevel,
+      cr.TripRating,
+      cr.Timestamp,
+      COALESCE(c.Name, uc.Name) AS Name,
+      COALESCE(c.Url, uc.Url) AS Url,
+      COALESCE(c.RegionId, uc.RegionId) AS RegionId,
+      COALESCE(crgn.Slug, ucrgn.Slug) AS RegionSlug,
+      COALESCE(crgn.Symbol, ucrgn.Symbol) AS RegionSymbol
+    FROM CanyonRecords cr
+    INNER JOIN CanyonRecordRope crr ON cr.Id = crr.CanyonRecordId
+    LEFT JOIN Canyons c ON cr.CanyonId = c.Id
+    LEFT JOIN UserCanyons uc ON cr.UserCanyonId = uc.Id
+    LEFT JOIN Regions crgn ON c.RegionId = crgn.Id
+    LEFT JOIN Regions ucrgn ON uc.RegionId = ucrgn.Id
+    WHERE cr.UserId = @userId AND crr.RopeItemId = @ropeId
+    ORDER BY cr.Date DESC
+  `;
+
+  const result = await pool.request()
+    .input('userId', sql.Int, userId)
+    .input('ropeId', sql.Int, ropeId)
+    .query(query);
+
+  const records = result.recordset as any[];
+
+  // Attach GearIds, RopeIds, and Tags for each record
+  await attachGearRopeTags(pool, records)
+  return records;
+}
+
+/** Delete a canyon record and cascade delete related data. */
+export async function deleteCanyonRecord(pool: sql.ConnectionPool, userId: number, recordId: number): Promise<void> {
+  const existing = await pool.request()
+    .input('Id', sql.Int, recordId)
+    .input('userId', sql.Int, userId)
+    .query('SELECT Id FROM CanyonRecords WHERE Id = @Id AND UserId = @userId');
+
+  if (existing.recordset.length === 0) {
+    throw new Error('Record not found');
+  }
+
+  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordGear WHERE CanyonRecordId = @Id');
+  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordRope WHERE CanyonRecordId = @Id');
+  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordTags WHERE CanyonRecordId = @Id');
+  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecords WHERE Id = @Id');
+}
+
+async function attachGearRopeTags(pool: sql.ConnectionPool, records: CanyonRecord[]): Promise<void> {
+
+  if(records.length === 0) {
+    return;
+  }
+
+  const ids = records.map(r => r.Id);
     const idList = ids.join(',');
 
     const ropeRows = await pool.request()
@@ -398,29 +465,14 @@ export async function getRecordsByGearId(pool: any, userId: number, gearId: numb
     });
 
     records.forEach(rec => {
+
+      if(rec.Id === undefined || rec.Id === null) {
+        throw new Error('Record Id is undefined or null');
+      }
+
       rec.RopeIds = ropesByRecord[rec.Id] || [];
       rec.GearIds = gearByRecord[rec.Id] || [];
       rec.Tags = tagsByRecord[rec.Id] || [];
       rec.DetailUrl = canyonDetailUrl(rec.CanyonId, rec.UserCanyonId);
     });
-  }
-
-  return records;
-}
-
-/** Delete a canyon record and cascade delete related data. */
-export async function deleteCanyonRecord(pool: any, userId: number, recordId: number): Promise<void> {
-  const existing = await pool.request()
-    .input('Id', sql.Int, recordId)
-    .input('userId', sql.Int, userId)
-    .query('SELECT Id FROM CanyonRecords WHERE Id = @Id AND UserId = @userId');
-
-  if (existing.recordset.length === 0) {
-    throw new Error('Record not found');
-  }
-
-  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordGear WHERE CanyonRecordId = @Id');
-  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordRope WHERE CanyonRecordId = @Id');
-  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecordTags WHERE CanyonRecordId = @Id');
-  await pool.request().input('Id', sql.Int, recordId).query('DELETE FROM CanyonRecords WHERE Id = @Id');
 }
