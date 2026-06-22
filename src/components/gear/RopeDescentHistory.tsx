@@ -10,7 +10,7 @@ interface RopeServiceDescentsProps {
   ropeId: number;
 }
 
-const RopeDescentHistory: React.FC<RopeServiceDescentsProps> = ({ ropeId: ropeId }) => {
+const RopeDescentHistory: React.FC<RopeServiceDescentsProps> = ({ ropeId }) => {
   const { t } = useTranslation();
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
 

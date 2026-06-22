@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormControlLabel, Autocomplete, AutocompleteRenderInputParams, TextField } from '@mui/material';
+import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormControlLabel, Autocomplete, TextField } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { GearItem } from '../../types/types';

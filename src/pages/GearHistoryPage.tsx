@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
 import GearServiceHistory from "../components/gear/GearServiceHistory";
-import { Box, Button, Chip, Divider, Paper, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Button, Divider, Paper, Stack, Tab, Tabs } from "@mui/material";
 import GearServiceModal from "../components/gear/GearServiceModal";
 import AddIcon from '@mui/icons-material/Add';
 import GearServiceDescents from "../components/gear/GearServiceDescents";

@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { CanyonRecord } from '../../types/CanyonRecord';
+import React, { useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import CanyonRecordAccordion from '../CanyonRecordAccordion/CanyonRecordAccordion';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useCanyonRecords } from '../../hooks/useCanyonRecords';

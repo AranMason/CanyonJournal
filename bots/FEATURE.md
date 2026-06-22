@@ -33,35 +33,6 @@ When asked to review, you should provide outline, priority and ease of implement
 
 # [Low] Support Trips that span multiple days
 
-# [Goals] Add Support for the following Goals
-- [ ] When Logging Unique Canyons, group same canyon together in audit trip list (both summary and Goal Page)
-- **Implemented**: Region rules, distinct regions, all-in-region, canyon type filter, min rating rules, first-time rule, rolling time window, tag rules, exclusion rules — all via GoalRules table.
-
-# [Goals] We should only load Completed Goals when they're requested to be shown in the settings
-- **Partially done**: Active vs Completed goals are loaded separately. The completed goals list is still fetched eagerly on load via `?includeCompleted=true`. Defer this fetch until the user clicks "Show Completed".
-
-# [Goals] Default Goals
-- New User should get a 'Descend 5 Canyons Goal' to teach them the system.
-- Default Goal Packs for various standards (IE: UKCA) - Don't know what other ones there are TBH
-
 # [General] Add a Change Log
 - Available from the corner, pop-up when someone logs in and something has changed.
 
-# [General] New User Pop-up with a Application Overview
-- Also potentially starting new Users with a Goal of 'Do X Canyons'
-
-# [Goal] Region Completion lists more relevent trips
-
-When listing all trips for Regional Completion, we show all recent trips currently, this isn't useful.
-We should introduce Tabs to the Goal Summary
-- Trips - This is what we currently display
-- Canyons 
-  - For regional completion. Breakdown of which Canyons have been completed, and which are still needing to be done.
-  - For Unique Canyons - Show List of Canyons Already done.
-- Regions
-  - For Unqiue Regions show which regions have already been done, with descent counts
-  - Have a link to 'All Canyons' page prefiltered to the appropriate region.
-
-# [Goals] Goals should be it's own featured page, rather than hidden in settings
-
-# [Navigation] On mobile, the top bar should display the icon, and link to the home page (/dashboard) for the app.

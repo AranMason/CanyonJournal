@@ -1,6 +1,6 @@
 import { RopeItem, Unit } from '../../types/types';
 import React, { useState } from 'react';
-import { DialogContent, DialogActions, Button, MenuItem, Box, Divider, Checkbox, FormControlLabel, Typography } from '@mui/material';
+import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormControlLabel } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikTextField from '../FormikTextField';

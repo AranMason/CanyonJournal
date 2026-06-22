@@ -66,7 +66,7 @@ app.use(async (req, res, next) => {
     const pool = await getPool();
 
     // Migrate old users
-    if (['aran.j.mason@gmail.com', 'joshbrennand319@gmail.com', 'dropdeaddove23@gmail.com', 'solharryarmer@gmail.com'].includes(oidcUser?.email)) {
+    if (['joshbrennand319@gmail.com', 'dropdeaddove23@gmail.com', 'solharryarmer@gmail.com'].includes(oidcUser?.email)) {
       await pool.request()
         .input('guid', sql.NVarChar(255), guid)
         .input('email', sql.NVarChar(255), oidcUser?.email)
@@ -86,6 +86,17 @@ app.use(async (req, res, next) => {
         .input('profilePicture', sql.NVarChar(255), oidcUser?.picture || '')
         .input('email', sql.NVarChar(255), oidcUser?.email)
         .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin, Email) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0, @email)');
+
+      // Set Up new user data with an initial goal
+      try{
+        var userId = result.recordset[0].UserId;
+        await pool.request()
+          .input('UserId', sql.Int, userId)
+          .query("INSERT INTO Goals (UserId, Label, MinCount, SortOrder) VALUES (@UserId, 'Record 5 Canyon Descents', 5, 0)")
+      } catch(e) {
+        console.error(e);
+      }
+      
     } else {
       // Update the user just in case
       await pool.request()
