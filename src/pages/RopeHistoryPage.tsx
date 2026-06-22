@@ -58,7 +58,7 @@ const GearHistoryPage: React.FC = () => {
         });
     }, [idParam]);
 
-    return <PageTemplate pageTitle={t('gear.itemPage.title')} isAuthRequired={true} isLoading={isLoading}>
+    return <PageTemplate pageTitle={t('gear.itemPage.title', { context: 'rope'})} isAuthRequired={true} isLoading={isLoading}>
         <RopeServiceModal ropeId={idParam ?? 0} open={isServiceModalOpen} onClose={() => setIsServiceModalOpen(false)} />
 
         <Box sx={{ mb: 3 }}>

@@ -236,7 +236,8 @@
       "serviceTypeLabel": "Service Type"
     },
     "itemPage": {
-      "title": "$t(common:terms.gear.upper, {\"count\": 1}) Details",
+      "title_gear": "$t(common:terms.gear.upper, {\"count\": 1}) Details",
+      "title_rope": "Rope Details",
       "canyonHistoryTab": "$t(common:terms.descent.upper, {\"count\": 2}) History",
       "serviceHistoryTab": "Service History",
       "noHistory": "No history",

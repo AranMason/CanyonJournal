@@ -58,21 +58,43 @@ app.use(morgan('dev'));
 app.use(async (req, res, next) => {
   if (!req.oidc.isAuthenticated()) return next();
   try {
+
     const oidcUser = req.oidc.user;
-    const guid = oidcUser?.email || oidcUser?.sub;
+    const guid = oidcUser?.sub;
     if (!guid) return next();
 
     const pool = await getPool();
+
+    // Migrate old users
+    if (['aran.j.mason@gmail.com', 'joshbrennand319@gmail.com', 'dropdeaddove23@gmail.com', 'solharryarmer@gmail.com'].includes(oidcUser?.email)) {
+      await pool.request()
+        .input('guid', sql.NVarChar(255), guid)
+        .input('email', sql.NVarChar(255), oidcUser?.email)
+        .query('UPDATE Users SET Guid = @guid WHERE Guid = @email')
+    }
+
+
     let result = await pool.request()
       .input('guid', sql.NVarChar(255), guid)
-      .query('SELECT Id, Guid, FirstName, ProfilePicture, IsAdmin FROM Users WHERE Guid = @guid');
+      .query('SELECT Id, Guid, FirstName, ProfilePicture, Email, IsAdmin, Email FROM Users WHERE Guid = @guid');
 
     if (result.recordset.length === 0) {
+      // Create New Users
       result = await pool.request()
         .input('guid', sql.NVarChar(255), guid)
         .input('firstName', sql.NVarChar(100), oidcUser?.given_name || oidcUser?.name || 'User')
         .input('profilePicture', sql.NVarChar(255), oidcUser?.picture || '')
-        .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0)');
+        .input('email', sql.NVarChar(255), oidcUser?.email)
+        .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin, Email) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0, @email)');
+    } else {
+      // Update the user just in case
+      await pool.request()
+        .input('guid', sql.NVarChar(255), guid)
+        .input('firstName', sql.NVarChar(100), oidcUser?.given_name || oidcUser?.name || 'User')
+        .input('profilePicture', sql.NVarChar(255), oidcUser?.picture || '')
+        .input('email', sql.NVarChar(255), oidcUser?.email)
+        .query('UPDATE Users SET FirstName=@firstName, ProfilePicture=@profilePicture, Email=@email WHERE Guid=@guid');
+
     }
 
     req.user = { dbUser: result.recordset[0] };
