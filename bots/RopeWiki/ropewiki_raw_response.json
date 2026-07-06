@@ -1,0 +1,1814 @@
+{
+    "query": {
+        "printrequests": [
+            {
+                "label": "",
+                "key": "",
+                "redi": "",
+                "typeid": "_wpg",
+                "mode": 2
+            },
+            {
+                "label": "Has pageid",
+                "key": "Has_pageid",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has coordinates",
+                "key": "Has_coordinates",
+                "redi": "",
+                "typeid": "_geo",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Located in region",
+                "key": "Located_in_region",
+                "redi": "",
+                "typeid": "_wpg",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has rating",
+                "key": "Has_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has vertical rating",
+                "key": "Has_vertical_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has aquatic rating",
+                "key": "Has_aquatic_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has commitment rating",
+                "key": "Has_commitment_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has technical rating",
+                "key": "Has_technical_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has water rating",
+                "key": "Has_water_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has time rating",
+                "key": "Has_time_rating",
+                "redi": "",
+                "typeid": "_txt",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has total rating",
+                "key": "Has_total_rating",
+                "redi": "",
+                "typeid": "_num",
+                "mode": 1,
+                "format": ""
+            },
+            {
+                "label": "Has total counter",
+                "key": "Has_total_counter",
+                "redi": "",
+                "typeid": "_num",
+                "mode": 1,
+                "format": ""
+            }
+        ],
+        "results": {
+            "Weano and Joffre Gorges": {
+                "printouts": {
+                    "Has pageid": [
+                        "460"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -22.3567,
+                            "lon": 118.2849
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Western Australia",
+                            "fullurl": "https://ropewiki.com/Western_Australia",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3C III  (<i>v3a4&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a4"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "C"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        4.8
+                    ],
+                    "Has total counter": [
+                        2
+                    ]
+                },
+                "fulltext": "Weano and Joffre Gorges",
+                "fullurl": "https://ropewiki.com/Weano_and_Joffre_Gorges",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Weeds N Steeds": {
+                "printouts": {
+                    "Has pageid": [
+                        "51434"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 20.9582,
+                            "lon": -156.5325
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Maui",
+                            "fullurl": "https://ropewiki.com/West_Maui",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3C II  (<i>v3a4&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a4"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "C"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        2.8
+                    ],
+                    "Has total counter": [
+                        5
+                    ]
+                },
+                "fulltext": "Weeds N Steeds",
+                "fullurl": "https://ropewiki.com/Weeds_N_Steeds",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wenzhou Longwan Yongjia": {
+                "printouts": {
+                    "Has pageid": [
+                        "30007"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 28.3199,
+                            "lon": 120.8582
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Zhejiang",
+                            "fullurl": "https://ropewiki.com/Zhejiang",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [],
+                    "Has vertical rating": [],
+                    "Has aquatic rating": [],
+                    "Has commitment rating": [],
+                    "Has technical rating": [],
+                    "Has water rating": [],
+                    "Has time rating": [],
+                    "Has total rating": [
+                        0
+                    ],
+                    "Has total counter": [
+                        0
+                    ]
+                },
+                "fulltext": "Wenzhou Longwan Yongjia",
+                "fullurl": "https://ropewiki.com/Wenzhou_Longwan_Yongjia",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Canyon Narrows": {
+                "printouts": {
+                    "Has pageid": [
+                        "32778"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 36.9406,
+                            "lon": -111.0765
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Canyon",
+                            "fullurl": "https://ropewiki.com/West_Canyon",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "2B V  (<i>v1a2&nbsp;V</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "V"
+                    ],
+                    "Has technical rating": [
+                        "2"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "V"
+                    ],
+                    "Has total rating": [
+                        4.7
+                    ],
+                    "Has total counter": [
+                        9
+                    ]
+                },
+                "fulltext": "West Canyon Narrows",
+                "fullurl": "https://ropewiki.com/West_Canyon_Narrows",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Clear Creek (Full)": {
+                "printouts": {
+                    "Has pageid": [
+                        "18805"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5813,
+                            "lon": -111.3934
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "2B VI  (<i>v1a2&nbsp;VI</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "VI"
+                    ],
+                    "Has technical rating": [
+                        "2"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "VI"
+                    ],
+                    "Has total rating": [
+                        5
+                    ],
+                    "Has total counter": [
+                        6
+                    ]
+                },
+                "fulltext": "West Clear Creek (Full)",
+                "fullurl": "https://ropewiki.com/West_Clear_Creek_(Full)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Clear Creek (Hanging Gardens)": {
+                "printouts": {
+                    "Has pageid": [
+                        "18807"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.561,
+                            "lon": -111.5199
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "1B III  (<i>v1a2&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        4.9
+                    ],
+                    "Has total counter": [
+                        41
+                    ]
+                },
+                "fulltext": "West Clear Creek (Hanging Gardens)",
+                "fullurl": "https://ropewiki.com/West_Clear_Creek_(Hanging_Gardens)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Clear Creek (Point Trail)": {
+                "printouts": {
+                    "Has pageid": [
+                        "18808"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5458,
+                            "lon": -111.4337
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "2 <i>III</i>  (<i>v1&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "2"
+                    ],
+                    "Has water rating": [],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        3.5
+                    ],
+                    "Has total counter": [
+                        20
+                    ]
+                },
+                "fulltext": "West Clear Creek (Point Trail)",
+                "fullurl": "https://ropewiki.com/West_Clear_Creek_(Point_Trail)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Fork of Oak Creek": {
+                "printouts": {
+                    "Has pageid": [
+                        "19771"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.9907,
+                            "lon": -111.7428
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Fork Oak Creek",
+                            "fullurl": "https://ropewiki.com/West_Fork_Oak_Creek",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "1B V  (<i>v1a2&nbsp;V</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "V"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "V"
+                    ],
+                    "Has total rating": [
+                        4.6
+                    ],
+                    "Has total counter": [
+                        12
+                    ]
+                },
+                "fulltext": "West Fork of Oak Creek",
+                "fullurl": "https://ropewiki.com/West_Fork_of_Oak_Creek",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Fork of Pasture Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "87819"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 38.4021,
+                            "lon": -110.4933
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "White Roost",
+                            "fullurl": "https://ropewiki.com/White_Roost",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "2B III  (<i>v1a2&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "2"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        2
+                    ],
+                    "Has total counter": [
+                        2
+                    ]
+                },
+                "fulltext": "West Fork of Pasture Canyon",
+                "fullurl": "https://ropewiki.com/West_Fork_of_Pasture_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "West Quartz Creek Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "1081"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 47.008,
+                            "lon": -121.1535
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yakima County",
+                            "fullurl": "https://ropewiki.com/Yakima_County",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3C I  (<i>v3a4&nbsp;I</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a4"
+                    ],
+                    "Has commitment rating": [
+                        "I"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "C"
+                    ],
+                    "Has time rating": [
+                        "I"
+                    ],
+                    "Has total rating": [
+                        3.3
+                    ],
+                    "Has total counter": [
+                        3
+                    ]
+                },
+                "fulltext": "West Quartz Creek Canyon",
+                "fullurl": "https://ropewiki.com/West_Quartz_Creek_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wet Beaver Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "18788"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.6864,
+                            "lon": -111.5712
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Wet Beaver Wilderness",
+                            "fullurl": "https://ropewiki.com/Wet_Beaver_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "1B V  (<i>v1a2&nbsp;V</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "V"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "V"
+                    ],
+                    "Has total rating": [
+                        4.5
+                    ],
+                    "Has total counter": [
+                        31
+                    ]
+                },
+                "fulltext": "Wet Beaver Canyon",
+                "fullurl": "https://ropewiki.com/Wet_Beaver_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "White Creek": {
+                "printouts": {
+                    "Has pageid": [
+                        "48515"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -41.7642,
+                            "lon": 172.2028
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Westland",
+                            "fullurl": "https://ropewiki.com/Westland",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "<i>4B</i>   (v4a2 II)"
+                    ],
+                    "Has vertical rating": [
+                        "v4"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [],
+                    "Has total rating": [
+                        3
+                    ],
+                    "Has total counter": [
+                        1
+                    ]
+                },
+                "fulltext": "White Creek",
+                "fullurl": "https://ropewiki.com/White_Creek",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "White Roost Canyon (Main Fork)": {
+                "printouts": {
+                    "Has pageid": [
+                        "571"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 38.3908,
+                            "lon": -110.4458
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "White Roost",
+                            "fullurl": "https://ropewiki.com/White_Roost",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3A II  (<i>v3a1&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        3.8
+                    ],
+                    "Has total counter": [
+                        24
+                    ]
+                },
+                "fulltext": "White Roost Canyon (Main Fork)",
+                "fullurl": "https://ropewiki.com/White_Roost_Canyon_(Main_Fork)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "White Roost Canyon (West Fork)": {
+                "printouts": {
+                    "Has pageid": [
+                        "572"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 38.3894,
+                            "lon": -110.4547
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "White Roost",
+                            "fullurl": "https://ropewiki.com/White_Roost",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3A II  (<i>v3a1&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        3.8
+                    ],
+                    "Has total counter": [
+                        25
+                    ]
+                },
+                "fulltext": "White Roost Canyon (West Fork)",
+                "fullurl": "https://ropewiki.com/White_Roost_Canyon_(West_Fork)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wikiup Creek Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "83775"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5921,
+                            "lon": -111.6805
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Wet Beaver Wilderness",
+                            "fullurl": "https://ropewiki.com/Wet_Beaver_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3A II  (<i>v3a1&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        2
+                    ],
+                    "Has total counter": [
+                        1
+                    ]
+                },
+                "fulltext": "Wikiup Creek Canyon",
+                "fullurl": "https://ropewiki.com/Wikiup_Creek_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wilbur Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "702"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5581,
+                            "lon": -111.4588
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3B III  (<i>v3a2&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        4.3
+                    ],
+                    "Has total counter": [
+                        74
+                    ]
+                },
+                "fulltext": "Wilbur Canyon",
+                "fullurl": "https://ropewiki.com/Wilbur_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wildcat Canyon (Zion National Park)": {
+                "printouts": {
+                    "Has pageid": [
+                        "1111"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.3071,
+                            "lon": -113.0056
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Zion West Side",
+                            "fullurl": "https://ropewiki.com/Zion_West_Side",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [],
+                    "Has vertical rating": [],
+                    "Has aquatic rating": [],
+                    "Has commitment rating": [],
+                    "Has technical rating": [],
+                    "Has water rating": [],
+                    "Has time rating": [],
+                    "Has total rating": [
+                        1
+                    ],
+                    "Has total counter": [
+                        1
+                    ]
+                },
+                "fulltext": "Wildcat Canyon (Zion National Park)",
+                "fullurl": "https://ropewiki.com/Wildcat_Canyon_(Zion_National_Park)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wildcat Creek": {
+                "printouts": {
+                    "Has pageid": [
+                        "87499"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.7237,
+                            "lon": -119.7172
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yosemite National Park",
+                            "fullurl": "https://ropewiki.com/Yosemite_National_Park",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3B II  (<i>v3a2&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        3.5
+                    ],
+                    "Has total counter": [
+                        3
+                    ]
+                },
+                "fulltext": "Wildcat Creek",
+                "fullurl": "https://ropewiki.com/Wildcat_Creek",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Willow Valley": {
+                "printouts": {
+                    "Has pageid": [
+                        "704"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5702,
+                            "lon": -111.3878
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "1B IV  (<i>v1a2&nbsp;IV</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "IV"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "IV"
+                    ],
+                    "Has total rating": [
+                        3.9
+                    ],
+                    "Has total counter": [
+                        23
+                    ]
+                },
+                "fulltext": "Willow Valley",
+                "fullurl": "https://ropewiki.com/Willow_Valley",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wilsons Creek": {
+                "printouts": {
+                    "Has pageid": [
+                        "11536"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -44.0812,
+                            "lon": 169.3587
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Westland",
+                            "fullurl": "https://ropewiki.com/Westland",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "<i>4C2&nbsp;III</i>  (v4a5 III)"
+                    ],
+                    "Has vertical rating": [
+                        "v4"
+                    ],
+                    "Has aquatic rating": [
+                        "a5"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "C2"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        5
+                    ],
+                    "Has total counter": [
+                        29
+                    ]
+                },
+                "fulltext": "Wilsons Creek",
+                "fullurl": "https://ropewiki.com/Wilsons_Creek",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Windjana": {
+                "printouts": {
+                    "Has pageid": [
+                        "31831"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -17.41,
+                            "lon": 124.943
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Western Australia",
+                            "fullurl": "https://ropewiki.com/Western_Australia",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "POI 1A I  (<i>v1a1&nbsp;I</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "I"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "I"
+                    ],
+                    "Has total rating": [
+                        0
+                    ],
+                    "Has total counter": [
+                        0
+                    ]
+                },
+                "fulltext": "Windjana",
+                "fullurl": "https://ropewiki.com/Windjana",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Windows": {
+                "printouts": {
+                    "Has pageid": [
+                        "77692"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -33.2168,
+                            "lon": 150.2457
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Wolgan Valley",
+                            "fullurl": "https://ropewiki.com/Wolgan_Valley",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "<i>3A&nbsp;III</i>  (v3a1 III)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        0
+                    ],
+                    "Has total counter": [
+                        0
+                    ]
+                },
+                "fulltext": "Windows",
+                "fullurl": "https://ropewiki.com/Windows",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Winter Camp Slot": {
+                "printouts": {
+                    "Has pageid": [
+                        "515"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 38.7958,
+                            "lon": -109.4364
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yellow Cat Mesa",
+                            "fullurl": "https://ropewiki.com/Yellow_Cat_Mesa",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3A II  (<i>v3a1&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        2.7
+                    ],
+                    "Has total counter": [
+                        37
+                    ]
+                },
+                "fulltext": "Winter Camp Slot",
+                "fullurl": "https://ropewiki.com/Winter_Camp_Slot",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wounded Knee Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "79408"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -33.2043,
+                            "lon": 150.5376
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Wollemi",
+                            "fullurl": "https://ropewiki.com/Wollemi",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "<i>4A&nbsp;IV</i>  (v4a1 IV)"
+                    ],
+                    "Has vertical rating": [
+                        "v4"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "IV"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "IV"
+                    ],
+                    "Has total rating": [
+                        2.5
+                    ],
+                    "Has total counter": [
+                        2
+                    ]
+                },
+                "fulltext": "Wounded Knee Canyon",
+                "fullurl": "https://ropewiki.com/Wounded_Knee_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Wulgumerang Gorge": {
+                "printouts": {
+                    "Has pageid": [
+                        "61883"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -37.0822,
+                            "lon": 148.3081
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Wulgumerang",
+                            "fullurl": "https://ropewiki.com/Wulgumerang",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3B IV <i>R</i> (v5a3 IV)"
+                    ],
+                    "Has vertical rating": [
+                        "v5"
+                    ],
+                    "Has aquatic rating": [
+                        "a3"
+                    ],
+                    "Has commitment rating": [
+                        "IV"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "IV"
+                    ],
+                    "Has total rating": [
+                        0
+                    ],
+                    "Has total counter": [
+                        0
+                    ]
+                },
+                "fulltext": "Wulgumerang Gorge",
+                "fullurl": "https://ropewiki.com/Wulgumerang_Gorge",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "X-Pine Canyon": {
+                "printouts": {
+                    "Has pageid": [
+                        "707"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 34.5597,
+                            "lon": -111.4828
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "West Clear Creek Wilderness",
+                            "fullurl": "https://ropewiki.com/West_Clear_Creek_Wilderness",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "3B III  (<i>v3a2&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v3"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "3"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        3
+                    ],
+                    "Has total counter": [
+                        25
+                    ]
+                },
+                "fulltext": "X-Pine Canyon",
+                "fullurl": "https://ropewiki.com/X-Pine_Canyon",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Yosemite Falls (Lower)": {
+                "printouts": {
+                    "Has pageid": [
+                        "66705"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.7515,
+                            "lon": -119.5972
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yosemite National Park",
+                            "fullurl": "https://ropewiki.com/Yosemite_National_Park",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "POI 4B II PG (<i>v4a2&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v4"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        4.7
+                    ],
+                    "Has total counter": [
+                        9
+                    ]
+                },
+                "fulltext": "Yosemite Falls (Lower)",
+                "fullurl": "https://ropewiki.com/Yosemite_Falls_(Lower)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Yosemite Falls (Middle Earth)": {
+                "printouts": {
+                    "Has pageid": [
+                        "1705"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.755,
+                            "lon": -119.5972
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yosemite National Park",
+                            "fullurl": "https://ropewiki.com/Yosemite_National_Park",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "4C III R (<i>v5a5&nbsp;III</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v5"
+                    ],
+                    "Has aquatic rating": [
+                        "a5"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "C"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        4.6
+                    ],
+                    "Has total counter": [
+                        66
+                    ]
+                },
+                "fulltext": "Yosemite Falls (Middle Earth)",
+                "fullurl": "https://ropewiki.com/Yosemite_Falls_(Middle_Earth)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Yosemite Falls (Upper)": {
+                "printouts": {
+                    "Has pageid": [
+                        "53621"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.757,
+                            "lon": -119.597
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Yosemite National Park",
+                            "fullurl": "https://ropewiki.com/Yosemite_National_Park",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "POI 4A V R (<i>v5a1&nbsp;V</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v5"
+                    ],
+                    "Has aquatic rating": [
+                        "a1"
+                    ],
+                    "Has commitment rating": [
+                        "V"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "A"
+                    ],
+                    "Has time rating": [
+                        "V"
+                    ],
+                    "Has total rating": [
+                        4.8
+                    ],
+                    "Has total counter": [
+                        7
+                    ]
+                },
+                "fulltext": "Yosemite Falls (Upper)",
+                "fullurl": "https://ropewiki.com/Yosemite_Falls_(Upper)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Zig Zag Creek": {
+                "printouts": {
+                    "Has pageid": [
+                        "11538"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": -44.1024,
+                            "lon": 169.3762
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Westland",
+                            "fullurl": "https://ropewiki.com/Westland",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "<i>4C&nbsp;III</i>  (v4a3 III)"
+                    ],
+                    "Has vertical rating": [
+                        "v4"
+                    ],
+                    "Has aquatic rating": [
+                        "a3"
+                    ],
+                    "Has commitment rating": [
+                        "III"
+                    ],
+                    "Has technical rating": [
+                        "4"
+                    ],
+                    "Has water rating": [
+                        "C"
+                    ],
+                    "Has time rating": [
+                        "III"
+                    ],
+                    "Has total rating": [
+                        3.2
+                    ],
+                    "Has total counter": [
+                        7
+                    ]
+                },
+                "fulltext": "Zig Zag Creek",
+                "fullurl": "https://ropewiki.com/Zig_Zag_Creek",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Zion Narrows (Lower)": {
+                "printouts": {
+                    "Has pageid": [
+                        "1112"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.2979,
+                            "lon": -112.9469
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Zion Main Canyon",
+                            "fullurl": "https://ropewiki.com/Zion_Main_Canyon",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "2B II  (<i>v1a2&nbsp;II</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "II"
+                    ],
+                    "Has technical rating": [
+                        "2"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "II"
+                    ],
+                    "Has total rating": [
+                        3.8
+                    ],
+                    "Has total counter": [
+                        61
+                    ]
+                },
+                "fulltext": "Zion Narrows (Lower)",
+                "fullurl": "https://ropewiki.com/Zion_Narrows_(Lower)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            },
+            "Zion Narrows (Upper)": {
+                "printouts": {
+                    "Has pageid": [
+                        "1113"
+                    ],
+                    "Has coordinates": [
+                        {
+                            "lat": 37.3694,
+                            "lon": -112.9283
+                        }
+                    ],
+                    "Located in region": [
+                        {
+                            "fulltext": "Zion East Side",
+                            "fullurl": "https://ropewiki.com/Zion_East_Side",
+                            "namespace": 0,
+                            "exists": "1",
+                            "displaytitle": ""
+                        }
+                    ],
+                    "Has rating": [
+                        "1B IV  (<i>v1a2&nbsp;IV</i>)"
+                    ],
+                    "Has vertical rating": [
+                        "v1"
+                    ],
+                    "Has aquatic rating": [
+                        "a2"
+                    ],
+                    "Has commitment rating": [
+                        "IV"
+                    ],
+                    "Has technical rating": [
+                        "1"
+                    ],
+                    "Has water rating": [
+                        "B"
+                    ],
+                    "Has time rating": [
+                        "IV"
+                    ],
+                    "Has total rating": [
+                        4
+                    ],
+                    "Has total counter": [
+                        42
+                    ]
+                },
+                "fulltext": "Zion Narrows (Upper)",
+                "fullurl": "https://ropewiki.com/Zion_Narrows_(Upper)",
+                "namespace": 0,
+                "exists": "1",
+                "displaytitle": ""
+            }
+        },
+        "serializer": "SMW\\Serializers\\QueryResultSerializer",
+        "version": 2,
+        "meta": {
+            "hash": "580455d437782f1220e142f2a026cda4",
+            "count": 32,
+            "offset": 300,
+            "source": "",
+            "time": "0.029278"
+        }
+    }
+}

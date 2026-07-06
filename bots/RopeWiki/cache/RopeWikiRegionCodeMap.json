@@ -1,0 +1,3566 @@
+{
+    "Abruzzo": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Achaia": {
+        "code": null,
+        "parent": "Peloponnese"
+    },
+    "Afaahiti": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Afareaitu": {
+        "code": null,
+        "parent": "Moorea"
+    },
+    "Africa": {
+        "code": "002",
+        "parent": "World"
+    },
+    "Agrigento": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Ain": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Alaska": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Alava": {
+        "code": null,
+        "parent": "Pais Vasco"
+    },
+    "Albacete": {
+        "code": null,
+        "parent": "Castilla - La Mancha"
+    },
+    "Albania": {
+        "code": "AL",
+        "parent": "Europe"
+    },
+    "Alessandria": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Alicante": {
+        "code": null,
+        "parent": "Valencia"
+    },
+    "Almeria": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Alpes-Maritimes": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Alpes-de-Haute-Provence": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Alpine Lakes": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "Alps": {
+        "code": null,
+        "parent": "Europe"
+    },
+    "Alsace": {
+        "code": null,
+        "parent": "France"
+    },
+    "Alta Verapaz": {
+        "code": null,
+        "parent": "Guatemala"
+    },
+    "Ancona": {
+        "code": null,
+        "parent": "Marche"
+    },
+    "Andalucia": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Andorra": {
+        "code": "AD",
+        "parent": "Europe"
+    },
+    "Angel Point": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Anhui": {
+        "code": null,
+        "parent": "China"
+    },
+    "Anjouan": {
+        "code": null,
+        "parent": "Comoros"
+    },
+    "Antalya": {
+        "code": null,
+        "parent": "Turkey"
+    },
+    "Anti-Atlas": {
+        "code": null,
+        "parent": "Morocco"
+    },
+    "Anza Borrego Desert": {
+        "code": null,
+        "parent": "San Diego"
+    },
+    "Aosta": {
+        "code": null,
+        "parent": "Valle d'Aosta"
+    },
+    "Appenzell": {
+        "code": null,
+        "parent": "Pre-Alps"
+    },
+    "Apulia": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Aqaba": {
+        "code": null,
+        "parent": "Jordan"
+    },
+    "Aquila": {
+        "code": null,
+        "parent": "Abruzzo"
+    },
+    "Aquitaine": {
+        "code": null,
+        "parent": "France"
+    },
+    "Aragon": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Aravaipa Canyon Wilderness Area": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Arches National Park": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Ardeche": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Argentina": {
+        "code": "AR",
+        "parent": "South America"
+    },
+    "Argolida": {
+        "code": null,
+        "parent": "Peloponnese"
+    },
+    "Ariege": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Arizona": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Arkansas": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Arroyo Seco region": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Ascoli Piceno": {
+        "code": null,
+        "parent": "Marche"
+    },
+    "Asia": {
+        "code": "142",
+        "parent": "World"
+    },
+    "Asturias": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Attica": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Aude": {
+        "code": null,
+        "parent": "Languedoc-Roussillon"
+    },
+    "Australia": {
+        "code": "AU",
+        "parent": "Pacific"
+    },
+    "Austria": {
+        "code": "AT",
+        "parent": "Europe"
+    },
+    "Auvergne": {
+        "code": null,
+        "parent": "France"
+    },
+    "Avellino": {
+        "code": null,
+        "parent": "Campania"
+    },
+    "Aveyron": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Avila": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Azores": {
+        "code": null,
+        "parent": "Portugal"
+    },
+    "Baden-Wurttemberg": {
+        "code": null,
+        "parent": "Germany"
+    },
+    "Baja": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Bajos del Toro": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "Bali": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "Bangs SRMA": {
+        "code": null,
+        "parent": "Western Slope"
+    },
+    "Barcelona": {
+        "code": null,
+        "parent": "Cataluña"
+    },
+    "Barrington Tops": {
+        "code": null,
+        "parent": "Northern NSW"
+    },
+    "Bas Valais": {
+        "code": null,
+        "parent": "Wallis"
+    },
+    "Basilicata": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Bavaria": {
+        "code": null,
+        "parent": "Germany"
+    },
+    "Beaver Canyon Area": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Belize": {
+        "code": "BZ",
+        "parent": "Central America"
+    },
+    "Belluno": {
+        "code": null,
+        "parent": "Veneto"
+    },
+    "Benevento": {
+        "code": null,
+        "parent": "Campania"
+    },
+    "Berat": {
+        "code": null,
+        "parent": "Albania"
+    },
+    "Bergamo": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Bern": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Bicknell": {
+        "code": null,
+        "parent": "Fruita District"
+    },
+    "Biella": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Big Island": {
+        "code": null,
+        "parent": "Hawaii"
+    },
+    "Big Sur": {
+        "code": null,
+        "parent": "California Central Coast"
+    },
+    "Big Tujunga Region": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Big Water": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Bighorn Mountains": {
+        "code": null,
+        "parent": "Wyoming"
+    },
+    "Bio Bio": {
+        "code": null,
+        "parent": "Chile"
+    },
+    "Black Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Black Mountains North": {
+        "code": null,
+        "parent": "Black Mountains"
+    },
+    "Black Mountains South": {
+        "code": null,
+        "parent": "Black Mountains"
+    },
+    "Bludenz": {
+        "code": null,
+        "parent": "Vorarlberg"
+    },
+    "Blue Mountains": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Bluejohn Complex": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "Bogong High Plains": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Bogota": {
+        "code": null,
+        "parent": "Colombia"
+    },
+    "Bolivia": {
+        "code": "BO",
+        "parent": "South America"
+    },
+    "Bologna": {
+        "code": null,
+        "parent": "Emilia-Romagna"
+    },
+    "Bolzano": {
+        "code": null,
+        "parent": "Trentino-Alto Adige"
+    },
+    "Bonao": {
+        "code": null,
+        "parent": "Dominican Republic"
+    },
+    "Bouches-du-Rhone": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Bradshaw Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Brasilia": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Brazil": {
+        "code": "BR",
+        "parent": "South America"
+    },
+    "Bregenz": {
+        "code": null,
+        "parent": "Vorarlberg"
+    },
+    "Brescia": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Brisbane": {
+        "code": null,
+        "parent": "Queensland"
+    },
+    "British Columbia": {
+        "code": "CA",
+        "parent": "Canada"
+    },
+    "Brittany": {
+        "code": null,
+        "parent": "France"
+    },
+    "Bruck an der Mur": {
+        "code": null,
+        "parent": "Styria"
+    },
+    "Bulgaria": {
+        "code": "BG",
+        "parent": "Europe"
+    },
+    "Bullfrog": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Bungonia": {
+        "code": null,
+        "parent": "Southern NSW"
+    },
+    "Burgos": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Burgundy": {
+        "code": null,
+        "parent": "France"
+    },
+    "Burr Pass": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "Burr Point": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Caceres": {
+        "code": null,
+        "parent": "Extremadura"
+    },
+    "Cadiz": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Cady Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Cagliari": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Calabria": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Cali (Colombia)": {
+        "code": null,
+        "parent": "Colombia"
+    },
+    "California": {
+        "code": null,
+        "parent": "United States"
+    },
+    "California Central Coast": {
+        "code": null,
+        "parent": "California"
+    },
+    "California Sierras": {
+        "code": null,
+        "parent": "California"
+    },
+    "Campania": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Campobasso": {
+        "code": null,
+        "parent": "Molise"
+    },
+    "Canada": {
+        "code": "CA",
+        "parent": "North America"
+    },
+    "Canadian Rockies": {
+        "code": null,
+        "parent": "Canada"
+    },
+    "Canastra Mountains National Park": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Canillo": {
+        "code": null,
+        "parent": "Andorra"
+    },
+    "Cantabria": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Cantal": {
+        "code": null,
+        "parent": "Auvergne"
+    },
+    "Canterbury": {
+        "code": null,
+        "parent": "South Island"
+    },
+    "Canyonlands National Park": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Cape Verde": {
+        "code": "CV",
+        "parent": "Africa"
+    },
+    "Capitol Reef National Park": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Carbonia-Iglesias": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Caribbean": {
+        "code": "029",
+        "parent": "Central America"
+    },
+    "Carinthia": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Caserta": {
+        "code": null,
+        "parent": "Campania"
+    },
+    "Castaic Lake": {
+        "code": null,
+        "parent": "Ventura"
+    },
+    "Castellon": {
+        "code": null,
+        "parent": "Valencia"
+    },
+    "Castilla - La Mancha": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Castilla y Leon": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Castle Valley": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Catalina Island": {
+        "code": null,
+        "parent": "Channel Islands"
+    },
+    "Cataluña": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Catania": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Catanzaro": {
+        "code": null,
+        "parent": "Calabria"
+    },
+    "Cedar Mesa": {
+        "code": null,
+        "parent": "Southeast Utah"
+    },
+    "Central Albania": {
+        "code": null,
+        "parent": "Albania"
+    },
+    "Central America": {
+        "code": "021",
+        "parent": "World"
+    },
+    "Central Coast": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Central Greece": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Central Kalimantan": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "Central Macedonia": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Central Nepal": {
+        "code": null,
+        "parent": "Nepal"
+    },
+    "Central North": {
+        "code": null,
+        "parent": "North Island"
+    },
+    "Central Oregon Cascades": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Central Swell": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Central Utah": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Chania": {
+        "code": null,
+        "parent": "Crete"
+    },
+    "Channel Islands": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Chelan County": {
+        "code": null,
+        "parent": "East Cascades"
+    },
+    "Chiapas": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Chieti": {
+        "code": null,
+        "parent": "Abruzzo"
+    },
+    "Chihuahua": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Chile": {
+        "code": "CL",
+        "parent": "South America"
+    },
+    "China": {
+        "code": "CN",
+        "parent": "Asia"
+    },
+    "Chongqing": {
+        "code": null,
+        "parent": "China"
+    },
+    "Choprock Bench": {
+        "code": null,
+        "parent": "Escalante"
+    },
+    "Ciudad Real": {
+        "code": null,
+        "parent": "Castilla - La Mancha"
+    },
+    "Coahuila": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Coast Range": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Cobbler Plateau": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Coffs Harbour": {
+        "code": null,
+        "parent": "Northern NSW"
+    },
+    "Cohab Canyon": {
+        "code": null,
+        "parent": "Fruita District"
+    },
+    "Colima": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Colombia": {
+        "code": "CO",
+        "parent": "South America"
+    },
+    "Colorado": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Colorado National Monument": {
+        "code": null,
+        "parent": "Western Slope"
+    },
+    "Columbia River Gorge": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Como": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Comoros": {
+        "code": "KM",
+        "parent": "Africa"
+    },
+    "Confusion Range": {
+        "code": null,
+        "parent": "West Desert"
+    },
+    "Connecticut": {
+        "code": null,
+        "parent": "Northeast"
+    },
+    "Coorongooba": {
+        "code": null,
+        "parent": "Wollemi"
+    },
+    "Cordoba": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Corinth": {
+        "code": null,
+        "parent": "Peloponnese"
+    },
+    "Coroico": {
+        "code": null,
+        "parent": "La Paz"
+    },
+    "Corsica": {
+        "code": null,
+        "parent": "France"
+    },
+    "Cosenza": {
+        "code": null,
+        "parent": "Calabria"
+    },
+    "Costa Pacífica": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "Costa Rica": {
+        "code": "CR",
+        "parent": "Central America"
+    },
+    "Cote-d'Or": {
+        "code": null,
+        "parent": "Burgundy"
+    },
+    "Cottonwood Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Coyote Mountains": {
+        "code": null,
+        "parent": "San Diego"
+    },
+    "Crater Lake National Park": {
+        "code": null,
+        "parent": "Southern Oregon Cascades"
+    },
+    "Crete": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Croatia": {
+        "code": "HR",
+        "parent": "Europe"
+    },
+    "Crotone": {
+        "code": null,
+        "parent": "Calabria"
+    },
+    "Crystal Lake": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Cuba": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Cuenca": {
+        "code": null,
+        "parent": "Castilla - La Mancha"
+    },
+    "Cuneo": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Darrington Ranger District": {
+        "code": null,
+        "parent": "North Cascades"
+    },
+    "Death Valley National Park": {
+        "code": null,
+        "parent": "California"
+    },
+    "Delta": {
+        "code": null,
+        "parent": "Western Slope"
+    },
+    "Detmold": {
+        "code": null,
+        "parent": "Lower Saxony"
+    },
+    "Dinosaur National Monument": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Dixie National Forest": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Djibouti": {
+        "code": "DJ",
+        "parent": "Africa"
+    },
+    "Dominica": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Dominican Republic": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Dornbirn": {
+        "code": null,
+        "parent": "Vorarlberg"
+    },
+    "Doubs": {
+        "code": null,
+        "parent": "Franche-Comte"
+    },
+    "Drome": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Durango": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "East Cascades": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "East Fork San Gabriel": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "East Java": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "East Kalimantan": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "East Macedonia and Thrace": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "East Nusa Tenggara": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "Easter Island": {
+        "code": null,
+        "parent": "Pacific"
+    },
+    "Eastern Reef": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Eastern Washington": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "Ecuador": {
+        "code": "EC",
+        "parent": "South America"
+    },
+    "Ekker Ranch Road": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "El Dorado National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "El Hierro": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "El Salvador": {
+        "code": "SV",
+        "parent": "Central America"
+    },
+    "Elbasan": {
+        "code": null,
+        "parent": "Albania"
+    },
+    "Elk & West Elk Ranges": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Emilia-Romagna": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Emirates": {
+        "code": "AE",
+        "parent": "Middle East"
+    },
+    "Encamp": {
+        "code": null,
+        "parent": "Andorra"
+    },
+    "Engadin": {
+        "code": null,
+        "parent": "Graubunden"
+    },
+    "England": {
+        "code": null,
+        "parent": "United Kingdom"
+    },
+    "Epirus": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Escalante": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Escaldes-Engordany": {
+        "code": null,
+        "parent": "Andorra"
+    },
+    "Ethiopia": {
+        "code": "ET",
+        "parent": "Africa"
+    },
+    "Eureka Dunes": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Europe": {
+        "code": null,
+        "parent": "World"
+    },
+    "Evros": {
+        "code": null,
+        "parent": "East Macedonia and Thrace"
+    },
+    "Evrytania": {
+        "code": null,
+        "parent": "Central Greece"
+    },
+    "Extremadura": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Faaa": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Faaone": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Faial": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Feldkirch": {
+        "code": null,
+        "parent": "Vorarlberg"
+    },
+    "Fermo": {
+        "code": null,
+        "parent": "Marche"
+    },
+    "Finistere": {
+        "code": null,
+        "parent": "Brittany"
+    },
+    "Finke Gorge": {
+        "code": null,
+        "parent": "Northern Territory"
+    },
+    "Fiordland": {
+        "code": null,
+        "parent": "South Island"
+    },
+    "Flagstaff": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "Flat Tops": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Flores": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Florianopolis": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Fossil Springs Wilderness": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "Four Peaks Wilderness": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "France": {
+        "code": "FR",
+        "parent": "Europe"
+    },
+    "Franche-Comte": {
+        "code": null,
+        "parent": "France"
+    },
+    "Fraser Valley": {
+        "code": null,
+        "parent": "British Columbia"
+    },
+    "Freiburg": {
+        "code": null,
+        "parent": "Baden-Wurttemberg"
+    },
+    "French Polynesia": {
+        "code": "PF",
+        "parent": "Pacific"
+    },
+    "Fribourg": {
+        "code": null,
+        "parent": "Pre-Alps"
+    },
+    "Friul-Venezia Giulia": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Friuli Venezia Giulia": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Front Range (Colorado)": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Frosinone": {
+        "code": null,
+        "parent": "Lazio"
+    },
+    "Fruita District": {
+        "code": null,
+        "parent": "Capitol Reef National Park"
+    },
+    "Funeral Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Galapagos Islands": {
+        "code": null,
+        "parent": "Pacific"
+    },
+    "Galicia": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Gard": {
+        "code": null,
+        "parent": "Languedoc-Roussillon"
+    },
+    "Gemeinde Mallnitz": {
+        "code": null,
+        "parent": "Carinthia"
+    },
+    "Gemini Bridges": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Genova": {
+        "code": null,
+        "parent": "Liguria"
+    },
+    "Georgia": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Georgia (Middle East)": {
+        "code": "GE",
+        "parent": "Middle East"
+    },
+    "Germany": {
+        "code": "DE",
+        "parent": "Europe"
+    },
+    "Gerona": {
+        "code": null,
+        "parent": "Cataluña"
+    },
+    "Gibraltar Range": {
+        "code": null,
+        "parent": "Northern NSW"
+    },
+    "Gila Box Riparian National Conservation Area": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Glacier National Park": {
+        "code": null,
+        "parent": "Montana"
+    },
+    "Glarus": {
+        "code": null,
+        "parent": "Innerschweiz"
+    },
+    "Glen Canyon NRA": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Glen Davis": {
+        "code": null,
+        "parent": "Wollemi"
+    },
+    "Gmunden": {
+        "code": null,
+        "parent": "Upper Austria"
+    },
+    "Goblin Valley State Park": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Graciosa": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Grampians": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Gran Canaria": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "Granada": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Grand Canyon": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Grand Comoro": {
+        "code": null,
+        "parent": "Comoros"
+    },
+    "Grand Junction": {
+        "code": null,
+        "parent": "Western Slope"
+    },
+    "Grapevine Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Graubunden": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Greece": {
+        "code": "GR",
+        "parent": "Europe"
+    },
+    "Grosseto": {
+        "code": null,
+        "parent": "Toscana"
+    },
+    "Guadalajara": {
+        "code": null,
+        "parent": "Castilla - La Mancha"
+    },
+    "Guadeloupe": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Guangxi": {
+        "code": null,
+        "parent": "China"
+    },
+    "Guatemala": {
+        "code": "GT",
+        "parent": "Central America"
+    },
+    "Guipuzcoa": {
+        "code": null,
+        "parent": "Pais Vasco"
+    },
+    "Guizhou": {
+        "code": null,
+        "parent": "China"
+    },
+    "Halls Creek area": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Hans Flat Road": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "Haut-Rhin": {
+        "code": null,
+        "parent": "Alsace"
+    },
+    "Haute-Garonne": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Haute-Loire": {
+        "code": null,
+        "parent": "Auvergne"
+    },
+    "Haute-Saone": {
+        "code": null,
+        "parent": "Franche-Comte"
+    },
+    "Haute-Savoie": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Hautes-Alpes": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Hautes-Pyrenees": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Hawaii": {
+        "code": "ushi",
+        "parent": "United States"
+    },
+    "Heilongjiang": {
+        "code": null,
+        "parent": "China"
+    },
+    "Hellsgate Wilderness": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Henry Mountains": {
+        "code": null,
+        "parent": "Southeast Utah"
+    },
+    "Heraklion": {
+        "code": null,
+        "parent": "Crete"
+    },
+    "Herault": {
+        "code": null,
+        "parent": "Languedoc-Roussillon"
+    },
+    "Hermagor": {
+        "code": null,
+        "parent": "Carinthia"
+    },
+    "Hidalgo": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Himachal Pradesh": {
+        "code": null,
+        "parent": "India - North"
+    },
+    "Hinterrhein": {
+        "code": null,
+        "parent": "Graubunden"
+    },
+    "Hitiaa": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Hog Springs": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Hokkaido": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Honduras": {
+        "code": "HN",
+        "parent": "Central America"
+    },
+    "Hong Kong": {
+        "code": "HK",
+        "parent": "Asia"
+    },
+    "Houaphan": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Hubei": {
+        "code": null,
+        "parent": "China"
+    },
+    "Huehuetenango": {
+        "code": null,
+        "parent": "Guatemala"
+    },
+    "Huesca": {
+        "code": null,
+        "parent": "Aragon"
+    },
+    "Hungary": {
+        "code": "HU",
+        "parent": "Europe"
+    },
+    "Hunter Valley": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Ibagué": {
+        "code": null,
+        "parent": "Colombia"
+    },
+    "Ice House": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Iceland": {
+        "code": "IS",
+        "parent": "Europe"
+    },
+    "Idaho": {
+        "code": "usid",
+        "parent": "United States"
+    },
+    "Imperia": {
+        "code": null,
+        "parent": "Liguria"
+    },
+    "Imst": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "India": {
+        "code": "IN",
+        "parent": "Asia"
+    },
+    "India - North": {
+        "code": null,
+        "parent": "India"
+    },
+    "India - West": {
+        "code": null,
+        "parent": "India"
+    },
+    "Indonesia": {
+        "code": "ID",
+        "parent": "Asia"
+    },
+    "Innerschweiz": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Innsbruck": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Interlaken": {
+        "code": null,
+        "parent": "Bern"
+    },
+    "Inyo Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Inyo National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Ioannina": {
+        "code": null,
+        "parent": "Epirus"
+    },
+    "Ionian Islands": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Iran": {
+        "code": "IR",
+        "parent": "Middle East"
+    },
+    "Ireland": {
+        "code": "IE",
+        "parent": "Europe"
+    },
+    "Isere": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Isernia": {
+        "code": null,
+        "parent": "Molise"
+    },
+    "Islas Baleares": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Islas Canarias": {
+        "code": "ES",
+        "parent": "Europe"
+    },
+    "Israel": {
+        "code": "IL",
+        "parent": "Middle East"
+    },
+    "Italy": {
+        "code": "IT",
+        "parent": "Europe"
+    },
+    "Izabal": {
+        "code": null,
+        "parent": "Guatemala"
+    },
+    "Izmir": {
+        "code": null,
+        "parent": "Turkey"
+    },
+    "Jaen": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Jalisco": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Jamaica": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Japan": {
+        "code": "JP",
+        "parent": "Asia"
+    },
+    "Jordan": {
+        "code": "JO",
+        "parent": "Middle East"
+    },
+    "Joshua Tree National Park": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Jura": {
+        "code": null,
+        "parent": "Franche-Comte"
+    },
+    "Jura Bernois": {
+        "code": null,
+        "parent": "Jura Mountains"
+    },
+    "Jura Mountains": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Jura Vaudois": {
+        "code": null,
+        "parent": "Jura Mountains"
+    },
+    "Kanab": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Kanangra": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Kane Creek Road": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Karak": {
+        "code": null,
+        "parent": "Jordan"
+    },
+    "Karditsa": {
+        "code": null,
+        "parent": "Thessaly"
+    },
+    "Kastamonu": {
+        "code": null,
+        "parent": "Turkey"
+    },
+    "Kefalonia": {
+        "code": null,
+        "parent": "Ionian Islands"
+    },
+    "Kenya": {
+        "code": "KE",
+        "parent": "Africa"
+    },
+    "Khau Pha": {
+        "code": null,
+        "parent": "Son La Province"
+    },
+    "Kings Canyon National Park": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Kirchdorf an der Krems": {
+        "code": null,
+        "parent": "Upper Austria"
+    },
+    "Kittitas County": {
+        "code": null,
+        "parent": "East Cascades"
+    },
+    "Kitzbuhel": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Klagenfurt": {
+        "code": null,
+        "parent": "Carinthia"
+    },
+    "Klamath Mountains": {
+        "code": null,
+        "parent": "California"
+    },
+    "Klickitat County": {
+        "code": null,
+        "parent": "East Cascades"
+    },
+    "Kolob Area": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Kozani": {
+        "code": null,
+        "parent": "West Macedonia"
+    },
+    "Kufstein": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "La Canada": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "La Coruña": {
+        "code": null,
+        "parent": "Galicia"
+    },
+    "La Fortuna": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "La Gomera": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "La Palma": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "La Paz": {
+        "code": null,
+        "parent": "Bolivia"
+    },
+    "Lake Mead NRA": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Lake Powell": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Landeck": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Languedoc-Roussillon": {
+        "code": null,
+        "parent": "France"
+    },
+    "Lanzarote": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "Laos": {
+        "code": "LA",
+        "parent": "Asia"
+    },
+    "Larissa": {
+        "code": null,
+        "parent": "Thessaly"
+    },
+    "Las Vegas": {
+        "code": null,
+        "parent": "Nevada"
+    },
+    "Lasithi": {
+        "code": null,
+        "parent": "Crete"
+    },
+    "Last Chance Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Latina": {
+        "code": null,
+        "parent": "Lazio"
+    },
+    "Lazio": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Lecco": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Leoben": {
+        "code": null,
+        "parent": "Styria"
+    },
+    "Leon": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Lerida": {
+        "code": null,
+        "parent": "Cataluña"
+    },
+    "Leventina": {
+        "code": null,
+        "parent": "Ticino"
+    },
+    "Lewis River (Washington)": {
+        "code": null,
+        "parent": "South Cascades"
+    },
+    "Lienz": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Liezen": {
+        "code": null,
+        "parent": "Styria"
+    },
+    "Liguria": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Lilienfeld": {
+        "code": null,
+        "parent": "Lower Austria"
+    },
+    "Lithuania": {
+        "code": "LT",
+        "parent": "Europe"
+    },
+    "Location": {
+        "code": null,
+        "parent": null
+    },
+    "Loire": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Lombardia": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Los Lagos": {
+        "code": null,
+        "parent": "Chile"
+    },
+    "Los Padres National Forest": {
+        "code": null,
+        "parent": "Ventura"
+    },
+    "Lot": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Lower Austria": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Lower Normandy": {
+        "code": null,
+        "parent": "France"
+    },
+    "Lower North": {
+        "code": null,
+        "parent": "North Island"
+    },
+    "Lower Saxony": {
+        "code": null,
+        "parent": "Germany"
+    },
+    "Lozere": {
+        "code": null,
+        "parent": "Languedoc-Roussillon"
+    },
+    "Luang Prabang": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Lucca": {
+        "code": null,
+        "parent": "Toscana"
+    },
+    "Lucerne": {
+        "code": null,
+        "parent": "Pre-Alps"
+    },
+    "Lugo": {
+        "code": null,
+        "parent": "Galicia"
+    },
+    "Lytle Creek Area": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Ma'an": {
+        "code": null,
+        "parent": "Jordan"
+    },
+    "Macedonia": {
+        "code": "MK",
+        "parent": "Europe"
+    },
+    "Macerata": {
+        "code": null,
+        "parent": "Marche"
+    },
+    "Madaba": {
+        "code": null,
+        "parent": "Jordan"
+    },
+    "Madagascar": {
+        "code": "MG",
+        "parent": "Africa"
+    },
+    "Madeira": {
+        "code": null,
+        "parent": "Portugal"
+    },
+    "Madrid": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Maggia (Valle)": {
+        "code": null,
+        "parent": "Ticino"
+    },
+    "Magnesia": {
+        "code": null,
+        "parent": "Thessaly"
+    },
+    "Maharashtra": {
+        "code": null,
+        "parent": "India - West"
+    },
+    "Maine": {
+        "code": null,
+        "parent": "Northeast"
+    },
+    "Malaga": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Mallorca": {
+        "code": null,
+        "parent": "Islas Baleares"
+    },
+    "Manche": {
+        "code": null,
+        "parent": "Lower Normandy"
+    },
+    "Manisa": {
+        "code": null,
+        "parent": "Turkey"
+    },
+    "Marche": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Marquesas Islands": {
+        "code": null,
+        "parent": "French Polynesia"
+    },
+    "Mars": {
+        "code": "Ignore",
+        "parent": null
+    },
+    "Martinique": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Massa Carrara": {
+        "code": null,
+        "parent": "Toscana"
+    },
+    "Massachusetts": {
+        "code": null,
+        "parent": "Northeast"
+    },
+    "Mataiea": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Maui": {
+        "code": null,
+        "parent": "Hawaii"
+    },
+    "Maule": {
+        "code": null,
+        "parent": "Chile"
+    },
+    "Mauritius": {
+        "code": "MU",
+        "parent": "Africa"
+    },
+    "Mayotte": {
+        "code": "YT",
+        "parent": "Africa"
+    },
+    "Mazatzal": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Mecca Hills": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Medellin": {
+        "code": null,
+        "parent": "Colombia"
+    },
+    "Medio Campidano": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Meiringen": {
+        "code": null,
+        "parent": "Bern"
+    },
+    "Merida": {
+        "code": null,
+        "parent": "Venezuela"
+    },
+    "Mesolcina": {
+        "code": null,
+        "parent": "Graubunden"
+    },
+    "Messina": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Mexico": {
+        "code": "MX",
+        "parent": "North America"
+    },
+    "Mexico DF": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Mid-Western Nepal": {
+        "code": null,
+        "parent": "Nepal"
+    },
+    "Middle East": {
+        "code": null,
+        "parent": "World"
+    },
+    "Midi-Pyrenees": {
+        "code": null,
+        "parent": "France"
+    },
+    "Midwest Montana": {
+        "code": null,
+        "parent": "Montana"
+    },
+    "Mie": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Minnesota": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Moab": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Mogollon Rim": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Molise": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Montana": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Monte Ceneri": {
+        "code": null,
+        "parent": "Ticino"
+    },
+    "Montenegro": {
+        "code": "ME",
+        "parent": "Europe"
+    },
+    "Moorea": {
+        "code": null,
+        "parent": "French Polynesia"
+    },
+    "Morelos": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Morocco": {
+        "code": "MA",
+        "parent": "Africa"
+    },
+    "Mount Buffalo": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Mount Charleston": {
+        "code": null,
+        "parent": "Las Vegas"
+    },
+    "Mount Rainier National Park": {
+        "code": null,
+        "parent": "South Cascades"
+    },
+    "Mount St. Helens": {
+        "code": null,
+        "parent": "South Cascades"
+    },
+    "Mt Carmel": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Mt. Baker Ranger District": {
+        "code": null,
+        "parent": "North Cascades"
+    },
+    "Muang Nan": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Muang Ngoy": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Mugii Murum-Ban SCA": {
+        "code": null,
+        "parent": "Wollemi"
+    },
+    "Mugla": {
+        "code": null,
+        "parent": "Turkey"
+    },
+    "Murcia": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Murzzuschlag": {
+        "code": null,
+        "parent": "Styria"
+    },
+    "Nagano": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Napoli": {
+        "code": null,
+        "parent": "Campania"
+    },
+    "Nara": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Navajo Canyon": {
+        "code": null,
+        "parent": "Page and Wahweap"
+    },
+    "Navajo Indian Reservation": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Navajo Nation": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Navarra": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Nayarit": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Nepal": {
+        "code": "NP",
+        "parent": "Asia"
+    },
+    "Neuchatel": {
+        "code": null,
+        "parent": "Jura Mountains"
+    },
+    "Nevada": {
+        "code": null,
+        "parent": "United States"
+    },
+    "New Caledonia": {
+        "code": "NC",
+        "parent": "Pacific"
+    },
+    "New England Tableland": {
+        "code": null,
+        "parent": "Northern NSW"
+    },
+    "New Mexico": {
+        "code": null,
+        "parent": "United States"
+    },
+    "New South Wales": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "New York": {
+        "code": null,
+        "parent": "Northeast"
+    },
+    "New Zealand": {
+        "code": "NZ",
+        "parent": "Pacific"
+    },
+    "Newberry Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Newnes Plateau": {
+        "code": null,
+        "parent": "Wollemi"
+    },
+    "Nicaragua": {
+        "code": "NI",
+        "parent": "Central America"
+    },
+    "Nidwalden": {
+        "code": null,
+        "parent": "Innerschweiz"
+    },
+    "No region specified": {
+        "code": null,
+        "parent": null
+    },
+    "Nopah Range": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "North America": {
+        "code": "021",
+        "parent": "World"
+    },
+    "North Carolina": {
+        "code": null,
+        "parent": "United States"
+    },
+    "North Cascades": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "North East": {
+        "code": null,
+        "parent": "India"
+    },
+    "North Island": {
+        "code": null,
+        "parent": "New Zealand"
+    },
+    "North Shore": {
+        "code": null,
+        "parent": "Maui"
+    },
+    "North Wash": {
+        "code": null,
+        "parent": "Southeast Utah"
+    },
+    "Northeast": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Northeastern Oregon": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Northern Albania": {
+        "code": null,
+        "parent": "Albania"
+    },
+    "Northern Coastal Ranges": {
+        "code": null,
+        "parent": "California"
+    },
+    "Northern Idaho (Panhandle)": {
+        "code": null,
+        "parent": "Idaho"
+    },
+    "Northern Ireland": {
+        "code": null,
+        "parent": "Ireland"
+    },
+    "Northern NSW": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Northern Oregon Cascades": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Northern Swell": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Northern Territory": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "Northwest Territories": {
+        "code": null,
+        "parent": "Canada"
+    },
+    "Notam": {
+        "code": null,
+        "parent": "Capitol Reef National Park"
+    },
+    "Novara": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Nuevo Leon": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Nuoro": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "O'Higgins": {
+        "code": null,
+        "parent": "Chile"
+    },
+    "Oahu": {
+        "code": null,
+        "parent": "Hawaii"
+    },
+    "Oaxaca": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Oberwallis": {
+        "code": null,
+        "parent": "Wallis"
+    },
+    "Obwalden": {
+        "code": null,
+        "parent": "Innerschweiz"
+    },
+    "Ogliastra": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Okanogan County": {
+        "code": null,
+        "parent": "East Cascades"
+    },
+    "Olbia-Tempio": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Olympic Peninsula": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "Oman": {
+        "code": "OM",
+        "parent": "Middle East"
+    },
+    "Omeo": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Orange County": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Ordino": {
+        "code": null,
+        "parent": "Andorra"
+    },
+    "Oregon": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Oregon Side": {
+        "code": null,
+        "parent": "Columbia River Gorge"
+    },
+    "Orense": {
+        "code": null,
+        "parent": "Galicia"
+    },
+    "Oristano": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Ossola": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Otago": {
+        "code": null,
+        "parent": "South Island"
+    },
+    "Otways": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Ouray": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "Pacific": {
+        "code": null,
+        "parent": "World"
+    },
+    "Pacific Northwest": {
+        "code": null,
+        "parent": "North America"
+    },
+    "Pacoima": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Page and Wahweap": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Pagosa Springs": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "Pahvant Range": {
+        "code": null,
+        "parent": "Central Utah"
+    },
+    "Pais Vasco": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Palencia": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Palermo": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Panamint Range West": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Papara": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Papeari": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Papenoo": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Papetoai": {
+        "code": null,
+        "parent": "Moorea"
+    },
+    "Paria": {
+        "code": null,
+        "parent": "Escalante"
+    },
+    "Park Range (Colorado)": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Parma": {
+        "code": null,
+        "parent": "Emilia-Romagna"
+    },
+    "Peloponnese": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Peru": {
+        "code": "PE",
+        "parent": "South America"
+    },
+    "Perugia": {
+        "code": null,
+        "parent": "Umbria"
+    },
+    "Pesaro": {
+        "code": null,
+        "parent": "Marche"
+    },
+    "Pescara": {
+        "code": null,
+        "parent": "Abruzzo"
+    },
+    "Peten": {
+        "code": null,
+        "parent": "Guatemala"
+    },
+    "Phou Khoun": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Phthiotis": {
+        "code": null,
+        "parent": "Central Greece"
+    },
+    "Piacenza": {
+        "code": null,
+        "parent": "Emilia-Romagna"
+    },
+    "Pico": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Piemonte": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Pieria": {
+        "code": null,
+        "parent": "Central Macedonia"
+    },
+    "Pinaleno Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Plumas National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Poison Springs": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Poland": {
+        "code": "PL",
+        "parent": "Europe"
+    },
+    "Pontevedra": {
+        "code": null,
+        "parent": "Galicia"
+    },
+    "Pordenone": {
+        "code": null,
+        "parent": "Friuli Venezia Giulia"
+    },
+    "Port Macquarie Hastings": {
+        "code": null,
+        "parent": "Northern NSW"
+    },
+    "Porto Alegre": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Portugal": {
+        "code": "PT",
+        "parent": "Europe"
+    },
+    "Portugal North": {
+        "code": null,
+        "parent": "Portugal"
+    },
+    "Potash Road": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Potenza": {
+        "code": null,
+        "parent": "Basilicata"
+    },
+    "Praia Grande": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Prato": {
+        "code": null,
+        "parent": "Toscana"
+    },
+    "Pre-Alps": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Princess Bride Range": {
+        "code": null,
+        "parent": "Cottonwood Mountains"
+    },
+    "Provence-Alpes-Cote d'Azur": {
+        "code": null,
+        "parent": "France"
+    },
+    "Puebla": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Puerto Rico": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Pueu": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Punaauia": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Puy-de-Dome": {
+        "code": null,
+        "parent": "Auvergne"
+    },
+    "Pyrenees-Atlantiques": {
+        "code": null,
+        "parent": "Aquitaine"
+    },
+    "Pyrenees-Orientales": {
+        "code": null,
+        "parent": "Languedoc-Roussillon"
+    },
+    "Quebec": {
+        "code": null,
+        "parent": "Canada"
+    },
+    "Queensland": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "Queretaro": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Quiche": {
+        "code": null,
+        "parent": "Guatemala"
+    },
+    "Racetrack Valley": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Ragusa": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Red Box": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "Red Rock Canyon": {
+        "code": null,
+        "parent": "Las Vegas"
+    },
+    "Reggio Calabria": {
+        "code": null,
+        "parent": "Calabria"
+    },
+    "Rethymno": {
+        "code": null,
+        "parent": "Crete"
+    },
+    "Reunion": {
+        "code": "RE",
+        "parent": "Africa"
+    },
+    "Reutte": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Rheintal + Prättigau": {
+        "code": null,
+        "parent": "Graubunden"
+    },
+    "Rhone-Alpes": {
+        "code": null,
+        "parent": "France"
+    },
+    "Ridgway": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "Rieti": {
+        "code": null,
+        "parent": "Lazio"
+    },
+    "Rioja": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Roan Plateau": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Robbers Roost": {
+        "code": null,
+        "parent": "Southeast Utah"
+    },
+    "Roma": {
+        "code": null,
+        "parent": "Lazio"
+    },
+    "Romania": {
+        "code": "RO",
+        "parent": "Europe"
+    },
+    "Saint Vincent": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Saint-Benoit": {
+        "code": null,
+        "parent": "Reunion"
+    },
+    "Saint-Denis": {
+        "code": null,
+        "parent": "Reunion"
+    },
+    "Saint-Paul": {
+        "code": null,
+        "parent": "Reunion"
+    },
+    "Saint-Pierre": {
+        "code": null,
+        "parent": "Reunion"
+    },
+    "Salamanca": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Salerno": {
+        "code": null,
+        "parent": "Campania"
+    },
+    "Saline Valley": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Salt River Canyon Wilderness": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Salzburg": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "San Bernardino Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "San Carlos Indian Reservation": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "San Diego": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "San Gabriel Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "San Gabriels Front Range": {
+        "code": null,
+        "parent": "San Gabriel Mountains"
+    },
+    "San Jacinto Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "San Juan Mountains": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "San Luis Potosi": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "San Miguel Island": {
+        "code": null,
+        "parent": "Channel Islands"
+    },
+    "San Rafael Desert": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "San Rafael Swell": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Sand Flats Road": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Sand Slide Slots": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Sangre de Cristo Mountains": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Sankt Gallen": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Sant Julia de Loria": {
+        "code": null,
+        "parent": "Andorra"
+    },
+    "Santa Barbara": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Santa Catalina Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Santa Cruz Island": {
+        "code": null,
+        "parent": "Channel Islands"
+    },
+    "Santa Cruz Mountains": {
+        "code": null,
+        "parent": "California Central Coast"
+    },
+    "Santa Maria": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Santa Monica Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Santa Rosa Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Santa Susana Mountains": {
+        "code": null,
+        "parent": "Ventura"
+    },
+    "Santiago": {
+        "code": null,
+        "parent": "Chile"
+    },
+    "Sao Jorge": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Sao Miguel": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Sao Paulo": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Sardegna": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Sassari": {
+        "code": null,
+        "parent": "Sardegna"
+    },
+    "Saudi Arabia": {
+        "code": "SA",
+        "parent": "Middle East"
+    },
+    "Savoie": {
+        "code": null,
+        "parent": "Rhone-Alpes"
+    },
+    "Savona": {
+        "code": null,
+        "parent": "Liguria"
+    },
+    "Sawatch Range": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Scheibbs": {
+        "code": null,
+        "parent": "Lower Austria"
+    },
+    "Schwaz": {
+        "code": null,
+        "parent": "Tyrol"
+    },
+    "Schwyz": {
+        "code": null,
+        "parent": "Innerschweiz"
+    },
+    "Scotland": {
+        "code": null,
+        "parent": "United Kingdom"
+    },
+    "Sea-to-Sky": {
+        "code": null,
+        "parent": "British Columbia"
+    },
+    "Secret Mountain": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "Sedona": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "Sequoia National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Sequoia National Park": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Sevilla": {
+        "code": null,
+        "parent": "Andalucia"
+    },
+    "Shaanxi": {
+        "code": null,
+        "parent": "China"
+    },
+    "Shiga": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Shinob": {
+        "code": null,
+        "parent": "Fruita District"
+    },
+    "Shizuoka": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Sicilia": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Sierra Ancha Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Sierra National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Sikkim": {
+        "code": null,
+        "parent": "North East"
+    },
+    "Silverton": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "Sinaloa": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Siracusa": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Slovakia": {
+        "code": "SK",
+        "parent": "Europe"
+    },
+    "Slovenia": {
+        "code": "SI",
+        "parent": "Europe"
+    },
+    "Snowy Mountains": {
+        "code": null,
+        "parent": "Southern NSW"
+    },
+    "Snowy Plains": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Solothurn": {
+        "code": null,
+        "parent": "Jura Mountains"
+    },
+    "Son La Province": {
+        "code": null,
+        "parent": "Vietnam"
+    },
+    "Sondrio": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Sonora": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Soria": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "South Africa": {
+        "code": "SA",
+        "parent": "Africa"
+    },
+    "South America": {
+        "code": "005",
+        "parent": "World"
+    },
+    "South Carolina": {
+        "code": null,
+        "parent": "United States"
+    },
+    "South Cascades": {
+        "code": null,
+        "parent": "Washington"
+    },
+    "South Dakota": {
+        "code": null,
+        "parent": "United States"
+    },
+    "South Island": {
+        "code": null,
+        "parent": "New Zealand"
+    },
+    "South Korea": {
+        "code": "KR",
+        "parent": "Asia"
+    },
+    "South Shore": {
+        "code": null,
+        "parent": "Maui"
+    },
+    "Southeast Utah": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Southeastern Idaho": {
+        "code": null,
+        "parent": "Idaho"
+    },
+    "Southeastern Oregon": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Southern Albania": {
+        "code": null,
+        "parent": "Albania"
+    },
+    "Southern California": {
+        "code": null,
+        "parent": "California"
+    },
+    "Southern Colombia": {
+        "code": null,
+        "parent": "Colombia"
+    },
+    "Southern NSW": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "Southern Oregon Cascades": {
+        "code": null,
+        "parent": "Oregon"
+    },
+    "Southern Swell": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Southwest Escalante": {
+        "code": null,
+        "parent": "Escalante"
+    },
+    "Southwest Montana": {
+        "code": null,
+        "parent": "Montana"
+    },
+    "Southwest Utah": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Spain": {
+        "code": "ES",
+        "parent": "Europe"
+    },
+    "Spanish Fork Canyon": {
+        "code": null,
+        "parent": "Wasatch Front"
+    },
+    "Spanish Valley": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Spezia": {
+        "code": null,
+        "parent": "Liguria"
+    },
+    "Spittal an der Drau": {
+        "code": null,
+        "parent": "Carinthia"
+    },
+    "Squamish": {
+        "code": null,
+        "parent": "Sea-to-Sky"
+    },
+    "St. George": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Stanislaus National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "State Line Hills": {
+        "code": null,
+        "parent": "Las Vegas"
+    },
+    "Steyr": {
+        "code": null,
+        "parent": "Upper Austria"
+    },
+    "Styria": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Sunshine Coast": {
+        "code": null,
+        "parent": "British Columbia"
+    },
+    "Superior/Globe": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Superstition Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Swabia": {
+        "code": null,
+        "parent": "Bavaria"
+    },
+    "Switzerland": {
+        "code": "CH",
+        "parent": "Europe"
+    },
+    "Sycamore Canyon Wilderness": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "Sylvania Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Syria": {
+        "code": "SY",
+        "parent": "Middle East"
+    },
+    "Tabasco": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Tafilah": {
+        "code": null,
+        "parent": "Jordan"
+    },
+    "Tahiti": {
+        "code": null,
+        "parent": "French Polynesia"
+    },
+    "Tahoe National Forest": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Taiwan": {
+        "code": "TW",
+        "parent": "Asia"
+    },
+    "Taranto": {
+        "code": null,
+        "parent": "Apulia"
+    },
+    "Tarn": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Tarn-et-Garonne": {
+        "code": null,
+        "parent": "Midi-Pyrenees"
+    },
+    "Tarragona": {
+        "code": null,
+        "parent": "Cataluña"
+    },
+    "Tasmania": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "Teahupoo": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Telluride": {
+        "code": null,
+        "parent": "San Juan Mountains"
+    },
+    "Tenerife": {
+        "code": null,
+        "parent": "Islas Canarias"
+    },
+    "Teramo": {
+        "code": null,
+        "parent": "Abruzzo"
+    },
+    "Terceira": {
+        "code": null,
+        "parent": "Azores"
+    },
+    "Terni": {
+        "code": null,
+        "parent": "Umbria"
+    },
+    "Teruel": {
+        "code": null,
+        "parent": "Aragon"
+    },
+    "Texas": {
+        "code": null,
+        "parent": "United States"
+    },
+    "The Black Mountains": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "The Catacombs": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "The East": {
+        "code": null,
+        "parent": "North Island"
+    },
+    "The Egypts": {
+        "code": null,
+        "parent": "Escalante"
+    },
+    "The Irish": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Thessaly": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "Thun/Spiez": {
+        "code": null,
+        "parent": "Bern"
+    },
+    "Tiarei": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Ticaboo Mesa": {
+        "code": null,
+        "parent": "Glen Canyon NRA"
+    },
+    "Ticino": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Tlaxcala": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Toahotu": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Tokyo": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Tonto Basin": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Top of the South": {
+        "code": null,
+        "parent": "South Island"
+    },
+    "Torino": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Torotoro National Park": {
+        "code": null,
+        "parent": "Bolivia"
+    },
+    "Toscana": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Townsville": {
+        "code": null,
+        "parent": "Queensland"
+    },
+    "Trachyte Area": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "Trapani": {
+        "code": null,
+        "parent": "Sicilia"
+    },
+    "Trentino-Alto Adige": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Trento": {
+        "code": null,
+        "parent": "Trentino-Alto Adige"
+    },
+    "Trinidad and Tobago": {
+        "code": null,
+        "parent": "Caribbean"
+    },
+    "Tucki Mountains": {
+        "code": null,
+        "parent": "Death Valley National Park"
+    },
+    "Turkey": {
+        "code": "TR",
+        "parent": "Europe"
+    },
+    "Turrialba": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "Tyrol": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Udine": {
+        "code": null,
+        "parent": "Friuli Venezia Giulia"
+    },
+    "Uganda": {
+        "code": "UG",
+        "parent": "Africa"
+    },
+    "Umbria": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "United Kingdom": {
+        "code": "UK",
+        "parent": "Europe"
+    },
+    "United States": {
+        "code": "US",
+        "parent": "North America"
+    },
+    "Upper Austria": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Upper Bavaria": {
+        "code": null,
+        "parent": "Bavaria"
+    },
+    "Upper North": {
+        "code": null,
+        "parent": "North Island"
+    },
+    "Uri": {
+        "code": null,
+        "parent": "Innerschweiz"
+    },
+    "Utah": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Vail & Summit County": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Vairao": {
+        "code": null,
+        "parent": "Tahiti"
+    },
+    "Valais Central": {
+        "code": null,
+        "parent": "Wallis"
+    },
+    "Valencia": {
+        "code": null,
+        "parent": "Spain"
+    },
+    "Valle Central": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "Valle d'Aosta": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Vancouver": {
+        "code": null,
+        "parent": "British Columbia"
+    },
+    "Vancouver Island": {
+        "code": null,
+        "parent": "British Columbia"
+    },
+    "Var": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Varese": {
+        "code": null,
+        "parent": "Lombardia"
+    },
+    "Vaucluse": {
+        "code": null,
+        "parent": "Provence-Alpes-Cote d'Azur"
+    },
+    "Vaud": {
+        "code": null,
+        "parent": "Pre-Alps"
+    },
+    "Veadeiros Plateau": {
+        "code": null,
+        "parent": "Brazil"
+    },
+    "Veneto": {
+        "code": null,
+        "parent": "Italy"
+    },
+    "Venezuela": {
+        "code": "VE",
+        "parent": "South America"
+    },
+    "Ventura": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Veracruz": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Vercelli": {
+        "code": null,
+        "parent": "Piemonte"
+    },
+    "Verdugo Mountains": {
+        "code": null,
+        "parent": "Southern California"
+    },
+    "Verona": {
+        "code": null,
+        "parent": "Veneto"
+    },
+    "Verzasca (Valle)": {
+        "code": null,
+        "parent": "Ticino"
+    },
+    "Vicenza": {
+        "code": null,
+        "parent": "Veneto"
+    },
+    "Victoria": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "Vieng Phouka": {
+        "code": null,
+        "parent": "Laos"
+    },
+    "Vietnam": {
+        "code": "VN",
+        "parent": "Asia"
+    },
+    "Villach": {
+        "code": null,
+        "parent": "Carinthia"
+    },
+    "Virgin River Gorge": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "Virginia": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Viterbo": {
+        "code": null,
+        "parent": "Lazio"
+    },
+    "Vizcaya": {
+        "code": null,
+        "parent": "Pais Vasco"
+    },
+    "Vocklabruck": {
+        "code": null,
+        "parent": "Upper Austria"
+    },
+    "Vorarlberg": {
+        "code": null,
+        "parent": "Austria"
+    },
+    "Vorderrhein": {
+        "code": null,
+        "parent": "Graubunden"
+    },
+    "Wakayama": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Wales": {
+        "code": null,
+        "parent": "United Kingdom"
+    },
+    "Wallis": {
+        "code": null,
+        "parent": "Switzerland"
+    },
+    "Wasatch Front": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "Washington": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Washington Side": {
+        "code": null,
+        "parent": "Columbia River Gorge"
+    },
+    "Waterholes Complex": {
+        "code": null,
+        "parent": "Page and Wahweap"
+    },
+    "Waterpocket Fold": {
+        "code": null,
+        "parent": "Capitol Reef National Park"
+    },
+    "Weiz": {
+        "code": null,
+        "parent": "Styria"
+    },
+    "West Butler": {
+        "code": null,
+        "parent": "North Wash"
+    },
+    "West Canyon": {
+        "code": null,
+        "parent": "Page and Wahweap"
+    },
+    "West Clear Creek Wilderness": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "West Desert": {
+        "code": null,
+        "parent": "Utah"
+    },
+    "West End": {
+        "code": null,
+        "parent": "Western Slope"
+    },
+    "West Fork": {
+        "code": null,
+        "parent": "West Fork Oak Creek"
+    },
+    "West Fork Oak Creek": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "West MacDonnell Ranges": {
+        "code": null,
+        "parent": "Northern Territory"
+    },
+    "West Macedonia": {
+        "code": null,
+        "parent": "Greece"
+    },
+    "West Maui": {
+        "code": null,
+        "parent": "Maui"
+    },
+    "West Nusa Tenggara": {
+        "code": null,
+        "parent": "Indonesia"
+    },
+    "Western Australia": {
+        "code": null,
+        "parent": "Australia"
+    },
+    "Western Cape": {
+        "code": null,
+        "parent": "South Africa"
+    },
+    "Western Juan Castro Blanco Parque Nacional": {
+        "code": null,
+        "parent": "Costa Rica"
+    },
+    "Western Reef": {
+        "code": null,
+        "parent": "San Rafael Swell"
+    },
+    "Western Slope": {
+        "code": null,
+        "parent": "Colorado"
+    },
+    "Westland": {
+        "code": null,
+        "parent": "South Island"
+    },
+    "Wet Beaver Wilderness": {
+        "code": null,
+        "parent": "Mogollon Rim"
+    },
+    "White Mountain Apache Reservation": {
+        "code": null,
+        "parent": "Arizona"
+    },
+    "White Roost": {
+        "code": null,
+        "parent": "Robbers Roost"
+    },
+    "Wolgan Valley": {
+        "code": null,
+        "parent": "Wollemi"
+    },
+    "Wollemi": {
+        "code": null,
+        "parent": "New South Wales"
+    },
+    "World": {
+        "code": null,
+        "parent": null
+    },
+    "Wulgumerang": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Wyoming": {
+        "code": null,
+        "parent": "United States"
+    },
+    "Yakima County": {
+        "code": null,
+        "parent": "East Cascades"
+    },
+    "Yamagata": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Yamanashi": {
+        "code": null,
+        "parent": "Japan"
+    },
+    "Yarra/Eildon Ranges": {
+        "code": null,
+        "parent": "Victoria"
+    },
+    "Yellow Cat Mesa": {
+        "code": null,
+        "parent": "Moab"
+    },
+    "Yosemite National Park": {
+        "code": null,
+        "parent": "California Sierras"
+    },
+    "Yucatan": {
+        "code": null,
+        "parent": "Mexico"
+    },
+    "Yunnan": {
+        "code": null,
+        "parent": "China"
+    },
+    "Zamora": {
+        "code": null,
+        "parent": "Castilla y Leon"
+    },
+    "Zaragoza": {
+        "code": null,
+        "parent": "Aragon"
+    },
+    "Zhejiang": {
+        "code": null,
+        "parent": "China"
+    },
+    "Zimbabwe": {
+        "code": "ZW",
+        "parent": "Africa"
+    },
+    "Zion East Side": {
+        "code": null,
+        "parent": "Zion National Park"
+    },
+    "Zion Main Canyon": {
+        "code": null,
+        "parent": "Zion National Park"
+    },
+    "Zion National Park": {
+        "code": null,
+        "parent": "Southwest Utah"
+    },
+    "Zion West Side": {
+        "code": null,
+        "parent": "Zion National Park"
+    }
+}
