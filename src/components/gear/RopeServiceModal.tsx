@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { ServiceType } from "../../types/types";
 import { apiFetch } from "../../utils/api";
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import { GearServiceStatus } from "../../types/GearStatusType";
+import ServiceStatusIndicator from "./ServiceStatusIndicator";
 
 
 type RopeServiceModalProps = {
@@ -22,16 +24,18 @@ const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClo
         <Formik
             initialValues={{
                 serviceType: initialValues?.serviceType ?? ServiceType.Service,
+                statusCode: initialValues?.statusCode ?? initialValues?.StatusCode ?? GearServiceStatus.Good,
                 serviceDate: initialValues?.serviceDate ?? new Date().toISOString().substring(0, 10),
                 notes: initialValues?.notes ?? ''
             }}
             enableReinitialize
             onSubmit={async (values) => {
-                apiFetch(`/api/equipment/rope/${ropeId}/service`, {
+                await apiFetch(`/api/equipment/rope/${ropeId}/service`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         serviceType: values.serviceType,
+                        statusCode: values.statusCode,
                         serviceDate: values.serviceDate,
                         notes: values.notes
                     })
@@ -60,6 +64,25 @@ const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClo
                             {[ServiceType.Service, ServiceType.Inspection, ServiceType.Other].map((type) => (
                                 <MenuItem key={type} value={type}>
                                     {t('gear.serviceType', { context: type })}
+                                </MenuItem>
+                            ))}
+                        </FormikTextField>
+
+                        <FormikTextField<typeof values>
+                            select
+                            fullWidth
+                            name="statusCode"
+                            label={t('gear.serviceModal.statusLabel')}
+                            value={values.statusCode}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            touched={touched}
+                            errors={errors}
+                            sx={{ mt: 2 }}
+                        >
+                            {[GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map((status) => (
+                                <MenuItem key={status} value={status}>
+                                    <ServiceStatusIndicator statusCode={status} isRetired={false} size="medium" showText />
                                 </MenuItem>
                             ))}
                         </FormikTextField>

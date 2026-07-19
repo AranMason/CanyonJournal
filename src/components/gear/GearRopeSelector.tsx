@@ -3,6 +3,7 @@ import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } f
 import { GearItem, RopeItem } from '../../types/types';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useTranslation } from 'react-i18next';
+import ServiceStatusIndicator from './ServiceStatusIndicator';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -37,13 +38,29 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
                 const rope = ropes.find(r => r.Id === id);
-                return rope ? <Chip size="small" key={id} label={rope.Name} /> : null;
+                return rope ? (
+                  <Chip
+                    size="small"
+                    key={id}
+                    label={(
+                      <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+                        <span>{rope.Name}</span>
+                        <ServiceStatusIndicator isRetired={rope.IsRetired} statusCode={rope.LatestStatusCode} />
+                      </Box>
+                    )}
+                  />
+                ) : null;
               })}
             </Box>
           )}
         >
           {ropes.map((rope) => (
-            <MenuItem key={rope.Id} value={rope.Id}>{rope.Name} - {rope.Length} {rope.Unit}</MenuItem>
+            <MenuItem key={rope.Id} value={rope.Id}>
+              <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                <ServiceStatusIndicator isRetired={rope.IsRetired} statusCode={rope.LatestStatusCode} />
+                <span>{rope.Name} - {rope.Length} {rope.Unit}</span>
+              </Box>
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -59,7 +76,18 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {(selected as number[]).map((id) => {
                 const g = gear.find(gg => gg.Id === id);
-                return g ? <Chip size="small" key={id} label={g.Name} /> : null;
+                return g ? (
+                  <Chip
+                    size="small"
+                    key={id}
+                    label={(
+                      <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
+                        <span>{g.Name}</span>
+                        <ServiceStatusIndicator isRetired={g.IsRetired} statusCode={g.LatestStatusCode} />
+                      </Box>
+                    )}
+                  />
+                ) : null;
               })}
             </Box>
           )}
@@ -73,7 +101,12 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           ).map(([category, items]) => [
             <ListSubheader key={category}>{category}</ListSubheader>,
             items.map(g => (
-              <MenuItem key={g.Id} value={g.Id}>{g.Name}</MenuItem>
+              <MenuItem key={g.Id} value={g.Id}>
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                  <ServiceStatusIndicator isRetired={g.IsRetired} statusCode={g.LatestStatusCode} />
+                  <span>{g.Name}</span>
+                </Box>
+              </MenuItem>
             ))
           ])}
         </Select>

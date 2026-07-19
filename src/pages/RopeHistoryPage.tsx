@@ -10,6 +10,7 @@ import { RopeItem } from "../types/types";
 import RopeDescentHistory from "../components/gear/RopeDescentHistory";
 import RopeServiceHistory from "../components/gear/RopeServiceHistory";
 import RopeServiceModal from "../components/gear/RopeServiceModal";
+import ServiceStatusIndicator from "../components/gear/ServiceStatusIndicator";
 
 
 const GearHistoryPage: React.FC = () => {
@@ -65,9 +66,12 @@ const GearHistoryPage: React.FC = () => {
             <Paper variant="outlined" sx={{ p: 2.5 }}>
                 <Stack spacing={1.5}>
                     <Box>
-                        <Typography variant="h5" component="h1">
-                            {rope?.Name ?? t('gear.itemPage.title')}
-                        </Typography>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="h5" component="h1">
+                                {rope?.Name ?? t('gear.itemPage.title')}
+                            </Typography>
+                            <ServiceStatusIndicator isRetired={rope?.IsRetired ?? false} statusCode={rope?.LatestStatusCode} />
+                        </Stack>
                     </Box>
 
                     {gearSummary.length > 0 && (

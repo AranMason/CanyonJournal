@@ -1,6 +1,7 @@
 import i18n from '../i18n';
 import { WaterLevel } from "../types/CanyonRecord";
 import { CanyonTypeEnum } from "../types/CanyonTypeEnum";
+import { GearServiceStatus } from '../types/GearStatusType';
 import { ReportIssueType } from "../types/ReportIssueType";
 import { ReportStatus } from "../types/ReportStatus";
 

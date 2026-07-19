@@ -1,3 +1,5 @@
+import {GearServiceStatus} from "./GearStatusType"
+
 export enum Unit {
   Metres = 'Metres',
   Feet = 'Feet',
@@ -20,6 +22,7 @@ export interface GearServiceHistoryItem {
   GearId: number;
   ServiceType: ServiceType;
   ServiceDate: string;
+  StatusCode: GearServiceStatus;
   Notes?: string;
 }
 
@@ -28,6 +31,7 @@ export interface RopeServiceHistoryItem {
   RopeId: number;
   ServiceType: ServiceType;
   ServiceDate: string;
+  StatusCode: GearServiceStatus;
   Notes?: string;
 }
 
@@ -35,6 +39,7 @@ export interface BaseItem {
   Id: number;
   Name: string;
   IsRetired: boolean;
+  LatestStatusCode?: GearServiceStatus;
   Manufacturer?: string;
   ManufactureDate?: string;
   InServiceDate?: string;

@@ -10,6 +10,7 @@ import SuccessSnackbar from "../SuccessSnackbar";
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
 import { RopeItem } from "../../types/types";
 import Loader from "../Loader";
+import ServiceStatusIndicator from "./ServiceStatusIndicator";
 
 const RopeTable: React.FC = () => {
   const navigate = useNavigate();
@@ -68,9 +69,12 @@ const RopeTable: React.FC = () => {
           {ropes.map(row => (
             <TableRow key={row.Id}>
               <TableCell>
-                <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/rope/${row.Id}`)} sx={{ cursor: 'pointer' }}>
-                  {row.Name}
-                </Link>
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
+                  <ServiceStatusIndicator isRetired={row.IsRetired} statusCode={row.LatestStatusCode} />
+                  <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/rope/${row.Id}`)} sx={{ cursor: 'pointer' }}>
+                    {row.Name}
+                  </Link>
+                </Box>
                 <br />
                 <Typography variant="caption" color="textSecondary">{row.Manufacturer} {row.Model}</Typography>
               </TableCell>

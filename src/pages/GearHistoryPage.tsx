@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import GearServiceDescents from "../components/gear/GearServiceDescents";
 import { load as loadGear } from "../helpers/EquipmentDataStore";
 import { GearItem } from "../types/types";
+import ServiceStatusIndicator from "../components/gear/ServiceStatusIndicator";
 
 
 const GearHistoryPage: React.FC = () => {
@@ -68,9 +69,12 @@ const GearHistoryPage: React.FC = () => {
                         <Typography variant="overline" color="text.secondary">
                             {gear?.Category}
                         </Typography>
-                        <Typography variant="h5" component="h1">
-                            {gear?.Name ?? t('gear.itemPage.title')}
-                        </Typography>
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <Typography variant="h5" component="h1">
+                                {gear?.Name ?? t('gear.itemPage.title')}
+                            </Typography>
+                            <ServiceStatusIndicator isRetired={gear?.IsRetired ?? false} statusCode={gear?.LatestStatusCode} />
+                        </Stack>
                     </Box>
 
                     {gearSummary.length > 0 && (

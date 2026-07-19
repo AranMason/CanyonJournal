@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { GearItem } from "../../types/types";
 import SuccessSnackbar from "../SuccessSnackbar";
 import Loader from "../Loader";
+import ServiceStatusIndicator from "./ServiceStatusIndicator";
 
 const GearTable: React.FC = () => {
     const navigate = useNavigate();
@@ -69,7 +70,11 @@ const GearTable: React.FC = () => {
                     {gear.map(row => (
                         <TableRow key={row.Id}>
                             <TableCell>
-                                <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/gear/${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link><br/>
+                                <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
+                                    <ServiceStatusIndicator isRetired={row.IsRetired} statusCode={row.LatestStatusCode} />
+                                    <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/gear/${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link>
+                                </Box>
+                                <br/>
                                 <Typography variant="caption" color="textSecondary">{row.Manufacturer} {row.Model}</Typography>
                             </TableCell>
                             <TableCell>{row.Category}</TableCell>

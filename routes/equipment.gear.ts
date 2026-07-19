@@ -191,28 +191,43 @@ router.post('/:id/service', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     const gearId = Number(req.params.id);
-    const { serviceType, serviceDate, notes } = req.body;
+    const { serviceType, statusCode, serviceDate, notes } = req.body;
+    const normalizedStatusCode = Number.isFinite(Number(statusCode)) ? Number(statusCode) : 1;
 
     await pool.request()
       .input('gearId', sql.Int, gearId)
       .input('userId', sql.Int, userId)
       .input('serviceType', sql.Int, serviceType)
+      .input('statusCode', sql.SmallInt, normalizedStatusCode)
       .input('serviceDate', sql.Date, toNullableDate(serviceDate))
       .input('notes', sql.NVarChar(500), toNullableString(notes))
       .query(`INSERT INTO GearServiceRecords (
                 GearItemId,
                 UserId,
                 ServiceType,
+                StatusCode,
                 ServiceDate,
                 Notes
               ) VALUES (
                 @gearId,
                 @userId,
                 @serviceType,
+                @statusCode,
                 @serviceDate,
                 @notes
-              )`);
+              );
+
+              IF @statusCode = 0
+              BEGIN
+                UPDATE GearItems
+                SET IsRetired = 1,
+                    Updated = GETDATE()
+                WHERE Id = @gearId AND UserId = @userId;
+              END`);
     res.status(201).json({ message: 'Service record added successfully' });
   } catch (err) {
     console.error(err);
