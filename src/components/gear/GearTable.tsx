@@ -6,7 +6,7 @@ import GearModal from "./GearModal";
 import GearServiceModal from "./GearServiceModal";
 import { useNavigate } from "react-router-dom";
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GearItem } from "../../types/types";
 import SuccessSnackbar from "../SuccessSnackbar";
 import Loader from "../Loader";
@@ -50,6 +50,17 @@ const GearTable: React.FC = () => {
         }
     };
 
+    const sortedGear = useMemo(() => {
+        return [...gear].sort((a, b) => {
+            const categoryCompare = (a.Category || '').localeCompare(b.Category || '', undefined, { sensitivity: 'base' });
+            if (categoryCompare !== 0) {
+                return categoryCompare;
+            }
+
+            return (a.Name || '').localeCompare(b.Name || '', undefined, { sensitivity: 'base' });
+        });
+    }, [gear]);
+
     return <Loader isLoading={isLoading}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
             <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
@@ -67,7 +78,7 @@ const GearTable: React.FC = () => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {gear.map(row => (
+                    {sortedGear.map(row => (
                         <TableRow key={row.Id}>
                             <TableCell>
                                 <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
