@@ -36,3 +36,6 @@ When asked to review, you should provide outline, priority and ease of implement
 # [General] Add a Change Log
 - Available from the corner, pop-up when someone logs in and something has changed.
 
+# [Gear] Add Dashboard Widget for Gear that needs review.
+This will be anything that is 6+ Months since it's last service initially.
+If no services in the record, use the following fallback: InServiceDate, CreatedDate on the item itself
