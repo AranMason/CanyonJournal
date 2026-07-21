@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
 import DashboardStats from '../components/DashboardStats';
@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
 import { getRecordsForDashboard } from '../helpers/RecordDataStore';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import ChangeLogModal from '../components/ChangeLogModal';
 
 const DashboardPage: React.FC = () => {
 
@@ -17,6 +19,7 @@ const DashboardPage: React.FC = () => {
   const { t } = useTranslation();
   const { user, loading } = useUser();
   const [sectionOpen, setSectionOpen] = useState<number | null>(null);
+  const [isChangeLogOpen, setIsChangeLogOpen] = useState(false);
 
   const { records, canyonsById, userCanyonsById, isLoading } = useCanyonRecords(
     getRecordsForDashboard,
@@ -29,8 +32,11 @@ const DashboardPage: React.FC = () => {
 
   return (
     <PageTemplate pageTitle={t('dashboard.title')} isLoading={loading || isLoading}>
-
-      <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")} sx={{ mb: 3 }} startIcon={<CreateIcon/>}>{t('common:actions.recordDescent')}</Button>
+      <ChangeLogModal open={isChangeLogOpen} onClose={() => setIsChangeLogOpen(false)}/>
+      <Box sx={{ mb: 3, display: 'flex', gap: 2, justifyContent: 'space-between' }}>
+        <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")}  startIcon={<CreateIcon/>}>{t('common:actions.recordDescent')}</Button>
+        <Button startIcon={<NotificationsActiveIcon/>} onClick={() => setIsChangeLogOpen(true)}>Change Log</Button>
+      </Box>
       <DashboardStats />
       <GoalsWidget />
       <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
