@@ -1,9 +1,9 @@
 import Typography from "@mui/material/Typography";
 import PageTemplate from "./PageTemplate";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
-import { Box, Button, Divider, Paper, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Breadcrumbs, Button, Divider, Link, Paper, Stack, Tab, Tabs } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import { load as loadRope } from "../helpers/EquipmentDataStore";
 import { RopeItem } from "../types/types";
@@ -16,6 +16,7 @@ import { GearServiceStatus } from "../types/GearStatusType";
 
 const GearHistoryPage: React.FC = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const { id } = useParams<{ id?: string }>();
     const idParam = id ? parseInt(id) : undefined;
 
@@ -72,6 +73,19 @@ const GearHistoryPage: React.FC = () => {
             }}
             onClose={() => setIsServiceModalOpen(false)}
         />
+
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+            <Link
+                component="button"
+                underline="hover"
+                color="primary"
+                onClick={() => navigate("/settings/gear?tab=1")}
+                sx={{ cursor: 'pointer' }}
+            >
+                {t('gear.title')}
+            </Link>
+            <Typography sx={{ color: 'text.primary' }}>{rope?.Name}</Typography>
+        </Breadcrumbs>
 
         <Box sx={{ mb: 3 }}>
             <Paper variant="outlined" sx={{ p: 2.5 }}>

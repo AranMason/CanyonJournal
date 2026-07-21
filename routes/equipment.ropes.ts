@@ -98,7 +98,7 @@ router.get('/:id/service', async (req: Request, res: Response) => {
     const historyRes = await pool.request()
       .input('userId', sql.Int, userId)
       .input('ropeId', sql.Int, ropeId)
-      .query('SELECT * FROM RopeServiceRecords WHERE RopeItemId = @ropeId AND UserId = @userId ORDER BY ServiceDate DESC');
+      .query('SELECT * FROM RopeServiceRecords WHERE RopeItemId = @ropeId AND UserId = @userId ORDER BY ServiceDate DESC, DateCreated DESC');
     res.json(historyRes.recordset);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch rope service history' });
@@ -129,14 +129,16 @@ router.post('/:id/service', async (req: Request, res: Response) => {
                 ServiceType,
                 StatusCode,
                 ServiceDate,
-                Notes
+                Notes,
+                DateCreated
               ) VALUES (
                 @ropeId,
                 @userId,
                 @serviceType,
                 @statusCode,
                 @serviceDate,
-                @notes
+                @notes,
+                GETUTCDATE()
               );
 
               IF @statusCode = 0

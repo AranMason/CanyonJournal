@@ -41,3 +41,17 @@ This will be anything that is 6+ Months since it's last service initially.
 If no services in the record, use the following fallback: InServiceDate, CreatedDate on the item itself
 
 # [Gear] When adding service history to an item the UI doesn't update with that information
+Mainly done, needs to be expanded to the Gear tab as well.
+
+# [Gear] Hide retired items
+We will want a toggle to include them, and if we are filtering to Retired Items, we will also want to show them as well.
+
+# [Gear] Add way to mass service gear
+Currently it's hard to track what has, and has not been serviced recently. Would be good to be able to easily visualize what needs to be serviced
+
+# [Gear] Highlight Gear in the Dashboard
+1) Items that have been more than 6 months since last service.
+2) Gear that is passed it's Retirement Date
+We will want to limit it to the 'Top 5' with a 'See More' link to the general equipment page.
+Users should be able to add a service on the page. But don't worry about updating the list once that service has been completed. We can add a 'Refresh' button however
+The section shouldn't be visible, if there is no Gear to worry about.

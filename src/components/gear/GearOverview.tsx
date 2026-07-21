@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Tab,
@@ -6,13 +6,26 @@ import {
 } from '@mui/material';
 import GearTable from './GearTable';
 import RopeTable from './RopeTable';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 const GearOverview: React.FC = () => {
 
-  const [activeTab, setActiveTab] = React.useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [activeTab, setActiveTab] = useState(0);
+
+  useMemo(() => {
+    const tab = searchParams.get('tab')
+    if(!tab) {
+      return;
+    }
+    const paramTab = parseInt(tab)
+    setActiveTab(paramTab)
+  }, [])
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+    setSearchParams({ tab: newValue.toString() });
   };
 
   return (

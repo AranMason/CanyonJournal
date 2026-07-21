@@ -1,20 +1,21 @@
 import Typography from "@mui/material/Typography";
 import PageTemplate from "./PageTemplate";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
 import GearServiceHistory from "../components/gear/GearServiceHistory";
-import { Box, Button, Divider, Paper, Stack, Tab, Tabs } from "@mui/material";
+import { Box, Breadcrumbs, Button, Divider, Link, Paper, Stack, Tab, Tabs } from "@mui/material";
 import GearServiceModal from "../components/gear/GearServiceModal";
 import AddIcon from '@mui/icons-material/Add';
 import GearServiceDescents from "../components/gear/GearServiceDescents";
-import { load as loadGear } from "../helpers/EquipmentDataStore";
+import { load as loadGear, loadGearHistory } from "../helpers/EquipmentDataStore";
 import { GearItem } from "../types/types";
 import ServiceStatusIndicator from "../components/gear/ServiceStatusIndicator";
 
 
 const GearHistoryPage: React.FC = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     const { id } = useParams<{ id?: string }>();
     const idParam = id ? parseInt(id) : undefined;
 
@@ -59,7 +60,7 @@ const GearHistoryPage: React.FC = () => {
         });
     }, [idParam]);
 
-    return <PageTemplate pageTitle={t('gear.itemPage.title', {context: 'gear'})} isAuthRequired={true} isLoading={isLoading}>
+    return <PageTemplate pageTitle={t('gear.itemPage.title', { context: 'gear' })} isAuthRequired={true} isLoading={isLoading}>
         <GearServiceModal
             gearId={idParam ?? 0}
             open={isServiceModalOpen}
@@ -68,9 +69,25 @@ const GearHistoryPage: React.FC = () => {
                 const data = await loadGear();
                 const current = data.gear.find(s => s.Id === idParam) ?? null;
                 setGear(current);
+                if(current) {
+                    await loadGearHistory(current.Id);
+                }
             }}
             onClose={() => setIsServiceModalOpen(false)}
         />
+
+        <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+            <Link
+                component="button"
+                underline="hover"
+                color="primary"
+                onClick={() => navigate("/settings/gear?tab=0")}
+                sx={{ cursor: 'pointer' }}
+            >
+                {t('gear.title')}
+            </Link>
+            <Typography sx={{ color: 'text.primary' }}>{gear?.Name}</Typography>
+        </Breadcrumbs>
 
         <Box sx={{ mb: 3 }}>
             <Paper variant="outlined" sx={{ p: 2.5 }}>

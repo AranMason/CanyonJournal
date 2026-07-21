@@ -180,7 +180,7 @@ router.get('/:id/service', async (req: Request, res: Response) => {
     const historyRes = await pool.request()
       .input('userId', sql.Int, userId)
       .input('gearId', sql.Int, gearId)
-      .query('SELECT * FROM GearServiceRecords WHERE GearItemId = @gearId AND UserId = @userId ORDER BY ServiceDate DESC');
+      .query('SELECT * FROM GearServiceRecords WHERE GearItemId = @gearId AND UserId = @userId ORDER BY ServiceDate DESC, DateCreated DESC');
     res.json(historyRes.recordset);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch gear service history' });
@@ -211,14 +211,16 @@ router.post('/:id/service', async (req: Request, res: Response) => {
                 ServiceType,
                 StatusCode,
                 ServiceDate,
-                Notes
+                Notes,
+                DateCreated
               ) VALUES (
                 @gearId,
                 @userId,
                 @serviceType,
                 @statusCode,
                 @serviceDate,
-                @notes
+                @notes,
+                GETUTCDATE()
               );
 
               IF @statusCode = 0
