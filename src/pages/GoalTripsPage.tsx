@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Breadcrumbs, Link, Tab, Tabs, Typography } from '@mui/material';
 import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
 import { Goal } from '../types/Goal';
@@ -64,6 +64,18 @@ const GoalTripsPage: React.FC = () => {
     <PageTemplate pageTitle={goal?.Label ?? t('goals.progress')} isAuthRequired isLoading={isLoading}>
       {goal && (
         <>
+          <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+            <Link
+                component="button"
+                underline="hover"
+                color="primary"
+                onClick={() => navigate("/settings/goals")}
+                sx={{ cursor: 'pointer' }}
+            >
+                {t('goals.title')}
+            </Link>
+            <Typography sx={{ color: 'text.primary' }}>{goal?.Label}</Typography>
+        </Breadcrumbs>
           <Box sx={{ mb: 3 }}>
             <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, py: 2 }}>
               <GoalProgressBar requirement={goal} tagNames={goalTagNames} regionNames={goalRegionNames} />

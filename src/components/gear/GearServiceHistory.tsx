@@ -28,7 +28,7 @@ const GearServiceHistory: React.FC<{ gearId: number }> = ({ gearId }) => {
         }).finally(() => {
             setIsLoading(false);
         })
-    }, [gearId]);
+    }, [gearId, loadGearHistory(gearId)]);
 
 
     return <Loader isLoading={isLoading}>

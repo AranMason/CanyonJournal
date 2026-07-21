@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { loadRopeHistory } from "../../helpers/EquipmentDataStore";
 import { RopeServiceHistoryItem } from "../../types/types";
 import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
@@ -28,7 +28,7 @@ const RopeServiceHistory: React.FC<{ ropeId: number }> = ({ ropeId }) => {
         }).finally(() => {
             setIsLoading(false);
         })
-    }, [ropeId]);
+    }, [ropeId, loadRopeHistory(ropeId)]);
 
 
     return <Loader isLoading={isLoading}>

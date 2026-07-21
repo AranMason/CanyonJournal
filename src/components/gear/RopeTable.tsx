@@ -14,6 +14,7 @@ import ServiceStatusIndicator from "./ServiceStatusIndicator";
 import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel";
 import { GearServiceStatus } from "../../types/GearStatusType";
 import RopeServiceModal from "./RopeServiceModal";
+import AddIcon from '@mui/icons-material/Add';
 
 type RopeStatusFilter = '' | 'good' | 'watch' | 'bad' | 'retired' | 'unknown';
 type RopeServiceAgeFilter = '' | 'gt3m' | 'gt6m' | 'gt1y';
@@ -173,7 +174,7 @@ const RopeTable: React.FC = () => {
 
   return <Loader isLoading={isLoading}>
     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-      <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => setRopeModalOpen(true)}>{t('gear.addRope')}</Button>
+      <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => setRopeModalOpen(true)} startIcon={<AddIcon />}>{t('gear.addRope')}</Button>
     </Box>
     <FilterPanel<RopeItem>
       items={ropes}

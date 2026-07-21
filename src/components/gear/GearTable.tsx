@@ -13,6 +13,7 @@ import Loader from "../Loader";
 import ServiceStatusIndicator from "./ServiceStatusIndicator";
 import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel";
 import { GearServiceStatus } from "../../types/GearStatusType";
+import AddIcon from '@mui/icons-material/Add';
 
 type GearStatusFilter = '' | 'good' | 'watch' | 'bad' | 'retired' | 'unknown';
 type ServiceAgeFilter = '' | 'gt3m' | 'gt6m' | 'gt1y';
@@ -195,7 +196,7 @@ const GearTable: React.FC = () => {
 
     return <Loader isLoading={isLoading}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-            <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => setGearModalOpen(true)}>{t('gear.addGear')}</Button>
+            <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => setGearModalOpen(true)} startIcon={<AddIcon />}>{t('gear.addGear')}</Button>
         </Box>
         <FilterPanel<GearItem>
             items={gear}
