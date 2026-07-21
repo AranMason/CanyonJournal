@@ -60,7 +60,17 @@ const GearHistoryPage: React.FC = () => {
     }, [idParam]);
 
     return <PageTemplate pageTitle={t('gear.itemPage.title', {context: 'gear'})} isAuthRequired={true} isLoading={isLoading}>
-        <GearServiceModal gearId={idParam ?? 0} open={isServiceModalOpen} onClose={() => setIsServiceModalOpen(false)} />
+        <GearServiceModal
+            gearId={idParam ?? 0}
+            open={isServiceModalOpen}
+            initialValues={{ statusCode: gear?.LatestStatusCode }}
+            onSaved={async () => {
+                const data = await loadGear();
+                const current = data.gear.find(s => s.Id === idParam) ?? null;
+                setGear(current);
+            }}
+            onClose={() => setIsServiceModalOpen(false)}
+        />
 
         <Box sx={{ mb: 3 }}>
             <Paper variant="outlined" sx={{ p: 2.5 }}>

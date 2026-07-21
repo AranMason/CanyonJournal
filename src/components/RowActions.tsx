@@ -3,6 +3,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import HistoryIcon from '@mui/icons-material/History';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import { useTranslation } from 'react-i18next';
 
 interface RowActionsProps {
@@ -23,7 +24,7 @@ const RowActions: React.FC<RowActionsProps> = ({ onEdit, onDelete, onViewTrips, 
       </Tooltip>}
       {onService && <Tooltip title={t('translation:gear.addServiceToolTip')}>
         <IconButton size="small" onClick={onService} sx={{ color: 'grey.500' }}>
-          <HistoryIcon />
+          <HomeRepairServiceIcon />
         </IconButton>
       </Tooltip>}
       {onEdit && <Tooltip title={t('actions.edit')}>

@@ -233,7 +233,7 @@
       "watch": "Monitor",
       "bad": "Bad Condition",
       "retired": "Retired",
-      "unknown": "Unknown"
+      "unknown": "No Service History"
     },
     "serviceModal": {
       "title": "Add Service Record",
@@ -254,6 +254,26 @@
       "serviceDate": "Service Date",
       "notes": "Notes",
       "addServiceButton": "Add Service Record"
+    },
+    "filters": {
+      "searchLabel": "Search Gear",
+      "allCategories": "All Categories",
+      "serviceStatusLabel": "Service Status",
+      "allServiceStatuses": "All Statuses",
+      "lastServiceDateLabel": "Last Service Date",
+      "allServiceAges": "All Service Dates",
+      "lastServiceDate": {
+        "over3Months": "More than 3 months",
+        "over6Months": "More than 6 months",
+        "over1Year": "More than 1 year"
+      },
+      "orderByLabel": "Order By",
+      "orderBy": {
+        "category": "Category",
+        "name": "Name",
+        "lastServiceDate": "Last Service Date",
+        "weight": "Weight"
+      }
     }
   },
   "report": {

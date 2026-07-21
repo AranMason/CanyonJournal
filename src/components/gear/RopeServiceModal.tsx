@@ -14,10 +14,11 @@ type RopeServiceModalProps = {
     open: boolean;
     ropeId: number | null;
     onClose: () => void;
+    onSaved?: (values: { serviceType: ServiceType; statusCode: GearServiceStatus; serviceDate: string; notes: string; }) => void;
     initialValues?: any;
 };
 
-const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClose, initialValues }) => {
+const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClose, onSaved, initialValues }) => {
     const { t } = useTranslation();
 
     return <AppModal open={ropeId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>        
@@ -41,6 +42,12 @@ const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClo
                     })
                 });
                 EquipmentDataStore.invalidate();
+                onSaved?.({
+                    serviceType: values.serviceType,
+                    statusCode: values.statusCode,
+                    serviceDate: values.serviceDate,
+                    notes: values.notes,
+                });
                 onClose();
             }}
         >

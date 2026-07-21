@@ -40,6 +40,7 @@ export interface BaseItem {
   Name: string;
   IsRetired: boolean;
   LatestStatusCode?: GearServiceStatus;
+  LastServiceDate?: string;
   Manufacturer?: string;
   ManufactureDate?: string;
   InServiceDate?: string;
@@ -54,8 +55,6 @@ export interface BaseItem {
 
 export interface GearItem extends BaseItem {
   Category: string;
-  LastInspectionDate?: string;
-  LastServiceDate?: string;
 }
 
 export interface RopeItem extends BaseItem {

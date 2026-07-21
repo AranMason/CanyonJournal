@@ -27,6 +27,8 @@ export type SingleSelectFilterConfig<V extends string | number = string | number
   labelId: string;
   /** Shown as the empty/all option. Defaults to "All {label}s" */
   placeholder?: string;
+  /** When false, omits the empty/all option. Default true. */
+  showEmptyOption?: boolean;
   options: { value: V; label: string }[];
 };
 
@@ -84,7 +86,7 @@ interface FilterPanelProps<T> {
   items: T[];
   config: FilterConfig[];
   filterFn: (item: T, values: FilterValues) => boolean;
-  children: (filteredItems: T[]) => React.ReactNode;
+  children: (filteredItems: T[], values: FilterValues) => React.ReactNode;
   /** Pre-populate specific filter keys on first render (e.g. from URL search params). */
   initialValues?: Partial<FilterValues>;
 }
@@ -150,7 +152,9 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
               value={values[c.key]}
               onChange={e => setValue(c.key, e.target.value)}
             >
-              <MenuItem value="">{c.placeholder ?? `All ${c.label}s`}</MenuItem>
+              {(c.showEmptyOption ?? true) && (
+                <MenuItem value="">{c.placeholder ?? `All ${c.label}s`}</MenuItem>
+              )}
               {c.options.map(opt => (
                 <MenuItem key={String(opt.value)} value={opt.value}>{opt.label}</MenuItem>
               ))}
@@ -243,7 +247,7 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3, alignItems: 'center' }}>
         {config.map(c => renderControl(c))}
       </Box>
-      {children(filteredItems)}
+      {children(filteredItems, values)}
     </Box>
   );
 }

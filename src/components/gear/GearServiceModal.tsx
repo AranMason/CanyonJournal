@@ -14,10 +14,11 @@ type GearServiceModalProps = {
     open: boolean;
     gearId: number | null;
     onClose: () => void;
+    onSaved?: (values: { serviceType: ServiceType; statusCode: GearServiceStatus; serviceDate: string; notes: string; }) => void;
     initialValues?: any;
 };
 
-const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClose, initialValues }) => {
+const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClose, onSaved, initialValues }) => {
     const { t } = useTranslation();
 
     return <AppModal open={gearId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>        
@@ -41,6 +42,12 @@ const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClo
                     })
                 });
                 EquipmentDataStore.invalidate();
+                onSaved?.({
+                    serviceType: values.serviceType,
+                    statusCode: values.statusCode,
+                    serviceDate: values.serviceDate,
+                    notes: values.notes,
+                });
                 onClose();
             }}
         >

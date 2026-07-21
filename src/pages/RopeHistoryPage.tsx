@@ -11,6 +11,7 @@ import RopeDescentHistory from "../components/gear/RopeDescentHistory";
 import RopeServiceHistory from "../components/gear/RopeServiceHistory";
 import RopeServiceModal from "../components/gear/RopeServiceModal";
 import ServiceStatusIndicator from "../components/gear/ServiceStatusIndicator";
+import { GearServiceStatus } from "../types/GearStatusType";
 
 
 const GearHistoryPage: React.FC = () => {
@@ -60,7 +61,17 @@ const GearHistoryPage: React.FC = () => {
     }, [idParam]);
 
     return <PageTemplate pageTitle={t('gear.itemPage.title', { context: 'rope'})} isAuthRequired={true} isLoading={isLoading}>
-        <RopeServiceModal ropeId={idParam ?? 0} open={isServiceModalOpen} onClose={() => setIsServiceModalOpen(false)} />
+        <RopeServiceModal
+            ropeId={idParam ?? 0}
+            open={isServiceModalOpen}
+            initialValues={{ statusCode: rope?.LatestStatusCode ?? GearServiceStatus.Good }}
+            onSaved={async () => {
+                const data = await loadRope();
+                const current = data.ropes.find(s => s.Id === idParam) ?? null;
+                setRope(current);
+            }}
+            onClose={() => setIsServiceModalOpen(false)}
+        />
 
         <Box sx={{ mb: 3 }}>
             <Paper variant="outlined" sx={{ p: 2.5 }}>
