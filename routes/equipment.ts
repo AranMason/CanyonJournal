@@ -3,6 +3,7 @@ import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
 import gear from './equipment.gear';
 import ropes from './equipment.ropes';
+import gearSets from './equipment.gear.sets'
 
 const router = Router();
 
@@ -38,6 +39,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.use('/gear/sets', gearSets);
 router.use('/gear', gear);
 router.use('/rope', ropes);
 
