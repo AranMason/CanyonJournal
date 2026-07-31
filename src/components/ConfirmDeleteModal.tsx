@@ -19,6 +19,7 @@ const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({ open, title, me
       onClose={onCancel}
       title={title}
       maxWidth="xs"
+      disableMinHeight
       actions={
         <>
           <Button onClick={onCancel}>{t('actions.cancel')}</Button>

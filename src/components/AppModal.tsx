@@ -14,6 +14,7 @@ interface AppModalProps {
   fullWidth?: boolean;
   /** Disables the X button and backdrop close — use while saving or submitting. */
   disableClose?: boolean;
+  disableMinHeight?: boolean
 }
 
 const AppModal: React.FC<AppModalProps> = ({
@@ -25,6 +26,7 @@ const AppModal: React.FC<AppModalProps> = ({
   maxWidth = 'sm',
   fullWidth = true,
   disableClose = false,
+  disableMinHeight = false
 }) => {
   return (
     <Dialog
@@ -33,7 +35,7 @@ const AppModal: React.FC<AppModalProps> = ({
       maxWidth={maxWidth}
       fullWidth={fullWidth}
       slotProps={{
-        paper: { sx: { borderLeft: '4px solid', borderColor: 'secondary.main', pb: 1, borderRadius: '0 4px 4px 0', minHeight: '400px' } },
+        paper: { sx: { borderLeft: '4px solid', borderColor: 'secondary.main', pb: 1, borderRadius: '0 4px 4px 0', minHeight: disableMinHeight ? undefined : '400px' } },
       }}
     >
       <DialogTitle sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: 1 }}>
