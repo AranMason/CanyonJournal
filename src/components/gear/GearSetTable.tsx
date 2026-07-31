@@ -84,20 +84,28 @@ const GearSetTable: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {gearData?.length ?? 0 > 0 ? gearData?.map(i => <TableRow>
+                        {gearData?.length ?? 0 > 0 ? gearData?.map(i => <TableRow key={i.Id}>
                             <TableCell sx={{ minWidth: 200 }}>
                                 {i.Name}
                             </TableCell>
                             <TableCell>
                                 <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-                                    {i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name)).map(g => <Chip label={g.Name} size='small' />)}
+                                    {i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name)).map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
                                 </Box>
                             </TableCell>
                             <TableCell sx={{ minWidth: 100 }}>
                                 {/* onDelete={() => deleteGearSet(i)} */}
                                 <RowActions onEdit={() => openModal(i)} />
                             </TableCell>
-                        </TableRow>) : <TableRow><TableCell sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2 }}>{t('gear.gearSet.emptyTable')}<Button variant='contained' onClick={() => openModal(null)}>{t('common:actions.create')}</Button></TableCell></TableRow>}
+                        </TableRow>) :
+                            <TableRow>
+                                <TableCell sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
+                                    {t('gear.gearSet.emptyTable')}
+                                    <Button variant='contained' onClick={() => openModal(null)}>
+                                        {t('common:actions.create')}
+                                    </Button>
+                                </TableCell>
+                            </TableRow>}
                     </TableBody>
                 </Table>
             </TableContainer>

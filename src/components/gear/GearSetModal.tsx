@@ -52,14 +52,13 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
             initialValues={gearSet ?? defaultGearSet}
             enableReinitialize
             validationSchema={Yup.object({
-                Name: Yup.string().required('Name is required'),
+                Name: Yup.string().required(t('gear.gearSet.modalErrors.name')),
                 Items: Yup
                     .array()
                     .of(Yup.number().required())
-                    .min(1, 'You must provide at least one item')
+                    .min(1, t('gear.gearSet.modalErrors.selectedGear'))
             })} onSubmit={
                 async (value, { setSubmitting }) => {
-                    console.log('Submitting', value)
                     setSubmitting(true)
                     await onSave({
                         ...value,
@@ -69,7 +68,7 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                     })
                 }
             }>
-            {({ values, setFieldValue, isValid, handleBlur, handleChange, handleSubmit, touched, errors }) => <>
+            {({ values, setFieldValue, isValid, handleBlur, handleChange, handleSubmit, touched, errors, submitCount, setFieldTouched }) => <>
                 <DialogContent>
                     <Loader isLoading={isLoading}>
                         <Form>
@@ -85,13 +84,13 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                                 helperText={touched.Name && errors.Name}
                             />
                             <List dense>
-                                {errors.Items && <Typography variant='subtitle2' color='error'>{errors.Items}</Typography>}
+                                {(touched.Items || submitCount > 0) && errors.Items && <Typography variant='caption' color='error'>{errors.Items}</Typography>}
                                 {Object.entries(gear?.reduce((acc, item) => {
                                     acc[item.Category] ||= [];
                                     acc[item.Category].push(item);
                                     return acc;
-                                }, {}) ?? []).sort(([a], [b]) => a.localeCompare(b)).map(([category, items]): React.ReactNode => {
-                                    return <div key={category}>
+                                }, {} as { [key in string]: GearItem[] }) ?? []).sort(([a], [b]) => a.localeCompare(b)).map(([category, items]): React.ReactNode => {
+                                    return <React.Fragment key={category}>
                                         <ListSubheader disableSticky>{category}</ListSubheader>
                                         {(items as GearItem[]).map(g => {
                                             const isChecked = values.Items.includes(g.Id);
@@ -99,7 +98,7 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                                             return <ListItem
                                                 key={g.Id}
                                                 secondaryAction={<Switch checked={isChecked} value={g.Id} onClick={() => {
-                                                    console.log(values, isValid, errors);
+                                                    setFieldTouched('Items', true);
                                                     if (isChecked) {
                                                         setFieldValue(
                                                             'Items',
@@ -112,12 +111,10 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                                                         )
                                                     }
                                                 }} />}>
-                                                <ListItemText inset primary={g.Name} secondary={`${g.Manufacturer} ${g.Model}`}></ListItemText>
+                                                <ListItemText inset primary={g.Name} secondary={t('gear.makeAndModel', { make: g.Manufacturer, model: g.Model })}></ListItemText>
 
                                             </ListItem>
-
-                                            // return <FormControlLabel key={g.Id} label={g.Name} control={ } />
-                                        })}</div>;
+                                        })}</React.Fragment>;
                                 })}
 
                             </List>
@@ -127,7 +124,7 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onClose} disabled={isLoading}>{t('common:actions.cancel')}</Button>
-                    <Button onClick={() => handleSubmit} disabled={isLoading || !isValid} variant='contained'>{actionLabel ?? t('common:actions.save')}</Button>
+                    <Button onClick={() => handleSubmit()} disabled={isLoading || !isValid} variant='contained'>{actionLabel ?? t('common:actions.save')}</Button>
                 </DialogActions>
             </>}
         </Formik>

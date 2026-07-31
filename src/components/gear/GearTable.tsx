@@ -163,10 +163,10 @@ const GearTable: React.FC = () => {
             const resolvedStatus = getResolvedStatus(item);
             const statusKey: GearStatusFilter =
                 resolvedStatus === GearServiceStatus.Good ? 'good' :
-                resolvedStatus === GearServiceStatus.Watch ? 'watch' :
-                resolvedStatus === GearServiceStatus.Bad ? 'bad' :
-                resolvedStatus === GearServiceStatus.Retired ? 'retired' :
-                'unknown';
+                    resolvedStatus === GearServiceStatus.Watch ? 'watch' :
+                        resolvedStatus === GearServiceStatus.Bad ? 'bad' :
+                            resolvedStatus === GearServiceStatus.Retired ? 'retired' :
+                                'unknown';
 
             if (statusFilter !== statusKey) {
                 return false;
@@ -253,8 +253,8 @@ const GearTable: React.FC = () => {
                                             <ServiceStatusIndicator isRetired={row.IsRetired} statusCode={row.LatestStatusCode} />
                                             <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/gear/${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link>
                                         </Box>
-                                        <br/>
-                                        <Typography variant="caption" color="textSecondary">{row.Manufacturer} {row.Model}</Typography>
+                                        <br />
+                                        <Typography variant="caption" color="textSecondary">{t('gear.makeAndModel', { make: row.Manufacturer, model: row.Model })}</Typography>
                                     </TableCell>
                                     <TableCell>{row.Category}</TableCell>
                                     <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.WeightGrams ? t(`gear.table.weight.cell`, { weight: row.WeightGrams }) : t('common:blank')}</TableCell>

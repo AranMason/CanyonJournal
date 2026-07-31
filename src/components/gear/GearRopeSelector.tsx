@@ -148,7 +148,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             }}>{t('common:actions.add')}</Button>
           </DialogActions>
         </AppModal>
-        <Button variant='outlined' onClick={() => setIsGearSetOpen(true)}>Add Gear Set</Button>
+        <Button variant='outlined' disabled={!gearSets?.length} onClick={() => setIsGearSetOpen(true)}>{t('translation:record.selectGearSetBtn')}</Button>
       </>}
     </>
   );

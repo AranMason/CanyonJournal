@@ -1,18 +1,9 @@
 import { Router, Response, Request } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
-
-// TODO:
-// - DELETE
-// - UPDATE
-// - Gear UI to create a set
-// This will involve a pop-up, that will select one or more items to be in the set using checkboxes. And a text field for the name.
-// - Record UI to select a set.
-// This will involve an additional dropdown selector, where you can select an item set. When selecting an option, all items in the set will automatically populate the gear field.
+import { GearItemSet } from '../src/types/types';
 
 const router = Router();
-
-// get all sets
 
 type GearSets = {
   Id: number,
@@ -69,9 +60,9 @@ router.get('/:id', async (req: Request, res: Response) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    var paramId = parseInt(req.params.id);
+    var setId = Number(req.params.id);
 
-    if (!paramId || paramId <= 0) {
+    if (!setId || setId <= 0) {
       return res.status(400).json({ error: 'Invalid Set Requested' })
     }
 
@@ -79,7 +70,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 
     const result = await pool.request()
       .input('userId', sql.BigInt(), userId)
-      .input('setId', sql.BigInt(), paramId)
+      .input('setId', sql.BigInt(), setId)
       .query(`SELECT
                   sit.Id,
                   sit.Name,
@@ -107,15 +98,10 @@ router.post('/', async (req: Request, res: Response) => {
     }
 
     const pool = await getPool();
-
-
     const {
       Name: name,
-      GearIds: gearIds
-    }: {
-      Name: string,
-      GearIds: number[]
-    } = req.body;
+      Items: gearIds
+    }: GearItemSet = req.body;
 
     const result = await pool.request()
       .input('name', sql.NVarChar(200), name)
@@ -162,10 +148,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
     }
 
     const pool = await getPool();
+    const setId = Number(req.params.id);
     await pool.request()
       .input('userId', sql.BigInt(), userId)
-      .input('setId', sql.BigInt(), req.params.id)
-      // TODO: Does this cascade into GearItemSetMember?
+      .input('setId', sql.BigInt(), setId)
       .query(`DELETE FROM GearItemSet WHERE Id = @setId and UserId = @userId`);
 
     res.status(204).end();
@@ -188,7 +174,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
       Items
     }: GearSets = req.body;
 
-    var setId = parseInt(req.params.id);
+    const setId = Number(req.params.id);
 
     await pool.request()
       .input('setId', sql.BigInt(), setId)
@@ -198,7 +184,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
 
     // Delete existing members
     await pool.request()
-      .input('setId', sql.BigInt(), req.params.id)
+      .input('setId', sql.BigInt(), setId)
       .input('userId', sql.BigInt(), userId)
       .query(`DELETE FROM GearItemSetMember WHERE SetId = @setId AND SetId IN (SELECT Id FROM GearItemSet WHERE UserId = @userId)`);
     // Insert new members
@@ -206,7 +192,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
       const valuesClauses = Items.map((_, idx) => `(@setId, @gearId${idx})`).join(', ');
       const insertQuery = `INSERT INTO GearItemSetMember (SetId, GearId) VALUES ${valuesClauses}`;
 
-      const insertRequest = pool.request().input('setId', sql.BigInt(), req.params.id);
+      const insertRequest = pool.request().input('setId', sql.BigInt(), setId);
       Items.forEach((gearId, idx) => {
         insertRequest.input(`gearId${idx}`, sql.BigInt(), gearId);
       });
