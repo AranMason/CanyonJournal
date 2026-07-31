@@ -61,7 +61,7 @@ const GearHistoryPage: React.FC = () => {
         });
     }, [idParam]);
 
-    return <PageTemplate pageTitle={t('gear.itemPage.title', { context: 'rope'})} isAuthRequired={true} isLoading={isLoading}>
+    return <PageTemplate pageTitle={t('gear.itemPage.title', { context: 'rope' })} isAuthRequired={true} isLoading={isLoading}>
         <RopeServiceModal
             ropeId={idParam ?? 0}
             open={isServiceModalOpen}
@@ -79,7 +79,7 @@ const GearHistoryPage: React.FC = () => {
                 component="button"
                 underline="hover"
                 color="primary"
-                onClick={() => navigate("/settings/gear?tab=1")}
+                onClick={() => navigate("/settings/gear?tab=2")}
                 sx={{ cursor: 'pointer' }}
             >
                 {t('gear.title')}

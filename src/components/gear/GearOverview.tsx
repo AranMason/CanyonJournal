@@ -7,6 +7,7 @@ import {
 import GearTable from './GearTable';
 import RopeTable from './RopeTable';
 import { useParams, useSearchParams } from 'react-router-dom';
+import GearSetTable from './GearSetTable';
 
 const GearOverview: React.FC = () => {
 
@@ -16,7 +17,7 @@ const GearOverview: React.FC = () => {
 
   useMemo(() => {
     const tab = searchParams.get('tab')
-    if(!tab) {
+    if (!tab) {
       return;
     }
     const paramTab = parseInt(tab)
@@ -30,12 +31,14 @@ const GearOverview: React.FC = () => {
 
   return (
     <>
-    <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
-      <Tab label="Gear" />
-      <Tab label="Ropes" />
-    </Tabs>
-    {activeTab === 0 && <Box sx={{ mb: 4 }}><GearTable /></Box>}
-    {activeTab === 1 && <Box sx={{ mb: 4 }}><RopeTable /></Box>}
+      <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
+        <Tab label="Gear" />
+        <Tab label="Gear Sets" />
+        <Tab label="Ropes" />
+      </Tabs>
+      {activeTab === 0 && <Box sx={{ mb: 4 }}><GearTable /></Box>}
+      {activeTab === 1 && <Box sx={{ mb: 4 }}><GearSetTable /></Box>}
+      {activeTab === 2 && <Box sx={{ mb: 4 }}><RopeTable /></Box>}
     </>
   );
 };

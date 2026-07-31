@@ -1,4 +1,4 @@
-import { GearItem, GearServiceHistoryItem, RopeItem, RopeServiceHistoryItem } from '../types/types';
+import { GearItem, GearItemSet, GearServiceHistoryItem, RopeItem, RopeServiceHistoryItem } from '../types/types';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { apiFetch } from '../utils/api';
 
@@ -15,6 +15,8 @@ var loadPromiseForGearDescents: Record<number, Promise<CanyonRecord[]>> = {};
 // Rope
 var loadPromiseForRopeServices: Record<number, Promise<RopeServiceHistoryItem[]>> = {};
 var loadPromiseForRopeDescents: Record<number, Promise<CanyonRecord[]>> = {};
+// Gear Sets
+var loadPromiseForGearSets: Promise<GearItemSet[]> | null = null;
 
 export function loadGearHistory(gearId: number): Promise<GearServiceHistoryItem[]> {
   if (!loadPromiseForGearServices[gearId]) {
@@ -24,6 +26,14 @@ export function loadGearHistory(gearId: number): Promise<GearServiceHistoryItem[
     });
   }
   return loadPromiseForGearServices[gearId];
+}
+
+export function loadGearSets(): Promise<GearItemSet[]> {
+
+  loadPromiseForGearSets ??= apiFetch<GearItemSet[]>('/api/equipment/gear/sets', {
+    method: 'GET'
+  })
+  return loadPromiseForGearSets;
 }
 
 export function loadGearDescents(gearId: number): Promise<CanyonRecord[]> {
@@ -70,21 +80,50 @@ export function invalidate(): void {
   loadPromiseForGearServices = {};
   loadPromiseForGearDescents = {};
   loadPromiseForRopeServices = {};
-  loadPromiseForRopeDescents = {}
+  loadPromiseForRopeDescents = {};
+  invalidateGearSets();
+}
+
+export function invalidateGearSets(): void {
+  loadPromiseForGearSets = null;
 }
 
 export async function addRope(rope: RopeItem): Promise<void> {
   await apiFetch<void>('/api/equipment/rope', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(rope),
-      });
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(rope),
+  });
 }
 
 export async function addGear(gear: GearItem): Promise<void> {
   await apiFetch<void>('/api/equipment/gear', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(gear),
-      });
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gear),
+  });
 }
+
+export async function updateGearSet(gearSet: GearItemSet) {
+  await apiFetch(`/api/equipment/gear/sets/${gearSet.Id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gearSet)
+  })
+}
+
+export async function createGearSet(gearSet: GearItemSet) {
+  await apiFetch(`/api/equipment/gear/sets`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gearSet)
+  })
+}
+
+export async function deleteGearSet(gearSet: GearItemSet) {
+  await apiFetch(`/api/equipment/gear/sets/${gearSet.Id}`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' }
+  })
+}
+

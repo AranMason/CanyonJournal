@@ -206,23 +206,23 @@
     "identifier": "Identifier",
     "table": {
       "item": {
-        "title":"Item"
+        "title": "Item"
       },
       "rope_size": {
-        "title":"Size",
+        "title": "Size",
         "cell_metres": "{{length}} m ({{diameter}} mm)",
         "cell_feet": "{{length}} ft ({{diameter}} mm)"
       },
       "weight": {
-        "title":"Weight",
+        "title": "Weight",
         "cell": "{{weight}} g",
         "cellSubtext": "{{weightPerUnit}} g/m"
       },
       "notes": {
-        "title":"$t(common:fields.notes)"
+        "title": "$t(common:fields.notes)"
       },
       "date_acquired": {
-        "title":"$t(gear.inServiceDate)"
+        "title": "$t(gear.inServiceDate)"
       }
     },
     "serviceType_0": "Other",
@@ -274,6 +274,16 @@
         "lastServiceDate": "Last Service Date",
         "weight": "Weight"
       }
+    },
+    "gearSet": {
+      "title": "Gear Set",
+      "modalTitle_create": "Create Gear Set",
+      "modalTitle_edit": "Update Gear Set",
+      "modalTitle_select": "Select Gear Sets",
+      "tableHeader": "Gear Sets",
+      "setItems": "Gear Items",
+      "emptyTable": "No Gear Sets",
+      "namePlaceholder": "Gear Set Name"
     }
   },
   "report": {
@@ -325,4 +335,3 @@
     }
   }
 }
-
