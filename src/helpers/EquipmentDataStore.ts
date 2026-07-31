@@ -120,8 +120,8 @@ export async function createGearSet(gearSet: GearItemSet) {
   })
 }
 
-export async function deleteGearSet(gearSet: GearItemSet) {
-  await apiFetch(`/api/equipment/gear/sets/${gearSet.Id}`, {
+export async function deleteGearSet(gearSetId: number) {
+  await apiFetch(`/api/equipment/gear/sets/${gearSetId}`, {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' }
   })

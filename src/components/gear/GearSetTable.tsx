@@ -7,11 +7,17 @@ import RowActions from '../RowActions';
 import GearSetModal from './GearSetModal';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
+import ConfirmDeleteModal from '../ConfirmDeleteModal';
+
+function sortGearSets(a: GearItemSet, b: GearItemSet) {
+    return a.Name.localeCompare(b.Name)
+}
 
 const GearSetTable: React.FC = () => {
     const { t } = useTranslation('translation');
     const [isLoading, setIsLoading] = useState(true);
 
+    const [gearSetToDelete, setGearSetToDelete] = useState<GearItemSet | null>(null);
     const [gearSetModalIsOpen, setGearSetModalIsOpen] = useState(false);
     const [gearSetModal, setGearSetModal] = useState<GearItemSet | null>(null);
     const [gearData, setGearSetData] = useState<GearItemSet[]>()
@@ -22,7 +28,7 @@ const GearSetTable: React.FC = () => {
         setIsLoading(true);
         Promise.all([EquipmentDataStore.load(), EquipmentDataStore.loadGearSets()])
             .then(([equipment, sets]) => {
-                setGearSetData(sets);
+                setGearSetData(sets.sort(sortGearSets));
                 const equipmentById: { [key in number]: GearItem } = {}
                 equipment.gear.forEach(element => {
                     equipmentById[element.Id] = element;
@@ -52,17 +58,25 @@ const GearSetTable: React.FC = () => {
 
         // Reload Gear Sets
         EquipmentDataStore.invalidateGearSets();
-        EquipmentDataStore.loadGearSets().then(g => setGearSetData(g))
+        EquipmentDataStore.loadGearSets().then(g => setGearSetData(g.sort(sortGearSets)))
     }
 
-    async function deleteGearSet(gearSet: GearItemSet) {
-        await EquipmentDataStore.deleteGearSet(gearSet);
+    async function deleteGearSet() {
+        if (gearSetToDelete === null) return;
+        await EquipmentDataStore.deleteGearSet(gearSetToDelete.Id);
 
+        setGearSetToDelete(null);
         EquipmentDataStore.invalidateGearSets();
         EquipmentDataStore.loadGearSets().then(g => setGearSetData(g))
     }
 
     return <Box>
+        <ConfirmDeleteModal
+            open={gearSetToDelete != null}
+            title={t('gear.gearSet.confirmDeleteTitle', { gearSet: gearSetToDelete?.Name })}
+            message={t('gear.gearSet.confirmDeleteMessage', { gearSet: gearSetToDelete?.Name })}
+            onConfirm={() => deleteGearSet()}
+            onCancel={() => setGearSetToDelete(null)} />
         <GearSetModal isOpen={gearSetModalIsOpen} gearSet={gearSetModal} actionLabel={gearSetModal ? t('common:actions.save') : t('common:actions.create')} onSave={saveGearSet} onClose={closeModal} />
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
             <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => openModal(null)} startIcon={<AddIcon />}>{t('common:actions.create')}</Button>
@@ -94,8 +108,7 @@ const GearSetTable: React.FC = () => {
                                 </Box>
                             </TableCell>
                             <TableCell sx={{ minWidth: 100 }}>
-                                {/* onDelete={() => deleteGearSet(i)} */}
-                                <RowActions onEdit={() => openModal(i)} />
+                                <RowActions onEdit={() => openModal(i)} onDelete={() => setGearSetToDelete(i)} />
                             </TableCell>
                         </TableRow>) :
                             <TableRow>

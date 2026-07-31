@@ -296,6 +296,8 @@
       "modalTitle_select": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
       "setItems": "$t(common:terms.gearSet.upper, {\"count\": 1}) Items",
       "emptyTable": "No $t(common:terms.gearSet.upper, {\"count\": 2}) - Click create to make a new set of $t(common:terms.gear.upper, {\"count\": 1})",
+      "confirmDeleteTitle": "Delete \"{{gearSet}}\" $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "confirmDeleteMessage": "Are you sure you want to delete the \"{{gearSet}}\" $t(common:terms.gearSet.upper, {\"count\": 1})",
       "modalErrors": {
         "name": "Name is required",
         "selectedGear": "You must select at least one piece of $t(common:terms.gear.upper,  {\"count\": 1})"
