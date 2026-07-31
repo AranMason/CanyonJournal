@@ -13,6 +13,13 @@ const changes: { date: Date, items: string[] }[] = [
     {
         date: new Date('2026-07-21'),
         items: ['Added Change Log', 'Improved navigation of Gear and Rope pages', 'Added breadcrumb navigation to Canyon, Goals, and Equipment sub-pages']
+    },
+    {
+        date: new Date('2026-07-31'),
+        items: [
+            'Added Gear Sets Tab to the Equipment Page - Enabling you to group related gear together',
+            'Added Gear Sets to Record Page - You can now chose gear sets when creating or editing a trip record'
+        ]
     }
 ];
 
@@ -28,7 +35,7 @@ const ChangeLogModal: React.FC<ChangeLogModalProps> = ({ open, onClose }) => {
         actions={<Button onClick={onClose} variant="contained">{t('actions.close')}</Button>}
     >
         <DialogContent>
-            {changes.map((item, idx) => {
+            {changes.sort((a, b) => b.date.getTime() - a.date.getTime()).map((item, idx) => {
                 return <><Typography key={idx}>
                     {item.date.toLocaleDateString()}
                 </Typography>

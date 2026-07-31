@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Tab,
@@ -6,9 +6,12 @@ import {
 } from '@mui/material';
 import GearTable from './GearTable';
 import RopeTable from './RopeTable';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import GearSetTable from './GearSetTable';
+import { useTranslation } from 'react-i18next';
 
 const GearOverview: React.FC = () => {
+  const { t } = useTranslation('translation');
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -16,26 +19,30 @@ const GearOverview: React.FC = () => {
 
   useMemo(() => {
     const tab = searchParams.get('tab')
-    if(!tab) {
+    if (!tab) {
       return;
     }
     const paramTab = parseInt(tab)
     setActiveTab(paramTab)
   }, [])
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
     setSearchParams({ tab: newValue.toString() });
   };
 
   return (
     <>
-    <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
-      <Tab label="Gear" />
-      <Tab label="Ropes" />
-    </Tabs>
-    {activeTab === 0 && <Box sx={{ mb: 4 }}><GearTable /></Box>}
-    {activeTab === 1 && <Box sx={{ mb: 4 }}><RopeTable /></Box>}
+      <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
+        <Tab label={t('gear.tabs.gear')} />
+        <Tab label={t('gear.tabs.gearSet')} />
+        <Tab label={t('gear.tabs.rope')} />
+      </Tabs>
+      <Box sx={{ mb: 4 }}>
+        {activeTab === 0 && <GearTable />}
+        {activeTab === 1 && <GearSetTable />}
+        {activeTab === 2 && <RopeTable />}
+      </Box>
     </>
   );
 };

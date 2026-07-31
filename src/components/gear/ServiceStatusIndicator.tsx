@@ -47,7 +47,7 @@ const getColor = (status: GearServiceStatus | null): string => {
     case GearServiceStatus.Bad:
       return "error.main";
     case GearServiceStatus.Retired:
-      return "text.disabled";
+      return "grey.800";
     default:
       return "grey.500";
   }

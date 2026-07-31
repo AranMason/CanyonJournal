@@ -11,6 +11,9 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if(!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     const {
       name,
       category,
@@ -82,6 +85,9 @@ router.put('/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if(!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     const id = Number(req.params.id);
     const {
       name,
@@ -138,6 +144,9 @@ router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if(!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM GearItems WHERE Id=@id AND UserId=@userId');
     res.status(204).end();
@@ -175,6 +184,9 @@ router.get('/:id/service', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if(!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
     const gearId = Number(req.params.id);
 
     const historyRes = await pool.request()

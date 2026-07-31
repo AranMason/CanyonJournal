@@ -63,3 +63,9 @@ export interface RopeItem extends BaseItem {
   Unit: Unit;
   ParentRopeItemsId?: number;
 }
+
+export interface GearItemSet {
+  Id: number;
+  Name: string;
+  Items: number[]
+}

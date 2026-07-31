@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader } from '@mui/material';
-import { GearItem, RopeItem } from '../../types/types';
+import { Box, Chip, MenuItem, Select, InputLabel, FormControl, ListSubheader, Button, DialogContent, DialogActions, ListItem, List, Checkbox } from '@mui/material';
+import { GearItem, GearItemSet, RopeItem } from '../../types/types';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useTranslation } from 'react-i18next';
 import ServiceStatusIndicator from './ServiceStatusIndicator';
+import AppModal from '../AppModal';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -13,15 +14,21 @@ interface GearRopeSelectorProps {
 }
 
 export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRopeIds, setSelectedRopeIds, selectedGearIds, setSelectedGearIds }) => {
+  const [isGearSetOpen, setIsGearSetOpen] = useState(false);
   const [ropes, setRopes] = useState<RopeItem[]>([]);
   const [gear, setGear] = useState<GearItem[]>([]);
+  const [gearSets, setGearSets] = useState<GearItemSet[]>([]);
+  const [selectedGearSets, setSelectedGearSets] = useState<GearItemSet[]>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
-    EquipmentDataStore.load().then(data => {
-      setRopes(data.ropes || []);
-      setGear(data.gear || []);
-    });
+
+    Promise.all([EquipmentDataStore.load(), EquipmentDataStore.loadGearSets()])
+      .then(([data, sets]) => {
+        setRopes(data.ropes || []);
+        setGear(data.gear || []);
+        setGearSets(sets);
+      })
   }, []);
 
   return (
@@ -44,8 +51,8 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
                     key={id}
                     label={(
                       <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
-                        <span>{rope.Name}</span>
                         <ServiceStatusIndicator isRetired={rope.IsRetired} statusCode={rope.LatestStatusCode} />
+                        <span>{rope.Name}</span>
                       </Box>
                     )}
                   />
@@ -82,8 +89,8 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
                     key={id}
                     label={(
                       <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
-                        <span>{g.Name}</span>
                         <ServiceStatusIndicator isRetired={g.IsRetired} statusCode={g.LatestStatusCode} />
+                        <span>{g.Name}</span>
                       </Box>
                     )}
                   />
@@ -111,6 +118,38 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
           ])}
         </Select>
       </FormControl>
+      {gearSets && <>
+        <AppModal open={isGearSetOpen} onClose={() => setIsGearSetOpen(false)} title={t('translation:gear.gearSet.modalTitle_select')}>
+          <DialogContent>
+            <List>
+              {gearSets.map(s => {
+                const isChecked = selectedGearSets.includes(s)
+
+                return <ListItem key={s.Id} secondaryAction={<Checkbox onClick={() => {
+                  if (isChecked) {
+                    const newChecked = selectedGearSets.filter(f => f.Id != s.Id);
+                    setSelectedGearSets(newChecked);
+                  } else {
+                    setSelectedGearSets([...selectedGearSets, s])
+                  }
+                }} checked={isChecked} />}>{s.Name}</ListItem>
+              })}
+            </List>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setIsGearSetOpen(false)}>{t('common:actions.close')}</Button>
+            <Button variant='contained' onClick={() => {
+              const gearIdsFromSets = selectedGearSets.flatMap(s => s.Items);
+              // Remove Duplicates
+              const newList = [... new Set([...selectedGearIds, ...gearIdsFromSets])];
+              setSelectedGearIds(newList);
+              setIsGearSetOpen(false);
+              setSelectedGearSets([]);
+            }}>{t('common:actions.add')}</Button>
+          </DialogActions>
+        </AppModal>
+        <Button variant='outlined' disabled={!gearSets?.length} onClick={() => setIsGearSetOpen(true)}>{t('translation:record.selectGearSetBtn')}</Button>
+      </>}
     </>
   );
 };

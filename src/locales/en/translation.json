@@ -59,7 +59,15 @@
     "canyonRequired": "A $t(common:terms.canyon.lower, {\"count\": 1}) must be selected",
     "createCanyon": "Create $t(common:terms.canyon.upper, {\"count\": 1})",
     "favourites": "Favourites",
-    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})"
+    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
+    "selectGearSetBtn": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
+    "formErrors": {
+      "maxDate": "Cannot be in the future",
+      "waterLevel": "Invalid water level",
+      "canyonRequired": "A $t(common:terms.canyon.lower, {\"count\": 1}) must be selected",
+      "teamSizeMin": "Team Size must be at least 1",
+      "teamSize": "Team Size is Required"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -188,6 +196,7 @@
     "hideAdvancedMode": "Hide Additional Fields",
     "addServiceToolTip": "Add Service Record",
     "model": "Model",
+    "makeAndModel": "{{make}} {{model}}",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
     "length": "$t(common:fields.length) (m)",
@@ -206,23 +215,23 @@
     "identifier": "Identifier",
     "table": {
       "item": {
-        "title":"Item"
+        "title": "Item"
       },
       "rope_size": {
-        "title":"Size",
+        "title": "Size",
         "cell_metres": "{{length}} m ({{diameter}} mm)",
         "cell_feet": "{{length}} ft ({{diameter}} mm)"
       },
       "weight": {
-        "title":"Weight",
+        "title": "Weight",
         "cell": "{{weight}} g",
         "cellSubtext": "{{weightPerUnit}} g/m"
       },
       "notes": {
-        "title":"$t(common:fields.notes)"
+        "title": "$t(common:fields.notes)"
       },
       "date_acquired": {
-        "title":"$t(gear.inServiceDate)"
+        "title": "$t(gear.inServiceDate)"
       }
     },
     "serviceType_0": "Other",
@@ -273,6 +282,23 @@
         "name": "Name",
         "lastServiceDate": "Last Service Date",
         "weight": "Weight"
+      }
+    },
+    "tabs": {
+      "gear": "$t(common:terms.gear.upper, {\"count\": 1})",
+      "gearSet": "$t(common:terms.gearSet.upper, {\"count\": 1})",
+      "rope": "$t(common:terms.rope.upper, {\"count\": 1})"
+    },
+    "gearSet": {
+      "title": "$t(common:terms.gearSet.upper, {\"count\": 2})",
+      "modalTitle_create": "Create $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "modalTitle_edit": "Update $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "modalTitle_select": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
+      "setItems": "$t(common:terms.gearSet.upper, {\"count\": 1}) Items",
+      "emptyTable": "No $t(common:terms.gearSet.upper, {\"count\": 2}) - Click create to make a new set of $t(common:terms.gear.upper, {\"count\": 1})",
+      "modalErrors": {
+        "name": "Name is required",
+        "selectedGear": "You must select at least one piece of $t(common:terms.gear.upper,  {\"count\": 1})"
       }
     }
   },
@@ -325,4 +351,3 @@
     }
   }
 }
-

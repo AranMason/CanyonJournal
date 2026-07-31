@@ -36,6 +36,12 @@
       "lower_one": "gear",
       "lower_other": "gear"
     },
+    "gearSet": {
+      "upper_one": "Gear Set",
+      "upper_other": "Gear Sets",
+      "lower_one": "gear set",
+      "lower_other": "gear sets"
+    },
     "journal": {
       "upper_one": "Journal",
       "upper_other": "Journals",

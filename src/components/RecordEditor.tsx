@@ -54,21 +54,21 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
         Promise.all([
             CanyonDataStore.load(),
-             UserCanyonDataStore.load(),
-              TagsDataStore.load()
-            ]).then(([baseCanyons, userCanyons, tags]) => {
+            UserCanyonDataStore.load(),
+            TagsDataStore.load()
+        ]).then(([baseCanyons, userCanyons, tags]) => {
 
             setAvailableTags(tags.map(t => t.Name));
 
             var canyonList: CanyonListEntry[] = [
                 ...baseCanyons.filter(c => c.IsVerified).map((c): CanyonListEntry => ({
-                    ...c, 
+                    ...c,
                     Key: canyonKey(c.Id ?? -1),
                     DetailUrl: "",
                     Descents: 0
                 })),
                 ...userCanyons.map((c): CanyonListEntry => ({
-                    ...c, 
+                    ...c,
                     IsVerified: true,
                     Key: userCanyonKey(c.Id),
                     DetailUrl: "",
@@ -84,7 +84,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
                 var currentCanyon: CanyonListEntry | undefined = undefined;
 
-                if(initialValues.CanyonId != null) {
+                if (initialValues.CanyonId != null) {
                     var key = canyonKey(initialValues.CanyonId);
                     currentCanyon = canyonList.find(c => c.Key === key);
                 }
@@ -93,15 +93,15 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                     currentCanyon = canyonList.find(c => c.Key === key);
                 }
 
-                if(currentCanyon) {
+                if (currentCanyon) {
                     setSelectedDisplay({
-                    name: currentCanyon.Name,
-                    isVerified: currentCanyon.IsVerified,
-                    canyon: currentCanyon
-                });
-                                
+                        name: currentCanyon.Name,
+                        isVerified: currentCanyon.IsVerified,
+                        canyon: currentCanyon
+                    });
+
+                }
             }
-        }
 
             // const userCanyonEntries: CanyonListEntry[] = userCanyons.map(uc => ({
 
@@ -114,101 +114,101 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
         CanyonId: undefined, UserCanyonId: undefined, WaterLevel: WaterLevel.Unknown
     };
 
-    return<>
+    return <>
         <Box maxWidth={{ xs: '100%', sm: 480, md: 600 }} mx="auto" mt={4}>
-                <Formik
-                    initialValues={initialFormValues}
-                    validationSchema={Yup.object().shape({
-                        Date: Yup.string().test("maxDate", "Cannot be in the future", val => !val || Date.parse(val) < Date.now()).required('Date is required'),
-                        TeamSize: Yup.number().min(1, 'Team size must be at least 1').required('Team size is required'),
-                        Comments: Yup.string().nullable(),
-                        WaterLevel: Yup.number().min(0, 'Invalid water level').max(5, 'Invalid water level'),
-                        CanyonId: Yup.number().nullable(),
-                        UserCanyonId: Yup.number().nullable(),
-                    }).test('canyon-required', 'A canyon must be selected', (values) =>
-                        Boolean(values.CanyonId) || Boolean(values.UserCanyonId)
-                    )}
-                    onSubmit={async (values, { setSubmitting }) => {
-                        try {
-                            await apiFetch('/api/record', {
-                                method: isEdit ? 'PATCH' : 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    ...values,
-                                    RopeIds: values.RopeIds,
-                                    GearIds: values.GearIds,
-                                    TagNames: selectedTagNames,
-                                    CanyonId: values.CanyonId || null,
-                                    UserCanyonId: values.UserCanyonId || null,
-                                }),
-                            });
-                            TagsDataStore.invalidate();
-                            setSnackbarOpen(true);
-                            const canyon = selectedDisplay?.canyon;
-                            const { canyonId } = canyon ? parseCanyonKey(canyon.Key) : { canyonId: undefined };
-                            navigate(canyonId ? `/journal?reportCanyonId=${canyonId}` : '/journal');
-                        } catch (err: any) {
-                            if (err.message !== 'Unauthorized') {
-                                alert(err.message || 'Failed to record canyon.');
-                            }
-                        } finally {
-                            setSubmitting(false);
+            <Formik
+                initialValues={initialFormValues}
+                validationSchema={Yup.object().shape({
+                    Date: Yup.string().test("maxDate", t('translation:record.formErrors.maxDate'), val => !val || Date.parse(val) < Date.now()).required('Date is required'),
+                    TeamSize: Yup.number().min(1, t('translation:record.formErrors.teamSizeMin')).required(t('translation:record.formErrors.teamSize')),
+                    Comments: Yup.string().nullable(),
+                    WaterLevel: Yup.number().min(0, t('translation:record.formErrors.waterLevel')).max(5, t('translation:record.formErrors.waterLevel')),
+                    CanyonId: Yup.number().nullable(),
+                    UserCanyonId: Yup.number().nullable(),
+                }).test('canyon-required', t('translation:record.formErrors.canyonRequired'), (values) =>
+                    Boolean(values.CanyonId) || Boolean(values.UserCanyonId)
+                )}
+                onSubmit={async (values, { setSubmitting }) => {
+                    try {
+                        await apiFetch('/api/record', {
+                            method: isEdit ? 'PATCH' : 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                ...values,
+                                RopeIds: values.RopeIds,
+                                GearIds: values.GearIds,
+                                TagNames: selectedTagNames,
+                                CanyonId: values.CanyonId || null,
+                                UserCanyonId: values.UserCanyonId || null,
+                            }),
+                        });
+                        TagsDataStore.invalidate();
+                        setSnackbarOpen(true);
+                        const canyon = selectedDisplay?.canyon;
+                        const { canyonId } = canyon ? parseCanyonKey(canyon.Key) : { canyonId: undefined };
+                        navigate(canyonId ? `/journal?reportCanyonId=${canyonId}` : '/journal');
+                    } catch (err: any) {
+                        if (err.message !== 'Unauthorized') {
+                            alert(err.message || 'Failed to record canyon.');
                         }
-                    }}
-                >
-                    {({ errors, touched, handleChange, handleBlur, values, setFieldValue, setFieldTouched, isSubmitting }) => {
+                    } finally {
+                        setSubmitting(false);
+                    }
+                }}
+            >
+                {({ errors, touched, handleChange, handleBlur, values, setFieldValue, setFieldTouched, isSubmitting }) => {
 
-                        const handleCanyonSelect = (canyon: CanyonListEntry) => {
+                    const handleCanyonSelect = (canyon: CanyonListEntry) => {
 
-                            const { canyonId, userCanyonId } = parseCanyonKey(canyon.Key);
-                            setFieldValue('CanyonId', canyonId);
-                            setFieldValue('UserCanyonId', userCanyonId);
-                            setSelectedDisplay({ name: canyon.Name, isVerified: canyonId !== undefined, canyon });
-                            setSearchFilter('');
-                        };
+                        const { canyonId, userCanyonId } = parseCanyonKey(canyon.Key);
+                        setFieldValue('CanyonId', canyonId);
+                        setFieldValue('UserCanyonId', userCanyonId);
+                        setSelectedDisplay({ name: canyon.Name, isVerified: canyonId !== undefined, canyon });
+                        setSearchFilter('');
+                    };
 
-                        const handleAddCanyonSubmit = async (values: CanyonModalFormValues) => {
-                            const newCanyon = await apiFetch<UserCanyon>('/api/user-canyons', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(mapCanyonFormToApiBody(values)),
-                            });
-                            setFieldValue('UserCanyonId', newCanyon.Id);
-                            setFieldValue('CanyonId', undefined);
-                            setSelectedDisplay({ name: newCanyon.Name, isVerified: false });
-                            UserCanyonDataStore.invalidate();
-                        };
+                    const handleAddCanyonSubmit = async (values: CanyonModalFormValues) => {
+                        const newCanyon = await apiFetch<UserCanyon>('/api/user-canyons', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(mapCanyonFormToApiBody(values)),
+                        });
+                        setFieldValue('UserCanyonId', newCanyon.Id);
+                        setFieldValue('CanyonId', undefined);
+                        setSelectedDisplay({ name: newCanyon.Name, isVerified: false });
+                        UserCanyonDataStore.invalidate();
+                    };
 
-                        const lowerFilter = searchFilter.trim().toLowerCase();
-                        const matchesFilter = (name: string, url?: string) =>
-                            !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
+                    const lowerFilter = searchFilter.trim().toLowerCase();
+                    const matchesFilter = (name: string, url?: string) =>
+                        !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
 
-                        const favouriteCanyons = canyons
-                            .filter(c => c.IsFavourite && matchesFilter(c.Name, c.Url))
-                            .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
+                    const favouriteCanyons = canyons
+                        .filter(c => c.IsFavourite && matchesFilter(c.Name, c.Url))
+                        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
-                        const otherCanyons = canyons
-                            .filter(c => !c.IsFavourite && (c.IsVerified) && matchesFilter(c.Name, c.Url))
-                            .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
+                    const otherCanyons = canyons
+                        .filter(c => !c.IsFavourite && (c.IsVerified) && matchesFilter(c.Name, c.Url))
+                        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
-                        const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
+                    const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
 
-                        return (
-                            <Form>
-                                {/* Create Custom Canyon Modal */}
-                                <AddCanyonModal
-                                    canyon={null}
-                                    open={createDialogOpen}
-                                    onClose={() => setCreateDialogOpen(false)}
-                                    title={t('settings.newCanyon')}
-                                    showNotes
-                                    onSubmit={handleAddCanyonSubmit}
-                                />
+                    return (
+                        <Form>
+                            {/* Create Custom Canyon Modal */}
+                            <AddCanyonModal
+                                canyon={null}
+                                open={createDialogOpen}
+                                onClose={() => setCreateDialogOpen(false)}
+                                title={t('settings.newCanyon')}
+                                showNotes
+                                onSubmit={handleAddCanyonSubmit}
+                            />
 
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('common:terms.canyon.upper', { count: 1 })}</Typography>
+                            <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('common:terms.canyon.upper', { count: 1 })}</Typography>
 
-                                {selectedDisplay ? (
-                                    <>
+                            {selectedDisplay ? (
+                                <>
                                     <Box border={1} borderColor="divider" borderRadius={1} p={2} mb={2}>
                                         <Box display="flex" justifyContent="space-between" alignItems="center">
                                             <Box display="flex" alignItems="center" gap={0.5}>
@@ -230,224 +230,224 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 />
                                             </Box>
                                         )}
-                                        
+
                                     </Box>
                                     <Box display="flex" gap={1} mt={1}>
-                                            <Button size="small" startIcon={<EditIcon />} onClick={() => {
-                                                setFieldValue('CanyonId', undefined);
-                                                setFieldValue('UserCanyonId', undefined);
-                                                setSelectedDisplay(null);
-                                                setSearchFilter('');
-                                            }}>
+                                        <Button size="small" startIcon={<EditIcon />} onClick={() => {
+                                            setFieldValue('CanyonId', undefined);
+                                            setFieldValue('UserCanyonId', undefined);
+                                            setSelectedDisplay(null);
+                                            setSearchFilter('');
+                                        }}>
                                             {t('record.changeCanyon')}
-                                            </Button>
-                                        </Box>
-                                    </>
-                                ) : (
-                                    <Box mb={2}>
-                                        {isCanyonsLoading ? (
-                                            <Box display="flex" justifyContent="center" p={3}><CircularProgress /></Box>
-                                        ) : (
-                                            <>
-                                                <TextField
-                                                    fullWidth
-                                                    placeholder={t('record.searchByName')}
-                                                    value={searchFilter}
-                                                    onChange={(e) => setSearchFilter(e.target.value)}
-                                                    size="small"
-                                                    sx={{ mb: 1 }}
-                                                    error={canyonError}
-                                                    helperText={canyonError ? t('record.canyonRequired') : ''}
-                                                />
-                                                <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
-                                                    {favouriteCanyons.length > 0 && (
-                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.favourites')}</ListSubheader>
-                                                    )}
-                                                    {favouriteCanyons.map((canyon) => (
-                                                        <ListItem key={canyon.Key} disablePadding>
-                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
-                                                                <ListItemText
-                                                                    primary={
-                                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                                            <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
-                                                                                <span>{canyon.Name}</span>
-                                                                            </Box>
-                                                                            
-                                                                            <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
-                                                                        </Box>
-                                                                    }
-                                                                    secondary={
-                                                                        <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
-                                                                    }
-                                                                />
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    ))}
-                                                    {otherCanyons.length > 0 && (
-                                                        <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.allCanyons')}</ListSubheader>
-                                                    )}
-                                                    {otherCanyons.map(canyon => (
-                                                        <ListItem key={canyon.Key} disablePadding>
-                                                            <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
-                                                                <ListItemText
-                                                                    primary={
-                                                                        <Box display="flex" justifyContent="space-between" alignItems="center">
-                                                                            <Box display="flex" alignItems="center" gap={0.5}>
-                                                                                <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
-                                                                                
-                                                                                <span>{canyon.Name}</span>
-                                                                            </Box>
-                                                                            <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
-                                                                        </Box>
-                                                                    }
-                                                                    secondary={
-                                                                        <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
-                                                                    }
-                                                                />
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    ))}
-                                                </List>
-                                                <Button
-                                                    variant="outlined"
-                                                    startIcon={<AddIcon />}
-                                                    fullWidth
-                                                    sx={{ mt: 2 }}
-                                                    onClick={() => setCreateDialogOpen(true)}
-                                                >
-                                                    {t('record.createCanyon')}
-                                                </Button>
-                                            </>
-                                        )}
+                                        </Button>
                                     </Box>
-                                )}
+                                </>
+                            ) : (
+                                <Box mb={2}>
+                                    {isCanyonsLoading ? (
+                                        <Box display="flex" justifyContent="center" p={3}><CircularProgress /></Box>
+                                    ) : (
+                                        <>
+                                            <TextField
+                                                fullWidth
+                                                placeholder={t('record.searchByName')}
+                                                value={searchFilter}
+                                                onChange={(e) => setSearchFilter(e.target.value)}
+                                                size="small"
+                                                sx={{ mb: 1 }}
+                                                error={canyonError}
+                                                helperText={canyonError ? t('record.canyonRequired') : ''}
+                                            />
+                                            <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
+                                                {favouriteCanyons.length > 0 && (
+                                                    <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.favourites')}</ListSubheader>
+                                                )}
+                                                {favouriteCanyons.map((canyon) => (
+                                                    <ListItem key={canyon.Key} disablePadding>
+                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                            <ListItemText
+                                                                primary={
+                                                                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                                            <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
+                                                                            <span>{canyon.Name}</span>
+                                                                        </Box>
 
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.descentInformation')}</Typography>                               
-                                <TextField
-                                    label={t('record.date')}
-                                    type="date"
-                                    name="Date"
-                                    value={values.Date}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                    required
-                                    margin="normal"
-                                    InputLabelProps={{ shrink: true }}
-                                    error={touched.Date && Boolean(errors.Date)}
-                                    helperText={touched.Date && errors.Date}
-                                />
-                                <TextField
-                                    label={t('record.teamSize')}
-                                    type="number"
-                                    name="TeamSize"
-                                    value={values.TeamSize}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                    required
-                                    margin="normal"
-                                    inputProps={{ min: 1 }}
-                                    error={touched.TeamSize && Boolean(errors.TeamSize)}
-                                    helperText={touched.TeamSize && errors.TeamSize}
-                                />
-                                <Box sx={{ mb: 2, mt: 2 }}>
-                                    <IconPicker
-                                        label={t('record.waterLevel')}
-                                        value={values.WaterLevel ?? 0}
-                                        onChange={v => setFieldValue('WaterLevel', v)}
-                                        icon={WaterDropIcon}
-                                        activeColor="info"
-                                    />
-                                </Box>
-                                <Box sx={{ mb: 2, mt: 2 }}>
-                                    <IconPicker
-                                        label={t('record.descentRating')}
-                                        value={values.TripRating ?? 0}
-                                        onChange={v => setFieldValue('TripRating', v)}
-                                        icon={StarIcon}
-                                        activeColor="secondary"
-                                    />
-                                </Box>
-                                <TextField
-                                    label={t('common:fields.comments')}
-                                    name="Comments"
-                                    value={values.Comments}
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    fullWidth
-                                    margin="normal"
-                                    multiline
-                                    minRows={3}
-                                    error={touched.Comments && Boolean(errors.Comments)}
-                                    helperText={touched.Comments && errors.Comments}
-                                />
-                                <Autocomplete
-                                    multiple
-                                    freeSolo
-                                    options={availableTags}
-                                    value={selectedTagNames}
-                                    onChange={(_, newValue) => setSelectedTagNames(newValue as string[])}
-                                    renderTags={(value, getTagProps) =>
-                                        value.map((option, index) => (
-                                            <Chip {...getTagProps({ index })} key={option} label={option} size="small" />
-                                        ))
-                                    }
-                                    renderInput={(params) => (
-                                        <TextField {...params} label={t('common:fields.tags')} placeholder={t('record.addTags')} margin="normal" />
+                                                                        <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
+                                                                    </Box>
+                                                                }
+                                                                secondary={
+                                                                    <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
+                                                                }
+                                                            />
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                ))}
+                                                {otherCanyons.length > 0 && (
+                                                    <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.allCanyons')}</ListSubheader>
+                                                )}
+                                                {otherCanyons.map(canyon => (
+                                                    <ListItem key={canyon.Key} disablePadding>
+                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                            <ListItemText
+                                                                primary={
+                                                                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                                            <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
+
+                                                                            <span>{canyon.Name}</span>
+                                                                        </Box>
+                                                                        <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
+                                                                    </Box>
+                                                                }
+                                                                secondary={
+                                                                    <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
+                                                                }
+                                                            />
+                                                        </ListItemButton>
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                            <Button
+                                                variant="outlined"
+                                                startIcon={<AddIcon />}
+                                                fullWidth
+                                                sx={{ mt: 2 }}
+                                                onClick={() => setCreateDialogOpen(true)}
+                                            >
+                                                {t('record.createCanyon')}
+                                            </Button>
+                                        </>
                                     )}
+                                </Box>
+                            )}
+
+                            <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.descentInformation')}</Typography>
+                            <TextField
+                                label={t('record.date')}
+                                type="date"
+                                name="Date"
+                                value={values.Date}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                fullWidth
+                                required
+                                margin="normal"
+                                InputLabelProps={{ shrink: true }}
+                                error={touched.Date && Boolean(errors.Date)}
+                                helperText={touched.Date && errors.Date}
+                            />
+                            <TextField
+                                label={t('record.teamSize')}
+                                type="number"
+                                name="TeamSize"
+                                value={values.TeamSize}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                fullWidth
+                                required
+                                margin="normal"
+                                inputProps={{ min: 1 }}
+                                error={touched.TeamSize && Boolean(errors.TeamSize)}
+                                helperText={touched.TeamSize && errors.TeamSize}
+                            />
+                            <Box sx={{ mb: 2, mt: 2 }}>
+                                <IconPicker
+                                    label={t('record.waterLevel')}
+                                    value={values.WaterLevel ?? 0}
+                                    onChange={v => setFieldValue('WaterLevel', v)}
+                                    icon={WaterDropIcon}
+                                    activeColor="info"
                                 />
-                                <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.gearAndRope')}</Typography>
-                                <Box display="flex" gap={2} flexDirection="column" mb={2}>
+                            </Box>
+                            <Box sx={{ mb: 2, mt: 2 }}>
+                                <IconPicker
+                                    label={t('record.descentRating')}
+                                    value={values.TripRating ?? 0}
+                                    onChange={v => setFieldValue('TripRating', v)}
+                                    icon={StarIcon}
+                                    activeColor="secondary"
+                                />
+                            </Box>
+                            <TextField
+                                label={t('common:fields.comments')}
+                                name="Comments"
+                                value={values.Comments}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                fullWidth
+                                margin="normal"
+                                multiline
+                                minRows={3}
+                                error={touched.Comments && Boolean(errors.Comments)}
+                                helperText={touched.Comments && errors.Comments}
+                            />
+                            <Autocomplete
+                                multiple
+                                freeSolo
+                                options={availableTags}
+                                value={selectedTagNames}
+                                onChange={(_, newValue) => setSelectedTagNames(newValue as string[])}
+                                renderTags={(value, getTagProps) =>
+                                    value.map((option, index) => (
+                                        <Chip {...getTagProps({ index })} key={option} label={option} size="small" />
+                                    ))
+                                }
+                                renderInput={(params) => (
+                                    <TextField {...params} label={t('common:fields.tags')} placeholder={t('record.addTags')} margin="normal" />
+                                )}
+                            />
+                            <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.gearAndRope')}</Typography>
+                            <Box display="flex" gap={2} flexDirection="column" mb={2}>
                                 <GearRopeSelector
                                     selectedRopeIds={values.RopeIds}
                                     setSelectedRopeIds={ids => setFieldValue('RopeIds', ids)}
                                     selectedGearIds={values.GearIds}
                                     setSelectedGearIds={ids => setFieldValue('GearIds', ids)}
                                 />
-                                </Box>
-                                
-                                <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
-                                    {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
-                                        {t('common:actions.cancel')}
-                                    </Button>}
-                                    <Button startIcon={submitString ? <SaveAsIcon/> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
-                                        {submitString || t('journal.createRecord')}
+                            </Box>
+
+                            <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} gap={2}>
+                                {isEdit && <Button type="button" variant="outlined" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => navigate("/journal")}>
+                                    {t('common:actions.cancel')}
+                                </Button>}
+                                <Button startIcon={submitString ? <SaveAsIcon /> : <AddIcon />} type="submit" variant="contained" color="primary" sx={{ mt: 2 }} disabled={isSubmitting} onClick={() => setFieldTouched('CanyonId', true)}>
+                                    {submitString || t('journal.createRecord')}
+                                </Button>
+
+                            </Box>
+                            {isEdit && (
+                                <Box mt={3} display="flex" justifyContent="flex-end">
+                                    <Button
+                                        type="button"
+                                        variant="text"
+                                        color="error"
+                                        size="small"
+                                        startIcon={<DeleteIcon />}
+                                        onClick={() => setDeleteOpen(true)}
+                                    >
+                                        {t('journal.deleteRecord')}
                                     </Button>
-                                    
                                 </Box>
-                                {isEdit && (
-                                    <Box mt={3} display="flex" justifyContent="flex-end">
-                                        <Button
-                                            type="button"
-                                            variant="text"
-                                            color="error"
-                                            size="small"
-                                            startIcon={<DeleteIcon />}
-                                            onClick={() => setDeleteOpen(true)}
-                                        >
-                                            {t('journal.deleteRecord')}
-                                        </Button>
-                                    </Box>
-                                )}
-                                
-                            </Form>
-                        );
-                    }}
-                </Formik>
-            </Box>
-            <SuccessSnackbar open={snackbarOpen} message={t('journal.recordAdded')} onClose={() => setSnackbarOpen(false)} />
-            <ConfirmDeleteModal
-                open={deleteOpen}
-                title={t('journal.deleteRecordTitle')}
-                message={t('journal.deleteRecordMessage')}
-                onConfirm={async () => {
-                    await apiFetch(`/api/record/${initialValues?.Id}`, { method: 'DELETE' });
-                    navigate('/journal');
+                            )}
+
+                        </Form>
+                    );
                 }}
-                onCancel={() => setDeleteOpen(false)}
-            />
+            </Formik>
+        </Box>
+        <SuccessSnackbar open={snackbarOpen} message={t('journal.recordAdded')} onClose={() => setSnackbarOpen(false)} />
+        <ConfirmDeleteModal
+            open={deleteOpen}
+            title={t('journal.deleteRecordTitle')}
+            message={t('journal.deleteRecordMessage')}
+            onConfirm={async () => {
+                await apiFetch(`/api/record/${initialValues?.Id}`, { method: 'DELETE' });
+                navigate('/journal');
+            }}
+            onCancel={() => setDeleteOpen(false)}
+        />
     </>
 }
 
