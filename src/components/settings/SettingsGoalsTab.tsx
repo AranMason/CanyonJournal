@@ -95,7 +95,7 @@ const SettingsGoalsTab: React.FC = () => {
   const sortGoals = (goal_a: Goal, goal_b: Goal): number => {
     var delta = goalProgressPercentage(goal_b) - goalProgressPercentage(goal_a);
 
-    if(delta === 0) {
+    if (delta === 0) {
       delta = goal_a.Id! - goal_b.Id!;
     }
     return delta;
@@ -295,7 +295,7 @@ const SettingsGoalsTab: React.FC = () => {
     return (
       <Box key={index} display="flex" gap={1} width={'100%'} flexWrap={'wrap'} alignItems="flex-start" sx={{ mt: 1 }}>
         {/* Rule type */}
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+        <FormControl size="small">
           <InputLabel>{t('common:canyon.canyonType')}</InputLabel>
           <Select
             value={rule.RuleType}
@@ -315,7 +315,7 @@ const SettingsGoalsTab: React.FC = () => {
               <InputLabel>{t('goals.ruleTypeCanyonType')}</InputLabel>
               <Select
                 multiple
-                    label={t('goals.ruleTypeCanyonType')}
+                label={t('goals.ruleTypeCanyonType')}
                 value={(rule.IntValues ?? '').split(',').map(Number).filter(n => !isNaN(n) && n > 0)}
                 onChange={e => {
                   const vals = e.target.value as number[];
@@ -627,7 +627,7 @@ const SettingsGoalsTab: React.FC = () => {
             {/* Time window */}
             <Box>
               <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: 'block' }}>
-              {t('goals.timeWindow')}
+                {t('goals.timeWindow')}
               </Typography>
               <RadioGroup
                 row
