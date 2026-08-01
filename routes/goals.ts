@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
-import { canyonKey,  userCanyonKey } from '../src/utils/canyonKey';
+import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
 import { GoalBuilder, GoalRuleField } from './helpers/goals.builder';
 import { mapRowToGoalRule } from './helpers/goals.helper';
 import { CanyonListEntry } from '../src/types/Canyon';
@@ -285,19 +285,19 @@ async function getPotentialGoalCanyonsWithDescents(
   var { query, bindings } = goalBuilder.buildQuery(
     [
       GoalRuleField.IsUserCanyon,
-      GoalRuleField.Id, 
-      GoalRuleField.CanyonId, 
-      GoalRuleField.Name, 
-      GoalRuleField.DetailsUrl, 
-      GoalRuleField.RegionId, 
-      GoalRuleField.RegionSlug, 
-      GoalRuleField.RegionSymbol, 
-      GoalRuleField.AquaticRating, 
-      GoalRuleField.VerticalRating, 
-      GoalRuleField.CommitmentRating, 
-      GoalRuleField.StarRating, 
-      GoalRuleField.IsUnrated, 
-      GoalRuleField.IsVerified, 
+      GoalRuleField.Id,
+      GoalRuleField.CanyonId,
+      GoalRuleField.Name,
+      GoalRuleField.DetailsUrl,
+      GoalRuleField.RegionId,
+      GoalRuleField.RegionSlug,
+      GoalRuleField.RegionSymbol,
+      GoalRuleField.AquaticRating,
+      GoalRuleField.VerticalRating,
+      GoalRuleField.CommitmentRating,
+      GoalRuleField.StarRating,
+      GoalRuleField.IsUnrated,
+      GoalRuleField.IsVerified,
       GoalRuleField.CanyonType,
       GoalRuleField.SourceId,
       GoalRuleField.SourceLogoUrl,
@@ -363,10 +363,10 @@ async function getGoalTrips(
     [
       GoalRuleField.DescentId,
       // Canyon Info
-      GoalRuleField.CanyonId, 
+      GoalRuleField.CanyonId,
       GoalRuleField.UserCanyonId,
-      GoalRuleField.Name, 
-      GoalRuleField.DetailsUrl, 
+      GoalRuleField.Name,
+      GoalRuleField.DetailsUrl,
       GoalRuleField.TopoUrl,
 
       // Trip Info
@@ -375,8 +375,8 @@ async function getGoalTrips(
       GoalRuleField.TripRating,
       GoalRuleField.DescentDate,
       // Region Info
-      GoalRuleField.RegionId, 
-      GoalRuleField.RegionSlug, 
+      GoalRuleField.RegionId,
+      GoalRuleField.RegionSlug,
       GoalRuleField.RegionSymbol
     ],
     [`${GoalRuleField.DescentId} IS NOT NULL`],

@@ -12,13 +12,11 @@ import { apiFetch } from "../../utils/api"
 import * as CanyonDataStore from "../../helpers/CanyonDataStore"
 import * as UserCanyonDataStore from "../../helpers/UserCanyonDataStore"
 import { Region } from "../../types/Region"
-import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import Loader from "../Loader"
 
-const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
+const GoalTripsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [trips, setTrips] = useState<EnrichedAuditTrip[]>([]);
@@ -41,7 +39,6 @@ const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
         setUserCanyonsById(ucById);
         setFlatRegions(regions);
       })
-      .catch(() => navigate('/journal'))
       .finally(() => setIsLoading(false));
   }, [goal?.Id]); // eslint-disable-line react-hooks/exhaustive-deps
 
