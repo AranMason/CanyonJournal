@@ -293,7 +293,7 @@ const SettingsGoalsTab: React.FC = () => {
     };
 
     return (
-      <Box key={index} display="flex" gap={1} alignItems="flex-start" sx={{ mt: 1 }}>
+      <Box key={index} display="flex" gap={1} width={'100%'} flexWrap={'wrap'} alignItems="flex-start" sx={{ mt: 1 }}>
         {/* Rule type */}
         <FormControl size="small" sx={{ minWidth: 150 }}>
           <InputLabel>{t('common:canyon.canyonType')}</InputLabel>
