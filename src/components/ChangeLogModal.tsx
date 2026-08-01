@@ -18,7 +18,8 @@ const changes: { date: Date, items: string[] }[] = [
         date: new Date('2026-07-31'),
         items: [
             'Added Gear Sets Tab to the Equipment Page - Enabling you to group related gear together',
-            'Added Gear Sets to Record Page - You can now chose gear sets when creating or editing a trip record'
+            'Added Gear Sets to Record Page - You can now chose gear sets when creating or editing a trip record',
+            'Fixed bug with Canyoning Goals that involve tagged trips'
         ]
     }
 ];

@@ -66,36 +66,39 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
               starRating={starRating}
               isUnrated={isUnrated}
             />
-            &nbsp;|&nbsp;
+
             {canyonType !== undefined && (
-              <CanyonTypeDisplay type={canyonType} />
+              <>
+                &nbsp;|&nbsp;
+                <CanyonTypeDisplay type={canyonType} />
+              </>
             )}
             &nbsp;|&nbsp;
-            <Typography variant="body1"><RegionIcon regionSlug={regionSlug ?? ''} regionSymbol={regionSymbol} size={16} />&nbsp;{GetRegionDisplayName(regionSlug)}</Typography> 
+            <Typography variant="body1"><RegionIcon regionSlug={regionSlug ?? ''} regionSymbol={regionSymbol} size={16} />&nbsp;{GetRegionDisplayName(regionSlug)}</Typography>
           </Box>
 
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ mb: 1, mt: 3 }}>
             <Box display={'flex'} flexDirection={'row'} alignItems={'center'} gap={1} justifyContent={'space-between'}>
-            {url && (
-              <Button
-                type="button"
-                variant="outlined"
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                startIcon={
-                  sourceLogoUrl
-                    ? <img src={sourceLogoUrl} alt={resolvedUrlLabel} style={{ height: 16, width: 16, objectFit: 'contain' }} />
-                    : <OpenInNewIcon />
-                }
-              >
-                {resolvedUrlLabel}
-              </Button>
-            )}
-            <FavouriteButton isFavourite={isFavourite} onToggle={onToggleFavourite} />
+              {url && (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  startIcon={
+                    sourceLogoUrl
+                      ? <img src={sourceLogoUrl} alt={resolvedUrlLabel} style={{ height: 16, width: 16, objectFit: 'contain' }} />
+                      : <OpenInNewIcon />
+                  }
+                >
+                  {resolvedUrlLabel}
+                </Button>
+              )}
+              <FavouriteButton isFavourite={isFavourite} onToggle={onToggleFavourite} />
             </Box>
             <Box display="flex" alignItems="flex-start">
-              <Button type="button" variant="contained" color="tertiary" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
+              <Button type="button" variant="contained" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
                 {t('common:actions.recordDescent')}
               </Button>
             </Box>

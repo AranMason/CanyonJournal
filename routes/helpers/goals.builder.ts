@@ -43,7 +43,9 @@ export enum GoalRuleField {
     SourceName = "[SourceName]",
     SourceLogoUrl = "[SourceLogoUrl]",
     SourceWebsiteUrl = "[SourceWebsiteUrl]",
-    SourceId = "[SourceId]"
+    SourceId = "[SourceId]",
+    // Record Info
+    CanyonRecordId = "[CanyonRecordId]"
 }
 
 type AggregationFields = {
@@ -90,7 +92,8 @@ export class GoalBuilder {
                 cr.Comments AS ${GoalRuleField.Comments},
                 cr.WaterLevel AS ${GoalRuleField.WaterLevel},
                 cr.TripRating AS ${GoalRuleField.TripRating},
-                CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite}
+                CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite},
+                cr.Id AS ${GoalRuleField.CanyonRecordId}
               FROM Canyons c
               LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
               LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @${this.userBindingName}
@@ -128,7 +131,8 @@ export class GoalBuilder {
                     cr.Comments AS ${GoalRuleField.Comments},
                     cr.WaterLevel AS ${GoalRuleField.WaterLevel},
                     cr.TripRating AS ${GoalRuleField.TripRating},
-                    CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite}
+                    CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite},
+                    cr.Id AS ${GoalRuleField.CanyonRecordId}
               FROM UserCanyons uc
               LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
               LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @${this.userBindingName}
@@ -152,17 +156,17 @@ export class GoalBuilder {
      * @returns An object containing the final SQL query and the bindings for the parameters.
      */
     public buildQuery = (select: GoalRuleField[], clauses: string[] = [], aggregateSelect: AggregationFields[] = [], orderBy: (GoalRuleField | string)[] = []): { query: string; bindings: { name: string; type: any; value: any }[] } => {
-        
+
         const allClauses = [...this.conditionClauses, ...clauses];
         const whereClause = allClauses.length > 0 ? `WHERE ${allClauses.map(s => `(${s})`).join(' AND ')}` : '';
         // Group by all selected fields except fields that are used as aggregate inputs.
-        
+
         const aggregateInputFields = new Set<GoalRuleField>(
             aggregateSelect.flatMap(agg => agg.inputFields.map(field => field as GoalRuleField)
             )
         );
 
-        if(select.some(field => aggregateInputFields.has(field))) {
+        if (select.some(field => aggregateInputFields.has(field))) {
             // TODO: We could probably just handle this quitely and safely. But the logic is easier this way.
             throw new Error(`Cannot select fields that are used as aggregate inputs. Selected fields: ${select.join(', ')}, Aggregate input fields: ${[...aggregateInputFields].join(', ')}`);
         }
@@ -172,10 +176,10 @@ export class GoalBuilder {
             ? `GROUP BY ${selectedFields.join(', ')}`
             : '';
         const orderByClause = orderBy && orderBy.length > 0 ? `ORDER BY ${orderBy.map(field => `${this.baseQueryTable}.${field}`).join(', ')}` : '';
-        
+
         var outputFields = [...selectedFields, ...aggregateSelect.map(agg => `${agg.clause} AS ${agg.outputField}`)].join(', ');
 
-        if(outputFields.length === 0) {
+        if (outputFields.length === 0) {
             throw new Error(`No output fields specified. Please specify at least one field to select or aggregate.`);
         }
 
@@ -201,7 +205,7 @@ export class GoalBuilder {
         const effectiveStartDate = this.resolveStartDate(startDate, rollingDays);
 
         // If we don't have a start date, then bail.
-        if(effectiveStartDate == null) {
+        if (effectiveStartDate == null) {
             return this;
         }
 
@@ -209,7 +213,7 @@ export class GoalBuilder {
         this.bindings.push({ name: bindingName, type: sql.DateTime, value: effectiveStartDate });
 
         var baseCondition = `${this.baseQueryTable}.${GoalRuleField.DescentDate} >= @${bindingName}`;
-        if(includeUndescended) {
+        if (includeUndescended) {
             baseCondition += ` OR ${this.baseQueryTable}.${GoalRuleField.DescentId} IS NULL`;
         }
 
@@ -291,7 +295,7 @@ export class GoalBuilder {
                     const p = this.pn(rule, `tag${ti}`);
                     this.bindings.push({ name: p, type: sql.Int, value: rawIds[ti] });
 
-                    const condition = `EXISTS (SELECT 1 FROM CanyonRecordTags crt WHERE crt.CanyonRecordId = cr.Id AND crt.TagId = @${p})`;
+                    const condition = `EXISTS (SELECT 1 FROM CanyonRecordTags crt WHERE crt.CanyonRecordId = ${this.baseQueryTable}.${GoalRuleField.CanyonRecordId} AND crt.TagId = @${p})`;
                     conditions.push(condition);
                 }
                 return conditions;
