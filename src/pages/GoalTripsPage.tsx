@@ -58,7 +58,7 @@ const GoalTripsPage: React.FC = () => {
     return region ? { [region.Id]: region.Name } : {};
   }, [goal, flatRegions]);
 
-  
+
 
   return (
     <PageTemplate pageTitle={goal?.Label ?? t('goals.progress')} isAuthRequired isLoading={isLoading}>
@@ -66,16 +66,16 @@ const GoalTripsPage: React.FC = () => {
         <>
           <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
             <Link
-                component="button"
-                underline="hover"
-                color="primary"
-                onClick={() => navigate("/settings/goals")}
-                sx={{ cursor: 'pointer' }}
+              component="button"
+              underline="hover"
+              color="primary"
+              onClick={() => navigate("/settings/goals")}
+              sx={{ cursor: 'pointer' }}
             >
-                {t('goals.title')}
+              {t('goals.title')}
             </Link>
             <Typography sx={{ color: 'text.primary' }}>{goal?.Label}</Typography>
-        </Breadcrumbs>
+          </Breadcrumbs>
           <Box sx={{ mb: 3 }}>
             <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, py: 2 }}>
               <GoalProgressBar requirement={goal} tagNames={goalTagNames} regionNames={goalRegionNames} />

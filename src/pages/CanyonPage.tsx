@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import CanyonRating from '../components/CanyonRating';
 import { apiFetch } from '../utils/api';
 import { CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
@@ -20,12 +19,11 @@ import {
 import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
-import { GetRegionDisplayName } from '../helpers/RegionHelper';
-import RegionIcon from '../components/RegionIcon';
 import { useNavigate } from 'react-router-dom';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import CanyonRating from '../components/CanyonRating';
 
-const minDateString: string = '1900-01-01' 
+const minDateString: string = '1900-01-01'
 
 enum SortOptionEnum {
   TotalDescents = 1,
@@ -160,7 +158,7 @@ const CanyonList: React.FC = () => {
     return [...filteredCanyons].sort((a, b) => {
       var diffVal = SortParams[sort].method(a, b);
 
-      if(diffVal === 0) {
+      if (diffVal === 0) {
         return SortParams[SortOptionEnum.Name].method(a, b);
       }
 
@@ -197,14 +195,14 @@ const CanyonList: React.FC = () => {
       </Alert>
       <Box my={2} alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="flex-end">
         <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="space-between" flex={1} mb={1}>
-          <Button variant="contained" color="primary" onClick={() => navigate("/settings?tab=0")} startIcon={<AddLocationAltIcon/>}>{t('translation:canyon.createUserCanyon')}</Button>
-          <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>         
+          <Button variant="contained" color="primary" onClick={() => navigate("/settings?tab=0")} startIcon={<AddLocationAltIcon />}>{t('translation:canyon.createUserCanyon')}</Button>
+          <Box alignContent="end" display="flex" flexDirection="row" alignItems="center" gap={1}>
             <InputLabel id="filter-sort-by">{t('common:canyon.sortBy')}</InputLabel>
             <Select
               size='small'
               labelId="filter-sort-by"
               label={t('common:canyon.sortBy')}
-              style={{width: "150px"}}
+              style={{ width: "150px" }}
               value={sort}
               onChange={e => {
                 const sortVal = e.target.value as SortOptionEnum;
@@ -228,8 +226,6 @@ const CanyonList: React.FC = () => {
             <TableHead>
               <TableRow>
                 <TableCell>{t('common:fields.name')}</TableCell>
-                <TableCell className='hide-md'>{t('common:fields.grade')}</TableCell>
-                <TableCell className='hide-md'>{t('common:fields.region')}</TableCell>
                 <TableCell className='hide-md'>{t('common:canyon.canyonType')}</TableCell>
                 <TableCell align="center">{t('canyon.yourDescents')}</TableCell>
                 <TableCell className='hide-sm' align="center">{t('canyon.lastDescent')}</TableCell>
@@ -239,18 +235,20 @@ const CanyonList: React.FC = () => {
             <TableBody>
               {getSortedCanyons(filteredCanyons).map(canyon => (
                 <TableRow key={canyon.Key}>
-                  <CanyonNameTableCell name={canyon.Name} detailUrl={canyon.DetailUrl}/>
-                  <TableCell className='hide-md'>
-                    <CanyonRating
-                      aquaticRating={canyon.AquaticRating}
-                      verticalRating={canyon.VerticalRating}
-                      commitmentRating={canyon.CommitmentRating}
-                      starRating={canyon.StarRating}
-                      isUnrated={canyon.IsUnrated}
-                    />
+                  <TableCell>
+                    <CanyonNameTableCell
+                      canyon={canyon}
+                      detailUrl={canyon.DetailUrl}
+                      subtitle={<CanyonRating
+                        aquaticRating={canyon.AquaticRating}
+                        verticalRating={canyon.VerticalRating}
+                        commitmentRating={canyon.CommitmentRating}
+                        starRating={canyon.StarRating}
+                        isUnrated={canyon.IsUnrated}
+                      />}>
+                    </CanyonNameTableCell>
                   </TableCell>
-                  <TableCell className='hide-md'><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug)}</TableCell>
-                  <CanyonTypeTableCell type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} className='hide-md'/>
+                  <CanyonTypeTableCell type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} className='hide-md' />
                   <TableCell align="center">{canyon.Descents}</TableCell>
                   <DateTableCell className='hide-sm' date={canyon.LastDescentDate} />
                   <TableCell align="center">
@@ -277,8 +275,8 @@ const CanyonList: React.FC = () => {
             </TableBody>
           </Table>
         </TableContainer>}
-      
-        
+
+
       </FilterPanel>
     </PageTemplate>
   );

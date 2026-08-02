@@ -7,21 +7,28 @@ export interface CanyonSource {
   WebsiteUrl?: string | null;
 }
 
-export interface Canyon {
-  Id: number | null;
+export interface IBaseCanyon {
   Name: string;
-  Url: string;
+  CanyonType: CanyonTypeEnum | null;
+
+  // Rating Info
   AquaticRating: number;
   VerticalRating: number;
   CommitmentRating: number;
   StarRating: number;
   IsUnrated: boolean;
-  CanyonType: CanyonTypeEnum;
-  IsDeleted: boolean;
-  IsVerified: boolean;
+  // Region Info
   RegionId?: number | null;
   RegionSlug?: string | null;
   RegionSymbol?: string | null;
+}
+
+export interface Canyon extends IBaseCanyon {
+  Id: number | null;
+  Url: string;
+  CanyonType: CanyonTypeEnum;
+  IsDeleted: boolean;
+  IsVerified: boolean;
   SourceId?: number | null;
   SourceName?: string | null;
   SourceLogoUrl?: string | null;
@@ -33,19 +40,10 @@ export interface CanyonWithDescents extends Canyon {
   LastDescentDate?: string | null;
 }
 
-export interface CanyonListEntry {
+export interface CanyonListEntry extends IBaseCanyon {
   Key: string;
   DetailUrl: string;
-  Name: string;
   Url: string;
-  RegionId?: number | null;
-  RegionSlug?: string | null;
-  RegionSymbol?: string | null;
-  AquaticRating: number;
-  VerticalRating: number;
-  CommitmentRating: number;
-  StarRating: number;
-  IsUnrated: boolean;
   IsVerified: boolean;
   CanyonType: CanyonTypeEnum | null;
   Descents: number;

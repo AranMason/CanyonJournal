@@ -9,19 +9,16 @@ import { useNavigate } from "react-router-dom";
 import CanyonRating from "../CanyonRating";
 import CanyonTypeDisplay from "../CanyonTypeDisplay";
 import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
-import { Canyon } from "../../types/Canyon";
-import { UserCanyon } from "../../types/UserCanyon";
+import { IBaseCanyon } from "../../types/Canyon";
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import StarIcon from '@mui/icons-material/Star';
 import IconDisplay from "../IconDisplay";
 import { useTranslation } from "react-i18next";
-import RegionIcon from "../RegionIcon";
-
-type CanyonInfo = Canyon | UserCanyon;
+import CanyonNameTableCell from "../table/CanyonNameCell";
 
 type CanyonRecordAccordionProps = {
     record: CanyonRecord;
-    canyon?: CanyonInfo;
+    canyon: IBaseCanyon;
     isOpen: boolean;
     onChange: () => void;
 }
@@ -30,19 +27,6 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
     const navigate = useNavigate();
     const { t } = useTranslation('common');
 
-
-    function GetRecordDisplayValue(canyonInfo?: CanyonInfo, canyonRecord?: CanyonRecord): React.ReactNode {
-        if(canyonInfo?.RegionId) {
-            return <>
-                <RegionIcon regionSlug={canyonInfo.RegionSlug ?? ''} regionSymbol={canyonInfo.RegionSymbol} size={16} />
-            </>;
-        }
-
-        return <>
-                <RegionIcon regionSlug={canyonRecord?.RegionSlug ?? ''} regionSymbol={canyonRecord?.RegionSymbol} size={16} />
-            </>;
-    }
-
     return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
@@ -50,26 +34,21 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
             id="panel1-header"
         >
             <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
+
                 <Box display="flex" flexDirection="row" alignItems={"center"} sx={{ maxWidth: { xs: '100%', sm: '60%' } }} flex="1" justifyContent={"space-between"} mr={2} >
-                    <Box>
-                        <Typography component="h3">{GetRecordDisplayValue(canyon, record)} {record.Name} </Typography>
-                        <Box sx={{ fontWeight: 400, color: 'grey.500', letterSpacing: 1 }}>
-                            {new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}
-                        </Box>
-                    </Box>
-                    
+                    <CanyonNameTableCell canyon={canyon} subtitle={new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}></CanyonNameTableCell>
                 </Box>
                 <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-                        {record.TripRating
-                          ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="secondary" />
-                          : <Typography variant="body2" color="text.secondary">-</Typography>}
-                    </Box>
-                    {/* <Box width={80} className="hide-sm">
+                    {record.TripRating
+                        ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="secondary" />
+                        : <Typography variant="body2" color="text.secondary">-</Typography>}
+                </Box>
+                {/* <Box width={80} className="hide-sm">
                         {GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown)}
                     </Box> */}
-                    <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-                        <WaterLevelRating waterLevel={record.WaterLevel ?? WaterLevel.Unknown} />
-                    </Box>
+                <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
+                    <WaterLevelRating waterLevel={record.WaterLevel ?? WaterLevel.Unknown} />
+                </Box>
                 <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'flex-end', width: 180 }}>
                     <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="center" mb={0.5}>
                         <GroupsIcon sx={{ height: "1rem", width: "1rem" }} />
@@ -82,10 +61,10 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
         <AccordionDetails>
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
                 {canyon ? <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
-                    <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating}/>
-                    
+                    <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating} />
+
                 </Box> : <span>{t('noData')}</span>}
-                <Box sx={{ml: "auto"}}>
+                <Box sx={{ ml: "auto" }}>
                     <IconButton
                         size="small"
                         disabled={!record.DetailUrl}
@@ -94,7 +73,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                     ><LocationPinIcon /></IconButton>
                     <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} sx={{ p: { xs: 1.5, sm: 1 } }}><EditIcon /></IconButton>
                 </Box>
-                
+
             </Box>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" whiteSpace={"pre-line"} fontStyle={"italic"} pl={2}>
