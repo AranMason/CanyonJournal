@@ -9,6 +9,7 @@ import RopeTable from './RopeTable';
 import { useSearchParams } from 'react-router-dom';
 import GearSetTable from './GearSetTable';
 import { useTranslation } from 'react-i18next';
+import GestureIcon from '@mui/icons-material/Gesture';
 
 const GearOverview: React.FC = () => {
   const { t } = useTranslation('translation');
@@ -22,13 +23,16 @@ const GearOverview: React.FC = () => {
     if (!tab) {
       return;
     }
-    const paramTab = parseInt(tab)
+    const paramTab = Number(tab)
     setActiveTab(paramTab)
   }, [searchParams])
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    setSearchParams({ tab: newValue.toString() });
+    setSearchParams(prev => {
+      prev.set('tab', newValue.toString())
+      return prev;
+    });
   };
 
   return (
@@ -36,7 +40,7 @@ const GearOverview: React.FC = () => {
       <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
         <Tab label={t('gear.tabs.gear')} />
         <Tab label={t('gear.tabs.gearSet')} />
-        <Tab label={t('gear.tabs.rope')} />
+        <Tab label={t('gear.tabs.rope')} icon={<GestureIcon />} iconPosition='start' />
       </Tabs>
       <Box sx={{ mb: 4 }}>
         {activeTab === 0 && <GearTable />}
