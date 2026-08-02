@@ -4,7 +4,6 @@
     ],
     "rules": {
         "react-hooks/exhaustive-deps": "off",
-        "eqeqeq": "error",
-        "no-var": "warning"
+        "eqeqeq": "error"
     }
 }
