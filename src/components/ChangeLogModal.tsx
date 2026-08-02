@@ -1,6 +1,6 @@
 import React from "react";
 import AppModal from "./AppModal";
-import { Button, DialogContent, DialogContentText, Typography } from "@mui/material";
+import { Button, DialogContent, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
 

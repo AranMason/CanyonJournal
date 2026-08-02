@@ -24,7 +24,7 @@ const GearOverview: React.FC = () => {
     }
     const paramTab = parseInt(tab)
     setActiveTab(paramTab)
-  }, [])
+  }, [searchParams])
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);

@@ -85,12 +85,12 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                 var currentCanyon: CanyonListEntry | undefined = undefined;
 
                 if (initialValues.CanyonId != null) {
-                    var key = canyonKey(initialValues.CanyonId);
-                    currentCanyon = canyonList.find(c => c.Key === key);
+                    const sharedCayonKey = canyonKey(initialValues.CanyonId);
+                    currentCanyon = canyonList.find(c => c.Key === sharedCayonKey);
                 }
                 else if (initialValues.UserCanyonId != null) {
-                    var key = userCanyonKey(initialValues.UserCanyonId);
-                    currentCanyon = canyonList.find(c => c.Key === key);
+                    const userCanyonkey = userCanyonKey(initialValues.UserCanyonId);
+                    currentCanyon = canyonList.find(c => c.Key === userCanyonkey);
                 }
 
                 if (currentCanyon) {

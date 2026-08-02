@@ -98,7 +98,7 @@ const GearSetTable: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {gearData?.length ?? 0 > 0 ? gearData?.map(i => <TableRow key={i.Id}>
+                        {(gearData?.length ?? 0) > 0 ? gearData?.map(i => <TableRow key={i.Id}>
                             <TableCell sx={{ minWidth: 200 }}>
                                 {i.Name}
                             </TableCell>

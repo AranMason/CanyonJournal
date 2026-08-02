@@ -270,7 +270,7 @@ const ValidFlagSlugs = new Set([
 
 const RegionIcon: React.FC<{ regionSlug: string, regionSymbol?: string | null, size?: number }> = ({ regionSlug, regionSymbol, size = 16 }) => {
 
-    if(regionSymbol) {
+    if (regionSymbol) {
         return <span style={{ fontSize: size * 0.8 }}>{regionSymbol}</span>;
     }
 

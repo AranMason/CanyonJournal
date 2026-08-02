@@ -40,13 +40,6 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
         if (gearSet) setGearSetData(gearSet)
     }, [gearSet]);
 
-    async function onAction(): Promise<void> {
-        setIsLoading(true);
-        onSave(gearSetData).finally(() => {
-            setIsLoading(false);
-        });
-    }
-
     return <AppModal open={isOpen} onClose={onClose} title={t('gear.gearSet.modalTitle', { context: !!gearSet ? 'edit' : 'create' })}>
         <Formik
             initialValues={gearSet ?? defaultGearSet}
@@ -102,7 +95,7 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                                                     if (isChecked) {
                                                         setFieldValue(
                                                             'Items',
-                                                            values.Items.filter(s => s != g.Id)
+                                                            values.Items.filter(s => s !== g.Id)
                                                         )
                                                     } else {
                                                         setFieldValue(

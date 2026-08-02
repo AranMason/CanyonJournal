@@ -127,7 +127,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
 
                 return <ListItem key={s.Id} secondaryAction={<Checkbox onClick={() => {
                   if (isChecked) {
-                    const newChecked = selectedGearSets.filter(f => f.Id != s.Id);
+                    const newChecked = selectedGearSets.filter(f => f.Id !== s.Id);
                     setSelectedGearSets(newChecked);
                   } else {
                     setSelectedGearSets([...selectedGearSets, s])
@@ -141,7 +141,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             <Button variant='contained' onClick={() => {
               const gearIdsFromSets = selectedGearSets.flatMap(s => s.Items);
               // Remove Duplicates
-              const newList = [... new Set([...selectedGearIds, ...gearIdsFromSets])];
+              const newList = [...new Set([...selectedGearIds, ...gearIdsFromSets])];
               setSelectedGearIds(newList);
               setIsGearSetOpen(false);
               setSelectedGearSets([]);
