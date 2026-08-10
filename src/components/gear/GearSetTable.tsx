@@ -108,8 +108,9 @@ const GearSetTable: React.FC = () => {
                             let notIncludedItems: string[] = [];
 
                             gearItems.forEach(item => {
-                                gearWeight += item.WeightGrams ?? 0;
-                                if (!gearWeight) {
+                                const weight = item.WeightGrams ?? 0
+                                gearWeight += weight;
+                                if (weight <= 0) {
                                     notIncludedItems.push(item.Name);
                                 }
                             })
