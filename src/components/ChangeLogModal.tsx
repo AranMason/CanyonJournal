@@ -21,6 +21,13 @@ const changes: { date: Date, items: string[] }[] = [
             'Added Gear Sets to Record Page - You can now chose gear sets when creating or editing a trip record',
             'Fixed bug with Canyoning Goals that involve tagged trips'
         ]
+    },
+    {
+        date: new Date('2026-08-10'),
+        items: [
+            'Added total weight column to Gear Sets',
+            'Hiding list of Gear Items in sets on Mobile'
+        ]
     }
 ];
 

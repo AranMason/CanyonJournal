@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
-import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { GearItem, GearItemSet } from '../../types/types';
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
 import RowActions from '../RowActions';
@@ -89,8 +89,11 @@ const GearSetTable: React.FC = () => {
                             <TableCell>
                                 {t('gear.gearSet.title')}
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                                 {t('gear.gearSet.setItems')}
+                            </TableCell>
+                            <TableCell>
+                                {t('gear.gearSet.totalWeight')}
                             </TableCell>
                             <TableCell>
                                 {t('common:actions.edit')}
@@ -98,19 +101,34 @@ const GearSetTable: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(gearData?.length ?? 0) > 0 ? gearData?.map(i => <TableRow key={i.Id}>
-                            <TableCell sx={{ minWidth: 200 }}>
-                                {i.Name}
-                            </TableCell>
-                            <TableCell>
-                                <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-                                    {i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name)).map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
-                                </Box>
-                            </TableCell>
-                            <TableCell sx={{ minWidth: 100 }}>
-                                <RowActions onEdit={() => openModal(i)} onDelete={() => setGearSetToDelete(i)} />
-                            </TableCell>
-                        </TableRow>) :
+                        {(gearData?.length ?? 0) > 0 ? gearData?.map(i => {
+                            const gearItems = i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name));
+
+                            const gearWeight = gearItems.reduce((acc, val) => acc += (val.WeightGrams ?? 0), 0)
+                            const notIncludedItems = 1;
+
+                            return (<TableRow key={i.Id}>
+                                <TableCell sx={{ minWidth: 150 }}>
+                                    {i.Name}
+                                </TableCell>
+                                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                                    <Box display={'flex'} gap={1} flexWrap={'wrap'}>
+                                        {gearItems.map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
+                                    </Box>
+                                </TableCell>
+                                <TableCell width={'100px'}>
+                                    <Box display="flex" flexDirection="column">
+                                        {t('gear.gearSet.weight', { value: gearWeight })}
+                                        {notIncludedItems > 0 && <Typography variant='caption' color='textSecondary'>{t('gear.gearSet.weightNotIncluded', { count: notIncludedItems })}</Typography>}
+                                    </Box>
+                                </TableCell>
+                                <TableCell sx={{ minWidth: 100 }}>
+                                    <RowActions onEdit={() => openModal(i)} onDelete={() => setGearSetToDelete(i)} />
+                                </TableCell>
+                            </TableRow>
+                            )
+                        }
+                        ) :
                             <TableRow>
                                 <TableCell sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
                                     {t('gear.gearSet.emptyTable')}
