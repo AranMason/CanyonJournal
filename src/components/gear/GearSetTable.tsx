@@ -128,7 +128,7 @@ const GearSetTable: React.FC = () => {
                                         {t('gear.gearSet.weight', { value: gearWeight })}
 
                                         {notIncludedItems.length > 0 &&
-                                            <Tooltip title={notIncludedItems.join(', ')}>
+                                            <Tooltip title={notIncludedItems.join('; ')} describeChild>
                                                 <Typography variant='caption' color='textSecondary'>{t('gear.gearSet.weightNotIncluded', { count: notIncludedItems.length })}</Typography>
                                             </Tooltip>}
 
