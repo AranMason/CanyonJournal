@@ -40,7 +40,7 @@ const GearOverview: React.FC = () => {
       <Tabs value={activeTab} onChange={handleTabChange} indicatorColor='secondary'>
         <Tab label={t('gear.tabs.gear')} />
         <Tab label={t('gear.tabs.gearSet')} />
-        <Tab label={t('gear.tabs.rope')} icon={<GestureIcon />} iconPosition='start' />
+        <Tab label={t('gear.tabs.rope')} />
       </Tabs>
       <Box sx={{ mb: 4 }}>
         {activeTab === 0 && <GearTable />}
