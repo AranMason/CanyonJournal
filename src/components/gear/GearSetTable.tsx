@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
-import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Box, Button, Chip, Paper, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
 import { GearItem, GearItemSet } from '../../types/types';
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
 import RowActions from '../RowActions';
@@ -104,8 +104,15 @@ const GearSetTable: React.FC = () => {
                         {(gearData?.length ?? 0) > 0 ? gearData?.map(i => {
                             const gearItems = i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name));
 
-                            const gearWeight = gearItems.reduce((acc, val) => acc += (val.WeightGrams ?? 0), 0)
-                            const notIncludedItems = 1;
+                            let gearWeight = 0;
+                            let notIncludedItems: string[] = [];
+
+                            gearItems.forEach(item => {
+                                gearWeight += item.WeightGrams ?? 0;
+                                if (!gearWeight) {
+                                    notIncludedItems.push(item.Name);
+                                }
+                            })
 
                             return (<TableRow key={i.Id}>
                                 <TableCell sx={{ minWidth: 150 }}>
@@ -119,7 +126,12 @@ const GearSetTable: React.FC = () => {
                                 <TableCell width={'100px'}>
                                     <Box display="flex" flexDirection="column">
                                         {t('gear.gearSet.weight', { value: gearWeight })}
-                                        {notIncludedItems > 0 && <Typography variant='caption' color='textSecondary'>{t('gear.gearSet.weightNotIncluded', { count: notIncludedItems })}</Typography>}
+
+                                        {notIncludedItems.length > 0 &&
+                                            <Tooltip title={notIncludedItems.join(', ')}>
+                                                <Typography variant='caption' color='textSecondary'>{t('gear.gearSet.weightNotIncluded', { count: notIncludedItems.length })}</Typography>
+                                            </Tooltip>}
+
                                     </Box>
                                 </TableCell>
                                 <TableCell sx={{ minWidth: 100 }}>
