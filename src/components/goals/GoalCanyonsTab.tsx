@@ -27,17 +27,17 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
   const [flatRegions, setFlatRegions] = React.useState<Region[]>([]);
 
   const usedRegionIds = useMemo(
-      () => {
-        return [...new Set(canyons.map(c => c.RegionId).filter((id): id is number => id != null))];
-      },
-      [canyons]
-    );
+    () => {
+      return [...new Set(canyons.map(c => c.RegionId).filter((id): id is number => id != null))];
+    },
+    [canyons]
+  );
 
   const filterConfig = useMemo(() => [
-      getCanyonNameFilterConfig(),
-      getHasCanyonDescentsFilterConfig(),
-      getRegionFilterConfig('region', usedRegionIds),
-    ], [usedRegionIds]);
+    getCanyonNameFilterConfig(),
+    getHasCanyonDescentsFilterConfig(),
+    getRegionFilterConfig('region', usedRegionIds),
+  ], [usedRegionIds]);
 
   useEffect(() => {
     if (!isValid) return; // Don't bother loading if we don't have a valid goal with a region
@@ -68,11 +68,11 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
     }
 
     if (values.region != null && canyon.RegionId != null) {
-          const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
-          if (!ids.includes(canyon.RegionId)) return false;
-        } else if (values.region != null && canyon.RegionId == null) {
-          return false;
-        }
+      const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
+      if (!ids.includes(canyon.RegionId)) return false;
+    } else if (values.region != null && canyon.RegionId == null) {
+      return false;
+    }
 
     return true;
   }, [flatRegions]);
@@ -91,7 +91,6 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
             <TableHead>
               <TableRow>
                 <TableCell>{t('common:fields.name')}</TableCell>
-                <TableCell className='hide-md'>{t('common:fields.grade')}</TableCell>
                 <TableCell className='hide-md'>{t('common:fields.region')}</TableCell>
                 <TableCell className='hide-md'>{t('common:canyon.canyonType')}</TableCell>
                 <TableCell align="center">{t('canyon.yourDescents')}</TableCell>
@@ -102,15 +101,14 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
             <TableBody>
               {filteredCanyons.map(canyon => (
                 <TableRow key={canyon.Key}>
-                  <CanyonNameTableCell name={canyon.Name} detailUrl={canyon.DetailUrl} />
-                  <TableCell className='hide-md'>
-                    <CanyonRating
+                  <TableCell>
+                    <CanyonNameTableCell canyon={canyon} detailUrl={canyon.DetailUrl} subtitle={<CanyonRating
                       aquaticRating={canyon.AquaticRating}
                       verticalRating={canyon.VerticalRating}
                       commitmentRating={canyon.CommitmentRating}
                       starRating={canyon.StarRating}
                       isUnrated={canyon.IsUnrated}
-                    />
+                    />} />
                   </TableCell>
                   <TableCell className='hide-md'><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug)}</TableCell>
                   <CanyonTypeTableCell type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} className='hide-md' />
