@@ -303,6 +303,7 @@ async function getPotentialGoalCanyonsWithDescents(
       GoalRuleField.SourceLogoUrl,
       GoalRuleField.SourceName,
       GoalRuleField.SourceWebsiteUrl,
+      GoalRuleField.Url
     ],
     [],
     [{
@@ -327,7 +328,7 @@ async function getPotentialGoalCanyonsWithDescents(
     Key: row.IsUserCanyon ? userCanyonKey(row.Id) : canyonKey(row.Id),
     DetailUrl: row.DetailsUrl,
     Name: row.Name,
-    Url: row.TopoUrl,
+    Url: row.Url,
     AquaticRating: row.AquaticRating,
     VerticalRating: row.VerticalRating,
     CommitmentRating: row.CommitmentRating,

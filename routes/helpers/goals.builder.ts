@@ -29,6 +29,7 @@ export enum GoalRuleField {
     IsVerified = "[IsVerified]",
     IsDeleted = "[IsDeleted]",
     DetailsUrl = "[DetailsUrl]",
+    Url = "[Url]",
     // Region Info
     RegionId = "[RegionId]",
     RegionSlug = "[RegionSlug]",
@@ -93,7 +94,8 @@ export class GoalBuilder {
                 cr.WaterLevel AS ${GoalRuleField.WaterLevel},
                 cr.TripRating AS ${GoalRuleField.TripRating},
                 CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite},
-                cr.Id AS ${GoalRuleField.CanyonRecordId}
+                cr.Id AS ${GoalRuleField.CanyonRecordId},
+                c.Url AS ${GoalRuleField.Url}
               FROM Canyons c
               LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
               LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @${this.userBindingName}
@@ -132,7 +134,8 @@ export class GoalBuilder {
                     cr.WaterLevel AS ${GoalRuleField.WaterLevel},
                     cr.TripRating AS ${GoalRuleField.TripRating},
                     CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS ${GoalRuleField.IsFavourite},
-                    cr.Id AS ${GoalRuleField.CanyonRecordId}
+                    cr.Id AS ${GoalRuleField.CanyonRecordId},
+                    uc.Url AS ${GoalRuleField.Url}
               FROM UserCanyons uc
               LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
               LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @${this.userBindingName}

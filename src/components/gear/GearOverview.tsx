@@ -9,7 +9,6 @@ import RopeTable from './RopeTable';
 import { useSearchParams } from 'react-router-dom';
 import GearSetTable from './GearSetTable';
 import { useTranslation } from 'react-i18next';
-import GestureIcon from '@mui/icons-material/Gesture';
 
 const GearOverview: React.FC = () => {
   const { t } = useTranslation('translation');

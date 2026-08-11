@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
-import { Box, Button, Chip, Paper, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
 import { GearItem, GearItemSet } from '../../types/types';
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
 import RowActions from '../RowActions';

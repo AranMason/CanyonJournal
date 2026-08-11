@@ -15,8 +15,6 @@ import {
     getCanyonNameFilterConfig, getDataSourceConfig, getRegionFilterConfig, getVerifiedFilterConfig,
 } from '../../helpers/filterConfigs';
 import { useTranslation } from 'react-i18next';
-import { GetRegionDisplayName } from '../../helpers/RegionHelper';
-import RegionIcon from '../RegionIcon';
 
 const EditCanyons: React.FC = () => {
 
