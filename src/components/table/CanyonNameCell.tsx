@@ -15,7 +15,7 @@ const CanyonNameTableCell: React.FC<CanyonNameTableCellProps> = ({ canyon, detai
 
     return <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box display={'flex'} gap={1} flexDirection={'row'} alignItems={'baseline'}>
-            {canyon.RegionId && <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />}
+            {canyon?.RegionId && <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />}
             {detailUrl ? <Link component="a" color="textPrimary" onClick={() => navigate(detailUrl)} sx={{ cursor: 'pointer' }} >{canyon.Name}</Link> : canyon.Name}
 
         </Box>
