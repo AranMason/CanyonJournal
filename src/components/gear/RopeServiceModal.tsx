@@ -21,11 +21,11 @@ type RopeServiceModalProps = {
 const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClose, onSaved, initialValues }) => {
     const { t } = useTranslation();
 
-    return <AppModal open={ropeId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>        
+    return <AppModal open={ropeId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>
         <Formik
             initialValues={{
                 serviceType: initialValues?.serviceType ?? ServiceType.Service,
-                statusCode: initialValues?.statusCode ?? initialValues?.StatusCode ?? GearServiceStatus.Good,
+                statusCode: initialValues?.statusCode ?? GearServiceStatus.None,
                 serviceDate: initialValues?.serviceDate ?? new Date().toISOString().substring(0, 10),
                 notes: initialValues?.notes ?? ''
             }}
@@ -87,7 +87,7 @@ const RopeServiceModal: React.FC<RopeServiceModalProps> = ({ ropeId, open, onClo
                             errors={errors}
                             sx={{ mt: 2 }}
                         >
-                            {[GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map((status) => (
+                            {[GearServiceStatus.None, GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map((status) => (
                                 <MenuItem key={status} value={status}>
                                     <ServiceStatusIndicator statusCode={status} isRetired={false} size="medium" showText />
                                 </MenuItem>

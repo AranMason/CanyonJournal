@@ -278,7 +278,7 @@ const GearTable: React.FC = () => {
             gearId={serviceModalForGear?.Id ?? null}
             open={serviceModalForGear !== null}
             initialValues={{
-                statusCode: serviceModalForGear?.LatestStatusCode ?? GearServiceStatus.Good,
+                statusCode: serviceModalForGear?.LatestStatusCode,
             }}
             onSaved={() => {
                 EquipmentDataStore.load().then(equipment => {

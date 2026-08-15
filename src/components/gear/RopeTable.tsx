@@ -90,13 +90,9 @@ const RopeTable: React.FC = () => {
       label: t('gear.filters.serviceStatusLabel'),
       labelId: 'rope-status-filter',
       placeholder: t('gear.filters.allServiceStatuses'),
-      options: [
-        { value: 'good', label: t('gear.serviceStatus.good') },
-        { value: 'watch', label: t('gear.serviceStatus.watch') },
-        { value: 'bad', label: t('gear.serviceStatus.bad') },
-        { value: 'retired', label: t('gear.serviceStatus.retired') },
-        { value: 'unknown', label: t('gear.serviceStatus.unknown') },
-      ],
+      options: [GearServiceStatus.None, GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map(s => {
+        return { value: s, label: t('gear.serviceStatus', { context: s }) }
+      })
     },
     {
       type: 'single-select',
@@ -141,10 +137,10 @@ const RopeTable: React.FC = () => {
       const resolvedStatus = getResolvedStatus(item);
       const statusKey: RopeStatusFilter =
         resolvedStatus === GearServiceStatus.Good ? 'good' :
-        resolvedStatus === GearServiceStatus.Watch ? 'watch' :
-        resolvedStatus === GearServiceStatus.Bad ? 'bad' :
-        resolvedStatus === GearServiceStatus.Retired ? 'retired' :
-        'unknown';
+          resolvedStatus === GearServiceStatus.Watch ? 'watch' :
+            resolvedStatus === GearServiceStatus.Bad ? 'bad' :
+              resolvedStatus === GearServiceStatus.Retired ? 'retired' :
+                'unknown';
 
       if (statusFilter !== statusKey) {
         return false;
@@ -258,7 +254,7 @@ const RopeTable: React.FC = () => {
       ropeId={serviceModalForRope?.Id ?? null}
       open={serviceModalForRope !== null}
       initialValues={{
-        statusCode: serviceModalForRope?.LatestStatusCode ?? GearServiceStatus.Good,
+        statusCode: serviceModalForRope?.LatestStatusCode,
       }}
       onSaved={() => {
         void loadRopes();

@@ -3,6 +3,7 @@ import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
 import { getRecordsByGearId } from './helpers/records.data';
 import { toNullableDate, toNullableNumber, toNullableString, toBit } from './helpers/sql.helper';
+import { GearServiceStatus } from '../src/types/GearStatusType';
 
 const router = Router();
 
@@ -235,7 +236,7 @@ router.post('/:id/service', async (req: Request, res: Response) => {
                 GETUTCDATE()
               );
 
-              IF @statusCode = 0
+              IF @statusCode = ${GearServiceStatus.Retired}
               BEGIN
                 UPDATE GearItems
                 SET IsRetired = 1,

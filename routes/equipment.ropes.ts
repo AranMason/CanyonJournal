@@ -4,6 +4,7 @@ import { getUserIdByRequest } from "./helpers/user.helper";
 import { toNullableDate, toNullableString } from "./helpers/sql.helper";
 import { getRecordsByRopeId } from "./helpers/records.data";
 import { createRopeItem, deleteRopeItem, updateRopeItem } from "./helpers/rope.data";
+import { GearServiceStatus } from "../src/types/GearStatusType";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post('/', async (req: Request, res: Response) => {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -32,12 +33,12 @@ router.put('/:id', async (req: Request, res: Response) => {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     var ropeItem = await updateRopeItem(pool, userId, Number(req.params.id), req.body);
-   
+
     if (!ropeItem) return res.status(404).json({ error: 'Not found' });
     res.json(ropeItem);
   } catch (err) {
@@ -53,7 +54,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -141,7 +142,7 @@ router.post('/:id/service', async (req: Request, res: Response) => {
                 GETUTCDATE()
               );
 
-              IF @statusCode = 0
+              IF @statusCode = ${GearServiceStatus.Retired}
               BEGIN
                 UPDATE RopeItems
                 SET IsRetired = 1,

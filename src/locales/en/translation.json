@@ -237,13 +237,12 @@
     "serviceType_0": "Other",
     "serviceType_1": "Service",
     "serviceType_2": "Inspection",
-    "serviceStatus": {
-      "good": "Good",
-      "watch": "Monitor",
-      "bad": "Bad Condition",
-      "retired": "Retired",
-      "unknown": "No Service History"
-    },
+    "serviceStatus_0": "Note Only",
+    "serviceStatus_1": "Good",
+    "serviceStatus_2": "Watch",
+    "serviceStatus_3": "Bad Condition",
+    "serviceStatus_4": "Retired",
+    "serviceStatus": "No Service History",
     "serviceModal": {
       "title": "Add Service Record",
       "description": "Record a service or inspection for this $t(common:terms.gear.lower, {\"count\": 1}). This will update the Last Inspection and Last Service dates for this item.",

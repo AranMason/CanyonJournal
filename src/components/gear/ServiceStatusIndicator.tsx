@@ -23,21 +23,6 @@ const getResolvedStatus = (isRetired: boolean, statusCode?: GearServiceStatus | 
   return statusCode;
 };
 
-const getLabelKey = (status: GearServiceStatus | null): string => {
-  switch (status) {
-    case GearServiceStatus.Good:
-      return "gear.serviceStatus.good";
-    case GearServiceStatus.Watch:
-      return "gear.serviceStatus.watch";
-    case GearServiceStatus.Bad:
-      return "gear.serviceStatus.bad";
-    case GearServiceStatus.Retired:
-      return "gear.serviceStatus.retired";
-    default:
-      return "gear.serviceStatus.unknown";
-  }
-};
-
 const getColor = (status: GearServiceStatus | null): string => {
   switch (status) {
     case GearServiceStatus.Good:
@@ -65,7 +50,7 @@ const ServiceStatusIndicator: React.FC<ServiceStatusIndicatorProps> = ({
 }) => {
   const { t } = useTranslation();
   const resolvedStatus = getResolvedStatus(isRetired, statusCode);
-  const label = t(getLabelKey(resolvedStatus));
+  const label = t('gear.serviceStatus', { context: resolvedStatus });
 
   return (
     <Tooltip title={label}>

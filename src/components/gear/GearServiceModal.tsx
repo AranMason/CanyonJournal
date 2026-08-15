@@ -25,7 +25,7 @@ const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClo
         <Formik
             initialValues={{
                 serviceType: initialValues?.serviceType ?? ServiceType.Service,
-                statusCode: initialValues?.statusCode ?? initialValues?.StatusCode ?? GearServiceStatus.Good,
+                statusCode: initialValues?.statusCode ?? GearServiceStatus.None,
                 serviceDate: initialValues?.serviceDate ?? new Date().toISOString().substring(0, 10),
                 notes: initialValues?.notes ?? ''
             }}
@@ -86,7 +86,7 @@ const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClo
                             errors={errors}
                             sx={{ mt: 2 }}
                         >
-                            {[GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map((status) => (
+                            {[GearServiceStatus.None, GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map((status) => (
                                 <MenuItem key={status} value={status}>
                                     <ServiceStatusIndicator statusCode={status} isRetired={false} showText />
                                 </MenuItem>

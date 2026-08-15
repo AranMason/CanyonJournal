@@ -4,6 +4,7 @@ import { getUserIdByRequest } from './helpers/user.helper';
 import gear from './equipment.gear';
 import ropes from './equipment.ropes';
 import gearSets from './equipment.gear.sets'
+import { GearServiceStatus } from '../src/types/GearStatusType';
 
 const router = Router();
 
@@ -15,21 +16,21 @@ router.get('/', async (req: Request, res: Response) => {
     const gearRes = await pool.request().input('userId', sql.Int, userId).query(`SELECT *,
       (SELECT TOP 1 StatusCode
        FROM GearServiceRecords gsr
-       WHERE gsr.GearItemId = GearItems.Id AND gsr.UserId = @userId
+       WHERE gsr.GearItemId = GearItems.Id AND gsr.UserId = @userId  AND gsr.StatusCode != ${GearServiceStatus.None}
        ORDER BY gsr.ServiceDate DESC, gsr.Id DESC) AS LatestStatusCode,
       (SELECT MAX(ServiceDate)
        FROM GearServiceRecords gsr
-        WHERE gsr.GearItemId = GearItems.Id) AS LastServiceDate
+        WHERE gsr.GearItemId = GearItems.Id AND gsr.StatusCode != ${GearServiceStatus.None}) AS LastServiceDate
       FROM GearItems
       WHERE GearItems.UserId = @userId`);
     const ropeRes = await pool.request().input('userId', sql.Int, userId).query(`SELECT *,
       (SELECT TOP 1 StatusCode
        FROM RopeServiceRecords rsr
-       WHERE rsr.RopeItemId = RopeItems.Id AND rsr.UserId = @userId
+       WHERE rsr.RopeItemId = RopeItems.Id AND rsr.UserId = @userId  AND rsr.StatusCode != ${GearServiceStatus.None}
        ORDER BY rsr.ServiceDate DESC, rsr.Id DESC) AS LatestStatusCode,
       (SELECT MAX(ServiceDate)
        FROM RopeServiceRecords rsr
-       WHERE rsr.RopeItemId = RopeItems.Id) AS LastServiceDate
+       WHERE rsr.RopeItemId = RopeItems.Id  AND rsr.StatusCode != ${GearServiceStatus.None}) AS LastServiceDate
       FROM RopeItems
       WHERE RopeItems.UserId = @userId`);
     res.json({ gear: gearRes.recordset, ropes: ropeRes.recordset });
