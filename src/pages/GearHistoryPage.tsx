@@ -69,9 +69,10 @@ const GearHistoryPage: React.FC = () => {
                 const data = await loadGear();
                 const current = data.gear.find(s => s.Id === idParam) ?? null;
                 setGear(current);
-                if(current) {
+                if (current) {
                     await loadGearHistory(current.Id);
                 }
+                setIsServiceModalOpen(false);
             }}
             onClose={() => setIsServiceModalOpen(false)}
         />

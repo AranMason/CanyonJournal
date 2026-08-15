@@ -21,7 +21,7 @@ type GearServiceModalProps = {
 const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClose, onSaved, initialValues }) => {
     const { t } = useTranslation();
 
-    return <AppModal open={gearId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>        
+    return <AppModal open={gearId !== null && open} onClose={onClose} title={t('gear.serviceModal.title')}>
         <Formik
             initialValues={{
                 serviceType: initialValues?.serviceType ?? ServiceType.Service,
@@ -48,7 +48,6 @@ const GearServiceModal: React.FC<GearServiceModalProps> = ({ gearId, open, onClo
                     serviceDate: values.serviceDate,
                     notes: values.notes,
                 });
-                onClose();
             }}
         >
             {({ values, errors, touched, handleChange, handleBlur, isSubmitting }) => (

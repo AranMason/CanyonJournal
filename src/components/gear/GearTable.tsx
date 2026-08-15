@@ -281,7 +281,11 @@ const GearTable: React.FC = () => {
                 statusCode: serviceModalForGear?.LatestStatusCode ?? GearServiceStatus.Good,
             }}
             onSaved={() => {
-                void loadGear();
+                EquipmentDataStore.load().then(equipment => {
+                    setGear(equipment.gear);
+                });
+                serviceModalForGear?.Id && EquipmentDataStore.loadGearHistory(serviceModalForGear?.Id);
+                setServiceModalForGear(null)
             }}
             onClose={() => setServiceModalForGear(null)}
         />
