@@ -1,6 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 
-const authFile = 'test/playwright/.auth/user.json';
+const authFile = 'tests/playwright/.auth/user.json';
 
 setup('authenticate', async ({ page, baseURL }) => {
   // Perform authentication steps. Replace these actions with your own.

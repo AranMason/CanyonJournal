@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
 
-test.use({ storageState: 'tests/playwright/.auth/user.json' });
-
 const pageChecks: { url: string, expectedTitle: string }[] = [
     {
         url: '/dashboard',
@@ -10,6 +8,23 @@ const pageChecks: { url: string, expectedTitle: string }[] = [
     {
         url: '/journal',
         expectedTitle: 'Your Journal'
+    },
+    {
+        url: '/journal/record',
+        expectedTitle: 'Add Record'
+    }, {
+        url: '/canyons',
+        expectedTitle: 'Canyon List'
+    },
+    {
+        url: '/settings/goals',
+        expectedTitle: 'Goals'
+    }, {
+        url: '/settings/gear',
+        expectedTitle: 'Equipment'
+    }, {
+        url: '/settings',
+        expectedTitle: 'Settings'
     }
 ];
 
@@ -19,5 +34,4 @@ pageChecks.forEach(({ url, expectedTitle }) => {
         await page.goto(url);
         await expect(page.locator('h1')).toHaveText(expectedTitle);
     });
-
 })
