@@ -28,6 +28,12 @@ const changes: { date: Date, items: string[] }[] = [
             'Added total weight column to Gear Sets',
             'Hiding list of Gear Items in sets on Mobile'
         ]
+    },
+    {
+        date: new Date('2026-08-17'),
+        items: [
+            'Changed how gear is selected on the Journal Entry pages'
+        ]
     }
 ];
 

@@ -9,6 +9,7 @@ type IconPickerProps = {
   count?: number;
   activeColor?: SvgIconProps['color'];
   label?: string;
+  dataTestPrefix?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ const IconPicker: React.FC<IconPickerProps> = ({
   count = 5,
   activeColor = 'info',
   label,
+  dataTestPrefix,
 }) => {
   const [hovered, setHovered] = useState<number | null>(null);
 
@@ -37,7 +39,7 @@ const IconPicker: React.FC<IconPickerProps> = ({
       {label && (
         <Typography variant="body2" color="text.secondary">{label}</Typography>
       )}
-      <Box display="flex" gap={0.5} onMouseLeave={() => setHovered(null)}>
+      <Box display="flex" gap={0.5} onMouseLeave={() => setHovered(null)} data-test={dataTestPrefix}>
         {Array.from({ length: count }, (_, i) => i + 1).map(i => (
           <Icon
             key={i}
@@ -45,10 +47,11 @@ const IconPicker: React.FC<IconPickerProps> = ({
             color={displayValue >= i ? activeColor : 'disabled'}
             onMouseEnter={() => setHovered(i)}
             onClick={() => handleClick(i)}
+            data-test={dataTestPrefix ? `${dataTestPrefix}-${i}` : undefined}
           />
         ))}
       </Box>
-      
+
     </Box>
   );
 };

@@ -255,6 +255,11 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 value={searchFilter}
                                                 onChange={(e) => setSearchFilter(e.target.value)}
                                                 size="small"
+                                                slotProps={{
+                                                    "htmlInput": {
+                                                        "data-test": "record-search-canyon"
+                                                    }
+                                                }}
                                                 sx={{ mb: 1 }}
                                                 error={canyonError}
                                                 helperText={canyonError ? t('record.canyonRequired') : ''}
@@ -264,8 +269,10 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                     <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.favourites')}</ListSubheader>
                                                 )}
                                                 {favouriteCanyons.map((canyon) => (
-                                                    <ListItem key={canyon.Key} disablePadding>
-                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                    <ListItem key={canyon.Key} disablePadding >
+                                                        <ListItemButton
+                                                            onClick={() => handleCanyonSelect(canyon)}
+                                                            data-test={`record-canyon-search--item-${canyon.Key}`}>
                                                             <ListItemText
                                                                 primary={
                                                                     <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -289,7 +296,9 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                                 )}
                                                 {otherCanyons.map(canyon => (
                                                     <ListItem key={canyon.Key} disablePadding>
-                                                        <ListItemButton onClick={() => handleCanyonSelect(canyon)}>
+                                                        <ListItemButton
+                                                            onClick={() => handleCanyonSelect(canyon)}
+                                                            data-test={`record-canyon-search--item-${canyon.Key}`}>
                                                             <ListItemText
                                                                 primary={
                                                                     <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -348,7 +357,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 fullWidth
                                 required
                                 margin="normal"
-                                inputProps={{ min: 1 }}
+                                inputProps={{ min: 1, 'data-test': 'record-team-size' }}
                                 error={touched.TeamSize && Boolean(errors.TeamSize)}
                                 helperText={touched.TeamSize && errors.TeamSize}
                             />
@@ -359,6 +368,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     onChange={v => setFieldValue('WaterLevel', v)}
                                     icon={WaterDropIcon}
                                     activeColor="info"
+                                    dataTestPrefix="record-water-level"
                                 />
                             </Box>
                             <Box sx={{ mb: 2, mt: 2 }}>
@@ -368,6 +378,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     onChange={v => setFieldValue('TripRating', v)}
                                     icon={StarIcon}
                                     activeColor="secondary"
+                                    dataTestPrefix="record-descent-rating"
                                 />
                             </Box>
                             <TextField
@@ -380,6 +391,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                 margin="normal"
                                 multiline
                                 minRows={3}
+                                inputProps={{ 'data-test': 'record-comments' }}
                                 error={touched.Comments && Boolean(errors.Comments)}
                                 helperText={touched.Comments && errors.Comments}
                             />
@@ -395,10 +407,20 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                                     ))
                                 }
                                 renderInput={(params) => (
-                                    <TextField {...params} label={t('common:fields.tags')} placeholder={t('record.addTags')} margin="normal" />
+                                    <TextField
+                                        {...params}
+                                        label={t('common:fields.tags')}
+                                        placeholder={t('record.addTags')}
+                                        margin="normal"
+                                        slotProps={{
+                                            htmlInput: {
+                                                ...params.inputProps,
+                                                'data-test': 'record-tags'
+                                            }
+                                        }}
+                                    />
                                 )}
                             />
-                            <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.gearAndRope')}</Typography>
                             <Box display="flex" gap={2} flexDirection="column" mb={2}>
                                 <GearRopeSelector
                                     selectedRopeIds={values.RopeIds}

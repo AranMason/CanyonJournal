@@ -61,6 +61,7 @@
     "favourites": "Favourites",
     "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
     "selectGearSetBtn": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
+    "noGear": "You have no gear",
     "formErrors": {
       "maxDate": "Cannot be in the future",
       "waterLevel": "Invalid water level",

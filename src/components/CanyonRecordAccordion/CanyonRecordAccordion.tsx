@@ -27,11 +27,12 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
     const navigate = useNavigate();
     const { t } = useTranslation('common');
 
-    return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }}>
+    return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }} data-test={`journal-record-${record.Id}`}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
             id="panel1-header"
+            data-test={`journal-record-summary-${record.Id}`}
         >
             <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
 
@@ -71,7 +72,13 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                         onClick={() => { if (record.DetailUrl) navigate(record.DetailUrl); }}
                         sx={{ p: { xs: 1.5, sm: 1 } }}
                     ><LocationPinIcon /></IconButton>
-                    <IconButton size="small" onClick={() => navigate(`/journal/record/${record.Id}`)} sx={{ p: { xs: 1.5, sm: 1 } }}><EditIcon /></IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => navigate(`/journal/record/${record.Id}`)}
+                        sx={{ p: { xs: 1.5, sm: 1 } }}
+                        data-test={`journal-record-edit-${record.Id}`}>
+                        <EditIcon />
+                    </IconButton>
                 </Box>
 
             </Box>
