@@ -8,12 +8,14 @@ export default defineConfig({
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
         headless: true,
+        testIdAttribute: 'data-test'
     },
     projects: [
         { name: 'setup', testMatch: /tests\/playwright\/.*\.setup\.ts/ },
         {
             name: 'test',
             testDir: './tests/playwright/suites',
+            workers: 2,
             use: {
                 ...devices['Desktop Chrome'],
                 // Use prepared auth state.

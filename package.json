@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./build/index.js",
-    "watch:server": "nodemon index.ts",
+    "dev:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
     "docs": "jekyll serve --source ./docs",

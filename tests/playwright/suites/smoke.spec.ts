@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 
+
 const pageChecks: { url: string, expectedTitle: string }[] = [
     {
         url: '/dashboard',
