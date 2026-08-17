@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { GearItem, GearItemSet } from '../../types/types';
-import { Button, DialogActions, DialogContent, List, ListItem, ListItemText, ListSubheader, Switch, TextField, Typography } from '@mui/material';
+import { Button, DialogActions, DialogContent, TextField } from '@mui/material';
 import Loader from '../Loader';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
 import { load as loadGear } from '../../helpers/EquipmentDataStore';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
+import GearSetItemSelector from './GearSetItemSelector';
 
 interface IGearSetModalProps {
     isOpen: boolean;
@@ -25,7 +26,6 @@ const defaultGearSet: GearItemSet = {
 const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLabel, onSave, onClose }) => {
     const { t } = useTranslation('translation')
     const [gear, setGear] = useState<GearItem[]>();
-    const [gearSetData, setGearSetData] = useState(defaultGearSet);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -35,10 +35,6 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
             setGear(g.gear);
         }).finally(() => setIsLoading(false));
     }, [])
-
-    useEffect(() => {
-        if (gearSet) setGearSetData(gearSet)
-    }, [gearSet]);
 
     return <AppModal open={isOpen} onClose={onClose} title={t('gear.gearSet.modalTitle', { context: !!gearSet ? 'edit' : 'create' })}>
         <Formik
@@ -55,13 +51,13 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                     setSubmitting(true)
                     await onSave({
                         ...value,
-                        Id: gearSetData.Id
+                        Id: gearSet?.Id ?? value.Id
                     }).finally(() => {
                         setSubmitting(false);
                     })
                 }
             }>
-            {({ values, setFieldValue, isValid, handleBlur, handleChange, handleSubmit, touched, errors, submitCount, setFieldTouched }) => <>
+            {({ values, isValid, handleBlur, handleChange, handleSubmit, touched, errors, submitCount, setFieldTouched, setFieldValue }) => <>
                 <DialogContent>
                     <Loader isLoading={isLoading}>
                         <Form>
@@ -75,42 +71,28 @@ const GearSetModal: React.FC<IGearSetModalProps> = ({ isOpen, gearSet, actionLab
                                 fullWidth
                                 error={touched.Name && Boolean(errors.Name)}
                                 helperText={touched.Name && errors.Name}
+                                sx={{ mb: 2 }}
                             />
-                            <List dense>
-                                {(touched.Items || submitCount > 0) && errors.Items && <Typography variant='caption' color='error'>{errors.Items}</Typography>}
-                                {Object.entries(gear?.reduce((acc, item) => {
-                                    acc[item.Category] ||= [];
-                                    acc[item.Category].push(item);
-                                    return acc;
-                                }, {} as { [key in string]: GearItem[] }) ?? []).sort(([a], [b]) => a.localeCompare(b)).map(([category, items]): React.ReactNode => {
-                                    return <React.Fragment key={category}>
-                                        <ListSubheader disableSticky>{category}</ListSubheader>
-                                        {(items as GearItem[]).map(g => {
-                                            const isChecked = values.Items.includes(g.Id);
 
-                                            return <ListItem
-                                                key={g.Id}
-                                                secondaryAction={<Switch checked={isChecked} value={g.Id} onClick={() => {
-                                                    setFieldTouched('Items', true);
-                                                    if (isChecked) {
-                                                        setFieldValue(
-                                                            'Items',
-                                                            values.Items.filter(s => s !== g.Id)
-                                                        )
-                                                    } else {
-                                                        setFieldValue(
-                                                            'Items',
-                                                            [...values.Items, g.Id]
-                                                        )
-                                                    }
-                                                }} />}>
-                                                <ListItemText inset primary={g.Name} secondary={t('gear.makeAndModel', { make: g.Manufacturer, model: g.Model })}></ListItemText>
-
-                                            </ListItem>
-                                        })}</React.Fragment>;
-                                })}
-
-                            </List>
+                            {(touched.Items || submitCount > 0) && errors.Items && <TextField
+                                value={errors.Items}
+                                error
+                                fullWidth
+                                margin="normal"
+                                helperText={errors.Items}
+                                label={t('gear.gearSet.selectedGear')}
+                                sx={{ display: 'none' }}
+                            />}
+                            {gear && (
+                                <GearSetItemSelector
+                                    gear={gear}
+                                    value={values.Items}
+                                    onChange={(items) => {
+                                        setFieldTouched('Items', true);
+                                        setFieldValue('Items', items);
+                                    }}
+                                />
+                            )}
                         </Form>
 
                     </Loader>
