@@ -37,7 +37,7 @@ const GearSetTable: React.FC = () => {
 
     const renderGearChips = (id: number, gear: GearItem[]): React.ReactElement => {
         const isExpanded = gearSetExpanded[id] ?? false;
-        const isTogglable = gear.length >= EXPAND_THRESHOLD;
+        const isTogglable = gear.length > EXPAND_THRESHOLD;
 
         const chipsToRender = isExpanded || !isTogglable ? gear : gear.slice(0, EXPAND_THRESHOLD);
 
