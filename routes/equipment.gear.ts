@@ -214,29 +214,17 @@ router.get('/widget', async (req: Request, res: Response) => {
         FROM GearItemsToService 
         WHERE 
     -- Items with service history within 6 months
-    LastServiceDate <= DATEADD(month, -6, GETDATE())
-    OR 
-    -- Items without service history: fallback to ManufactureDate or Created date
-    (
-        LastServiceDate IS NULL 
-        AND Created <= DATEADD(month, -6, GETDATE())
-    )
+    COALESCE(LastServiceDate, InServiceDate, Created) < DATEADD(month, -6, GETDATE())
     OR RetirementDate <= GETDATE()
 ORDER BY 
-    -- Priority 1: Approaching or past RetirementDate (RetirementDate <= GETDATE() gets group 0)
-    CASE 
-        WHEN RetirementDate IS NOT NULL AND RetirementDate <= GETDATE() THEN 0 
-        ELSE 1 
-    END ASC,
-    -- Secondary sort for items with retirement dates (soonest first)
+    CASE WHEN RetirementDate IS NOT NULL AND RetirementDate <= GETDATE() THEN 0 ELSE 1 END ASC,
     RetirementDate ASC,
-    -- Priority 2: Serviced items first, unserviced items last
-    CASE 
-        WHEN LastServiceDate IS NULL THEN 1 
-        ELSE 0 
-    END ASC,
-    -- Secondary sort for serviced items (most recent first)
-    LastServiceDate DESC;`)
+    CASE WHEN LastServiceDate IS NULL THEN 1 ELSE 0 END ASC,
+    LastServiceDate DESC,
+    CASE WHEN InServiceDate IS NULL THEN 1 ELSE 0 END ASC,
+    InServiceDate DESC,
+    CASE WHEN Created IS NULL THEN 1 ELSE 0 END ASC,
+    Created DESC`)
     res.json(historyRes.recordset);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch gear service history' });

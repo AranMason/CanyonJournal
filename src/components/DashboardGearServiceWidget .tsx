@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "../utils/api";
-import { Box, Card, IconButton, Link, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, Card, Chip, IconButton, Link, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
 import Loader from "./Loader";
 import { GearItem } from "../types/types";
 import { useTranslation } from "react-i18next";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import GearServiceModal from "./gear/GearServiceModal";
 import ServiceStatusIndicator from "./gear/ServiceStatusIndicator";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const DashboardGearServiceWidget: React.FC = () => {
 
@@ -35,38 +35,41 @@ const DashboardGearServiceWidget: React.FC = () => {
     }
 
     function displayDate(date: string): string {
-        return new Date(date).toLocaleDateString(undefined, { dateStyle: "medium" })
+        return new Date(date).toLocaleDateString(undefined, { dateStyle: "medium" });
+    }
+
+    // Checks if an item has reached/passed its retirement date
+    function isRetiredOrDue(retirementDate: string | null | undefined): boolean {
+        if (!retirementDate) return false;
+        return new Date(retirementDate) <= new Date();
     }
 
     function renderServiceText(item: GearItem): React.ReactNode {
+        // Priority 1: Retired / Approaching Retirement
+        if (isRetiredOrDue(item.RetirementDate)) {
+            return <Tooltip title={t('translation:dashboard.serviceDateTooltip', { date: displayDate(item.RetirementDate!) })} >
+                <Chip label={t('translation:dashboard.retireDate')} size="small" color="error" variant="outlined" />
+            </Tooltip >
 
 
-
-        if (item.RetirementDate && new Date(item.RetirementDate) < new Date) {
-            return <>
-                <i>
-                    {t('translation:dashboard.retirementDate')}
-                </i>
-                <br />
-                <span>
-                    {displayDate(item.RetirementDate)}
-                </span>
-            </>
         }
 
-        if (item.LastServiceDate) {
-            return <>
-                <i>{t('translation:dashboard.lastServicedDate')}</i>
-                <br />
-                <span>{displayDate(item.LastServiceDate)}</span>
-            </>
-        }
+        // Determine the fallback date used by COALESCE in SQL
+        const fallbackDate = item.LastServiceDate
+            || item.InServiceDate
+            || item.Created;
 
-        return <i>{t('translation:dashboard.noServiceHistory')}</i>
+        return <Tooltip title={t('translation:dashboard.serviceDateTooltip', { date: displayDate(fallbackDate!) })}>
+            <Chip label={t('translation:dashboard.needsService')} size="small" variant="outlined" color="warning" />
+        </Tooltip>
     }
 
-
-    return <><Typography variant="h6" mb={2}>{t('translation:dashboard.gearToService')}</Typography>
+    return <><Typography variant="h6" mb={2}>
+        {t('translation:dashboard.gearToService')}
+    </Typography>
+        <Typography component="p" color="textSecondary" fontSize={12}>
+            {t('translation:dashboard.gearToServiceInfo')}
+        </Typography>
         <Card>
             <Loader isLoading={isLoading}>
                 <GearServiceModal open={gearServiceModalId !== null} gearId={gearServiceModalId}
