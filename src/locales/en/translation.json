@@ -22,10 +22,7 @@
     "priorYear": "{{year}}: {{count}}",
     "gearToService": "Gear Monitor",
     "gearToServiceInfo": "Top 5 items flagged because they are past retirement, last serviced/inspected over 6 months ago, or have no service history after 6 months from being added.",
-    "noServiceHistory": "No Service History",
-    "needsService": "Should Service",
-    "retireDate": "Should Retire",
-    "serviceDateTooltip": "Since {{date}}"
+    "retirementDateTooltip": "Retirement Date: {{date}}"
   },
   "journal": {
     "title": "Your Journal",

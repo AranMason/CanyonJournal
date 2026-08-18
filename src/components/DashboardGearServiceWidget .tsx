@@ -8,6 +8,8 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import GearServiceModal from "./gear/GearServiceModal";
 import ServiceStatusIndicator from "./gear/ServiceStatusIndicator";
 import { useNavigate } from "react-router-dom";
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 const DashboardGearServiceWidget: React.FC = () => {
 
@@ -47,12 +49,14 @@ const DashboardGearServiceWidget: React.FC = () => {
     function renderServiceText(item: GearItem): React.ReactNode {
         // Priority 1: Retired / Approaching Retirement
         if (isRetiredOrDue(item.RetirementDate)) {
-            return <Tooltip title={t('translation:dashboard.serviceDateTooltip', { date: displayDate(item.RetirementDate!) })} >
-                <Chip label={t('translation:dashboard.retireDate')} size="small" color="error" variant="outlined" />
+            return <Tooltip title={t('translation:dashboard.retirementDateTooltip', { date: displayDate(item.RetirementDate!) })} >
+                <ErrorOutlineOutlinedIcon color="error" />
             </Tooltip >
 
 
         }
+
+        return null;
 
         // Determine the fallback date used by COALESCE in SQL
         const fallbackDate = item.LastServiceDate
@@ -103,7 +107,7 @@ const DashboardGearServiceWidget: React.FC = () => {
                                 mr={2}
                                 variant='caption'
                                 color='textSecondary'
-                                sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'end' }}
+                                sx={{ display: 'flex', flexDirection: 'column', alignItems: 'end' }}
                             >
                                 {renderServiceText(i)}
                             </Typography>
