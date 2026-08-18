@@ -19,7 +19,11 @@
     "acrossCountry_one": "Across {{count}} country",
     "acrossCountry_other": "Across {{count}} countries",
     "newThisYear": "+{{count}} this year",
-    "priorYear": "{{year}}: {{count}}"
+    "priorYear": "{{year}}: {{count}}",
+    "gearToService": "Gear Monitor",
+    "noServiceHistory": "No Service History",
+    "lastServicedDate": "Last Serviced",
+    "retirementDate": "Retirement Date"
   },
   "journal": {
     "title": "Your Journal",

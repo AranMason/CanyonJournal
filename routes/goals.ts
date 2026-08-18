@@ -422,8 +422,7 @@ async function getGoalTrips(
     RegionId: row.RegionId,
     RegionSlug: row.RegionSlug,
     RegionSymbol: row.RegionSymbol,
-    Date: row.DescentDate,
-    // TODO: Get GearIds and RopeIds for the descent. This will require secondary queries
+    Date: row.DescentDate
   }
 
   ));

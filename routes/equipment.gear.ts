@@ -12,8 +12,8 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
-    if(!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
     const {
       name,
@@ -86,8 +86,8 @@ router.put('/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
-    if(!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
     const id = Number(req.params.id);
     const {
@@ -145,8 +145,8 @@ router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
-    if(!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
     const id = Number(req.params.id);
     await pool.request().input('id', sql.Int, id).input('userId', sql.Int, userId).query('DELETE FROM GearItems WHERE Id=@id AND UserId=@userId');
@@ -181,12 +181,74 @@ router.get('/:gearId/descents', async (req: Request, res: Response) => {
 /// Service history endpoints
 /// =========================================================================
 
+router.get('/widget', async (req: Request, res: Response) => {
+  try {
+    const pool = await getPool();
+    const userId = await getUserIdByRequest(req);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const historyRes = await pool.request()
+      .input('userId', sql.Int, userId)
+      .query(`WITH GearItemsToService AS (
+            SELECT 
+                gi.*,
+                gsr.StatusCode AS LatestStatusCode,
+                gsr.ServiceDate AS LastServiceDate
+            FROM GearItems gi
+            OUTER APPLY (
+                SELECT TOP (1) 
+                    gsr_sub.StatusCode, 
+                    gsr_sub.ServiceDate
+                FROM GearServiceRecords gsr_sub
+                WHERE gsr_sub.GearItemId = gi.Id 
+                  AND gsr_sub.UserId = gi.UserId  
+                  AND gsr_sub.StatusCode != ${GearServiceStatus.None}
+                ORDER BY gsr_sub.ServiceDate DESC, gsr_sub.Id DESC
+            ) gsr
+            WHERE gi.UserId = @UserId 
+              AND gi.IsRetired = 0
+        )
+        SELECT TOP 5 * 
+        FROM GearItemsToService 
+        WHERE 
+    -- Items with service history within 6 months
+    LastServiceDate <= DATEADD(month, -6, GETDATE())
+    OR 
+    -- Items without service history: fallback to ManufactureDate or Created date
+    (
+        LastServiceDate IS NULL 
+        AND Created <= DATEADD(month, -6, GETDATE())
+    )
+    OR RetirementDate <= GETDATE()
+ORDER BY 
+    -- Priority 1: Approaching or past RetirementDate (RetirementDate <= GETDATE() gets group 0)
+    CASE 
+        WHEN RetirementDate IS NOT NULL AND RetirementDate <= GETDATE() THEN 0 
+        ELSE 1 
+    END ASC,
+    -- Secondary sort for items with retirement dates (soonest first)
+    RetirementDate ASC,
+    -- Priority 2: Serviced items first, unserviced items last
+    CASE 
+        WHEN LastServiceDate IS NULL THEN 1 
+        ELSE 0 
+    END ASC,
+    -- Secondary sort for serviced items (most recent first)
+    LastServiceDate DESC;`)
+    res.json(historyRes.recordset);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch gear service history' });
+  }
+});
+
 router.get('/:id/service', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
-    if(!userId) {
-        return res.status(401).json({ error: 'Unauthorized' });
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
     const gearId = Number(req.params.id);
 

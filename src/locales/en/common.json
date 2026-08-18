@@ -79,6 +79,7 @@
     "postReport": "Post Report",
     "recordDescent": "$t(common:terms.record.upper, {\"count\": 1}) $t(common:terms.descent.upper, {\"count\": 1})",
     "viewTrips": "View Trips",
+    "viewMore": "View more",
     "addFavourite": "Add to favourites",
     "removeFavourite": "Remove from favourites"
   },

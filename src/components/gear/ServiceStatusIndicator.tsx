@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 type ServiceStatusIndicatorProps = {
   isRetired: boolean;
-  statusCode?: GearServiceStatus | null;
+  statusCode: GearServiceStatus | undefined;
   size?: "small" | "medium";
   showText?: boolean;
 };

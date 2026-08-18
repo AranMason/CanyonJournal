@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { getRecordsForDashboard } from '../helpers/RecordDataStore';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChangeLogModal from '../components/ChangeLogModal';
+import DashboardGearServiceWidget from '../components/DashboardGearServiceWidget ';
 
 const DashboardPage: React.FC = () => {
 
@@ -32,26 +33,31 @@ const DashboardPage: React.FC = () => {
 
   return (
     <PageTemplate pageTitle={t('dashboard.title')} isLoading={loading || isLoading}>
-      <ChangeLogModal open={isChangeLogOpen} onClose={() => setIsChangeLogOpen(false)}/>
+      <ChangeLogModal open={isChangeLogOpen} onClose={() => setIsChangeLogOpen(false)} />
       <Box sx={{ mb: 3, display: 'flex', gap: 2, justifyContent: 'space-between' }}>
-        <Button variant="contained" color="tertiary" onClick={() => navigate("/journal/record")}  startIcon={<CreateIcon/>}>{t('common:actions.recordDescent')}</Button>
-        <Button startIcon={<NotificationsActiveIcon/>} onClick={() => setIsChangeLogOpen(true)}>Change Log</Button>
+        <Button variant="contained" color="primary" onClick={() => navigate("/journal/record")} startIcon={<CreateIcon />}>{t('common:actions.recordDescent')}</Button>
+        <Button startIcon={<NotificationsActiveIcon />} onClick={() => setIsChangeLogOpen(true)}>Change Log</Button>
       </Box>
       <DashboardStats />
       <GoalsWidget />
+      <DashboardGearServiceWidget />
       <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
         {t('dashboard.recentDescents')}
       </Typography>
       {records.length === 0 ? (<div>{t('journal.noRecords')}</div>) : (
 
-        records.map(rec => (
-          <CanyonRecordAccordion
+        records.map(rec => {
+          const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined
+
+          if (!canyon) return null;
+
+          return <CanyonRecordAccordion
             key={rec.Id}
             isOpen={sectionOpen === rec.Id}
             onChange={() => handleAccordionToggle(rec.Id ?? null)}
             record={rec}
-            canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined} />
-        ))
+            canyon={canyon} />
+        })
       )}
     </PageTemplate>
   );

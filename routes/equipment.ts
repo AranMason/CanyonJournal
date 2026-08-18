@@ -13,7 +13,8 @@ router.get('/', async (req: Request, res: Response) => {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
     console.log("userId in /api/equipment:", userId);
-    const gearRes = await pool.request().input('userId', sql.Int, userId).query(`SELECT *,
+    const gearRes = await pool.request().input('userId', sql.Int, userId)
+      .query(`SELECT *,
       (SELECT TOP 1 StatusCode
        FROM GearServiceRecords gsr
        WHERE gsr.GearItemId = GearItems.Id AND gsr.UserId = @userId  AND gsr.StatusCode != ${GearServiceStatus.None}

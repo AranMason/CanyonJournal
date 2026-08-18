@@ -105,13 +105,9 @@ const GearTable: React.FC = () => {
             label: t('gear.filters.serviceStatusLabel'),
             labelId: 'gear-status-filter',
             placeholder: t('gear.filters.allServiceStatuses'),
-            options: [
-                { value: 'good', label: t('gear.serviceStatus.good') },
-                { value: 'watch', label: t('gear.serviceStatus.watch') },
-                { value: 'bad', label: t('gear.serviceStatus.bad') },
-                { value: 'retired', label: t('gear.serviceStatus.retired') },
-                { value: 'unknown', label: t('gear.serviceStatus.unknown') },
-            ],
+            options: [GearServiceStatus.None, GearServiceStatus.Good, GearServiceStatus.Watch, GearServiceStatus.Bad, GearServiceStatus.Retired].map(s => {
+                return { value: s, label: t('gear.serviceStatus', { context: s }) }
+            })
         },
         {
             type: 'single-select',

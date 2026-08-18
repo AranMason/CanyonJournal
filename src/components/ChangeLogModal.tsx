@@ -34,6 +34,13 @@ const changes: { date: Date, items: string[] }[] = [
         items: [
             'Changed how gear is selected on the Journal Entry pages'
         ]
+    },
+    {
+        date: new Date('2026-08-18'),
+        items: [
+            'Fixed Bug with Service Status Filter on Gear Page',
+            'Added Gear Monitor Widget - This will appear if any of the following is true: 6+ Months since an item was last serviced; 6+ months since it was added if no service history present; or past it\'s retirement date'
+        ]
     }
 ];
 
