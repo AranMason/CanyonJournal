@@ -301,6 +301,8 @@
       "weight": "{{value}} g",
       "totalWeight": "Gear Set Weight",
       "weightNotIncluded": "{{count}} items missing",
+      "viewMoreItems": "Show {{count}} more items...",
+      "viewMoreItems_min": "Show less",
       "modalErrors": {
         "name": "Name is required",
         "selectedGear": "You must select at least one piece of $t(common:terms.gear.upper,  {\"count\": 1})"

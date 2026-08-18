@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
-import { Box, Button, Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Chip, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
 import { GearItem, GearItemSet } from '../../types/types';
 import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
 import RowActions from '../RowActions';
@@ -8,6 +8,9 @@ import GearSetModal from './GearSetModal';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import ConfirmDeleteModal from '../ConfirmDeleteModal';
+
+
+const EXPAND_THRESHOLD = 8;
 
 function sortGearSets(a: GearItemSet, b: GearItemSet) {
     return a.Name.localeCompare(b.Name)
@@ -22,6 +25,33 @@ const GearSetTable: React.FC = () => {
     const [gearSetModal, setGearSetModal] = useState<GearItemSet | null>(null);
     const [gearData, setGearSetData] = useState<GearItemSet[]>()
     const [gearItemById, setGearItemsById] = useState<{ [key in number]: GearItem }>({});
+    const [gearSetExpanded, setGearSetExpanded] = useState<{ [key in number]?: boolean }>({})
+
+    const toggleGearSet = (id: number): void => {
+        const val = gearSetExpanded[id] ?? false;
+        setGearSetExpanded({
+            ...gearSetExpanded,
+            [id]: !val
+        })
+    }
+
+    const renderGearChips = (id: number, gear: GearItem[]): React.ReactElement => {
+        const isExpanded = gearSetExpanded[id] ?? false;
+        const isTogglable = gear.length >= EXPAND_THRESHOLD;
+
+        const chipsToRender = isExpanded || !isTogglable ? gear : gear.slice(0, EXPAND_THRESHOLD);
+
+        return <>
+            {chipsToRender.map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
+            {isTogglable &&
+                <Link
+                    variant='subtitle1'
+                    fontSize={12}
+                    sx={{ cursor: 'pointer' }}
+                    underline='hover' onClick={() => toggleGearSet(id)}>
+                    {isExpanded ? t('translation:gear.gearSet.viewMoreItems_min') : t('translation:gear.gearSet.viewMoreItems', { count: gear.length - EXPAND_THRESHOLD })}</Link>}
+        </>
+    }
 
 
     useEffect(() => {
@@ -121,7 +151,7 @@ const GearSetTable: React.FC = () => {
                                 </TableCell>
                                 <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
                                     <Box display={'flex'} gap={1} flexWrap={'wrap'}>
-                                        {gearItems.map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
+                                        {renderGearChips(i.Id, gearItems)}
                                     </Box>
                                 </TableCell>
                                 <TableCell width={'100px'}>
