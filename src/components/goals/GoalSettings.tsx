@@ -16,7 +16,7 @@ import { Region } from '../../types/Region';
 import AppModal from '../AppModal';
 import GoalEditorModal, { GoalEditorPayload } from './GoalEditorModal';
 
-const SettingsGoalsTab: React.FC = () => {
+const GoalSettings: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -218,4 +218,4 @@ const SettingsGoalsTab: React.FC = () => {
   );
 };
 
-export default SettingsGoalsTab;
+export default GoalSettings;

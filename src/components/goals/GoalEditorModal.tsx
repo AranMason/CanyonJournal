@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   Box, Button, Chip, DialogActions, DialogContent, Divider, FormControl,
   FormControlLabel, IconButton, InputLabel, MenuItem, Radio, RadioGroup,
-  Select, TextField, Typography,
+  Select, Switch, TextField, Typography,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
 import { Goal, GoalRule, GoalRuleType } from '../../types/Goal';
 import { Tag } from '../../helpers/TagsDataStore';
@@ -59,6 +58,7 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
   const [timeWindowMode, setTimeWindowMode] = useState<TimeWindowMode>('alltime');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [newRuleType, setNewRuleType] = useState<GoalRuleType | ''>('');
 
   useEffect(() => {
     if (!open) return;
@@ -92,6 +92,14 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
       ...previous,
       Rules: previous.Rules.map((rule, ruleIndex) => ruleIndex === index ? { ...rule, ...changes } : rule),
     }));
+
+  const addRule = (ruleType: GoalRuleType) => {
+    setForm(previous => ({
+      ...previous,
+      Rules: [...previous.Rules, { ...createEmptyRule(), RuleType: ruleType }],
+    }));
+    setNewRuleType('');
+  };
 
   const validate = (): boolean => {
     const nextErrors: Record<string, string> = {};
@@ -238,30 +246,39 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
           </Box>
 
           <Divider><Typography variant="caption" color="text.secondary">{t('goals.filtersSection')}</Typography></Divider>
+          <FormControl size="small" sx={{ alignSelf: 'flex-start', minWidth: 180 }}>
+            <InputLabel>{t('goals.addRule')}</InputLabel>
+            <Select
+              value={newRuleType}
+              label={t('goals.addRule')}
+              onChange={event => addRule(event.target.value as GoalRuleType)}
+            >
+              {ruleTypes.map(ruleType => (
+                <MenuItem key={ruleType} value={ruleType}>{ruleTypeLabel[ruleType]}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           {form.Rules.map((rule, index) => (
             <React.Fragment key={index}>
               {index > 0 && <Divider sx={{ my: 1 }} />}
-              <Box
-                sx={{
-                  display: 'grid',
-                  gridTemplateColumns: { xs: 'minmax(0, 1fr) auto', sm: 'minmax(150px, 0.9fr) minmax(0, 1fr) minmax(104px, 0.5fr) auto' },
-                  gap: 1,
-                  alignItems: 'start',
-                  width: '100%',
-                }}
-              >
-              <FormControl size="small" sx={{ gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
-                <InputLabel>{t('common:canyon.canyonType')}</InputLabel>
-                <Select
-                  value={rule.RuleType}
-                  label={t('common:canyon.canyonType')}
-                  onChange={event => updateRule(index, { RuleType: event.target.value as GoalRuleType, IntValue: null, IntValues: null })}
+              <Box display="flex" justifyContent="space-between" alignItems="center" minWidth={0}>
+                <Typography variant="subtitle2" noWrap>{ruleTypeLabel[rule.RuleType]}</Typography>
+                <IconButton
+                  size="small"
+                  onClick={() => setForm(previous => ({ ...previous, Rules: previous.Rules.filter((_, ruleIndex) => ruleIndex !== index) }))}
+                  color="text.secondary"
                 >
-                  {ruleTypes.map(ruleType => <MenuItem key={ruleType} value={ruleType}>{ruleTypeLabel[ruleType]}</MenuItem>)}
-                </Select>
-              </FormControl>
-
-              <Box minWidth={0} sx={{ gridColumn: { xs: '1 / -1', sm: 'auto' } }}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Box>
+              <Box
+                display="flex"
+                gap={1}
+                flexWrap="wrap"
+                alignItems="center"
+                width="100%"
+              >
+              <Box flex={1} display="flex" minWidth={180} gap={2} ml={1}>
                 {rule.RuleType === 'canyon_type' && (
                   <FormControl size="small" fullWidth>
                     <InputLabel>{t('goals.ruleTypeCanyonType')}</InputLabel>
@@ -337,39 +354,22 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
               </Box>
 
               {rule.RuleType !== 'first_time' && (
-                <FormControl size="small" sx={{ gridColumn: { xs: '1', sm: 'auto' } }}>
-                  <InputLabel>{t('goals.ruleMode')}</InputLabel>
-                  <Select
-                    value={rule.IsExclusion ? 'exclude' : 'include'}
-                    label={t('goals.ruleMode')}
-                    onChange={event => updateRule(index, { IsExclusion: event.target.value === 'exclude' })}
-                  >
-                    <MenuItem value="include">{t('goals.ruleInclude')}</MenuItem>
-                    <MenuItem value="exclude">{t('goals.ruleExclude')}</MenuItem>
-                  </Select>
-                </FormControl>
+                <FormControlLabel
+                  control={
+                    <Switch
+                        size="small"
+                      checked={!rule.IsExclusion}
+                      onChange={event => updateRule(index, { IsExclusion: !event.target.checked })}
+                    />
+                  }
+                  labelPlacement="start"
+                  label={t('goals.ruleInclude')}
+                  sx={{ m: 0, whiteSpace: 'nowrap' }}
+                />
               )}
-
-              <IconButton
-                size="small"
-                color="error"
-                onClick={() => setForm(previous => ({ ...previous, Rules: previous.Rules.filter((_, ruleIndex) => ruleIndex !== index) }))}
-                sx={{ gridColumn: { xs: '2', sm: 'auto' }, alignSelf: 'center' }}
-              >
-                <RemoveCircleOutlineIcon fontSize="small" />
-              </IconButton>
               </Box>
             </React.Fragment>
           ))}
-          <Button
-            size="small"
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={() => setForm(previous => ({ ...previous, Rules: [...previous.Rules, createEmptyRule()] }))}
-            sx={{ alignSelf: 'flex-start' }}
-          >
-            {t('goals.addRule')}
-          </Button>
         </Box>
       </DialogContent>
       <DialogActions>

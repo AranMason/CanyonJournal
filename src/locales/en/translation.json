@@ -167,8 +167,8 @@
     "ruleTypeMinStars": "$t(common:canyon.stars)",
     "ruleTypeTag": "Tag(s)",
     "ruleTypeFirstTime": "First time only",
-    "ruleInclude": "Include",
-    "ruleExclude": "Exclude",
+    "ruleInclude": "Is Included",
+    "ruleExclude": "Excluded",
     "trips": "$t(common:terms.descent.upper, {\"count\": 2})",
     "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})"
   },
