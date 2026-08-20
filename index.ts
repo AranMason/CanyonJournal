@@ -65,15 +65,6 @@ app.use(async (req, res, next) => {
 
     const pool = await getPool();
 
-    // Migrate old users
-    if (['joshbrennand319@gmail.com', 'dropdeaddove23@gmail.com', 'solharryarmer@gmail.com'].includes(oidcUser?.email)) {
-      await pool.request()
-        .input('guid', sql.NVarChar(255), guid)
-        .input('email', sql.NVarChar(255), oidcUser?.email)
-        .query('UPDATE Users SET Guid = @guid WHERE Guid = @email')
-    }
-
-
     let result = await pool.request()
       .input('guid', sql.NVarChar(255), guid)
       .query('SELECT Id, Guid, FirstName, ProfilePicture, Email, IsAdmin, Email FROM Users WHERE Guid = @guid');
@@ -88,15 +79,15 @@ app.use(async (req, res, next) => {
         .query('INSERT INTO Users (Guid, FirstName, ProfilePicture, IsAdmin, Email) OUTPUT INSERTED.* VALUES (@guid, @firstName, @profilePicture, 0, @email)');
 
       // Set Up new user data with an initial goal
-      try{
-        var userId = result.recordset[0].UserId;
+      try {
+        const userId = result.recordset[0].Id;
         await pool.request()
           .input('UserId', sql.Int, userId)
           .query("INSERT INTO Goals (UserId, Label, MinCount, SortOrder) VALUES (@UserId, 'Record 5 Canyon Descents', 5, 0)")
-      } catch(e) {
+      } catch (e) {
         console.error(e);
       }
-      
+
     } else {
       // Update the user just in case
       await pool.request()
