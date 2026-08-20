@@ -14,6 +14,7 @@ interface GoalProgressBarProps {
   regionNames?: Record<number, string>;
   onMarkComplete?: () => void;
   isCompleting?: boolean;
+  isAlwaysCompletable?: boolean;
   onTitleClick?: () => void;
 }
 
@@ -23,6 +24,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
   regionNames,
   onMarkComplete,
   isCompleting,
+  isAlwaysCompletable,
   onTitleClick,
 }) => {
   const { t } = useTranslation();
@@ -152,7 +154,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
           sx={{ width: '100%', height: 8, borderRadius: 4 }}
           color={isComplete ? 'success' : 'info'}
         />
-        {onMarkComplete && isComplete && (
+        {onMarkComplete && (isComplete || isAlwaysCompletable) && (
           <Tooltip title={t('goals.markComplete')}>
             <IconButton
               size="small"

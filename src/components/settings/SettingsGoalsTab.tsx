@@ -1,35 +1,25 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Box, Button, Chip, CircularProgress, Collapse, DialogActions,
+  Box, Button, Chip, CircularProgress, DialogActions,
   DialogContent, Divider, FormControl, FormControlLabel, IconButton,
-  InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Tooltip, Typography,
+  InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import ReplayIcon from '@mui/icons-material/Replay';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
-import { Goal, GoalRule, GoalRuleType, AuditTrip, EnrichedAuditTrip, enrichAuditTrips } from '../../types/Goal';
-import GoalProgressBar from '../goals/GoalProgressBar';
-import CanyonRating from '../CanyonRating';
+import { Goal, GoalRule, GoalRuleType } from '../../types/Goal';
+import * as GoalsDataStore from '../../helpers/GoalsDataStore';
+import GoalCard from '../goals/GoalCard';
 import RegionTreePicker from '../RegionTreePicker';
 import { useTranslation } from 'react-i18next';
 import * as TagsDataStore from '../../helpers/TagsDataStore';
-import * as CanyonDataStore from '../../helpers/CanyonDataStore';
-import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
 import { Region } from '../../types/Region';
 import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
 import { CanyonTypeEnum, CanyonTypeList } from '../../types/CanyonTypeEnum';
 import AppModal from '../AppModal';
-
-const PREVIEW_COUNT = 5;
 
 type TimeWindowMode = 'alltime' | 'since' | 'rolling';
 
@@ -80,12 +70,6 @@ const SettingsGoalsTab: React.FC = () => {
   const [deleteTarget, setDeleteTarget] = useState<Goal | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [completingId, setCompletingId] = useState<number | null>(null);
-  const [completeConfirmTarget, setCompleteConfirmTarget] = useState<Goal | null>(null);
-
-  const [auditOpen, setAuditOpen] = useState<Record<number, boolean>>({});
-  const [auditTrips, setAuditTrips] = useState<Record<number, EnrichedAuditTrip[] | undefined>>({});
-  const [auditLoading, setAuditLoading] = useState<Record<number, boolean>>({});
 
   const goalProgressPercentage = (goal: Goal): number => {
     const target = goal.TargetCount ?? goal.MinCount ?? 0;
@@ -103,7 +87,7 @@ const SettingsGoalsTab: React.FC = () => {
 
   const loadGoals = async () => {
     const [completed, tgs, regions] = await Promise.all([
-      apiFetch<Goal[]>('/api/goals?includeCompleted=true'),
+      GoalsDataStore.load(true),
       TagsDataStore.load(),
       RegionDataStore.load(),
     ]);
@@ -117,27 +101,6 @@ const SettingsGoalsTab: React.FC = () => {
     setIsLoading(true);
     loadGoals().finally(() => setIsLoading(false));
   }, []);
-
-  const toggleAudit = async (req: Goal) => {
-    const id = req.Id!;
-    const isOpen = auditOpen[id];
-    setAuditOpen(prev => ({ ...prev, [id]: !isOpen }));
-    if (!isOpen && auditTrips[id] === undefined) {
-      setAuditLoading(prev => ({ ...prev, [id]: true }));
-      try {
-        const [trips, canyonsById, userCanyonsById] = await Promise.all([
-          apiFetch<AuditTrip[]>(`/api/goals/${id}/trips`),
-          CanyonDataStore.loadById(),
-          UserCanyonDataStore.loadById(),
-        ]);
-        setAuditTrips(prev => ({ ...prev, [id]: enrichAuditTrips(trips, canyonsById, userCanyonsById) }));
-      } catch {
-        setAuditTrips(prev => ({ ...prev, [id]: [] }));
-      } finally {
-        setAuditLoading(prev => ({ ...prev, [id]: false }));
-      }
-    }
-  };
 
   const openAdd = () => {
     setEditingId(null);
@@ -193,8 +156,6 @@ const SettingsGoalsTab: React.FC = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        setAuditTrips(prev => { const next = { ...prev }; delete next[editingId]; return next; });
-        setAuditOpen(prev => ({ ...prev, [editingId]: false }));
       } else {
         await apiFetch('/api/goals', {
           method: 'POST',
@@ -202,6 +163,7 @@ const SettingsGoalsTab: React.FC = () => {
           body: JSON.stringify(payload),
         });
       }
+      GoalsDataStore.invalidate();
       await loadGoals();
       setDialogOpen(false);
     } catch (err: any) {
@@ -211,27 +173,13 @@ const SettingsGoalsTab: React.FC = () => {
     }
   };
 
-  const handleMarkComplete = async (req: Goal) => {
-    setCompletingId(req.Id!);
-    try {
-      await apiFetch(`/api/goals/${req.Id}/complete`, { method: 'PATCH' });
-      await loadGoals();
-    } catch (err: any) {
-      alert(err.message || t('goals.errors.markCompleteFailed'));
-    } finally {
-      setCompletingId(null);
-    }
-  };
-
   const handleReopen = async (req: Goal) => {
-    setCompletingId(req.Id!);
     try {
       await apiFetch(`/api/goals/${req.Id}/reopen`, { method: 'PATCH' });
+      GoalsDataStore.invalidate();
       await loadGoals();
     } catch (err: any) {
       alert(err.message || t('goals.errors.reopenFailed'));
-    } finally {
-      setCompletingId(null);
     }
   };
 
@@ -240,6 +188,7 @@ const SettingsGoalsTab: React.FC = () => {
     setIsDeleting(true);
     try {
       await apiFetch(`/api/goals/${deleteTarget.Id}`, { method: 'DELETE' });
+      GoalsDataStore.invalidate();
       await loadGoals();
       setDeleteTarget(null);
     } catch (err: any) {
@@ -264,13 +213,6 @@ const SettingsGoalsTab: React.FC = () => {
 
   const removeRule = (index: number) =>
     setForm(prev => ({ ...prev, Rules: prev.Rules.filter((_, i) => i !== index) }));
-
-  const goalTagNames = (goal: Goal): string[] =>
-    (goal.Rules ?? [])
-      .filter(r => r.RuleType === 'tag' && !r.IsExclusion)
-      .flatMap(r => (r.IntValues ?? '').split(',').map(Number).filter(n => !isNaN(n) && n > 0))
-      .map(id => tags.find(tg => tg.Id === id)?.Name)
-      .filter((n): n is string => Boolean(n));
 
   const goalRegionNames = useMemo((): Record<number, string> => {
     const map: Record<number, string> = {};
@@ -425,98 +367,17 @@ const SettingsGoalsTab: React.FC = () => {
         opacity: isCompleted ? 0.7 : 1,
       }}
     >
-      <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-        <Box flex={1} mr={1}>
-          <GoalProgressBar
-            requirement={req}
-            tagNames={goalTagNames(req)}
-            regionNames={goalRegionNames}
-            onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
-          />
-        </Box>
-        <Box display="flex" gap={0.5} mt={-0.5} flexShrink={0}>
-          <Tooltip title={t('goals.viewTrips')}>
-            <IconButton size="small" onClick={() => toggleAudit(req)}>
-              {auditOpen[req.Id!] ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
-            </IconButton>
-          </Tooltip>
-          {!isCompleted ? (
-            <Tooltip title={t('goals.markComplete')}>
-              <IconButton size="small" color="success" onClick={() => setCompleteConfirmTarget(req)} disabled={completingId === req.Id}>
-                <CheckCircleIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip title={t('goals.reopen')}>
-              <IconButton size="small" onClick={() => handleReopen(req)} disabled={completingId === req.Id}>
-                <ReplayIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-          <Tooltip title={t('common:actions.edit')}>
-            <IconButton size="small" onClick={() => openEdit(req)}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title={t('common:actions.delete')}>
-            <IconButton size="small" color="error" onClick={() => setDeleteTarget(req)}>
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Box>
-
-      <Collapse in={auditOpen[req.Id!]}>
-        <Divider sx={{ mt: 1, mb: 1 }} />
-        <Typography variant="caption" color="text.secondary" fontWeight={600} sx={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
-          {t('goals.matchingTrips')}
-        </Typography>
-        {auditLoading[req.Id!] ? (
-          <Box display="flex" justifyContent="center" py={1}><CircularProgress size={18} /></Box>
-        ) : (auditTrips[req.Id!] ?? []).length === 0 ? (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, mb: 1 }}>
-            {t('goals.noMatchingTrips')}
-          </Typography>
-        ) : (
-          <Box sx={{ mb: 1 }}>
-            {(auditTrips[req.Id!] ?? []).slice(0, PREVIEW_COUNT).map((trip, ti) => (
-              <Box key={trip.Id}>
-                {ti > 0 && <Divider sx={{ my: 0.5 }} />}
-                <Box display="flex" justifyContent="space-between" alignItems="center" py={0.5}>
-                  <Box minWidth={0} flex={1}>
-                    <Typography variant="body2" noWrap>
-                      {trip.RegionSymbol ? `${trip.RegionSymbol} ` : ''}{trip.Name}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      {new Date(trip.Date).toLocaleDateString(undefined, { dateStyle: 'medium' })}
-                    </Typography>
-                  </Box>
-                  <Box ml={1} flexShrink={0}>
-                    <Typography variant="caption" color="text.secondary">
-                      <CanyonRating
-                        verticalRating={trip.VerticalRating ?? undefined}
-                        aquaticRating={trip.AquaticRating ?? undefined}
-                        commitmentRating={trip.CommitmentRating ?? undefined}
-                        isUnrated={trip.IsUnrated ?? undefined}
-                      />
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-            ))}
-            {(auditTrips[req.Id!] ?? []).length > PREVIEW_COUNT && (
-              <Button
-                size="small"
-                variant="text"
-                onClick={() => navigate(`/journal/goals/${req.Id}`)}
-                sx={{ p: 0, mt: 0.5, typography: 'caption', minWidth: 0, textTransform: 'none' }}
-              >
-                {t('goals.viewAllTrips', { count: (auditTrips[req.Id!] ?? []).length })}
-              </Button>
-            )}
-          </Box>
-        )}
-      </Collapse>
+      <GoalCard
+        goal={req}
+        regionNames={goalRegionNames}
+        isCompleted={isCompleted}
+        isAlwaysCompletable={!isCompleted}
+        onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
+        onCompleted={loadGoals}
+        onEdit={() => openEdit(req)}
+        onDelete={() => setDeleteTarget(req)}
+        onReopen={isCompleted ? () => handleReopen(req) : undefined}
+      />
     </Box>
   );
 
@@ -711,27 +572,6 @@ const SettingsGoalsTab: React.FC = () => {
         </DialogContent>
       </AppModal>
 
-      {/* Mark complete confirmation */}
-      <AppModal
-        open={Boolean(completeConfirmTarget)}
-        onClose={() => setCompleteConfirmTarget(null)}
-        title={t('goals.markCompleteConfirmTitle')}
-        maxWidth="xs"
-        actions={
-          <>
-            <Button onClick={() => setCompleteConfirmTarget(null)}>{t('common:actions.cancel')}</Button>
-            <Button variant="contained" color="success"
-              disabled={completingId === completeConfirmTarget?.Id}
-              onClick={() => { if (completeConfirmTarget) { setCompleteConfirmTarget(null); handleMarkComplete(completeConfirmTarget); } }}>
-              {t('goals.markComplete')}
-            </Button>
-          </>
-        }
-      >
-        <DialogContent>
-          <Typography>{t('goals.markCompleteConfirmMessage', { label: completeConfirmTarget?.Label })}</Typography>
-        </DialogContent>
-      </AppModal>
     </>
   );
 };
