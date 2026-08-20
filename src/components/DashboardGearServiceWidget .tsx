@@ -8,7 +8,6 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 import GearServiceModal from "./gear/GearServiceModal";
 import ServiceStatusIndicator from "./gear/ServiceStatusIndicator";
 import { useNavigate } from "react-router-dom";
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 const DashboardGearServiceWidget: React.FC = () => {
