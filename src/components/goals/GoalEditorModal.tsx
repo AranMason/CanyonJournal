@@ -204,6 +204,7 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
             onChange={id => setField('RegionId', id)}
             label={form.CountMode === 'all_in_region' ? t('goals.regionRequired') : t('goals.regionOptional')}
             allowClear
+            size="small"
             error={Boolean(errors.RegionId)}
             helperText={errors.RegionId}
           />
