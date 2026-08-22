@@ -1,0 +1,14 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  {% assign pages_to_index = "/,/contact.html,/privacy.html" | split: "," %}
+  {% for path in pages_to_index %}
+  <url>
+    <loc>{{ site.url }}{{ path }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>{% if path == '/' %}1.0{% else %}0.7{% endif %}</priority>
+  </url>
+  {% endfor %}
+</urlset>
