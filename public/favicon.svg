@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+<svg width="48px" height="48px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
   <ellipse style="stroke: rgb(255, 107, 53); stroke-width: 24px; fill: rgb(35, 41, 70);" cx="250" cy="250" rx="229.704" ry="229.704"/>
   <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: &quot;Arial&quot;, sans-serif; font-size: 28px;" x="615.221" y="188.776"> </text>
   <g transform="matrix(1.185202, 0, 0, 1.185202, -42.37225, -41.842873)" style="">
