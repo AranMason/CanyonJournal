@@ -33,7 +33,7 @@ function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <MobileAppBar onMenuClick={() => setMobileOpen(true)} />
+      <MobileAppBar onMenuClick={() => setMobileOpen(!mobileOpen)} />
       <Box display="flex">
         <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
         <Box component="main" sx={{ flexGrow: 1, mt: { xs: '56px', sm: '64px', md: 0 } }}>
