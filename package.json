@@ -8,7 +8,7 @@
     "dev:server": "nodemon index.ts",
     "build": "react-scripts build && tsc",
     "dev": "react-scripts start",
-    "docs": "jekyll serve --source ./docs",
+    "dev:docs": "jekyll serve --source ./docs",
     "test": "react-scripts test",
     "test:e2e": "playwright test",
     "eject": "react-scripts eject",
@@ -91,5 +91,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "allowScripts": {
+    "core-js@3.45.1": true,
+    "core-js-pure@3.45.1": true
   }
 }

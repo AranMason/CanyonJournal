@@ -1,4 +1,4 @@
-# Canyon Journal — Marketing Site (docs/)
+# Hand Linne — Marketing Site (docs/)
 
 Static marketing website published via GitHub Pages. Built with Jekyll for shared layouts and templating.
 
@@ -7,7 +7,7 @@ Static marketing website published via GitHub Pages. Built with Jekyll for share
 - `index.html` — Homepage with hero, feature grid, and call-to-action.
 - `contact.html` — Contact page with email address.
 - `privacy.html` — Privacy statement.
-- `assets/styles.css` — Site styles.
+- `src/styles.css` — Site styles.
 - `_layouts/base.html` — Shared layout (head, header, footer). All pages extend this.
 - `_layouts/page.html` — Centred content page layout (used by contact + privacy).
 - `_config.yml` — Jekyll site configuration.
