@@ -2,9 +2,12 @@ import { Box, Typography } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import GroupIcon from "@mui/icons-material/Group";
 import HikingIcon from "@mui/icons-material/Hiking";
+import PublicIcon from "@mui/icons-material/Public";
 import TerrainIcon from "@mui/icons-material/Terrain";
 import React, { useMemo } from "react";
+import { GetRegionDisplayName } from "../../helpers/RegionHelper";
 import { apiFetch } from "../../utils/api";
+import RegionIcon from "../regions/RegionIcon";
 import StatCard from "../StatCard";
 
 type PopularCanyon = {
@@ -12,13 +15,21 @@ type PopularCanyon = {
     tripCount: number;
 };
 
+type PopularRegion = {
+    regionSlug: string;
+    regionSymbol?: string | null;
+    tripCount: number;
+};
+
 type StatsData = {
     totalUsers: number;
     totalRecords: number;
+    totalTripsLast90Days: number;
     totalGoals: number;
     totalGoalsCompleted: number;
     activeUsersLast90Days: number;
     topCanyons: PopularCanyon[];
+    topRegions: PopularRegion[];
 };
 
 const AdminStatsTab: React.FC = () => {
@@ -53,6 +64,9 @@ const AdminStatsTab: React.FC = () => {
                     <Typography variant="h2" sx={{ fontWeight: 700 }}>
                         {data?.totalRecords}
                     </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                        Last 3 months: {data?.totalTripsLast90Days ?? 0}
+                    </Typography>
                 </Box>
             )}
         </StatCard>
@@ -72,6 +86,43 @@ const AdminStatsTab: React.FC = () => {
                     </Typography>
                 </Box>
             )}
+        </StatCard>
+        <StatCard
+            title={"Top 5 Regions"}
+            getData={() => loadPromise}
+            icon={PublicIcon}
+            color="primary.main"
+        >
+            {(data: StatsData) => {
+                const regions = data?.topRegions ?? [];
+
+                if (regions.length === 0) {
+                    return (
+                        <Box sx={{ textAlign: "center" }}>
+                            <Typography variant="body2" color="text.secondary">
+                                No region data yet
+                            </Typography>
+                        </Box>
+                    );
+                }
+
+                return (
+                    <Box sx={{ width: "100%" }}>
+                        {regions.map((region, index) => (
+                            <Box key={`${region.regionSlug}-${index}`} sx={{ display: "flex", justifyContent: "space-between", py: 0.5 }}>
+                                <Typography variant="body2" sx={{ pr: 1 }}>
+                                    <RegionIcon regionSlug={region.regionSlug} regionSymbol={region.regionSymbol} size={16} />
+                                    &nbsp;
+                                    {GetRegionDisplayName(region.regionSlug)}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                                    {region.tripCount}
+                                </Typography>
+                            </Box>
+                        ))}
+                    </Box>
+                );
+            }}
         </StatCard>
         <StatCard
             title={"Top 5 Popular Canyons"}
