@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Paper, Typography, Box, CircularProgress } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
 
-interface StatCardProps {
+interface StatCardProps<T> {
   title: string;
-  getData: () => any;
+  getData: () => T;
   icon?: SvgIconComponent;
   color?: string;
-  children?: (data?: any) => React.ReactNode;
+  children?: (data?: T) => React.ReactNode;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, getData, icon: Icon, color = 'primary.main', children }) => {
+const StatCard: React.FC<StatCardProps<any>> = ({ title, getData, icon: Icon, color = 'primary.main', children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(null);
 

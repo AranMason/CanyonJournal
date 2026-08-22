@@ -11,6 +11,7 @@ import sources from './sources';
 import reports from './reports';
 import regions from './regions';
 import goals from './goals';
+import admin from './admin';
 
 const router: Router = express.Router()
 
@@ -26,5 +27,6 @@ router.use('/sources', sources);
 router.use('/reports', reports);
 router.use('/regions', regions);
 router.use('/goals', goals);
+router.use('/admin', admin);
 
 export default router;

@@ -6,6 +6,7 @@ import SourcesTab from '../components/admin/SourcesTab';
 import ReportsTab from '../components/admin/ReportsTab';
 import RegionsTab from '../components/admin/RegionsTab';
 import { useTranslation } from 'react-i18next';
+import AdminStatsTab from '../components/admin/AdminStatsTab';
 
 const AdminPage: React.FC = () => {
   const [tab, setTab] = useState(0);
@@ -19,12 +20,14 @@ const AdminPage: React.FC = () => {
           <Tab label={t('admin.sources')} />
           <Tab label={t('admin.reports')} />
           <Tab label="Regions" />
+          <Tab label="Statistics" />
         </Tabs>
       </Box>
       {tab === 0 && <EditCanyons />}
       {tab === 1 && <SourcesTab />}
       {tab === 2 && <ReportsTab />}
       {tab === 3 && <RegionsTab />}
+      {tab === 4 && <AdminStatsTab />}
     </PageTemplate>
   );
 };
