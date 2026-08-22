@@ -233,7 +233,8 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
                                     </Box>
                                     <Box display="flex" gap={1} mt={1}>
-                                        <Button size="small" startIcon={<EditIcon />} onClick={() => {
+                                        <Button
+size="small" startIcon={<EditIcon />} onClick={() => {
                                             setFieldValue('CanyonId', undefined);
                                             setFieldValue('UserCanyonId', undefined);
                                             setSelectedDisplay(null);

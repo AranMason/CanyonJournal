@@ -38,7 +38,7 @@ const RopeDescentHistory: React.FC<RopeServiceDescentsProps> = ({ ropeId }) => {
           }
 
           return <CanyonRecordAccordion
-            key={rec.Id ?? rec.Timestamp ?? `${rec.Name}-${rec.Date}`}
+key={rec.Id ?? rec.Timestamp ?? `${rec.Name}-${rec.Date}`}
             isOpen={sectionOpen === rec.Id}
             onChange={() => handleAccordionToggle(rec.Id ?? null)}
             record={rec}

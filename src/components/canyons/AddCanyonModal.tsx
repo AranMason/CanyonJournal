@@ -246,7 +246,8 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
                   error={touched.starRating && Boolean(errors.starRating)}
                   helperText={touched.starRating && errors.starRating}
                 />
-                <FormControlLabel control={<Checkbox
+                <FormControlLabel
+control={<Checkbox
                   checked={values.isUnrated}
                   name='isUnrated'
                   onChange={handleChange}

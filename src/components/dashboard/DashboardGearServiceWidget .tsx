@@ -66,7 +66,8 @@ const DashboardGearServiceWidget: React.FC = () => {
         </Typography>
         <Card>
             <Loader isLoading={isLoading}>
-                <GearServiceModal open={gearServiceModalId !== null} gearId={gearServiceModalId}
+                <GearServiceModal
+                    open={gearServiceModalId !== null} gearId={gearServiceModalId}
                     initialValues={{
                         statusCode: gearToService.find(s => s.Id === gearServiceModalId)?.LatestStatusCode,
                     }}

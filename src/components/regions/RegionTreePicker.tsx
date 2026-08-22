@@ -125,7 +125,8 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
             </Box>
           ) : (
             <>
-              <TextField fullWidth
+              <TextField
+fullWidth
                 placeholder={t('common:actions.search', 'Search')}
                 value={textFilter}
                 size="small"

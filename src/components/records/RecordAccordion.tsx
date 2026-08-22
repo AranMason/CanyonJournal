@@ -1,11 +1,6 @@
 import { Accordion, AccordionSummary, Box, AccordionDetails } from "@mui/material";
 import React from "react";
-import { Canyon } from "../../types/Canyon";
-import { UserCanyon } from "../../types/UserCanyon";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-
-type CanyonInfo = Canyon | UserCanyon;
 
 type CanyonRecordAccordionProps = {
     isOpen: boolean;

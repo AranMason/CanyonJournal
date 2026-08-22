@@ -98,9 +98,9 @@ async function buildRuleConditions(
   const totalConditions: string[] = [];
   const bindings: { name: string; type: any; value: any }[] = [];
   let idx = paramOffset;
+  const pn = (suffix: string) => `rp${idx}_${suffix}`;
 
   for (const rule of rules) {
-    const pn = (suffix: string) => `rp${idx}_${suffix}`;
     const negate = rule.IsExclusion;
 
     function buildContainsCondition(field: string, inList: string, negate: boolean, bonusConditions: string[] = []): string {
@@ -278,7 +278,7 @@ async function getPotentialGoalCanyonsWithDescents(
 ): Promise<CanyonListEntry[]> {
 
   // If it's not a region-based goal, we don't need to find all the valid canyons.
-  if (!(goal.CountMode == 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
+  if (!(goal.CountMode === 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
 
   var goalBuilder = await buildGoalBuilder(pool, userId, goal, rules);
 
@@ -602,7 +602,7 @@ goalsRouter.get('/:id/canyons', async (req: Request, res: Response): ApiReturnTy
       .then(r => r.recordset[0] as GoalRow | undefined);
     if (!goal) return res.status(404).json({ error: 'Not found' });
 
-    if (goal.RegionId == null) {
+    if (goal.RegionId === null) {
       return res.status(400).json({ error: 'Only regional completion goals are supported' });
     }
 

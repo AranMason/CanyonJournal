@@ -102,7 +102,8 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
               {filteredCanyons.map(canyon => (
                 <TableRow key={canyon.Key}>
                   <TableCell>
-                    <CanyonNameTableCell canyon={canyon} detailUrl={canyon.DetailUrl} subtitle={<CanyonRating
+                    <CanyonNameTableCell
+canyon={canyon} detailUrl={canyon.DetailUrl} subtitle={<CanyonRating
                       aquaticRating={canyon.AquaticRating}
                       verticalRating={canyon.VerticalRating}
                       commitmentRating={canyon.CommitmentRating}

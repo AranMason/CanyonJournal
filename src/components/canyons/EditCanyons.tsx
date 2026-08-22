@@ -75,7 +75,8 @@ const EditCanyons: React.FC = () => {
                         {filteredCanyons.map(canyon => (
                             <TableRow key={canyon.Id}>
                                 <TableCell>
-                                    <CanyonNameTableCell canyon={canyon} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} subtitle={<CanyonRating
+                                    <CanyonNameTableCell
+canyon={canyon} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} subtitle={<CanyonRating
                                         aquaticRating={canyon.AquaticRating}
                                         verticalRating={canyon.VerticalRating}
                                         commitmentRating={canyon.CommitmentRating}
