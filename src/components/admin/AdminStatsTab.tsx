@@ -29,7 +29,7 @@ const AdminStatsTab: React.FC = () => {
             title={"Total Users"}
             getData={() => loadPromise}
             icon={GroupIcon}
-            color="info.main"
+            color="primary.main"
         >
             {(data: StatsData) => (
                 <Box sx={{ textAlign: "center" }}>
@@ -46,7 +46,7 @@ const AdminStatsTab: React.FC = () => {
             title={"Total Trips"}
             getData={() => loadPromise}
             icon={HikingIcon}
-            color="info.main"
+            color="primary.main"
         >
             {(data: StatsData) => (
                 <Box sx={{ textAlign: "center" }}>
@@ -60,7 +60,7 @@ const AdminStatsTab: React.FC = () => {
             title={"Total Goals"}
             getData={() => loadPromise}
             icon={EmojiEventsIcon}
-            color="info.main"
+            color="primary.main"
         >
             {(data: StatsData) => (
                 <Box sx={{ textAlign: "center" }}>
@@ -77,7 +77,7 @@ const AdminStatsTab: React.FC = () => {
             title={"Top 5 Popular Canyons"}
             getData={() => loadPromise}
             icon={TerrainIcon}
-            color="info.main"
+            color="primary.main"
         >
             {(data: StatsData) => (
                 <Box sx={{ width: "100%" }}>
