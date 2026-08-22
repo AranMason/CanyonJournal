@@ -12,11 +12,11 @@ import {
   TextField,
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Region } from '../types/Region';
-import * as RegionDataStore from '../helpers/RegionDataStore';
+import { Region } from '../../types/Region';
+import * as RegionDataStore from '../../helpers/RegionDataStore';
 import { useTranslation } from 'react-i18next';
 import RegionTreeView from './RegionTreeView';
-import AppModal from './AppModal';
+import AppModal from '../AppModal';
 
 interface RegionTreePickerProps {
   value: number | null;
@@ -68,7 +68,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
 
   function getDisplayValue(region: Region | null): string {
 
-    if(!region) return '';
+    if (!region) return '';
 
     return region.Name;
   }
@@ -125,19 +125,19 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
             </Box>
           ) : (
             <>
-            <TextField fullWidth
-              placeholder={t('common:actions.search', 'Search')}
-              value={textFilter}
-              size="small"
-              onChange={(e) => setTextFilter(e.target.value)}
-              sx={{ mb: 1 }} />
-            <RegionTreeView
-              nodes={visibleTree}
-              selectedId={value}
-              expandedIds={expandedIds}
-              onSelect={id => { onChange(id); setOpen(false); }}
-              sx={{ maxHeight: 400, overflowY: 'auto' }}
-            />
+              <TextField fullWidth
+                placeholder={t('common:actions.search', 'Search')}
+                value={textFilter}
+                size="small"
+                onChange={(e) => setTextFilter(e.target.value)}
+                sx={{ mb: 1 }} />
+              <RegionTreeView
+                nodes={visibleTree}
+                selectedId={value}
+                expandedIds={expandedIds}
+                onSelect={id => { onChange(id); setOpen(false); }}
+                sx={{ maxHeight: 400, overflowY: 'auto' }}
+              />
             </>
           )}
           {allowClear && value != null && (

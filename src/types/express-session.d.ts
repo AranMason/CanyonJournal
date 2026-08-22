@@ -1,6 +1,8 @@
-declare module 'express' {
-  interface Request {
-    user?: { dbUser?: DbUser };
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { dbUser?: DbUser };
+    }
   }
 }
 
@@ -12,4 +14,4 @@ type DbUser = {
   IsAdmin?: boolean;
 };
 
-export {};
+export { };

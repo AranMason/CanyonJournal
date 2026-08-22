@@ -21,7 +21,7 @@ import { Region } from '../types/Region';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import CanyonRating from '../components/CanyonRating';
+import CanyonRating from '../components/canyons/CanyonRating';
 
 const minDateString: string = '1900-01-01'
 

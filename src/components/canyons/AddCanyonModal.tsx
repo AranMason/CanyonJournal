@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography, Stack, DialogContent, DialogActions, Divider, FormControl, InputLabel, Checkbox, FormControlLabel, Select, MenuItem } from '@mui/material';
-import { apiFetch } from '../utils/api';
+import { apiFetch } from '../../utils/api';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import CanyonRating from './CanyonRating';
-import { Canyon, CanyonSource } from '../types/Canyon';
-import { UserCanyon } from '../types/UserCanyon';
-import { CanyonTypeEnum, CanyonTypeList } from '../types/CanyonTypeEnum';
-import { GetCanyonTypeDisplayName } from '../helpers/EnumMapper';
-import RegionTreePicker from './RegionTreePicker';
+import { Canyon, CanyonSource } from '../../types/Canyon';
+import { UserCanyon } from '../../types/UserCanyon';
+import { CanyonTypeEnum, CanyonTypeList } from '../../types/CanyonTypeEnum';
+import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
+import RegionTreePicker from '../regions/RegionTreePicker';
 import { useTranslation } from 'react-i18next';
-import AppModal from './AppModal';
+import AppModal from '../AppModal';
 
 export interface CanyonModalFormValues {
   id?: number;
@@ -52,7 +52,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
 
   useEffect(() => {
     if (showSource && open) {
-      apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => {});
+      apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => { });
     }
   }, [showSource, open]);
 
@@ -256,7 +256,7 @@ const AddCanyonModal: React.FC<AddCanyonModalProps> = ({
               </Stack>
               <DialogActions sx={{ mt: 2 }}>
                 <Button onClick={onClose}>{t('common:actions.cancel')}</Button>
-                <Button type="submit" variant="contained" color="tertiary" disabled={isSubmitting}>{t('common:actions.save')}</Button>
+                <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>{t('common:actions.save')}</Button>
               </DialogActions>
             </Form>
           )}

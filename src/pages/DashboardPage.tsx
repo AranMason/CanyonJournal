@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PageTemplate from './PageTemplate';
 import { Box, Button, Typography } from '@mui/material';
 import { useUser } from '../App';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import DashboardStats from '../components/DashboardStats';
+import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
+import DashboardStats from '../components/dashboard/DashboardStats';
 import GoalsWidget from '../components/goals/GoalsWidget';
 import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { getRecordsForDashboard } from '../helpers/RecordDataStore';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChangeLogModal from '../components/ChangeLogModal';
-import DashboardGearServiceWidget from '../components/DashboardGearServiceWidget ';
+import DashboardGearServiceWidget from '../components/dashboard/DashboardGearServiceWidget ';
 
 const DashboardPage: React.FC = () => {
 

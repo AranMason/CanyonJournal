@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
 import PageTemplate from './PageTemplate';
-import EditCanyons from '../components/admin/EditCanyons';
+import EditCanyons from '../components/canyons/EditCanyons';
 import SourcesTab from '../components/admin/SourcesTab';
 import ReportsTab from '../components/admin/ReportsTab';
 import RegionsTab from '../components/admin/RegionsTab';

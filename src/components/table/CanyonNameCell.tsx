@@ -2,7 +2,7 @@ import { Box, Link, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IBaseCanyon } from "../../types/Canyon";
-import RegionIcon from "../RegionIcon";
+import RegionIcon from "../regions/RegionIcon";
 
 type CanyonNameTableCellProps = {
     canyon: IBaseCanyon;

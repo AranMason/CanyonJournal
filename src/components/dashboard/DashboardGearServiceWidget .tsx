@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { apiFetch } from "../utils/api";
-import { Box, Card, Chip, IconButton, Link, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
-import Loader from "./Loader";
-import { GearItem } from "../types/types";
+import { apiFetch } from "../../utils/api";
+import { Box, Card, IconButton, Link, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
+import Loader from "../Loader";
+import { GearItem } from "../../types/types";
 import { useTranslation } from "react-i18next";
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
-import GearServiceModal from "./gear/GearServiceModal";
-import ServiceStatusIndicator from "./gear/ServiceStatusIndicator";
+import GearServiceModal from "../gear/GearServiceModal";
+import ServiceStatusIndicator from "../gear/ServiceStatusIndicator";
 import { useNavigate } from "react-router-dom";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
@@ -56,15 +56,6 @@ const DashboardGearServiceWidget: React.FC = () => {
         }
 
         return null;
-
-        // Determine the fallback date used by COALESCE in SQL
-        const fallbackDate = item.LastServiceDate
-            || item.InServiceDate
-            || item.Created;
-
-        return <Tooltip title={t('translation:dashboard.serviceDateTooltip', { date: displayDate(fallbackDate!) })}>
-            <Chip label={t('translation:dashboard.needsService')} size="small" variant="outlined" color="warning" />
-        </Tooltip>
     }
 
     return <><Typography variant="h6" mb={2}>

@@ -1,7 +1,7 @@
 import { Button, DialogActions, DialogContent, MenuItem, Typography } from "@mui/material";
 import { Formik, Form } from "formik";
 import AppModal from "../AppModal";
-import FormikTextField from "../FormikTextField";
+import FormikTextField from "../forms/FormikTextField";
 import { useTranslation } from "react-i18next";
 import { ServiceType } from "../../types/types";
 import { apiFetch } from "../../utils/api";

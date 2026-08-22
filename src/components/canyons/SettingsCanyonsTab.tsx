@@ -11,10 +11,10 @@ import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import { Region } from '../../types/Region';
-import CanyonRating from '../CanyonRating';
-import CanyonTypeDisplay from '../CanyonTypeDisplay';
+import CanyonRating from './CanyonRating';
+import CanyonTypeDisplay from './CanyonTypeDisplay';
 import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
-import AddCanyonModal, { CanyonModalFormValues } from '../AddCanyonModal';
+import AddCanyonModal, { CanyonModalFormValues } from './AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../../utils/canyonForm';
 import RowActions from '../RowActions';
 import FilterPanel, { FilterValues } from '../FilterPanel';
@@ -22,7 +22,7 @@ import { getCanyonNameFilterConfig, getRegionFilterConfig, getCanyonTypeFilterCo
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
 import { GetRegionDisplayName } from '../../helpers/RegionHelper';
-import RegionIcon from '../RegionIcon';
+import RegionIcon from '../regions/RegionIcon';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
@@ -112,7 +112,7 @@ const SettingsCanyonsTab: React.FC = () => {
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h5">{t('settings.canyons')}</Typography>
-        <Button variant="contained" color="tertiary" startIcon={<AddIcon />} onClick={openCreate}>
+        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={openCreate}>
           {t('settings.newCanyon')}
         </Button>
       </Box>

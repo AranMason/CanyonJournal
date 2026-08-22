@@ -4,7 +4,7 @@ import {
   MenuItem, Select, TextField, ToggleButton, ToggleButtonGroup,
 } from '@mui/material';
 import MultiSelectChipFilter from './MultiSelectChipFilter';
-import RegionTreePicker from './RegionTreePicker';
+import RegionTreePicker from './regions/RegionTreePicker';
 import { useSearchParams } from 'react-router-dom';
 
 export type TextFilterConfig = {

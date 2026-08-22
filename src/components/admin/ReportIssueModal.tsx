@@ -6,10 +6,10 @@ import {
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
-import { apiFetch } from '../utils/api';
-import { ReportIssueType, ReportIssueTypeList } from '../types/ReportIssueType';
-import { GetReportIssueTypeDisplayName } from '../helpers/EnumMapper';
-import AppModal from './AppModal';
+import { apiFetch } from '../../utils/api';
+import { ReportIssueType, ReportIssueTypeList } from '../../types/ReportIssueType';
+import { GetReportIssueTypeDisplayName } from '../../helpers/EnumMapper';
+import AppModal from '../AppModal';
 
 interface ReportIssueModalProps {
   canyonId: number;

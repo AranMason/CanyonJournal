@@ -16,7 +16,7 @@ import * as TagsDataStore from '../../helpers/TagsDataStore';
 import * as GoalsDataStore from '../../helpers/GoalsDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
 import GoalProgressBar from './GoalProgressBar';
-import CanyonRating from '../CanyonRating';
+import CanyonRating from '../canyons/CanyonRating';
 import AppModal from '../AppModal';
 
 const PREVIEW_COUNT = 5;

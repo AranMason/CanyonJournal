@@ -11,7 +11,7 @@ import { CanyonReport } from '../../types/CanyonReport';
 import { ReportStatus, ReportStatusList } from '../../types/ReportStatus';
 import { GetReportIssueTypeDisplayName, GetReportStatusDisplayName } from '../../helpers/EnumMapper';
 import { Canyon } from '../../types/Canyon';
-import AddCanyonModal from '../AddCanyonModal';
+import AddCanyonModal from '../canyons/AddCanyonModal';
 
 const statusColour: Record<ReportStatus, 'default' | 'warning' | 'success' | 'error'> = {
   [ReportStatus.Pending]: 'warning',

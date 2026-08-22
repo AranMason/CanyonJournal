@@ -1,6 +1,6 @@
 import React from 'react';
 import PageTemplate from './PageTemplate';
-import RecordEditor from '../components/RecordEditor';
+import RecordEditor from '../components/records/RecordEditor';
 import { useSearchParams } from 'react-router-dom';
 import { WaterLevel } from '../types/CanyonRecord';
 import { useTranslation } from 'react-i18next';

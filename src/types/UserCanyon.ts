@@ -9,7 +9,7 @@ export interface UserCanyon extends IBaseCanyon {
   Updated?: string;
 }
 
-export interface UserCanyonWithDescents extends UserCanyon {
+export interface UserCanyonWithDescents extends UserCanyon, IBaseCanyon {
   Descents: number;
   LastDescentDate?: string | null;
 }

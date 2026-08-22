@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import CanyonRecordAccordion from '../CanyonRecordAccordion/CanyonRecordAccordion';
+import CanyonRecordAccordion from '../canyons/CanyonRecordAccordion';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useCanyonRecords } from '../../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
@@ -25,25 +25,26 @@ const GearServiceDescents: React.FC<GearServiceDescentsProps> = ({ gearId }) => 
 
   return (
     <Loader isLoading={isLoading} >
-    <Box>
-      {records.length > 0 ? records.map(rec => (
-        <CanyonRecordAccordion
-          key={rec.Id ?? rec.Timestamp ?? `${rec.Name}-${rec.Date}`}
-          isOpen={sectionOpen === rec.Id}
-          onChange={() => handleAccordionToggle(rec.Id ?? null)}
-          record={rec}
-          canyon={
-            rec.CanyonId
-              ? canyonsById[rec.CanyonId]
-              : rec.UserCanyonId
+      <Box>
+        {records.length > 0 ? records.map(rec => {
+          const canyon = rec.CanyonId
+            ? canyonsById[rec.CanyonId]
+            : rec.UserCanyonId
               ? userCanyonsById[rec.UserCanyonId]
               : undefined
-          }
-        />
-      )): <Typography sx={{ p: 2, fontStyle: 'italic' }}>
-        {t('journal.noRecords')}
-      </Typography>}
-    </Box>
+          if (!canyon) return null;
+
+          return <CanyonRecordAccordion
+            key={rec.Id ?? rec.Timestamp ?? `${rec.Name}-${rec.Date}`}
+            isOpen={sectionOpen === rec.Id}
+            onChange={() => handleAccordionToggle(rec.Id ?? null)}
+            record={rec}
+            canyon={canyon}
+          />
+        }) : <Typography sx={{ p: 2, fontStyle: 'italic' }}>
+          {t('journal.noRecords')}
+        </Typography>}
+      </Box>
     </Loader>
   );
 };

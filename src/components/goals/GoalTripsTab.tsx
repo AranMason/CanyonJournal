@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 import { AuditTrip, enrichAuditTrips, EnrichedAuditTrip, Goal } from "../../types/Goal"
 import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel"
-import CanyonRecordAccordion from "../CanyonRecordAccordion/CanyonRecordAccordion"
+import CanyonRecordAccordion from "../canyons/CanyonRecordAccordion"
 import { Canyon } from "../../types/Canyon"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import * as RegionDataStore from "../../helpers/RegionDataStore"
@@ -120,15 +120,18 @@ const GoalTripsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
           </Typography>
           {filteredTrips.length === 0 ? (
             <Typography variant="body2" color="text.secondary">{t('goals.noMatchingTrips')}</Typography>
-          ) : filteredTrips.map(trip => (
-            <CanyonRecordAccordion
+          ) : filteredTrips.map(trip => {
+            const canyon = getCanyonForTrip(trip);
+            if (!canyon) return null;
+
+            return <CanyonRecordAccordion
               key={trip.Id}
               record={toRecord(trip)}
-              canyon={getCanyonForTrip(trip)}
+              canyon={canyon}
               isOpen={sectionOpen === trip.Id}
               onChange={() => setSectionOpen(prev => prev === trip.Id ? null : trip.Id)}
             />
-          ))}
+          })}
         </>
       )}
     </FilterPanel>

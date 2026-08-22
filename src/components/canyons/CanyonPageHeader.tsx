@@ -2,14 +2,14 @@ import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import FavouriteButton from './FavouriteButton';
+import FavouriteButton from '../FavouriteButton';
 import CanyonRating from './CanyonRating';
 import CanyonTypeDisplay from './CanyonTypeDisplay';
-import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
+import { CanyonTypeEnum } from '../../types/CanyonTypeEnum';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { GetRegionDisplayName } from '../helpers/RegionHelper';
-import RegionIcon from './RegionIcon';
+import { GetRegionDisplayName } from '../../helpers/RegionHelper';
+import RegionIcon from '../regions/RegionIcon';
 
 interface CanyonPageHeaderProps {
   isFavourite: boolean;

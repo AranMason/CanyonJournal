@@ -1,7 +1,7 @@
 import React from "react";
-import { apiFetch } from "../utils/api";
-import { DashboardWidget } from "../types/Widgets";
-import StatCard from "./StatCard";
+import { apiFetch } from "../../utils/api";
+import { DashboardWidget } from "../../types/Widgets";
+import StatCard from "../StatCard";
 import { Box, Typography } from "@mui/material";
 import TerrainIcon from "@mui/icons-material/Terrain";
 import ExploreIcon from "@mui/icons-material/Explore";

@@ -11,7 +11,7 @@ import { Tag } from '../../helpers/TagsDataStore';
 import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
 import { CanyonTypeEnum, CanyonTypeList } from '../../types/CanyonTypeEnum';
 import AppModal from '../AppModal';
-import RegionTreePicker from '../RegionTreePicker';
+import RegionTreePicker from '../regions/RegionTreePicker';
 
 type TimeWindowMode = 'alltime' | 'since' | 'rolling';
 
@@ -279,95 +279,95 @@ const GoalEditorModal: React.FC<GoalEditorModalProps> = ({ open, goal, tags, onC
                 alignItems="center"
                 width="100%"
               >
-              <Box flex={1} display="flex" minWidth={180} gap={2} ml={1}>
-                {rule.RuleType === 'canyon_type' && (
-                  <FormControl size="small" fullWidth>
-                    <InputLabel>{t('goals.ruleTypeCanyonType')}</InputLabel>
-                    <Select
-                      multiple
-                      label={t('goals.ruleTypeCanyonType')}
-                      value={(rule.IntValues ?? '').split(',').map(Number).filter(value => !isNaN(value) && value > 0)}
-                      onChange={event => updateRule(index, { IntValues: (event.target.value as number[]).join(',') })}
-                      renderValue={selected => (selected as number[]).map(value => GetCanyonTypeDisplayName(value as CanyonTypeEnum)).join(', ')}
-                    >
-                      {CanyonTypeList.filter(canyonType => canyonType !== CanyonTypeEnum.Unknown).map(canyonType => (
-                        <MenuItem key={canyonType} value={canyonType}>{GetCanyonTypeDisplayName(canyonType)}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-                {(rule.RuleType === 'min_vertical' || rule.RuleType === 'min_aquatic') && (
-                  <TextField
-                    size="small"
-                    fullWidth
-                    type="number"
-                    label={t('goals.minRating')}
-                    value={rule.IntValue ?? ''}
-                    inputProps={{ min: 1, max: 7 }}
-                    onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
-                  />
-                )}
-                {rule.RuleType === 'min_commitment' && (
-                  <TextField
-                    size="small"
-                    fullWidth
-                    type="number"
-                    label={t('goals.minRating')}
-                    value={rule.IntValue ?? ''}
-                    inputProps={{ min: 0, max: 6 }}
-                    onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
-                  />
-                )}
-                {rule.RuleType === 'min_star' && (
-                  <TextField
-                    size="small"
-                    fullWidth
-                    type="number"
-                    label={t('goals.minRating')}
-                    value={rule.IntValue ?? ''}
-                    inputProps={{ min: 0, max: 5 }}
-                    onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
-                  />
-                )}
-                {rule.RuleType === 'tag' && (
-                  <FormControl size="small" fullWidth>
-                    <InputLabel>{t('common:fields.tags')}</InputLabel>
-                    <Select
-                      multiple
-                      label={t('common:fields.tags')}
-                      value={(rule.IntValues ?? '').split(',').map(Number).filter(value => !isNaN(value) && value > 0)}
-                      onChange={event => updateRule(index, { IntValues: (event.target.value as number[]).join(','), IntValue: null })}
-                      renderValue={selected =>
-                        (selected as number[])
-                          .map(id => tags.find(tag => tag.Id === id)?.Name ?? id)
-                          .map(name => <Chip key={name} label={name} size="small" sx={{ mr: 0.5 }} />)
-                      }
-                    >
-                      {tags.map(tag => <MenuItem key={tag.Id} value={tag.Id}>{tag.Name}</MenuItem>)}
-                    </Select>
-                  </FormControl>
-                )}
-                {rule.RuleType === 'first_time' && (
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', pt: 1 }}>
-                    {t('goals.firstTimeDescription')}
-                  </Typography>
-                )}
-              </Box>
-
-              {rule.RuleType !== 'first_time' && (
-                <FormControlLabel
-                  control={
-                    <Switch
-                        size="small"
-                      checked={!rule.IsExclusion}
-                      onChange={event => updateRule(index, { IsExclusion: !event.target.checked })}
+                <Box flex={1} display="flex" minWidth={180} gap={2} ml={1}>
+                  {rule.RuleType === 'canyon_type' && (
+                    <FormControl size="small" fullWidth>
+                      <InputLabel>{t('goals.ruleTypeCanyonType')}</InputLabel>
+                      <Select
+                        multiple
+                        label={t('goals.ruleTypeCanyonType')}
+                        value={(rule.IntValues ?? '').split(',').map(Number).filter(value => !isNaN(value) && value > 0)}
+                        onChange={event => updateRule(index, { IntValues: (event.target.value as number[]).join(',') })}
+                        renderValue={selected => (selected as number[]).map(value => GetCanyonTypeDisplayName(value as CanyonTypeEnum)).join(', ')}
+                      >
+                        {CanyonTypeList.filter(canyonType => canyonType !== CanyonTypeEnum.Unknown).map(canyonType => (
+                          <MenuItem key={canyonType} value={canyonType}>{GetCanyonTypeDisplayName(canyonType)}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                  {(rule.RuleType === 'min_vertical' || rule.RuleType === 'min_aquatic') && (
+                    <TextField
+                      size="small"
+                      fullWidth
+                      type="number"
+                      label={t('goals.minRating')}
+                      value={rule.IntValue ?? ''}
+                      inputProps={{ min: 1, max: 7 }}
+                      onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
                     />
-                  }
-                  labelPlacement="start"
-                  label={t('goals.ruleInclude')}
-                  sx={{ m: 0, whiteSpace: 'nowrap' }}
-                />
-              )}
+                  )}
+                  {rule.RuleType === 'min_commitment' && (
+                    <TextField
+                      size="small"
+                      fullWidth
+                      type="number"
+                      label={t('goals.minRating')}
+                      value={rule.IntValue ?? ''}
+                      inputProps={{ min: 0, max: 6 }}
+                      onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
+                    />
+                  )}
+                  {rule.RuleType === 'min_star' && (
+                    <TextField
+                      size="small"
+                      fullWidth
+                      type="number"
+                      label={t('goals.minRating')}
+                      value={rule.IntValue ?? ''}
+                      inputProps={{ min: 0, max: 5 }}
+                      onChange={event => updateRule(index, { IntValue: event.target.value === '' ? null : parseInt(event.target.value, 10) })}
+                    />
+                  )}
+                  {rule.RuleType === 'tag' && (
+                    <FormControl size="small" fullWidth>
+                      <InputLabel>{t('common:fields.tags')}</InputLabel>
+                      <Select
+                        multiple
+                        label={t('common:fields.tags')}
+                        value={(rule.IntValues ?? '').split(',').map(Number).filter(value => !isNaN(value) && value > 0)}
+                        onChange={event => updateRule(index, { IntValues: (event.target.value as number[]).join(','), IntValue: null })}
+                        renderValue={selected =>
+                          (selected as number[])
+                            .map(id => tags.find(tag => tag.Id === id)?.Name ?? id)
+                            .map(name => <Chip key={name} label={name} size="small" sx={{ mr: 0.5 }} />)
+                        }
+                      >
+                        {tags.map(tag => <MenuItem key={tag.Id} value={tag.Id}>{tag.Name}</MenuItem>)}
+                      </Select>
+                    </FormControl>
+                  )}
+                  {rule.RuleType === 'first_time' && (
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', pt: 1 }}>
+                      {t('goals.firstTimeDescription')}
+                    </Typography>
+                  )}
+                </Box>
+
+                {rule.RuleType !== 'first_time' && (
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        size="small"
+                        checked={!rule.IsExclusion}
+                        onChange={event => updateRule(index, { IsExclusion: !event.target.checked })}
+                      />
+                    }
+                    labelPlacement="start"
+                    label={t('goals.ruleInclude')}
+                    sx={{ m: 0, whiteSpace: 'nowrap' }}
+                  />
+                )}
               </Box>
             </React.Fragment>
           ))}

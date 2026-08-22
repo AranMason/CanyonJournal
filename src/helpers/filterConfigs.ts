@@ -6,7 +6,7 @@ import { GetCanyonTypeDisplayName } from './EnumMapper';
 import { apiFetch } from '../utils/api';
 import { DataSource } from '../types/DataSource';
 import i18n from '../i18n';
-import { COMMITMENT_RATINGS } from '../components/CanyonRating';
+import { COMMITMENT_RATINGS } from '../components/canyons/CanyonRating';
 
 // ─── Individual filter building blocks ────────────────────────────────────────
 
@@ -65,7 +65,7 @@ export function getCommitmentRatingFilterConfig(key = 'commitmentRating'): Filte
     key,
     label: i18n.t('filters.commitmentRating'),
     labelId: 'commitment-rating-filter',
-    options: [...Array(7).keys()].map(i => ({ value: i+1, label: COMMITMENT_RATINGS[i] })),
+    options: [...Array(7).keys()].map(i => ({ value: i + 1, label: COMMITMENT_RATINGS[i] })),
   };
 }
 
@@ -130,7 +130,7 @@ export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
 export function getHasCanyonDescentsFilterConfig(key = 'hasDescents'): FilterConfig {
   return {
     type: 'single-select',
-    key,  
+    key,
     label: i18n.t('filters.hasDescents.label'),
     labelId: 'has-descents-filter',
     placeholder: i18n.t('filters.hasDescents.all'),

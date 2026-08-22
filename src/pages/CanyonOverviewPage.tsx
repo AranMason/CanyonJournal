@@ -6,9 +6,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { Box, Breadcrumbs, Button, Link, Typography } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import CanyonPageHeader from '../components/CanyonPageHeader';
-import ReportIssueModal from '../components/ReportIssueModal';
+import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
+import CanyonPageHeader from '../components/canyons/CanyonPageHeader';
+import ReportIssueModal from '../components/admin/ReportIssueModal';
 import { useFavourite } from '../hooks/useFavourite';
 import { useTranslation } from 'react-i18next';
 

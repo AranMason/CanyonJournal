@@ -4,7 +4,7 @@ import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
+import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
 import CreateIcon from '@mui/icons-material/Create';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import FilterPanel, { FilterValues } from '../components/FilterPanel';
@@ -14,7 +14,7 @@ import {
 } from '../helpers/filterConfigs';
 import * as RegionDataStore from '../helpers/RegionDataStore';
 import { Region } from '../types/Region';
-import ReportCTAAlert from '../components/ReportCTAAlert';
+import ReportCTAAlert from '../components/admin/ReportCTAAlert';
 import { useTranslation } from 'react-i18next';
 import { getRecords } from '../helpers/RecordDataStore';
 
@@ -114,10 +114,10 @@ const RecordsOverviewPage: React.FC = () => {
         <Box sx={{ mb: 2 }}>
           <Button
             variant="contained"
-            color="tertiary"
+            color="primary"
             onClick={() => navigate("/journal/record")}
             startIcon={<CreateIcon />}>
-              {t('common:actions.recordDescent')}
+            {t('common:actions.recordDescent')}
           </Button>
         </Box>
         <FilterPanel<CanyonRecord>
@@ -129,14 +129,16 @@ const RecordsOverviewPage: React.FC = () => {
           {(filteredRecords) => filteredRecords.length === 0 ? (
             <div>{t('journal.noRecords')}</div>
           ) : (
-            filteredRecords.map(rec => (
-              <CanyonRecordAccordion
+            filteredRecords.map(rec => {
+              const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined;
+              if (!canyon) return null;
+              return <CanyonRecordAccordion
                 key={rec.Id ?? rec.Timestamp ?? `${rec.Name}-${rec.Date}`}
                 isOpen={sectionOpen === rec.Id}
                 onChange={() => handleAccordionToggle(rec.Id ?? null)}
                 record={rec}
-                canyon={rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined} />
-            ))
+                canyon={canyon} />
+            })
           )}
         </FilterPanel>
       </Box>

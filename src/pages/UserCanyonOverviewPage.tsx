@@ -5,8 +5,8 @@ import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
 import { UserCanyonWithDescents } from '../types/UserCanyon';
 import { CanyonRecord } from '../types/CanyonRecord';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import CanyonPageHeader from '../components/CanyonPageHeader';
+import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
+import CanyonPageHeader from '../components/canyons/CanyonPageHeader';
 import { useFavourite } from '../hooks/useFavourite';
 import { useTranslation } from 'react-i18next';
 
@@ -51,21 +51,22 @@ const UserCanyonOverviewPage: React.FC = () => {
         isCustom
         notes={canyonData?.Notes}
       />
-      
+
       <Typography variant="h4" my={2} fontSize={24}>
         {`${t('canyon.yourDescents')} (${records.length})`}
       </Typography>
       {records.length === 0 ? (
         <div>{t('journal.noRecords')}</div>
       ) : (
-        records.map(rec => (
-          <CanyonRecordAccordion
+        records.map(rec => {
+          if (!canyonData) return null;
+          return <CanyonRecordAccordion
             key={rec.Id}
             isOpen={sectionOpen === rec.Id}
             onChange={() => handleAccordionToggle(rec.Id ?? null)}
             record={rec}
-          />
-        ))
+            canyon={canyonData} />
+        })
       )}
     </PageTemplate>
   );
