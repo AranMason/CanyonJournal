@@ -9,6 +9,12 @@ type AdminStatsRow = {
     TotalRecords: number;
     TotalGoals: number;
     TotalGoalsCompleted: number;
+    ActiveUsersLast90Days: number;
+};
+
+type PopularCanyonRow = {
+    CanyonName: string;
+    TripCount: number;
 };
 
 // Auth0: Get current user info from OIDC
@@ -25,9 +31,24 @@ router.get('/stats', async (req: Request, res: Response) => {
                     (SELECT COUNT(*) FROM Users) AS TotalUsers,
                     (SELECT COUNT(*) FROM CanyonRecords) AS TotalRecords,
                     (SELECT COUNT(*) FROM Goals) AS TotalGoals,
-                    (SELECT COUNT(*) FROM Goals WHERE CompletedAt IS NOT NULL) AS TotalGoalsCompleted;
+                    (SELECT COUNT(*) FROM Goals WHERE CompletedAt IS NOT NULL) AS TotalGoalsCompleted,
+                    (
+                        SELECT COUNT(DISTINCT UserId)
+                        FROM CanyonRecords
+                        WHERE [Date] >= DATEADD(MONTH, -3, CAST(GETDATE() AS DATE))
+                    ) AS ActiveUsersLast90Days;
               `
         );
+
+        const popularCanyonsResult = await pool.request().query<PopularCanyonRow>(`
+                SELECT TOP 5
+                    c.Name AS CanyonName,
+                    COUNT(*) AS TripCount
+                FROM CanyonRecords cr
+                INNER JOIN Canyons c ON cr.CanyonId = c.Id
+                GROUP BY c.Name
+                ORDER BY COUNT(*) DESC, c.Name ASC;
+            `);
 
         const stats = result.recordset[0];
 
@@ -35,7 +56,12 @@ router.get('/stats', async (req: Request, res: Response) => {
             totalUsers: stats?.TotalUsers ?? 0,
             totalRecords: stats?.TotalRecords ?? 0,
             totalGoals: stats?.TotalGoals ?? 0,
-            totalGoalsCompleted: stats?.TotalGoalsCompleted ?? 0
+            totalGoalsCompleted: stats?.TotalGoalsCompleted ?? 0,
+            activeUsersLast90Days: stats?.ActiveUsersLast90Days ?? 0,
+            topCanyons: popularCanyonsResult.recordset.map((row) => ({
+                canyonName: row.CanyonName,
+                tripCount: row.TripCount
+            }))
         });
     }
     catch (e) {
