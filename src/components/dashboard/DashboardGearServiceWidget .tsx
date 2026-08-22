@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "../../utils/api";
-import { Box, Card, IconButton, Link, List, ListItem, ListItemText, Tooltip, Typography } from "@mui/material";
+import { Box, Card, IconButton, Link, List, ListItem, ListItemText, Paper, Tooltip, Typography } from "@mui/material";
 import Loader from "../Loader";
 import { GearItem } from "../../types/types";
 import { useTranslation } from "react-i18next";
@@ -61,10 +61,10 @@ const DashboardGearServiceWidget: React.FC = () => {
     return <><Typography variant="h6" mb={2}>
         {t('translation:dashboard.gearToService')}
     </Typography>
-        <Typography component="p" color="textSecondary" fontSize={12}>
+        <Typography component="p" color="textSecondary" fontSize={12} mb={1}>
             {t('translation:dashboard.gearToServiceInfo')}
         </Typography>
-        <Card>
+        <Paper sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
             <Loader isLoading={isLoading}>
                 <GearServiceModal
                     open={gearServiceModalId !== null} gearId={gearServiceModalId}
@@ -106,7 +106,7 @@ const DashboardGearServiceWidget: React.FC = () => {
                     }) : <Box display={'flex'} height={'100px'} alignItems={'center'} justifyContent={'center'}><Typography variant="body2" color="textSecondary">{t('translation:dashboard.noGearToMonitor')}</Typography></Box>}
                 </List>
             </Loader>
-        </Card >
+        </Paper >
     </>;
 }
 

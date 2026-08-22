@@ -27,11 +27,14 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
     const navigate = useNavigate();
     const { t } = useTranslation('common');
 
-    return <Accordion expanded={isOpen} onChange={onChange} slotProps={{ transition: { unmountOnExit: true } }} data-test={`journal-record-${record.Id}`}>
+    return <Accordion
+        expanded={isOpen}
+        onChange={onChange}
+        slotProps={{ transition: { unmountOnExit: true } }}
+        data-test={`journal-record-${record.Id}`}
+        sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
         <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1-content"
-            id="panel1-header"
             data-test={`journal-record-summary-${record.Id}`}
         >
             <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
@@ -44,9 +47,6 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                         ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="secondary" />
                         : <Typography variant="body2" color="text.secondary">-</Typography>}
                 </Box>
-                {/* <Box width={80} className="hide-sm">
-                        {GetRegionDisplayName(canyon?.Region ?? record?.Region ?? RegionType.Unknown)}
-                    </Box> */}
                 <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
                     <WaterLevelRating waterLevel={record.WaterLevel ?? WaterLevel.Unknown} />
                 </Box>
@@ -59,7 +59,7 @@ const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, c
                 </Box>
             </Box>
         </AccordionSummary>
-        <AccordionDetails>
+        <AccordionDetails sx={{ borderBottom: 0 }}>
             <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
                 {canyon ? <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
                     <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating} />

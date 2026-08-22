@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, CircularProgress, Divider, Typography,
+  Box, CircularProgress, Divider, Paper, Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Goal } from '../../types/Goal';
@@ -35,12 +35,18 @@ const GoalsWidget: React.FC = () => {
   return (
     <Box sx={{ mb: 3 }}>
       <Typography variant="h6" sx={{ mb: 1 }}>{t('goals.progress')}</Typography>
-      <Box sx={{ border: '1px solid', borderColor: 'divider', borderRadius: 1, px: 2, pt: 2, pb: 1, backgroundColor: 'background.paper' }}>
+      <Paper sx={{
+        borderLeft: 2,
+        borderColor: 'secondary.main',
+        borderRadius: 1, px: 2, pt: 2, pb: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1
+      }}>
         {goals.map((goal, i) => {
           return (
             <React.Fragment key={goal.Id}>
-              {i > 0 && <Divider sx={{ my: 1.5 }} />}
-
+              {i > 0 && <Divider />}
               <GoalCard
                 goal={goal}
                 regionNames={regionNames}
@@ -53,9 +59,9 @@ const GoalsWidget: React.FC = () => {
             </React.Fragment>
           );
         })}
-      </Box>
+      </Paper>
 
-    </Box>
+    </Box >
   );
 };
 

@@ -25,7 +25,14 @@ const StatCard: React.FC<StatCardProps> = ({ title, getData, icon: Icon, color =
   }, [getData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <Paper elevation={3} sx={{ p: 3, minHeight: 160, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+    <Paper
+      elevation={3}
+      sx={{
+        p: 3, minHeight: 160, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
+        borderLeft: 2,
+        borderColor: 'secondary.main'
+      }}
+    >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
         <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 500 }}>
           {title}
@@ -40,7 +47,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, getData, icon: Icon, color =
             alignItems: 'center',
             justifyContent: 'center',
             opacity: 0.85,
-            flexShrink: 0,
+            flexShrink: 0
           }}>
             <Icon sx={{ fontSize: 20, color: '#fff' }} />
           </Box>
