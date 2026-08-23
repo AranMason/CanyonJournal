@@ -43,20 +43,18 @@ const GoalsWidget: React.FC = () => {
         flexDirection: 'column',
         gap: 1
       }}>
-        {goals.map((goal, i) => {
+        {goals.map((goal) => {
           return (
-            <React.Fragment key={goal.Id}>
-              {i > 0 && <Divider />}
-              <GoalCard
-                goal={goal}
-                regionNames={regionNames}
-                onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}
-                onCompleted={async () => {
-                  setIsLoading(true);
-                  await loadGoals();
-                }}
-              />
-            </React.Fragment>
+            <GoalCard
+              key={goal.Id}
+              goal={goal}
+              regionNames={regionNames}
+              onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}
+              onCompleted={async () => {
+                setIsLoading(true);
+                await loadGoals();
+              }}
+            />
           );
         })}
       </Paper>

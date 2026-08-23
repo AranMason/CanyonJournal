@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
 import DashboardStats from '../components/dashboard/DashboardStats';

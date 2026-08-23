@@ -112,7 +112,7 @@ const GearSetTable: React.FC = () => {
             <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => openModal(null)} startIcon={<AddIcon />}>{t('common:actions.create')}</Button>
         </Box>
         <Loader isLoading={isLoading}>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
                 <Table>
                     <TableHead>
                         <TableRow>

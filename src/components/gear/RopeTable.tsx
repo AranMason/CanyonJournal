@@ -199,7 +199,7 @@ const RopeTable: React.FC = () => {
           return (a.Name || '').localeCompare(b.Name || '', undefined, { sensitivity: 'base' });
         });
 
-        return <TableContainer component={Paper}>
+        return <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -285,7 +285,7 @@ const RopeTable: React.FC = () => {
       initialValues={editRopeId !== null ? ropes.find(r => r.Id === editRopeId) : undefined}
     />
     <SuccessSnackbar open={snackbarOpen} message={t('errors.addedSuccessfully')} onClose={() => setSnackbarOpen(false)} />
-  </Loader>;
+  </Loader >;
 }
 
 export default RopeTable

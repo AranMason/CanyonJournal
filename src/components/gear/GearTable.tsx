@@ -229,7 +229,7 @@ const GearTable: React.FC = () => {
                     return (a.Name || '').localeCompare(b.Name || '', undefined, { sensitivity: 'base' });
                 });
 
-                return <TableContainer component={Paper}>
+                return <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
                     <Table>
                         <TableHead>
                             <TableRow>

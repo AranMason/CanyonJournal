@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Box, Button, CircularProgress, DialogContent, Typography,
+  Box, Button, CircularProgress, DialogContent, Paper, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
@@ -75,9 +75,9 @@ const GoalSettings: React.FC = () => {
   const handleSave = async (payload: GoalEditorPayload) => {
     if (editingGoal?.Id != null) {
       await apiFetch(`/api/goals/${editingGoal.Id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
       });
     } else {
       await apiFetch('/api/goals', {
@@ -122,26 +122,18 @@ const GoalSettings: React.FC = () => {
   }, [flatRegions]);
 
   const renderGoalCard = (req: Goal, isCompleted = false) => (
-    <Box
-      key={req.Id}
-      sx={{
-        border: '1px solid', borderColor: 'divider', borderRadius: 1,
-        px: 2, pt: 2, pb: 1, mb: 2,
-        opacity: isCompleted ? 0.7 : 1,
-      }}
-    >
-      <GoalCard
-        goal={req}
-        regionNames={goalRegionNames}
-        isCompleted={isCompleted}
-        isAlwaysCompletable={!isCompleted}
-        onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
-        onCompleted={loadGoals}
-        onEdit={() => openEdit(req)}
-        onDelete={() => setDeleteTarget(req)}
-        onReopen={isCompleted ? () => handleReopen(req) : undefined}
-      />
-    </Box>
+
+    <GoalCard
+      goal={req}
+      regionNames={goalRegionNames}
+      isCompleted={isCompleted}
+      isAlwaysCompletable={!isCompleted}
+      onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
+      onCompleted={loadGoals}
+      onEdit={() => openEdit(req)}
+      onDelete={() => setDeleteTarget(req)}
+      onReopen={isCompleted ? () => handleReopen(req) : undefined}
+    />
   );
 
   if (isLoading) {
@@ -160,7 +152,17 @@ const GoalSettings: React.FC = () => {
         </Typography>
       )}
 
-      {activeGoals.map(req => renderGoalCard(req, false))}
+      <Paper sx={{
+        borderLeft: 2,
+        borderColor: 'secondary.main',
+        borderRadius: 1, px: 2, pt: 2, pb: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1,
+        mb: 2
+      }}>
+        {activeGoals.map(req => renderGoalCard(req, false))}
+      </Paper>
 
       <Box display="flex" gap={2} alignItems="center" flexWrap="wrap">
         <Button variant="outlined" startIcon={<AddIcon />} onClick={openAdd}>
@@ -178,7 +180,16 @@ const GoalSettings: React.FC = () => {
           <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
             {t('goals.completedGoals')}
           </Typography>
-          {completedGoals.map(req => renderGoalCard(req, true))}
+          <Paper sx={{
+            borderLeft: 2,
+            borderColor: 'secondary.main',
+            borderRadius: 1, px: 2, pt: 2, pb: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1
+          }}>
+            {completedGoals.map(req => renderGoalCard(req, true))}
+          </Paper>
         </Box>
       )}
 
