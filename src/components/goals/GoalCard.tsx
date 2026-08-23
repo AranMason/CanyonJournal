@@ -113,7 +113,7 @@ const GoalCard: React.FC<GoalCardProps> = ({
 
   return (
     <>
-      <Box display="flex" alignItems="center" gap={0.5}>
+      <Box display="flex" alignItems="center" gap={0.5} data-test={`goal-entry-${goal.Id}`}>
         <Box flex={1} minWidth={0}>
           <GoalProgressBar
             requirement={goal}
@@ -128,27 +128,27 @@ const GoalCard: React.FC<GoalCardProps> = ({
 
         <Box display="flex" gap={0.5} flexShrink={0}>
           <Tooltip title={t('goals.viewTrips')}>
-            <IconButton size="small" onClick={() => setAuditOpen(prev => !prev)} sx={{ ml: 2 }}>
+            <IconButton size="small" onClick={() => setAuditOpen(prev => !prev)} sx={{ ml: 2 }} data-test={`goal-expand-${goal.Id}`}>
               {auditOpen ? <ExpandLessIcon fontSize="small" /> : <ExpandMoreIcon fontSize="small" />}
             </IconButton>
           </Tooltip>
           {isCompleted && onReopen && (
             <Tooltip title={t('goals.reopen')}>
-              <IconButton size="small" onClick={onReopen}>
+              <IconButton size="small" onClick={onReopen} data-test={`goal-reopen-${goal.Id}`}>
                 <ReplayIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
-          {onEdit && (
+          {!isCompleted && onEdit && (
             <Tooltip title={t('common:actions.edit')}>
-              <IconButton size="small" onClick={onEdit}>
+              <IconButton size="small" onClick={onEdit} data-test={`goal-edit-${goal.Id}`}>
                 <EditIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           )}
           {onDelete && (
             <Tooltip title={t('common:actions.delete')}>
-              <IconButton size="small" color="error" onClick={onDelete}>
+              <IconButton size="small" color="error" onClick={onDelete} data-test={`goal-delete-${goal.Id}`}>
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -156,7 +156,7 @@ const GoalCard: React.FC<GoalCardProps> = ({
         </Box>
       </Box>
 
-      <Collapse in={auditOpen}>
+      <Collapse in={auditOpen} data-test={`goal-expand-${goal.Id}`}>
         <Divider sx={{ mt: 1, mb: 0.5 }} />
         <Typography
           variant="caption"

@@ -119,6 +119,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
             noWrap
             title={requirement.Label}
             sx={{ display: 'block', maxWidth: '100%', textAlign: 'left' }}
+            data-test={`goal-title-${requirement.Id}`}
           >
             {requirement.Label}
           </Link>
@@ -161,6 +162,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
               color="success"
               onClick={onMarkComplete}
               disabled={isCompleting}
+              data-test={`goal-mark-complete-${requirement.Id}`}
               sx={{
                 position: 'absolute',
                 right: -14,

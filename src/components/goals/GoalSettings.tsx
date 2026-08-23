@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Box, Button, CircularProgress, DialogContent, Paper, Typography,
+  Box, Button, CircularProgress, DialogContent, FormControlLabel, Paper, Switch, ToggleButton, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +21,6 @@ const GoalSettings: React.FC = () => {
   const navigate = useNavigate();
 
   const [activeGoals, setActiveGoals] = useState<Goal[]>([]);
-  const [completedGoals, setCompletedGoals] = useState<Goal[]>([]);
   const [showCompleted, setShowCompleted] = useState(false);
   const [tags, setTags] = useState<Tag[]>([]);
   const [flatRegions, setFlatRegions] = useState<Region[]>([]);
@@ -51,8 +50,7 @@ const GoalSettings: React.FC = () => {
       TagsDataStore.load(),
       RegionDataStore.load(),
     ]);
-    setActiveGoals(completed.filter(g => !g.CompletedAt).sort(sortGoals));
-    setCompletedGoals(completed.filter(g => g.CompletedAt));
+    setActiveGoals(completed.sort(sortGoals));
     setTags(tgs);
     setFlatRegions(regions);
   };
@@ -121,20 +119,6 @@ const GoalSettings: React.FC = () => {
     return map;
   }, [flatRegions]);
 
-  const renderGoalCard = (req: Goal, isCompleted = false) => (
-
-    <GoalCard
-      goal={req}
-      regionNames={goalRegionNames}
-      isCompleted={isCompleted}
-      isAlwaysCompletable={!isCompleted}
-      onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
-      onCompleted={loadGoals}
-      onEdit={() => openEdit(req)}
-      onDelete={() => setDeleteTarget(req)}
-      onReopen={isCompleted ? () => handleReopen(req) : undefined}
-    />
-  );
 
   if (isLoading) {
     return <Box display="flex" justifyContent="center" p={4}><CircularProgress /></Box>;
@@ -152,6 +136,21 @@ const GoalSettings: React.FC = () => {
         </Typography>
       )}
 
+      <Box display="flex" gap={2} alignItems="center" justifyContent={'space-between'} flexWrap="wrap" mb={2}>
+        <Button variant="contained" color='primary' startIcon={<AddIcon />} onClick={openAdd} data-test={`goal-add`}>
+          {t('goals.addRequirement')}
+        </Button>
+        <FormControlLabel
+          control={
+            <Switch title={t('goals.showCompleted')} value={!showCompleted} onClick={() => setShowCompleted(v => !v)} data-test={`goal-switch-include-completed`} />
+          }
+          labelPlacement="start"
+          label={t('goals.showCompleted')}
+          sx={{ m: 0, whiteSpace: 'nowrap' }}
+        />
+
+      </Box>
+
       <Paper sx={{
         borderLeft: 2,
         borderColor: 'secondary.main',
@@ -161,37 +160,26 @@ const GoalSettings: React.FC = () => {
         gap: 1,
         mb: 2
       }}>
-        {activeGoals.map(req => renderGoalCard(req, false))}
+        {activeGoals.map(req => {
+          const isCompleted = !!req.CompletedAt;
+
+          if (isCompleted && !showCompleted) {
+            return null;
+          }
+
+          return <GoalCard
+            goal={req}
+            regionNames={goalRegionNames}
+            isCompleted={isCompleted}
+            isAlwaysCompletable={!isCompleted}
+            onTitleClick={() => navigate(`/journal/goals/${req.Id}`)}
+            onCompleted={loadGoals}
+            onEdit={() => openEdit(req)}
+            onDelete={() => setDeleteTarget(req)}
+            onReopen={isCompleted ? () => handleReopen(req) : undefined}
+          />
+        })}
       </Paper>
-
-      <Box display="flex" gap={2} alignItems="center" flexWrap="wrap">
-        <Button variant="outlined" startIcon={<AddIcon />} onClick={openAdd}>
-          {t('goals.addRequirement')}
-        </Button>
-        {completedGoals.length > 0 && (
-          <Button size="small" variant="text" onClick={() => setShowCompleted(v => !v)}>
-            {showCompleted ? t('goals.hideCompleted') : `${t('goals.showCompleted')} (${completedGoals.length})`}
-          </Button>
-        )}
-      </Box>
-
-      {showCompleted && completedGoals.length > 0 && (
-        <Box sx={{ mt: 3 }}>
-          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-            {t('goals.completedGoals')}
-          </Typography>
-          <Paper sx={{
-            borderLeft: 2,
-            borderColor: 'secondary.main',
-            borderRadius: 1, px: 2, pt: 2, pb: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1
-          }}>
-            {completedGoals.map(req => renderGoalCard(req, true))}
-          </Paper>
-        </Box>
-      )}
 
       <GoalEditorModal
         open={dialogOpen}

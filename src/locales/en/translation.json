@@ -103,7 +103,7 @@
   "goals": {
     "title": "$t(common:terms.goal.upper, {\"count\": 2})",
     "noRequirements": "No $t(common:terms.goal.lower, {\"count\": 2}) set yet. Add a $t(common:terms.goal.lower, {\"count\": 1}) to start tracking your progress.",
-    "addRequirement": "Add $t(common:terms.goal.upper, {\"count\": 1})",
+    "addRequirement": "Create $t(common:terms.goal.upper, {\"count\": 1})",
     "editRequirement": "Edit $t(common:terms.goal.upper, {\"count\": 1})",
     "deleteRequirement": "Delete $t(common:terms.goal.upper, {\"count\": 1})",
     "deleteConfirm": "Delete this $t(common:terms.goal.lower, {\"count\": 1})?",
