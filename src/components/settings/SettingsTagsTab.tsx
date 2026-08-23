@@ -99,7 +99,7 @@ const SettingsTagsTab: React.FC = () => {
       {tags.length === 0 ? (
         <Typography variant="body2" color="text.secondary">{t('settings.noTags')}</Typography>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
           <Table>
             <TableHead>
               <TableRow>

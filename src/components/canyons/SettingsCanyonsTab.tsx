@@ -159,7 +159,7 @@ const SettingsCanyonsTab: React.FC = () => {
         filterFn={filterFn}
       >
         {(filteredCanyons) => (
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
             <Table>
               <TableHead>
                 <TableRow>

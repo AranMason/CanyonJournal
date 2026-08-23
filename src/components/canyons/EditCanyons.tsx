@@ -61,7 +61,7 @@ const EditCanyons: React.FC = () => {
             config={[getCanyonNameFilterConfig(), getRegionFilterConfig(), getDataSourceConfig(), getVerifiedFilterConfig(),]}
             filterFn={filterFn}
         >
-            {(filteredCanyons) => <TableContainer component={Paper}>
+            {(filteredCanyons) => <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -76,13 +76,13 @@ const EditCanyons: React.FC = () => {
                             <TableRow key={canyon.Id}>
                                 <TableCell>
                                     <CanyonNameTableCell
-canyon={canyon} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} subtitle={<CanyonRating
-                                        aquaticRating={canyon.AquaticRating}
-                                        verticalRating={canyon.VerticalRating}
-                                        commitmentRating={canyon.CommitmentRating}
-                                        starRating={canyon.StarRating}
-                                        isUnrated={canyon.IsUnrated}
-                                    />} />
+                                        canyon={canyon} detailUrl={canyon.Id ? `/canyons/${canyon.Id}` : null} subtitle={<CanyonRating
+                                            aquaticRating={canyon.AquaticRating}
+                                            verticalRating={canyon.VerticalRating}
+                                            commitmentRating={canyon.CommitmentRating}
+                                            starRating={canyon.StarRating}
+                                            isUnrated={canyon.IsUnrated}
+                                        />} />
                                 </TableCell>
                                 <CanyonTypeTableCell type={canyon.CanyonType} sx={{ display: { xs: 'none', sm: 'table-cell' } }} />
                                 <TableCell>
