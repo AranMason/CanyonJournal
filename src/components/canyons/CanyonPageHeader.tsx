@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import FavouriteButton from '../FavouriteButton';
 import CanyonRating from './CanyonRating';
@@ -10,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { GetRegionDisplayName } from '../../helpers/RegionHelper';
 import RegionIcon from '../regions/RegionIcon';
+import CreateIcon from '@mui/icons-material/Create';
 
 interface CanyonPageHeaderProps {
   isFavourite: boolean;
@@ -98,7 +98,7 @@ const CanyonPageHeader: React.FC<CanyonPageHeaderProps> = ({
               <FavouriteButton isFavourite={isFavourite} onToggle={onToggleFavourite} />
             </Box>
             <Box display="flex" alignItems="flex-start">
-              <Button type="button" variant="contained" onClick={() => navigate(recordUrl)} startIcon={<EditNoteIcon />}>
+              <Button type="button" variant="contained" onClick={() => navigate(recordUrl)} startIcon={<CreateIcon />}>
                 {t('common:actions.recordDescent')}
               </Button>
             </Box>

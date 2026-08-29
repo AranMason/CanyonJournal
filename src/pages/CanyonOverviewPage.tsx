@@ -4,13 +4,15 @@ import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
-import { Box, Breadcrumbs, Button, Link, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Link, Paper, Typography } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
 import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
 import CanyonPageHeader from '../components/canyons/CanyonPageHeader';
 import ReportIssueModal from '../components/admin/ReportIssueModal';
 import { useFavourite } from '../hooks/useFavourite';
 import { useTranslation } from 'react-i18next';
+import EmptyCellCta from '../components/EmptyCellCta';
+import CreateIcon from '@mui/icons-material/Create';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
@@ -97,9 +99,13 @@ const CanyonOverviewPage: React.FC = () => {
     <Typography variant='h4' my={2} fontSize={24}>
       {`${t('canyon.yourDescents')} (${canyonRecords.length})`}
     </Typography>
-    {canyonRecords.length === 0 ? (<div>{t('journal.noRecords')}</div>) : (
+    {canyonRecords.length === 0 ? (<Paper sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+      <EmptyCellCta
+        description={t('journal.noRecords')}
+        cta={t('common:actions.recordDescent')}
+        ctaIcon={<CreateIcon />} ctaAction={() => navigate(`/journal/record?canyonId=${canyonId}`)} /></Paper>) : (
       canyonRecords.map(rec => (
-        <CanyonRecordAccordion
+        canyonData && <CanyonRecordAccordion
           isOpen={sectionOpen === rec.Id}
           onChange={() => handleAccordionToggle(rec.Id ?? null)}
           record={rec}
