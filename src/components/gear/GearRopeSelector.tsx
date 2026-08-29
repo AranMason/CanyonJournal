@@ -35,19 +35,20 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   }, []);
 
   function selectGearSet(gs: GearItemSet) {
-    const selectableItems = gs.Items.filter(g => !retiredGear.has(g))
-
-    setSelectedGearIds([...new Set([...selectedGearIds, ...selectableItems])])
+    setSelectedGearIds([...new Set([...selectedGearIds, ...gs.Items])])
   }
 
   function getGearByCategory(gearToOrganise: GearItem[]): [key: string, values: GearItem[]][] {
-    function groupBy<T extends object>(xs: T[], key: keyof T): { [key in string]: T[] } {
-      return xs.reduce((rv, x) => {
-        (rv[x[key]] ??= []).push(x);
+
+    function groupBy(xs: GearItem[], key: keyof GearItem): { [key in string]: T[] } {
+
+      return xs.reduce((rv: { [x: string]: GearItem[] }, x) => {
+        const keyVal = x[key] as string;
+        (rv[keyVal] ??= []).push(x);
         return rv;
       }, {});
     };
-    return Object.entries(groupBy(gearToOrganise.filter(r => !r.IsRetired), "Category")).sort((a, b) => a[0].localeCompare(b[0], undefined, { sensitivity: 'base' }))
+    return Object.entries(groupBy(gearToOrganise.filter(r => !r.IsRetired || selectedGearIds.includes(r.Id)), "Category")).sort((a, b) => a[0].localeCompare(b[0], undefined, { sensitivity: 'base' }))
   }
 
   function renderGearCollection(key: string, values: GearItem[]): React.ReactNode {
@@ -61,12 +62,13 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
       <Box display={'flex'} gap={1} flexWrap={'wrap'} ml={1}>
         {values.sort((a, b) => a.Name.localeCompare(b.Name)).map(v => {
           const isSelected = selectedGearIds.includes(v.Id);
+
           return <Chip
             size='small'
             key={v.Id}
             label={v.Name}
             variant={isSelected ? 'filled' : 'outlined'}
-            color={isSelected ? 'info' : 'primary'}
+            color={isSelected ? (v.IsRetired ? 'error' : 'info') : 'primary'}
             onClick={() => !isSelected
               ? setSelectedGearIds([...selectedGearIds, v.Id])
               : setSelectedGearIds([...selectedGearIds].filter(s => s !== v.Id))}
@@ -109,7 +111,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             </Box>
           )}
         >
-          {ropes.filter(r => !r.IsRetired).map((rope) => (
+          {ropes.filter(r => !r.IsRetired || selectedGearIds.includes(r.Id)).map((rope) => (
             <MenuItem key={rope.Id} value={rope.Id}>
               <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
                 <ServiceStatusIndicator isRetired={rope.IsRetired} statusCode={rope.LatestStatusCode} />
