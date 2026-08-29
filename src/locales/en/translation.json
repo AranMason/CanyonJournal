@@ -22,7 +22,9 @@
     "priorYear": "{{year}}: {{count}}",
     "gearToService": "Gear Monitor",
     "gearToServiceInfo": "Top 5 items flagged because they are past retirement, last serviced/inspected over 6 months ago, or have no service history after 6 months from being added.",
-    "retirementDateTooltip": "Retirement Date: {{date}}"
+    "retirementDateTooltip": "Retirement Date: {{date}}",
+    "noGoalsSet": "You don't have any $t(common:terms.goal.upper, {\"count\": 2}) set at the moment",
+    "noGoalsSetCta": "Set your $t(common:terms.goal.upper, {\"count\": 2})"
   },
   "journal": {
     "title": "Your Journal",

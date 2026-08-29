@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { act, useEffect, useMemo, useState } from 'react';
 import {
   Box, Button, CircularProgress, DialogContent, FormControlLabel, Paper, Switch, ToggleButton, Typography,
 } from '@mui/material';
@@ -119,6 +119,13 @@ const GoalSettings: React.FC = () => {
     return map;
   }, [flatRegions]);
 
+  const goalsToDiplay = useMemo(() => {
+    if (!showCompleted) {
+      return activeGoals.filter(s => !!s.CompletedAt)
+    }
+    return activeGoals;
+  }, [activeGoals, showCompleted])
+
 
   if (isLoading) {
     return <Box display="flex" justifyContent="center" p={4}><CircularProgress /></Box>;
@@ -130,11 +137,7 @@ const GoalSettings: React.FC = () => {
         {t('goals.descriptionText')}
       </Typography>
 
-      {activeGoals.length === 0 && !showCompleted && (
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          {t('goals.noRequirements')}
-        </Typography>
-      )}
+
 
       <Box display="flex" gap={2} alignItems="center" justifyContent={'space-between'} flexWrap="wrap" mb={2}>
         <Button variant="contained" color='primary' startIcon={<AddIcon />} onClick={openAdd} data-test={`goal-add`}>
@@ -160,12 +163,8 @@ const GoalSettings: React.FC = () => {
         gap: 1,
         mb: 2
       }}>
-        {activeGoals.map(req => {
+        {goalsToDiplay.length > 0 ? goalsToDiplay.map(req => {
           const isCompleted = !!req.CompletedAt;
-
-          if (isCompleted && !showCompleted) {
-            return null;
-          }
 
           return <GoalCard
             goal={req}
@@ -178,7 +177,11 @@ const GoalSettings: React.FC = () => {
             onDelete={() => setDeleteTarget(req)}
             onReopen={isCompleted ? () => handleReopen(req) : undefined}
           />
-        })}
+        }) :
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {t('goals.noRequirements')}
+          </Typography>
+        }
       </Paper>
 
       <GoalEditorModal

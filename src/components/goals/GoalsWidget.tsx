@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, CircularProgress, Divider, Paper, Typography,
+  Box, Button, CircularProgress, Divider, Paper, Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Goal } from '../../types/Goal';
@@ -30,7 +30,41 @@ const GoalsWidget: React.FC = () => {
   );
 
   if (isLoading) return <Box display="flex" justifyContent="center" p={2}><CircularProgress size={24} /></Box>;
-  if (goals.length === 0) return null;
+
+  function renderNoGoals(): React.ReactNode {
+
+    return <Box
+      width="100%"
+      display="flex"
+      justifyContent={"center"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      gap={2}
+      my={2}>
+      <Typography color='textSecondary'>{t('translation:dashboard.noGoalsSet')}</Typography>
+      <Button
+        variant='contained'
+        onClick={() => navigate('/settings/goals')}>{t('translation:dashboard.noGoalsSetCta')}</Button>
+    </Box>
+  }
+
+  function renderGoals(): React.ReactNode {
+    return <>
+      {goals.map((goal) => {
+        return (
+          <GoalCard
+            key={goal.Id}
+            goal={goal}
+            regionNames={regionNames}
+            onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}
+            onCompleted={async () => {
+              setIsLoading(true);
+              await loadGoals();
+            }}
+          />
+        );
+      })}</>
+  }
 
   return (
     <Box sx={{ mb: 3 }}>
@@ -43,20 +77,8 @@ const GoalsWidget: React.FC = () => {
         flexDirection: 'column',
         gap: 1
       }}>
-        {goals.map((goal) => {
-          return (
-            <GoalCard
-              key={goal.Id}
-              goal={goal}
-              regionNames={regionNames}
-              onTitleClick={() => navigate(`/journal/goals/${goal.Id}`)}
-              onCompleted={async () => {
-                setIsLoading(true);
-                await loadGoals();
-              }}
-            />
-          );
-        })}
+
+        {goals.length > 0 ? renderGoals() : renderNoGoals()}
       </Paper>
 
     </Box >
