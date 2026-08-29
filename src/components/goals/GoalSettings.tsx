@@ -122,7 +122,7 @@ const GoalSettings: React.FC = () => {
 
   const goalsToDiplay = useMemo(() => {
     if (!showCompleted) {
-      return activeGoals.filter(s => !!s.CompletedAt)
+      return activeGoals.filter(s => !s.CompletedAt)
     }
     return activeGoals;
   }, [activeGoals, showCompleted])
