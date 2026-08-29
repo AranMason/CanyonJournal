@@ -221,7 +221,7 @@ const CanyonList: React.FC = () => {
         config={filterConfig}
         filterFn={filterFn}
       >
-        {(filteredCanyons) => <TableContainer component={Paper}>
+        {(filteredCanyons) => <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
           <Table>
             <TableHead>
               <TableRow>
