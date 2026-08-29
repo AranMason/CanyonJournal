@@ -77,6 +77,7 @@ const SettingsTagsTab: React.FC = () => {
       setRenameError(err.message || 'Failed to rename tag');
     } finally {
       setIsSaving(false);
+      setEditName('');
     }
   };
 
@@ -130,7 +131,11 @@ const SettingsTagsTab: React.FC = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {t('settings.tagsDescription')}
         </Typography>
-        <Button variant='contained' startIcon={<AddIcon />} onClick={() => setOpenCreateModal(true)}>{t('common:actions.create')}</Button>
+        <Button variant='contained' startIcon={<AddIcon />} onClick={() => {
+          setEditingId(null);
+          setEditName('');
+          setOpenCreateModal(true);
+        }}>{t('common:actions.create')}</Button>
       </Box>
       <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
         <Table>
@@ -147,7 +152,7 @@ const SettingsTagsTab: React.FC = () => {
               <EmptyCellCta
                 description={t('settings.noTags')}
                 cta={t('common:actions.create')}
-                ctaIcon={<AddIcon />} ctaAction={() => setOpenCreateModal(true)} /></TableCell></TableRow>
+                ctaIcon={<AddIcon />} ctaAction={() => { setEditingId(null); setEditName(''); setOpenCreateModal(true) }} /></TableCell></TableRow>
               : tags.map(tag => (
                 <TableRow key={tag.Id}>
                   <TableCell sx={{ py: 0.5 }}>
