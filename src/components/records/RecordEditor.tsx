@@ -1,4 +1,4 @@
-import { Box, TextField, Typography, Button, List, ListItem, ListItemButton, ListItemText, CircularProgress, ListSubheader, Paper, Autocomplete, Chip } from "@mui/material";
+import { Box, TextField, Typography, Button, Paper, Autocomplete, Chip } from "@mui/material";
 import { Formik, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import { CanyonRecord, WaterLevel } from "../../types/CanyonRecord";
@@ -11,22 +11,18 @@ import SuccessSnackbar from "../SuccessSnackbar";
 import React, { useEffect, useState } from "react";
 import { CanyonListEntry } from '../../types/Canyon';
 import { UserCanyon } from '../../types/UserCanyon';
-import { canyonKey, isUserCanyonKey, parseCanyonKey, userCanyonKey } from '../../utils/canyonKey';
+import { canyonKey, userCanyonKey } from '../../utils/canyonKey';
 import AddCanyonModal, { CanyonModalFormValues } from '../canyons/AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../../utils/canyonForm';
 import * as Yup from 'yup';
 import AddIcon from '@mui/icons-material/Add';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import StarIcon from '@mui/icons-material/Star';
-import CanyonRating from "../canyons/CanyonRating";
 import IconPicker from "../IconPicker";
 import ConfirmDeleteModal from "../ConfirmDeleteModal";
 import { useTranslation } from 'react-i18next';
-import RegionIcon from "../regions/RegionIcon";
-import SourceIcon from "../SourceIcon";
 import RecordCanyonSelector from "./RecordCanyonSelector";
 
 type RecordEditorProps = {
@@ -44,7 +40,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
-    const [searchFilter, setSearchFilter] = useState('');
     const [availableTags, setAvailableTags] = useState<string[]>([]);
     const [selectedTagNames, setSelectedTagNames] = useState<string[]>(initialValues?.Tags?.map(t => t.Name) || []);
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -140,14 +135,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
             >
                 {({ errors, touched, handleChange, handleBlur, values, setFieldValue, setFieldTouched, isSubmitting }) => {
 
-                    const handleCanyonSelect = (canyon: CanyonListEntry) => {
-
-                        const { canyonId, userCanyonId } = parseCanyonKey(canyon.Key);
-                        setFieldValue('CanyonId', canyonId);
-                        setFieldValue('UserCanyonId', userCanyonId);
-                        setSearchFilter('');
-                    };
-
                     const handleAddCanyonSubmit = async (values: CanyonModalFormValues) => {
                         const newCanyon = await apiFetch<UserCanyon>('/api/user-canyons', {
                             method: 'POST',
@@ -158,18 +145,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                         setFieldValue('CanyonId', undefined);
                         UserCanyonDataStore.invalidate();
                     };
-
-                    const lowerFilter = searchFilter.trim().toLowerCase();
-                    const matchesFilter = (name: string, url?: string) =>
-                        !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
-
-                    const favouriteCanyons = canyons
-                        .filter(c => c.IsFavourite && matchesFilter(c.Name, c.Url))
-                        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
-
-                    const otherCanyons = canyons
-                        .filter(c => !c.IsFavourite && (c.IsVerified) && matchesFilter(c.Name, c.Url))
-                        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' }));
 
                     const canyonError = !values.CanyonId && !values.UserCanyonId && touched.CanyonId;
 
@@ -189,6 +164,7 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
 
                             <RecordCanyonSelector
                                 value={getCanyon(values.CanyonId, values.UserCanyonId)}
+                                isLoading={isCanyonsLoading}
                                 canyons={canyons}
                                 setCanyon={
                                     (canyonId, userCanyonId) => {
@@ -209,94 +185,96 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             </Button>
 
                             <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('journal.descentInformation')}</Typography>
-                            <TextField
-                                label={t('record.date')}
-                                type="date"
-                                name="Date"
-                                value={values.Date}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                fullWidth
-                                required
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                                error={touched.Date && Boolean(errors.Date)}
-                                helperText={touched.Date && errors.Date}
-                            />
-                            <TextField
-                                label={t('record.teamSize')}
-                                type="number"
-                                name="TeamSize"
-                                value={values.TeamSize}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                fullWidth
-                                required
-                                margin="normal"
-                                inputProps={{ min: 1, 'data-test': 'record-team-size' }}
-                                error={touched.TeamSize && Boolean(errors.TeamSize)}
-                                helperText={touched.TeamSize && errors.TeamSize}
-                            />
-                            <Box sx={{ mb: 2, mt: 2 }}>
-                                <IconPicker
-                                    label={t('record.waterLevel')}
-                                    value={values.WaterLevel ?? 0}
-                                    onChange={v => setFieldValue('WaterLevel', v)}
-                                    icon={WaterDropIcon}
-                                    activeColor="info"
-                                    dataTestPrefix="record-water-level"
+                            <Paper sx={{ p: 2, mb: 2, borderLeft: 2, borderColor: 'secondary.main' }}>
+                                <TextField
+                                    label={t('record.date')}
+                                    type="date"
+                                    name="Date"
+                                    value={values.Date}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    InputLabelProps={{ shrink: true }}
+                                    error={touched.Date && Boolean(errors.Date)}
+                                    helperText={touched.Date && errors.Date}
                                 />
-                            </Box>
-                            <Box sx={{ mb: 2, mt: 2 }}>
-                                <IconPicker
-                                    label={t('record.descentRating')}
-                                    value={values.TripRating ?? 0}
-                                    onChange={v => setFieldValue('TripRating', v)}
-                                    icon={StarIcon}
-                                    activeColor="secondary"
-                                    dataTestPrefix="record-descent-rating"
+                                <TextField
+                                    label={t('record.teamSize')}
+                                    type="number"
+                                    name="TeamSize"
+                                    value={values.TeamSize}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    fullWidth
+                                    required
+                                    margin="normal"
+                                    inputProps={{ min: 1, 'data-test': 'record-team-size' }}
+                                    error={touched.TeamSize && Boolean(errors.TeamSize)}
+                                    helperText={touched.TeamSize && errors.TeamSize}
                                 />
-                            </Box>
-                            <TextField
-                                label={t('common:fields.comments')}
-                                name="Comments"
-                                value={values.Comments}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                fullWidth
-                                margin="normal"
-                                multiline
-                                minRows={3}
-                                inputProps={{ 'data-test': 'record-comments' }}
-                                error={touched.Comments && Boolean(errors.Comments)}
-                                helperText={touched.Comments && errors.Comments}
-                            />
-                            <Autocomplete
-                                multiple
-                                freeSolo
-                                options={availableTags}
-                                value={selectedTagNames}
-                                onChange={(_, newValue) => setSelectedTagNames(newValue as string[])}
-                                renderTags={(value, getTagProps) =>
-                                    value.map((option, index) => (
-                                        <Chip {...getTagProps({ index })} key={option} label={option} size="small" />
-                                    ))
-                                }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={t('common:fields.tags')}
-                                        placeholder={t('record.addTags')}
-                                        margin="normal"
-                                        slotProps={{
-                                            htmlInput: {
-                                                ...params.inputProps,
-                                                'data-test': 'record-tags'
-                                            }
-                                        }}
+                                <Box sx={{ mb: 2, mt: 2 }}>
+                                    <IconPicker
+                                        label={t('record.waterLevel')}
+                                        value={values.WaterLevel ?? 0}
+                                        onChange={v => setFieldValue('WaterLevel', v)}
+                                        icon={WaterDropIcon}
+                                        activeColor="info"
+                                        dataTestPrefix="record-water-level"
                                     />
-                                )}
-                            />
+                                </Box>
+                                <Box sx={{ mb: 2, mt: 2 }}>
+                                    <IconPicker
+                                        label={t('record.descentRating')}
+                                        value={values.TripRating ?? 0}
+                                        onChange={v => setFieldValue('TripRating', v)}
+                                        icon={StarIcon}
+                                        activeColor="secondary"
+                                        dataTestPrefix="record-descent-rating"
+                                    />
+                                </Box>
+                                <TextField
+                                    label={t('common:fields.comments')}
+                                    name="Comments"
+                                    value={values.Comments}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                    multiline
+                                    minRows={3}
+                                    inputProps={{ 'data-test': 'record-comments' }}
+                                    error={touched.Comments && Boolean(errors.Comments)}
+                                    helperText={touched.Comments && errors.Comments}
+                                />
+                                <Autocomplete
+                                    multiple
+                                    freeSolo
+                                    options={availableTags}
+                                    value={selectedTagNames}
+                                    onChange={(_, newValue) => setSelectedTagNames(newValue as string[])}
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip {...getTagProps({ index })} key={option} label={option} size="small" />
+                                        ))
+                                    }
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label={t('common:fields.tags')}
+                                            placeholder={t('record.addTags')}
+                                            margin="normal"
+                                            slotProps={{
+                                                htmlInput: {
+                                                    ...params.inputProps,
+                                                    'data-test': 'record-tags'
+                                                }
+                                            }}
+                                        />
+                                    )}
+                                />
+                            </Paper>
                             <Box display="flex" gap={2} flexDirection="column" mb={2}>
                                 <GearRopeSelector
                                     selectedRopeIds={values.RopeIds}

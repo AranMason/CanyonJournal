@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, Button, Typography, Card, CardContent } from '@mui/material';
 import { GearItem, GearItemSet, RopeItem } from '../../types/types';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
@@ -19,6 +19,11 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   const [gearSets, setGearSets] = useState<GearItemSet[]>([]);
   const { t } = useTranslation();
 
+  const retiredGear = useMemo(() => {
+    const retiredGearIds = gear?.filter(g => g.IsRetired) ?? [];
+    return new Set(retiredGearIds.map(g => g.Id));
+  }, [gear])
+
   useEffect(() => {
 
     Promise.all([EquipmentDataStore.load(), EquipmentDataStore.loadGearSets()])
@@ -29,6 +34,12 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
       })
   }, []);
 
+  function selectGearSet(gs: GearItemSet) {
+    const selectableItems = gs.Items.filter(g => !retiredGear.has(g))
+
+    setSelectedGearIds([...new Set([...selectedGearIds, ...selectableItems])])
+  }
+
   function getGearByCategory(gearToOrganise: GearItem[]): [key: string, values: GearItem[]][] {
     function groupBy<T extends object>(xs: T[], key: keyof T): { [key in string]: T[] } {
       return xs.reduce((rv, x) => {
@@ -36,12 +47,10 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
         return rv;
       }, {});
     };
-    return Object.entries(groupBy(gearToOrganise, "Category")).sort((a, b) => a[0].localeCompare(b[0], undefined, { sensitivity: 'base' }))
+    return Object.entries(groupBy(gearToOrganise.filter(r => !r.IsRetired), "Category")).sort((a, b) => a[0].localeCompare(b[0], undefined, { sensitivity: 'base' }))
   }
 
   function renderGearCollection(key: string, values: GearItem[]): React.ReactNode {
-
-    // const selectedItems = values.filter(v => selectedGearIds.includes(v.Id));
 
     return <Box key={key}>
 
@@ -100,7 +109,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             </Box>
           )}
         >
-          {ropes.map((rope) => (
+          {ropes.filter(r => !r.IsRetired).map((rope) => (
             <MenuItem key={rope.Id} value={rope.Id}>
               <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
                 <ServiceStatusIndicator isRetired={rope.IsRetired} statusCode={rope.LatestStatusCode} />
@@ -118,8 +127,8 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
             label={'All Gear'}
             deleteIcon={<AddIcon />}
             color='primary'
-            onDelete={() => setSelectedGearIds(gear.map(s => s.Id))}
-            onClick={() => setSelectedGearIds(gear.map(s => s.Id))}
+            onDelete={() => setSelectedGearIds(gear.filter(g => !g.IsRetired).map(s => s.Id))}
+            onClick={() => setSelectedGearIds(gear.filter(g => !g.IsRetired).map(s => s.Id))}
           />
           {gearSets.map(gs => {
             return <Chip
@@ -128,8 +137,8 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
               deleteIcon={<AddIcon />}
               color='primary'
               variant='outlined'
-              onDelete={() => setSelectedGearIds([...new Set([...selectedGearIds, ...gs.Items])])}
-              onClick={() => setSelectedGearIds([...new Set([...selectedGearIds, ...gs.Items])])}
+              onDelete={() => selectGearSet(gs)}
+              onClick={() => selectGearSet(gs)}
             />
           })}
           <Button variant='text' size='small' onClick={() => setSelectedGearIds([])}>{t('common:actions.clear')}</Button>
@@ -143,15 +152,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
               })}</Box> : <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={100}><Typography variant='subtitle2'>{t('translation:record.noGear')}</Typography></Box>}
           </CardContent>
         </Card>
-        {/* <AppModal open={isGearSetOpen} title={t('common:terms.gear.upper', { count: 2 })} onClose={() => setIsGearSetOpen(false)}>
-          <DialogContent>
-            <Box display={'flex'} gap={2} flexWrap={'wrap'} flexDirection={'column'}>
-              {getGearByCategory(gear).map(([key, values]) => {
-                return renderGearCollection(key, values)
-              })}
-            </Box>
-          </DialogContent>
-        </AppModal> */}
+
       </FormControl >
     </>
   );
