@@ -19,6 +19,8 @@ const RecordPage: React.FC = () => {
         WaterLevel: WaterLevel.Unknown
     } : undefined;
 
+    console.log(searchParams, canyonId, initialValues);
+
     return (
         <PageTemplate pageTitle={t('common:actions.recordDescent')} isAuthRequired>
             <RecordEditor isEdit={false} initialValues={initialValues} />
