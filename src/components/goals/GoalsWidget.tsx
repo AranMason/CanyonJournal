@@ -9,6 +9,8 @@ import * as GoalsDataStore from '../../helpers/GoalsDataStore';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
 import { Region } from '../../types/Region';
 import { useTranslation } from 'react-i18next';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import EmptyCellCta from '../EmptyCellCta';
 
 const GoalsWidget: React.FC = () => {
   const { t } = useTranslation();
@@ -33,19 +35,11 @@ const GoalsWidget: React.FC = () => {
 
   function renderNoGoals(): React.ReactNode {
 
-    return <Box
-      width="100%"
-      display="flex"
-      justifyContent={"center"}
-      flexDirection={"column"}
-      alignItems={"center"}
-      gap={2}
-      my={2}>
-      <Typography color='textSecondary'>{t('translation:dashboard.noGoalsSet')}</Typography>
-      <Button
-        variant='contained'
-        onClick={() => navigate('/settings/goals')}>{t('translation:dashboard.noGoalsSetCta')}</Button>
-    </Box>
+    return <EmptyCellCta
+      description={t('translation:dashboard.noGoalsSet')}
+      cta={t('translation:dashboard.noGoalsSetCta')}
+      ctaIcon={<ChecklistIcon />}
+      ctaAction={() => navigate('/settings/goals')} />
   }
 
   function renderGoals(): React.ReactNode {

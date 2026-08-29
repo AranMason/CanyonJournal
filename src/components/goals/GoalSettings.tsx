@@ -15,6 +15,7 @@ import { Tag } from '../../helpers/TagsDataStore';
 import { Region } from '../../types/Region';
 import AppModal from '../AppModal';
 import GoalEditorModal, { GoalEditorPayload } from './GoalEditorModal';
+import EmptyCellCta from '../EmptyCellCta';
 
 const GoalSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -178,9 +179,7 @@ const GoalSettings: React.FC = () => {
             onReopen={isCompleted ? () => handleReopen(req) : undefined}
           />
         }) :
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            {t('goals.noRequirements')}
-          </Typography>
+          <EmptyCellCta description={t('goals.noRequirements')} cta={t('goals.addRequirement')} ctaIcon={<AddIcon />} ctaAction={() => openAdd()} />
         }
       </Paper>
 

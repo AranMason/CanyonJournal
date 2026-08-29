@@ -8,6 +8,7 @@ import GearSetModal from './GearSetModal';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import ConfirmDeleteModal from '../ConfirmDeleteModal';
+import EmptyCellCta from '../EmptyCellCta';
 
 
 const EXPAND_THRESHOLD = 8;
@@ -173,11 +174,8 @@ const GearSetTable: React.FC = () => {
                         }
                         ) :
                             <TableRow>
-                                <TableCell sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
-                                    {t('gear.gearSet.emptyTable')}
-                                    <Button variant='contained' onClick={() => openModal(null)}>
-                                        {t('common:actions.create')}
-                                    </Button>
+                                <TableCell colSpan={4} >
+                                    <EmptyCellCta description={t('gear.gearSet.emptyTable')} cta={t('common:actions.create')} ctaIcon={<AddIcon />} ctaAction={() => openModal(null)} />
                                 </TableCell>
                             </TableRow>}
                     </TableBody>

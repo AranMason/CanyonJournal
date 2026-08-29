@@ -14,6 +14,7 @@ import ServiceStatusIndicator from "./ServiceStatusIndicator";
 import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel";
 import { GearServiceStatus } from "../../types/GearStatusType";
 import AddIcon from '@mui/icons-material/Add';
+import EmptyCellCta from "../EmptyCellCta";
 
 type GearStatusFilter = '' | 'good' | 'watch' | 'bad' | 'retired' | 'unknown';
 type ServiceAgeFilter = '' | 'gt3m' | 'gt6m' | 'gt1y';
@@ -242,6 +243,16 @@ const GearTable: React.FC = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
+                            {gear.length === 0 && <TableRow>
+                                <TableCell colSpan={6}>
+                                    <EmptyCellCta
+                                        description={t('gear.addGearText')}
+                                        cta={t('gear.addGear')}
+                                        ctaIcon={<AddIcon />}
+                                        ctaAction={() => {
+                                            setGearModalOpen(true)
+                                        }} />
+                                </TableCell></TableRow>}
                             {sortedFilteredGear.map(row => (
                                 <TableRow key={row.Id}>
                                     <TableCell>

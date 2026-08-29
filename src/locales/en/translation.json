@@ -23,6 +23,8 @@
     "gearToService": "Gear Monitor",
     "gearToServiceInfo": "Top 5 items flagged because they are past retirement, last serviced/inspected over 6 months ago, or have no service history after 6 months from being added.",
     "retirementDateTooltip": "Retirement Date: {{date}}",
+    "noGearToMonitor": "No $t(common:terms.gear.upper, {\"count\": 2}) needs servicing",
+    "noGearCta": "Visit your gear",
     "noGoalsSet": "You don't have any $t(common:terms.goal.upper, {\"count\": 2}) set at the moment",
     "noGoalsSetCta": "Set your $t(common:terms.goal.upper, {\"count\": 2})"
   },
@@ -204,7 +206,9 @@
     "model": "Model",
     "makeAndModel": "{{make}} {{model}}",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
+    "addRopeText": "Add $t(common:terms.rope.upper, {\"count\": 2}) to track $t(common:terms.descent.lower, {\"count\": 2}) and service history",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
+    "addGearText": "Add $t(common:terms.gear.upper, {\"count\": 2}) to track $t(common:terms.descent.lower, {\"count\": 2}) and service history",
     "length": "$t(common:fields.length) (m)",
     "diameter": "$t(common:fields.diameter) (mm)",
     "category": "$t(common:fields.category)",

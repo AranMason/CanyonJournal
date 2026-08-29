@@ -31,6 +31,11 @@ const DashboardPage: React.FC = () => {
     setSectionOpen(prev => prev === id ? null : id);
   }
 
+  if (!user?.id && !isLoading) {
+    // IF we're not logged in, send them to the Login page.
+    return navigate('/login')
+  }
+
   return (
     <PageTemplate pageTitle={t('dashboard.title')} isLoading={loading || isLoading}>
       <ChangeLogModal open={isChangeLogOpen} onClose={() => setIsChangeLogOpen(false)} />

@@ -15,6 +15,7 @@ import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel";
 import { GearServiceStatus } from "../../types/GearStatusType";
 import RopeServiceModal from "./RopeServiceModal";
 import AddIcon from '@mui/icons-material/Add';
+import EmptyCellCta from "../EmptyCellCta";
 
 type RopeStatusFilter = '' | 'good' | 'watch' | 'bad' | 'retired' | 'unknown';
 type RopeServiceAgeFilter = '' | 'gt3m' | 'gt6m' | 'gt1y';
@@ -212,7 +213,7 @@ const RopeTable: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedFilteredRopes.map(row => (
+              {sortedFilteredRopes.length > 0 ? sortedFilteredRopes.map(row => (
                 <TableRow key={row.Id}>
                   <TableCell>
                     <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.75 }}>
@@ -244,7 +245,18 @@ const RopeTable: React.FC = () => {
                     />
                   </TableCell>
                 </TableRow>
-              ))}
+              )) : <TableRow>
+                <TableCell colSpan={6} >
+                  <EmptyCellCta
+                    description={t('gear.addRopeText')}
+                    cta={t('gear.addRope')}
+                    ctaIcon={<AddIcon />}
+                    ctaAction={() => {
+                      setEditRopeId(null);
+                      setRopeModalOpen(true)
+                    }} />
+                </TableCell>
+              </TableRow>}
             </TableBody>
           </Table>
         </TableContainer>;

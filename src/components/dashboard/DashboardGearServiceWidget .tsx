@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "../../utils/api";
-import { Box, IconButton, Link, List, ListItem, ListItemText, Paper, Tooltip, Typography } from "@mui/material";
+import { Box, Button, IconButton, Link, List, ListItem, ListItemText, Paper, Tooltip, Typography } from "@mui/material";
 import Loader from "../Loader";
 import { GearItem } from "../../types/types";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,8 @@ import GearServiceModal from "../gear/GearServiceModal";
 import ServiceStatusIndicator from "../gear/ServiceStatusIndicator";
 import { useNavigate } from "react-router-dom";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import BuildIcon from '@mui/icons-material/Build';
+import EmptyCellCta from "../EmptyCellCta";
 
 const DashboardGearServiceWidget: React.FC = () => {
 
@@ -31,10 +33,6 @@ const DashboardGearServiceWidget: React.FC = () => {
         loadGear();
     }, [])
 
-    if (!isLoading && gearToService.length === 0) {
-        return null
-    }
-
     function displayDate(date: string): string {
         return new Date(date).toLocaleDateString(undefined, { dateStyle: "medium" });
     }
@@ -51,8 +49,6 @@ const DashboardGearServiceWidget: React.FC = () => {
             return <Tooltip title={t('translation:dashboard.retirementDateTooltip', { date: displayDate(item.RetirementDate!) })} >
                 <ErrorOutlineOutlinedIcon color="error" />
             </Tooltip >
-
-
         }
 
         return null;
@@ -103,7 +99,11 @@ const DashboardGearServiceWidget: React.FC = () => {
                                 {renderServiceText(i)}
                             </Typography>
                         </ListItem>
-                    }) : <Box display={'flex'} height={'100px'} alignItems={'center'} justifyContent={'center'}><Typography variant="body2" color="textSecondary">{t('translation:dashboard.noGearToMonitor')}</Typography></Box>}
+                    }) : <EmptyCellCta
+                        description={t('translation:dashboard.noGearToMonitor')}
+                        cta={t('translation:dashboard.noGearCta')} 
+                        ctaIcon={<BuildIcon />} 
+                        ctaAction={() => navigate('/settings/gear')} />}
                 </List>
             </Loader>
         </Paper >
