@@ -15,7 +15,9 @@ const EmptyCellCta: React.FC<EmptyCellCtaProps> = ({ description, cta, ctaIcon, 
         flexDirection={'column'}
         minHeight={'100px'}
         alignItems={'center'}
-        justifyContent={'center'}>
+        justifyContent={'center'}
+        my={2}
+        mx={1}>
         <Typography variant="body2" color="textSecondary" textAlign={'center'}>
             {description}
         </Typography>

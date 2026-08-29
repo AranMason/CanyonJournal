@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageTemplate from './PageTemplate';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import { useUser } from '../App';
 import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
 import DashboardStats from '../components/dashboard/DashboardStats';
@@ -13,6 +13,7 @@ import { getRecordsForDashboard } from '../helpers/RecordDataStore';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChangeLogModal from '../components/ChangeLogModal';
 import DashboardGearServiceWidget from '../components/dashboard/DashboardGearServiceWidget ';
+import EmptyCellCta from '../components/EmptyCellCta';
 
 const DashboardPage: React.FC = () => {
 
@@ -31,9 +32,14 @@ const DashboardPage: React.FC = () => {
     setSectionOpen(prev => prev === id ? null : id);
   }
 
-  if (!user?.id && !isLoading) {
-    // IF we're not logged in, send them to the Login page.
-    return navigate('/login')
+  useEffect(() => {
+    if (!user?.id && !isLoading && !loading) {
+      navigate('/login');
+    }
+  }, [user, isLoading, loading, navigate]);
+
+  if (!user?.id && !isLoading && !loading) {
+    return null;
   }
 
   return (
@@ -50,7 +56,13 @@ const DashboardPage: React.FC = () => {
         {t('dashboard.recentDescents')}
       </Typography>
 
-      {records.length === 0 ? (<div>{t('journal.noRecords')}</div>) : (
+      {records.length === 0 ? (<Paper sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+        <EmptyCellCta
+          description={t('journal.noRecords')}
+          cta={t('common:actions.recordDescent')}
+          ctaIcon={<CreateIcon />}
+          ctaAction={() => navigate("/journal/record")} />
+      </Paper>) : (
 
         records.map(rec => {
           const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined

@@ -30,7 +30,7 @@
   },
   "journal": {
     "title": "Your Journal",
-    "noRecords": "No $t(common:terms.record.upper, {\"count\": 2})",
+    "noRecords": "No $t(common:terms.descent.lower, {\"count\": 2}) recorded. Add your first canyoning $t(common:terms.descent.lower, {\"count\": 2}) and get started.",
     "editRecord": "Edit $t(common:terms.record.upper, {\"count\": 1})",
     "deleteRecord": "Delete $t(common:terms.record.upper, {\"count\": 1})",
     "deleteRecordTitle": "Delete $t(common:terms.descent.lower, {\"count\": 1}) $t(common:terms.record.lower, {\"count\": 1})?",

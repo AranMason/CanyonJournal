@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, Button, Collapse } from '@mui/material';
+import { Box, Button, Collapse, Paper } from '@mui/material';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import { Region } from '../types/Region';
 import ReportCTAAlert from '../components/admin/ReportCTAAlert';
 import { useTranslation } from 'react-i18next';
 import { getRecords } from '../helpers/RecordDataStore';
+import EmptyCellCta from '../components/EmptyCellCta';
 
 const RecordsOverviewPage: React.FC = () => {
   const navigate = useNavigate();
@@ -127,7 +128,13 @@ const RecordsOverviewPage: React.FC = () => {
           initialValues={initialValues}
         >
           {(filteredRecords) => filteredRecords.length === 0 ? (
-            <div>{t('journal.noRecords')}</div>
+            <Paper sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+              <EmptyCellCta
+                description={t('journal.noRecords')}
+                cta={t('common:actions.recordDescent')}
+                ctaIcon={<CreateIcon />}
+                ctaAction={() => navigate("/journal/record")} />
+            </Paper>
           ) : (
             filteredRecords.map(rec => {
               const canyon = rec.CanyonId ? canyonsById[rec.CanyonId] : rec.UserCanyonId ? userCanyonsById[rec.UserCanyonId] : undefined;
