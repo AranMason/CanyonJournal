@@ -9,6 +9,25 @@
     "gear": "Equipment",
     "welcome": "Welcome {{name}}"
   },
+  "welcome": {
+    "title": "Welcome to Hand Linne!",
+    "blurb": "Your dedicated personal journal and log book for all your canyoning adventures!",
+    "recordTrip": {
+      "title": "Record your Descents",
+      "description": "Get started by recording your first canyon descent on Hand Linne.",
+      "cta": "Record Now"
+    },
+    "addGear": {
+      "title": "Track your gear",
+      "description": "Track all your gear, see every trip it's been on, record maintenance, and stay on top of items that need attention or replacement.",
+      "cta": "Log Gear"
+    },
+    "addGoal": {
+      "title": "Set a Goal",
+      "description": "Define a personal or professional goal. Travel somewhere new, take on a fresh challenge, or make progress toward a qualification.",
+      "cta": "Set Goal"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "recentDescents": "Recent $t(common:terms.descent.upper, {\"count\": 2})",

@@ -12,6 +12,7 @@ type DbUser = {
   FirstName: string;
   ProfilePicture: string | null;
   IsAdmin?: boolean;
+  IsNewUser: boolean;
 };
 
 export { };

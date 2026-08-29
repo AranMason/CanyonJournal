@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../App';
 import Loader from '../components/Loader';
 import { useTranslation } from 'react-i18next';
+import NewUserModal from '../components/NewUserModal';
 interface PageTemplateProps {
     pageTitle: string;
     isAuthRequired?: boolean;
@@ -34,6 +35,7 @@ function PageTemplate({ pageTitle, children, isAuthRequired, isLoading }: PageTe
     return (
         <Loader isLoading={loading}>
             {user ? <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+                <NewUserModal />
                 <h1 className="App-title">{pageTitle}</h1>
                 {isLoading && <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>}
                 {!isLoading && children}

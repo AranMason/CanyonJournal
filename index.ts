@@ -69,7 +69,10 @@ app.use(async (req, res, next) => {
       .input('guid', sql.NVarChar(255), guid)
       .query('SELECT Id, Guid, FirstName, ProfilePicture, Email, IsAdmin, Email FROM Users WHERE Guid = @guid');
 
-    if (result.recordset.length === 0) {
+    const isNewUser = result.recordset.length === 0;
+
+    if (isNewUser) {
+
       // Create New Users
       result = await pool.request()
         .input('guid', sql.NVarChar(255), guid)
@@ -99,7 +102,7 @@ app.use(async (req, res, next) => {
 
     }
 
-    req.user = { dbUser: result.recordset[0] };
+    req.user = { dbUser: { ...result.recordset[0], IsNewUser: isNewUser } };
     next();
   } catch (err) {
     next(err);

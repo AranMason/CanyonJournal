@@ -1,4 +1,4 @@
-import {GearServiceStatus} from "./GearStatusType"
+import { GearServiceStatus } from "./GearStatusType"
 
 export enum Unit {
   Metres = 'Metres',
@@ -9,6 +9,7 @@ export interface User {
   picture_url?: string;
   id: Number,
   isAdmin: boolean;
+  isNewUser: boolean;
 }
 
 export enum ServiceType {
