@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Box, Button, CircularProgress, DialogContent,
+  Box, Button, CircularProgress, DialogActions, DialogContent,
   DialogContentText, IconButton, InputAdornment, Paper,
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
   TextField, Tooltip, Typography,
@@ -14,6 +14,8 @@ import * as TagsDataStore from '../../helpers/TagsDataStore';
 import { Tag } from '../../helpers/TagsDataStore';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
+import EmptyCellCta from '../EmptyCellCta';
+import AddIcon from '@mui/icons-material/Add';
 
 const SettingsTagsTab: React.FC = () => {
   const [tags, setTags] = useState<Tag[]>([]);
@@ -27,13 +29,19 @@ const SettingsTagsTab: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [renameError, setRenameError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [openCreateModel, setOpenCreateModal] = useState(false);
+
+  const reloadData = async () => {
+    TagsDataStore.invalidate();
+    await TagsDataStore.load()
+      .then(setTags)
+  }
 
   useEffect(() => {
     setIsLoading(true);
-    TagsDataStore.invalidate();
-    TagsDataStore.load()
-      .then(setTags)
-      .finally(() => setIsLoading(false));
+    reloadData().finally(() => {
+      setIsLoading(false);
+    })
   }, []);
 
   const startEdit = (tag: Tag) => {
@@ -63,7 +71,7 @@ const SettingsTagsTab: React.FC = () => {
         body: JSON.stringify({ Name: trimmed }),
       });
       setTags(prev => prev.map(t => t.Id === editingId ? { ...t, Name: updated.Name } : t));
-      TagsDataStore.invalidate();
+      reloadData();
       setEditingId(null);
     } catch (err: any) {
       setRenameError(err.message || 'Failed to rename tag');
@@ -78,7 +86,7 @@ const SettingsTagsTab: React.FC = () => {
     try {
       await apiFetch(`/api/tags/${deleteTarget.Id}`, { method: 'DELETE' });
       setTags(prev => prev.filter(t => t.Id !== deleteTarget.Id));
-      TagsDataStore.invalidate();
+      reloadData();
       setDeleteTarget(null);
     } catch (err: any) {
       alert(err.message || 'Failed to delete tag');
@@ -87,30 +95,60 @@ const SettingsTagsTab: React.FC = () => {
     }
   };
 
+  const handleCreate = async () => {
+    apiFetch<{ Name: string }>(`/api/tags`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Name: editName.trim() }),
+    }).then(() => {
+      reloadData();
+    }).finally(() => {
+      setEditName('');
+      setOpenCreateModal(false);
+    })
+  }
+
   if (isLoading) {
     return <Box display="flex" justifyContent="center" p={4}><CircularProgress /></Box>;
   }
 
   return (
     <>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        {t('settings.tagsDescription')}
-      </Typography>
-      {tags.length === 0 ? (
-        <Typography variant="body2" color="text.secondary">{t('settings.noTags')}</Typography>
-      ) : (
-        <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>{t('common:fields.name')}</TableCell>
-                <TableCell>{t('settings.tagUsageCount')}</TableCell>
-                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('settings.tagLastUsed')}</TableCell>
-                <TableCell sx={{ width: 120 }}>{t('common:actions.edit')}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tags.map(tag => (
+      <AppModal
+        open={openCreateModel}
+        onClose={() => {
+          setOpenCreateModal(false);
+        }} title={t('translation:settings.addTagModelTitle')}>
+        <DialogContent>
+          <TextField fullWidth value={editName} onChange={(e) => setEditName(e.target.value)} placeholder={t('translation:settings.tagName')}></TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button variant='contained' onClick={handleCreate} type='submit'>{t('common:actions.create')}</Button>
+        </DialogActions>
+      </AppModal>
+      <Box display={'flex'} flexDirection={'row'} justifyContent={'space-between'} alignItems={'baseline'} mb={2}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {t('settings.tagsDescription')}
+        </Typography>
+        <Button variant='contained' startIcon={<AddIcon />} onClick={() => setOpenCreateModal(true)}>{t('common:actions.create')}</Button>
+      </Box>
+      <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t('common:fields.name')}</TableCell>
+              <TableCell>{t('settings.tagUsageCount')}</TableCell>
+              <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{t('settings.tagLastUsed')}</TableCell>
+              <TableCell sx={{ width: 120 }}>{t('common:actions.edit')}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {tags.length === 0 ? <TableRow><TableCell colSpan={5}>
+              <EmptyCellCta
+                description={t('settings.noTags')}
+                cta={t('common:actions.create')}
+                ctaIcon={<AddIcon />} ctaAction={() => setOpenCreateModal(true)} /></TableCell></TableRow>
+              : tags.map(tag => (
                 <TableRow key={tag.Id}>
                   <TableCell sx={{ py: 0.5 }}>
                     {editingId === tag.Id ? (
@@ -160,10 +198,10 @@ const SettingsTagsTab: React.FC = () => {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
 
       <AppModal
         open={Boolean(deleteTarget)}

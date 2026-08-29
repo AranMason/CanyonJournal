@@ -23,6 +23,7 @@ import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
 import { GetRegionDisplayName } from '../../helpers/RegionHelper';
 import RegionIcon from '../regions/RegionIcon';
+import EmptyCellCta from '../EmptyCellCta';
 
 const SettingsCanyonsTab: React.FC = () => {
   const navigate = useNavigate();
@@ -207,9 +208,7 @@ const SettingsCanyonsTab: React.FC = () => {
                 {filteredCanyons.length === 0 && !isLoading && (
                   <TableRow>
                     <TableCell colSpan={6} align="center">
-                      <Typography color="text.secondary" py={2}>
-                        {canyons.length === 0 ? t('settings.noCustomCanyons') : t('common:noResults')}
-                      </Typography>
+                      <EmptyCellCta description={canyons.length === 0 ? t('settings.noCustomCanyons') : t('common:noResults')} cta={t('settings.newCanyon')} ctaIcon={<AddIcon />} ctaAction={openCreate} />
                     </TableCell>
                   </TableRow>
                 )}
