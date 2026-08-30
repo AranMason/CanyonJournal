@@ -131,11 +131,14 @@ const SettingsTagsTab: React.FC = () => {
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {t('settings.tagsDescription')}
         </Typography>
-        <Button variant='contained' startIcon={<AddIcon />} onClick={() => {
-          setEditingId(null);
-          setEditName('');
-          setOpenCreateModal(true);
-        }}>{t('common:actions.create')}</Button>
+        <Button
+          variant='contained'
+          startIcon={<AddIcon />}
+          onClick={() => {
+            setEditingId(null);
+            setEditName('');
+            setOpenCreateModal(true);
+          }}>{t('common:actions.create')}</Button>
       </Box>
       <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
         <Table>

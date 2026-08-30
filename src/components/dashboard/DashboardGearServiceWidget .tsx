@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiFetch } from "../../utils/api";
-import { Box, Button, IconButton, Link, List, ListItem, ListItemText, Paper, Tooltip, Typography } from "@mui/material";
+import { IconButton, Link, List, ListItem, ListItemText, Paper, Tooltip, Typography } from "@mui/material";
 import Loader from "../Loader";
 import { GearItem } from "../../types/types";
 import { useTranslation } from "react-i18next";

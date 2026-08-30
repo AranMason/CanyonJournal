@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, Button, Typography, Card, CardContent, Tooltip } from '@mui/material';
 import { GearItem, GearItemSet, RopeItem } from '../../types/types';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';

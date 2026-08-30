@@ -1,6 +1,6 @@
-import React, { act, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Box, Button, CircularProgress, DialogContent, FormControlLabel, Paper, Switch, ToggleButton, Typography,
+  Box, Button, CircularProgress, DialogContent, FormControlLabel, Paper, Switch, Typography,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
