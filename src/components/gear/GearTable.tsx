@@ -15,6 +15,7 @@ import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel";
 import { GearServiceStatus } from "../../types/GearStatusType";
 import AddIcon from '@mui/icons-material/Add';
 import EmptyCellCta from "../EmptyCellCta";
+import { getMakeAndModel } from "../../helpers/TranslationHelper";
 
 type GearStatusFilter = '' | 'good' | 'watch' | 'bad' | 'retired' | 'unknown';
 type ServiceAgeFilter = '' | 'gt3m' | 'gt6m' | 'gt1y';
@@ -261,7 +262,7 @@ const GearTable: React.FC = () => {
                                             <Link component="a" color="textPrimary" onClick={() => navigate(`/settings/gear/${row.Id}`)} sx={{ cursor: 'pointer' }}>{row.Name}</Link>
                                         </Box>
                                         <br />
-                                        <Typography variant="caption" color="textSecondary">{t('gear.makeAndModel', { make: row.Manufacturer, model: row.Model })}</Typography>
+                                        <Typography variant="caption" color="textSecondary">{getMakeAndModel(t, row) ?? t('common:blank')}</Typography>
                                     </TableCell>
                                     <TableCell>{row.Category}</TableCell>
                                     <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>{row.WeightGrams ? t(`gear.table.weight.cell`, { weight: row.WeightGrams }) : t('common:blank')}</TableCell>

@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import BuildIcon from '@mui/icons-material/Build';
 import EmptyCellCta from "../EmptyCellCta";
+import { getMakeAndModel } from "../../helpers/TranslationHelper";
 
 const DashboardGearServiceWidget: React.FC = () => {
 
@@ -88,7 +89,7 @@ const DashboardGearServiceWidget: React.FC = () => {
                                 primary={<Link display='flex' gap={1} onClick={() => navigate(`/settings/gear/${i.Id}`)} sx={{ cursor: 'pointer' }}>
                                     <ServiceStatusIndicator isRetired={i.IsRetired} statusCode={i.LatestStatusCode} />{i.Name}
                                 </Link>}
-                                secondary={t('translation:gear.makeAndModel', { make: i.Manufacturer, model: i.Model })}
+                                secondary={getMakeAndModel(t, i) ?? t('common:blank')}
                             />
                             <Typography
                                 mr={2}
@@ -101,8 +102,8 @@ const DashboardGearServiceWidget: React.FC = () => {
                         </ListItem>
                     }) : <EmptyCellCta
                         description={t('translation:dashboard.noGearToMonitor')}
-                        cta={t('translation:dashboard.noGearCta')} 
-                        ctaIcon={<BuildIcon />} 
+                        cta={t('translation:dashboard.noGearCta')}
+                        ctaIcon={<BuildIcon />}
                         ctaAction={() => navigate('/settings/gear')} />}
                 </List>
             </Loader>

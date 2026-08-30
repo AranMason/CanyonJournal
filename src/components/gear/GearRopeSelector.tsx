@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Chip, MenuItem, Select, InputLabel, FormControl, Button, Typography, Card, CardContent } from '@mui/material';
+import { Box, Chip, MenuItem, Select, InputLabel, FormControl, Button, Typography, Card, CardContent, Tooltip } from '@mui/material';
 import { GearItem, GearItemSet, RopeItem } from '../../types/types';
 import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
 import { useTranslation } from 'react-i18next';
 import ServiceStatusIndicator from './ServiceStatusIndicator'
 import AddIcon from '@mui/icons-material/Add';
+import { getMakeAndModel } from '../../helpers/TranslationHelper';
 
 interface GearRopeSelectorProps {
   selectedRopeIds: number[];
@@ -18,11 +19,6 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
   const [gear, setGear] = useState<GearItem[]>([]);
   const [gearSets, setGearSets] = useState<GearItemSet[]>([]);
   const { t } = useTranslation();
-
-  const retiredGear = useMemo(() => {
-    const retiredGearIds = gear?.filter(g => g.IsRetired) ?? [];
-    return new Set(retiredGearIds.map(g => g.Id));
-  }, [gear])
 
   useEffect(() => {
 
@@ -40,7 +36,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
 
   function getGearByCategory(gearToOrganise: GearItem[]): [key: string, values: GearItem[]][] {
 
-    function groupBy(xs: GearItem[], key: keyof GearItem): { [key in string]: T[] } {
+    function groupBy(xs: GearItem[], key: keyof GearItem): { [key in string]: GearItem[] } {
 
       return xs.reduce((rv: { [x: string]: GearItem[] }, x) => {
         const keyVal = x[key] as string;
@@ -63,7 +59,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
         {values.sort((a, b) => a.Name.localeCompare(b.Name)).map(v => {
           const isSelected = selectedGearIds.includes(v.Id);
 
-          return <Chip
+          return <Tooltip title={getMakeAndModel(t, v) ?? v.Name}><Chip
             size='small'
             key={v.Id}
             label={v.Name}
@@ -73,6 +69,7 @@ export const GearRopeSelector: React.FC<GearRopeSelectorProps> = ({ selectedRope
               ? setSelectedGearIds([...selectedGearIds, v.Id])
               : setSelectedGearIds([...selectedGearIds].filter(s => s !== v.Id))}
           />
+          </Tooltip>
         })}
       </Box>
     </Box>

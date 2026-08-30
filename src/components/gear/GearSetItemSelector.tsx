@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Chip, Tooltip, Typography } from '@mui/material';
 import { GearItem } from '../../types/types';
 import { useTranslation } from 'react-i18next';
+import { getMakeAndModel } from '../../helpers/TranslationHelper';
 
 type GearSetItemSelectorProps = {
     gear: GearItem[];
@@ -40,7 +41,7 @@ const GearSetItemSelector: React.FC<GearSetItemSelectorProps> = ({ gear, value, 
                             const isSelected = selectedIds.has(item.Id);
 
                             return (
-                                <Tooltip title={t('gear.makeAndModel', { make: item.Manufacturer, model: item.Model })} enterDelay={250} >
+                                <Tooltip title={getMakeAndModel(t, item) ?? item.Name} enterDelay={250} >
                                     <Chip
                                         key={item.Id}
                                         size="small"
