@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -25,6 +25,13 @@ const RegionTreeView: React.FC<RegionTreeViewProps> = ({
   renderActions,
   sx,
 }) => {
+
+  const [currentExpandedIds, setCurrentExpandedIds] = useState<string[]>(expandedIds ?? [])
+
+  useEffect(() => {
+    setCurrentExpandedIds(expandedIds ?? []);
+  }, [expandedIds])
+
   function renderTree(items: Region[]): React.ReactNode {
     return items.map(node => (
       <TreeItem
@@ -46,7 +53,8 @@ const RegionTreeView: React.FC<RegionTreeViewProps> = ({
   return (
     <SimpleTreeView
       slots={{ collapseIcon: ExpandMoreIcon, expandIcon: ChevronRightIcon }}
-      defaultExpandedItems={expandedIds ?? []}
+      expandedItems={currentExpandedIds}
+      onExpandedItemsChange={(event, itemIds) => setCurrentExpandedIds(itemIds)}
       selectedItems={selectedId != null ? String(selectedId) : ''}
       onItemClick={onSelect ? (event, itemId) => {
         const target = event.target as HTMLElement;

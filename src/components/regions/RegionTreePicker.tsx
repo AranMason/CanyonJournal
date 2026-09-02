@@ -74,13 +74,15 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   }
 
   const visibleTree = useMemo(() => {
-    if (!availableRegionIds) return tree;
-    const available = new Set(availableRegionIds);
+    const regionList = availableRegionIds ?? collectAllIds(tree);
+
+    const available = new Set(regionList);
     return elevateTree(pruneTree(tree, available, textFilter), available);
   }, [tree, availableRegionIds, textFilter]);
 
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setTextFilter('');
     onChange(null);
   };
 
@@ -88,7 +90,8 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   // if the visible tree is small, expand everything for convenience.
   const expandedIds = useMemo(() => {
     const allVisibleIds = collectAllIds(visibleTree);
-    if (allVisibleIds.length < 10 || textFilter !== '') return allVisibleIds;
+    console.log(allVisibleIds)
+    if (allVisibleIds.length < 10) return allVisibleIds;
     return value != null ? getAncestorIds(value, flat).map(String) : [];
   }, [visibleTree, value, flat, textFilter]);
 
@@ -126,7 +129,7 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
           ) : (
             <>
               <TextField
-fullWidth
+                fullWidth
                 placeholder={t('common:actions.search', 'Search')}
                 value={textFilter}
                 size="small"
@@ -135,7 +138,7 @@ fullWidth
               <RegionTreeView
                 nodes={visibleTree}
                 selectedId={value}
-                expandedIds={expandedIds}
+                expandedIds={expandedIds.map(s => s.toString())}
                 onSelect={id => { onChange(id); setOpen(false); }}
                 sx={{ maxHeight: 400, overflowY: 'auto' }}
               />
@@ -164,16 +167,17 @@ function getAncestorIds(regionId: number | null, flat: Region[]): number[] {
   return ancestors;
 }
 
-function collectAllIds(nodes: Region[]): string[] {
-  return nodes.flatMap(n => [String(n.Id), ...collectAllIds(n.Children ?? [])]);
+function collectAllIds(nodes: Region[]): number[] {
+  return nodes.flatMap(n => [n.Id, ...collectAllIds(n.Children ?? [])]);
 }
 
 /** Prune the tree to only nodes whose subtree contains at least one available ID. */
 function pruneTree(nodes: Region[], available: Set<number>, textFilter: string): Region[] {
+  // TODO: Enable iternmediate node searching.
   const filterText = textFilter.toLowerCase();
   return nodes.reduce<Region[]>((acc, node) => {
     const prunedChildren = pruneTree(node.Children ?? [], available, textFilter);
-    const matchesFilter = filterText === '' || node.Name.toLowerCase().includes(filterText);
+    const matchesFilter = filterText === '' || node.Name.toLowerCase().includes(filterText) || node.Slug.toLowerCase().includes(filterText);
     const hasMatchingDescendant = prunedChildren.length > 0;
     if ((available.has(node.Id) || hasMatchingDescendant) && (matchesFilter || hasMatchingDescendant)) {
       acc.push({ ...node, Children: prunedChildren });
