@@ -90,7 +90,6 @@ const RegionTreePicker: React.FC<RegionTreePickerProps> = ({
   // if the visible tree is small, expand everything for convenience.
   const expandedIds = useMemo(() => {
     const allVisibleIds = collectAllIds(visibleTree);
-    console.log(allVisibleIds)
     if (allVisibleIds.length < 10) return allVisibleIds;
     return value != null ? getAncestorIds(value, flat).map(String) : [];
   }, [visibleTree, value, flat, textFilter]);
