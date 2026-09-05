@@ -212,11 +212,7 @@ body {
   margin-top: 24px
 }
 
-@media(max-width:560px) {
-  .features {
-    grid-template-columns: 1fr
-  }
-}
+
 
 .feature {
   background: rgba(255, 255, 255, 0.02);
@@ -320,4 +316,33 @@ body {
   border: 0;
   color: var(--white);
   font-weight: 600
+}
+
+@media(max-width:640px) {
+  .hero {
+    padding: 28px 0
+  }
+
+  .site-title-link>.small {
+    display: none;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .header {
+    padding: 12px;
+  }
+
+  .brand>img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media(max-width:560px) {
+  .features {
+    grid-template-columns: 1fr
+  }
 }
