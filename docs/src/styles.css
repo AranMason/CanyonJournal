@@ -6,6 +6,7 @@
   --accent: #ff6b35;
   --muted: #94a3b8;
   --text: #ffffff;
+  --white: #ffffff;
   --text-body: var(--card)
 }
 
@@ -100,7 +101,7 @@ body {
 
 .hero {
   color: var(--text);
-
+  background-color: var(--muted);
   height: 500px;
   width: 100%;
   max-height: 60vh;
@@ -262,7 +263,7 @@ body {
 
 .nav-button:hover,
 .nav-button:active {
-  border-bottom: #ff6b35 3px solid;
+  border-bottom: var(--accent) 3px solid;
 }
 
 .small {
@@ -327,6 +328,6 @@ body {
   border-radius: 8px;
   background: var(--accent);
   border: 0;
-  color: #fff;
+  color: var(--white);
   font-weight: 600
 }
