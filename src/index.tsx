@@ -37,7 +37,7 @@ function AppLayout() {
       <Box display="flex">
         <Sidebar mobileOpen={mobileOpen} onMobileClose={() => setMobileOpen(false)} />
         <Box component="main" sx={{ flexGrow: 1, mt: { xs: '56px', sm: '64px', md: 0 } }}>
-          <Routes>
+          <Routes>  
             <Route path="/" element={<HomePage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             {/* Journal */}
