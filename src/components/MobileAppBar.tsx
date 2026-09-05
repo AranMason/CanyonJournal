@@ -21,7 +21,7 @@ const MobileAppBar: React.FC<MobileAppBarProps> = ({ onMenuClick }) => {
         </IconButton>
 
         <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
-          <img src="/favicon.svg" alt={t('common:app.name')} style={{ width: 28, height: 28, marginRight: 8 }} />
+          <img src="/favicon.svg" alt={t('common:app.name')} style={{ width: 32, height: 32, marginRight: 8 }} />
           <Typography variant="h6" noWrap component="div" fontWeight={700}>
             {t('common:app.name')}
           </Typography>
