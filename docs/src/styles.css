@@ -280,16 +280,6 @@ body {
   font-weight: 600;
 }
 
-@media(max-width:640px) {
-  .hero {
-    padding: 28px 0
-  }
-
-  .hero h1 {
-    font-size: 1.5rem
-  }
-}
-
 /* Utility */
 .center {
   display: flex;
