@@ -25,14 +25,14 @@ features:
       Record date, team size, water conditions, star rating, and personal notes for every trip you complete.
 
   - icon: fa-solid fa-map-pin
-    title: Create canyons
+    title: Add private canyons
     text: >
-      Log trips against verified canyons, or add your own custom entries for any canyon you descend.
+      Log trips against our list of canyons from your favourite sources, or add your own.
 
   - icon: fa-solid fa-helmet-safety
     title: Know your kit
     text: >
-      Log your ropes and equipment, track usage, and keep your gear list organised.
+      Log your ropes and equipment, track usage, keep your gear list organised and track thier service history.
 
   - icon: fa-solid fa-tags
     title: Tags & organisation
