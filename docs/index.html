@@ -3,53 +3,40 @@ layout: base
 title: Record your descents
 description: Hand Linne — your personal canyoning log book and journal.
 ---
-<section class="hero-image">
+<section class="hero">
   <div class="hero-cta">
-    <h1>The journal built for canyoneers</h1>
-    <p>Every trip recorded. Every detail remembered.</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
-      <a class="cta" href="https://app.handlinne.co.uk/login?screen_hint=signup">Register free</a>
-      <a class="cta" style="background-color:unset;" href="https://app.handlinne.co.uk/">Login</a>
+    <div class="hero-image"></div>
+    <div class="hero-title">
+      <h1>{{ site.title }}</h1>
+      <span>{{ site.tagline }}</span>
     </div>
+    <!-- <p>Every trip recorded. Every detail remembered.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a class="cta" href="{{ site.appUrl }}">Register free</a>
+      <a class="cta" style="background-color:unset;" href="{{ site.appUrl }}">Login</a>
+    </div> -->
   </div>
+  <a class="hero-cta-bar" href="{{ site.appUrl }}">
+    Get Started
+    <i class="fa-solid fa-arrow-right"></i>
+  </a>
 </section>
 
-<section class="hero">
+<section>
   <div class="hero-content">
     <div class="hero-left">
       <div class="features">
-
+        {% for feature in site.features %}
         <div class="feature">
-          <i class="fa-solid fa-book-open"></i>
-          <div><h3>Log every descent</h3>
-          <p>Record date, team size, water conditions, star rating, and personal notes for every trip you complete.</p></div>
+          <i class="{{ feature.icon }}"></i>
+          <div>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.text }}</p>
+          </div>
         </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-map-pin"></i>
-          <div><h3>Create canyons</h3>
-          <p>Log trips against verified canyons, or add your own custom entries for any canyon you descend.</p></div>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-helmet-safety"></i>
-          <div><h3>Know your kit</h3>
-          <p>Log your ropes and equipment, track usage, and keep your gear list organised.</p></div>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-tags"></i>
-          <div><h3>Tags &amp; organisation</h3>
-          <p>Organise your journal with custom tags. Filter past trips instantly to find exactly what you're looking for.</p></div>
-        </div>
-
-        <div class="feature">
-          <i class="fa-solid fa-bullseye"></i>
-          <div><h3>Set &amp; track goals</h3>
-          <p>Set targets for trips, regions, or guide training. Track your progress automatically as you log.</p></div>
-        </div>
-
+        {% endfor %}
       </div>
+
     </div>
   </div>
 </section>

@@ -10,7 +10,7 @@
   {% assign seo_description = page.description | default: site.description %}
   {% assign seo_image = page.og_image | default: '/assets/hero.jpg' %}
   <link rel="icon" href="/assets/favicon.svg" />
-  <title>{% if page.title %}{{ page.title }} — {% endif %}Hand Linne</title>
+  <title>{% if page.title %}{{ page.title }} - {% endif %}Hand Linne</title>
   <link rel="canonical" href="{{ canonical_url }}" />
   <link rel="stylesheet" href="/src/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
@@ -37,26 +37,34 @@
     <header class="header">
       <div class="brand">
         <img src="/assets/favicon.svg" width="48" height="48" alt="Hand Linne logo" />
-        <div>
-          <div class="site-title">Hand Linne</div>
-          <div class="small">Log Descents • Track Gear • Tag Adventures</div>
-        </div>
+        <a href="/" class="site-title-link">
+          <div class="site-title">{{ site.title }}</div>
+          <div class="small">{{ site.tagline }}</div>
+        </a>
       </div>
       <nav class="nav">
-        <a class="small" href="/">Home</a>
-        <a class="small" href="/contact.html">Contact</a>
-        <a class="small cta" href="https://app.handlinne.co.uk/">Login</a>
+        {% for item in site.navigation.header %}
+        <a class="nav-button small {{ item.css }} 
+          {% if page.url == item.url %}active{% endif %}" href="{{ item.url }}">
+          {{ item.title }}
+        </a>
+        {% endfor %}
       </nav>
+
     </header>
-
-    {{ content }}
-
+    <main>
+      {{ content }}
+    </main>
     <footer class="footer">
-      <div class="small">© Hand Linne</div>
+      <div class="small">© {{ site.title }}</div>
       <div>
-        <a class="privacy-link" href="/privacy.html">Privacy</a>
-        &nbsp;•&nbsp;
-        <a class="privacy-link" href="/contact.html">Contact</a>
+        {% for item in site.navigation.footer %}
+        &nbsp;
+        <a class="privacy-link {{ item.css }} 
+          {% if page.url == item.url %}active{% endif %}" href="{{ item.url }}">
+          {{ item.title }}
+        </a>
+        {% endfor %}
       </div>
     </footer>
   </div>
