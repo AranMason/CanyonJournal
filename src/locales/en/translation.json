@@ -170,7 +170,7 @@
     "rollingDaysHelp": "e.g. 90 = last 90 days",
     "filtersSection": "Filters (optional)",
     "firstTimeDescription": "Only count trips to canyons not previously visited",
-    "descriptionText": "Define progress goals — useful for guide training or personal targets.",
+    "descriptionText": "Define progress goals - useful for guide training or personal targets.",
     "minRating": "Min. rating",
     "ruleMode": "Mode",
     "dateFrom": "from {{date}}",
