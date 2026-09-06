@@ -59,7 +59,7 @@
     "createRecord": "Create $t(common:terms.record.upper, {\"count\": 1})",
     "descentInformation": "$t(common:terms.descent.upper, {\"count\": 1}) Information",
     "gearAndRope": "$t(common:terms.gear.upper, {\"count\": 1}) & $t(common:terms.rope.upper, {\"count\": 1}) Used",
-    "canyonLogCta": "Consider sharing your experience at {{name}} on $t(common:partners.canyonLog) to help the community."
+    "sourceCta": "Consider sharing your experience at {{name}} on {{ sourceName }} to help the community."
   },
   "canyon": {
     "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",

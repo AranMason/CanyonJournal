@@ -14,8 +14,8 @@ const AdminPage: React.FC = () => {
 
   return (
     <PageTemplate pageTitle={t('admin.title')} isAuthRequired>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
-        <Tabs value={tab} indicatorColor='secondary' variant="scrollable" onChange={(_, v) => setTab(v)}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2, width: '100%' }}>
+        <Tabs value={tab} indicatorColor='secondary' variant="scrollable" scrollButtons='auto' onChange={(_, v) => setTab(v)}>
           <Tab label={t('admin.canyons')} />
           <Tab label={t('admin.sources')} />
           <Tab label={t('admin.reports')} />

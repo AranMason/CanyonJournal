@@ -58,7 +58,7 @@ export const getBaseCanyonDataWithDescents = async (pool: sql.ConnectionPool, us
                 LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
                 LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
                 LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
-                WHERE c.IsVerified = 1
+                WHERE c.IsVerified = 1 AND cs.IsEnabled = 1
                 GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
               `);
 

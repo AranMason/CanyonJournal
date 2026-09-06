@@ -19,7 +19,7 @@ router.get('/', async (req: Request, res: Response) => {
 // POST /api/sources — create a source (admin only)
 router.post('/', async (req: Request, res: Response) => {
   if (!await isAdmin(req)) return res.status(403).json({ error: 'Admin access required' });
-  const { displayName, logoUrl, websiteUrl } = req.body;
+  const { displayName, logoUrl, websiteUrl, isEnabled } = req.body;
   if (!displayName) return res.status(400).json({ error: 'DisplayName is required' });
   try {
     const pool = await getPool();
@@ -27,7 +27,8 @@ router.post('/', async (req: Request, res: Response) => {
       .input('displayName', sql.NVarChar(200), displayName)
       .input('logoUrl', sql.NVarChar(500), logoUrl || null)
       .input('websiteUrl', sql.NVarChar(500), websiteUrl || null)
-      .query('INSERT INTO CanyonSources (DisplayName, LogoUrl, WebsiteUrl) OUTPUT INSERTED.* VALUES (@displayName, @logoUrl, @websiteUrl)');
+      .input('isEnabled', sql.Bit(), isEnabled || false)
+      .query('INSERT INTO CanyonSources (DisplayName, LogoUrl, WebsiteUrl, IsEnabled) OUTPUT INSERTED.* VALUES (@displayName, @logoUrl, @websiteUrl, @isEnabled)');
     res.status(201).json(result.recordset[0]);
   } catch (err) {
     console.error(err);
@@ -38,7 +39,7 @@ router.post('/', async (req: Request, res: Response) => {
 // PATCH /api/sources/:id — update a source (admin only)
 router.patch('/:id', async (req: Request, res: Response) => {
   if (!await isAdmin(req)) return res.status(403).json({ error: 'Admin access required' });
-  const { displayName, logoUrl, websiteUrl } = req.body;
+  const { displayName, logoUrl, websiteUrl, isEnabled } = req.body;
   if (!displayName) return res.status(400).json({ error: 'DisplayName is required' });
   try {
     const pool = await getPool();
@@ -47,7 +48,8 @@ router.patch('/:id', async (req: Request, res: Response) => {
       .input('displayName', sql.NVarChar(200), displayName)
       .input('logoUrl', sql.NVarChar(500), logoUrl || null)
       .input('websiteUrl', sql.NVarChar(500), websiteUrl || null)
-      .query('UPDATE CanyonSources SET DisplayName=@displayName, LogoUrl=@logoUrl, WebsiteUrl=@websiteUrl OUTPUT INSERTED.* WHERE Id=@id');
+      .input('isEnabled', sql.Bit(), isEnabled || false)
+      .query('UPDATE CanyonSources SET DisplayName=@displayName, LogoUrl=@logoUrl, WebsiteUrl=@websiteUrl, IsEnabled=@isEnabled OUTPUT INSERTED.* WHERE Id=@id');
     if (result.recordset.length === 0) return res.status(404).json({ error: 'Source not found' });
     res.json(result.recordset[0]);
   } catch (err) {

@@ -5,6 +5,7 @@ export interface CanyonSource {
   DisplayName: string;
   LogoUrl?: string | null;
   WebsiteUrl?: string | null;
+  IsEnabled: boolean;
 }
 
 export interface IBaseCanyon {

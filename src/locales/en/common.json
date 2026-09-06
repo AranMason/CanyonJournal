@@ -103,7 +103,8 @@
     "diameter": "Diameter",
     "category": "Category",
     "unit": "Unit",
-    "progress": "Progress"
+    "progress": "Progress",
+    "isEnabled": "Is Enabled"
   },
   "canyon": {
     "sortBy": "Sort by",
