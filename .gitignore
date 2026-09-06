@@ -6,3 +6,5 @@ _site
 .jekyll-cache
 scripts/
 src/locales/**/ref/*.json
+test-results/**
+tests/playwright/.auth/**

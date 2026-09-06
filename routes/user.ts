@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import {} from '../src/types/express-session';
+import { } from '../src/types/express-session';
 
 const router: Router = express.Router();
 
@@ -15,7 +15,8 @@ router.get('/user', async (req: Request, res: Response) => {
     id: user.Id,
     first_name: user.FirstName,
     picture_url: user.ProfilePicture,
-    isAdmin: user.IsAdmin || false
+    isAdmin: user.IsAdmin || false,
+    isNewUser: user.IsNewUser
   });
 });
 

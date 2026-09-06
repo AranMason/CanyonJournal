@@ -1,0 +1,188 @@
+import React, { useEffect, useState } from 'react';
+import Loader from '../Loader';
+import { Box, Button, Chip, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
+import { GearItem, GearItemSet } from '../../types/types';
+import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import RowActions from '../RowActions';
+import GearSetModal from './GearSetModal';
+import { useTranslation } from 'react-i18next';
+import AddIcon from '@mui/icons-material/Add';
+import ConfirmDeleteModal from '../ConfirmDeleteModal';
+import EmptyCellCta from '../EmptyCellCta';
+
+
+const EXPAND_THRESHOLD = 8;
+
+function sortGearSets(a: GearItemSet, b: GearItemSet) {
+    return a.Name.localeCompare(b.Name)
+}
+
+const GearSetTable: React.FC = () => {
+    const { t } = useTranslation('translation');
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [gearSetToDelete, setGearSetToDelete] = useState<GearItemSet | null>(null);
+    const [gearSetModalIsOpen, setGearSetModalIsOpen] = useState(false);
+    const [gearSetModal, setGearSetModal] = useState<GearItemSet | null>(null);
+    const [gearData, setGearSetData] = useState<GearItemSet[]>()
+    const [gearItemById, setGearItemsById] = useState<{ [key in number]: GearItem }>({});
+    const [gearSetExpanded, setGearSetExpanded] = useState<{ [key in number]?: boolean }>({})
+
+    const toggleGearSet = (id: number): void => {
+        const val = gearSetExpanded[id] ?? false;
+        setGearSetExpanded({
+            ...gearSetExpanded,
+            [id]: !val
+        })
+    }
+
+    const renderGearChips = (id: number, gear: GearItem[]): React.ReactElement => {
+        const isExpanded = gearSetExpanded[id] ?? false;
+        const isTogglable = gear.length > EXPAND_THRESHOLD;
+
+        const chipsToRender = isExpanded || !isTogglable ? gear : gear.slice(0, EXPAND_THRESHOLD);
+
+        return <>
+            {chipsToRender.map(g => <Chip key={g.Id} label={g.Name} size='small' />)}
+            {isTogglable &&
+                <Link
+                    variant='subtitle1'
+                    fontSize={12}
+                    sx={{ cursor: 'pointer' }}
+                    underline='hover' onClick={() => toggleGearSet(id)}>
+                    {isExpanded ? t('translation:gear.gearSet.viewMoreItems_min') : t('translation:gear.gearSet.viewMoreItems', { count: gear.length - EXPAND_THRESHOLD })}</Link>}
+        </>
+    }
+
+
+    useEffect(() => {
+        setIsLoading(true);
+        Promise.all([EquipmentDataStore.load(), EquipmentDataStore.loadGearSets()])
+            .then(([equipment, sets]) => {
+                setGearSetData(sets.sort(sortGearSets));
+                const equipmentById: { [key in number]: GearItem } = {}
+                equipment.gear.forEach(element => {
+                    equipmentById[element.Id] = element;
+                });
+                setGearItemsById(equipmentById)
+            })
+            .finally(() => {
+                setIsLoading(false)
+            })
+    }, [])
+
+    function openModal(gearSet: GearItemSet | null) {
+        setGearSetModal(gearSet);
+        setGearSetModalIsOpen(true);
+    }
+
+    function closeModal() {
+        setGearSetModal(null);
+        setGearSetModalIsOpen(false);
+    }
+
+    async function saveGearSet(gearSet: GearItemSet) {
+        gearSet.Id > 0 ?
+            await EquipmentDataStore.updateGearSet(gearSet) :
+            await EquipmentDataStore.createGearSet(gearSet);
+        closeModal();
+
+        // Reload Gear Sets
+        EquipmentDataStore.invalidateGearSets();
+        EquipmentDataStore.loadGearSets().then(g => setGearSetData(g.sort(sortGearSets)))
+    }
+
+    async function deleteGearSet() {
+        if (gearSetToDelete === null) return;
+        await EquipmentDataStore.deleteGearSet(gearSetToDelete.Id);
+
+        setGearSetToDelete(null);
+        EquipmentDataStore.invalidateGearSets();
+        EquipmentDataStore.loadGearSets().then(g => setGearSetData(g))
+    }
+
+    return <Box>
+        <ConfirmDeleteModal
+            open={gearSetToDelete != null}
+            title={t('gear.gearSet.confirmDeleteTitle', { gearSet: gearSetToDelete?.Name })}
+            message={t('gear.gearSet.confirmDeleteMessage', { gearSet: gearSetToDelete?.Name })}
+            onConfirm={() => deleteGearSet()}
+            onCancel={() => setGearSetToDelete(null)} />
+        <GearSetModal isOpen={gearSetModalIsOpen} gearSet={gearSetModal} actionLabel={gearSetModal ? t('common:actions.save') : t('common:actions.create')} onSave={saveGearSet} onClose={closeModal} />
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Button sx={{ ml: 'auto' }} variant="contained" color="primary" onClick={() => openModal(null)} startIcon={<AddIcon />}>{t('common:actions.create')}</Button>
+        </Box>
+        <Loader isLoading={isLoading}>
+            <TableContainer component={Paper} sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                {t('gear.gearSet.title')}
+                            </TableCell>
+                            <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                                {t('gear.gearSet.setItems')}
+                            </TableCell>
+                            <TableCell>
+                                {t('gear.gearSet.totalWeight')}
+                            </TableCell>
+                            <TableCell>
+                                {t('common:actions.edit')}
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {(gearData?.length ?? 0) > 0 ? gearData?.map(i => {
+                            const gearItems = i.Items.map(gearId => gearItemById[gearId]).sort((a, b) => a.Name.localeCompare(b.Name));
+
+                            let gearWeight = 0;
+                            let notIncludedItems: string[] = [];
+
+                            gearItems.forEach(item => {
+                                const weight = item.WeightGrams ?? 0
+                                gearWeight += weight;
+                                if (weight <= 0) {
+                                    notIncludedItems.push(item.Name);
+                                }
+                            })
+
+                            return (<TableRow key={i.Id}>
+                                <TableCell sx={{ minWidth: 150 }}>
+                                    {i.Name}
+                                </TableCell>
+                                <TableCell sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                                    <Box display={'flex'} gap={1} flexWrap={'wrap'}>
+                                        {renderGearChips(i.Id, gearItems)}
+                                    </Box>
+                                </TableCell>
+                                <TableCell width={'100px'}>
+                                    <Box display="flex" flexDirection="column">
+                                        {t('gear.gearSet.weight', { value: gearWeight })}
+
+                                        {notIncludedItems.length > 0 &&
+                                            <Tooltip title={notIncludedItems.join('; ')} describeChild>
+                                                <Typography variant='caption' color='textSecondary'>{t('gear.gearSet.weightNotIncluded', { count: notIncludedItems.length })}</Typography>
+                                            </Tooltip>}
+
+                                    </Box>
+                                </TableCell>
+                                <TableCell sx={{ minWidth: 100 }}>
+                                    <RowActions onEdit={() => openModal(i)} onDelete={() => setGearSetToDelete(i)} />
+                                </TableCell>
+                            </TableRow>
+                            )
+                        }
+                        ) :
+                            <TableRow>
+                                <TableCell colSpan={4} >
+                                    <EmptyCellCta description={t('gear.gearSet.emptyTable')} cta={t('common:actions.create')} ctaIcon={<AddIcon />} ctaAction={() => openModal(null)} />
+                                </TableCell>
+                            </TableRow>}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Loader>
+    </Box>
+}
+
+export default GearSetTable;

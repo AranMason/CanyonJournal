@@ -9,6 +9,25 @@
     "gear": "Equipment",
     "welcome": "Welcome {{name}}"
   },
+  "welcome": {
+    "title": "Welcome to Hand Linne!",
+    "blurb": "Your dedicated personal journal and log book for all your canyoning adventures!",
+    "recordTrip": {
+      "title": "Record your Descents",
+      "description": "Get started by recording your first canyon descent on Hand Linne.",
+      "cta": "Record Now"
+    },
+    "addGear": {
+      "title": "Track your gear",
+      "description": "Track all your gear, see every trip it's been on, record maintenance, and stay on top of items that need attention or replacement.",
+      "cta": "Log Gear"
+    },
+    "addGoal": {
+      "title": "Set a Goal",
+      "description": "Define a personal or professional goal. Travel somewhere new, take on a fresh challenge, or make progress toward a qualification.",
+      "cta": "Set Goal"
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "recentDescents": "Recent $t(common:terms.descent.upper, {\"count\": 2})",
@@ -19,11 +38,18 @@
     "acrossCountry_one": "Across {{count}} country",
     "acrossCountry_other": "Across {{count}} countries",
     "newThisYear": "+{{count}} this year",
-    "priorYear": "{{year}}: {{count}}"
+    "priorYear": "{{year}}: {{count}}",
+    "gearToService": "Gear Monitor",
+    "gearToServiceInfo": "Top 5 items flagged because they are past retirement, last serviced/inspected over 6 months ago, or have no service history after 6 months from being added.",
+    "retirementDateTooltip": "Retirement Date: {{date}}",
+    "noGearToMonitor": "No $t(common:terms.gear.upper, {\"count\": 2}) needs servicing",
+    "noGearCta": "Visit your gear",
+    "noGoalsSet": "You don't have any $t(common:terms.goal.upper, {\"count\": 2}) set at the moment",
+    "noGoalsSetCta": "Set your $t(common:terms.goal.upper, {\"count\": 2})"
   },
   "journal": {
     "title": "Your Journal",
-    "noRecords": "No $t(common:terms.record.upper, {\"count\": 2})",
+    "noRecords": "No $t(common:terms.descent.lower, {\"count\": 2}) recorded. Add your first canyoning $t(common:terms.descent.lower, {\"count\": 2}) and get started.",
     "editRecord": "Edit $t(common:terms.record.upper, {\"count\": 1})",
     "deleteRecord": "Delete $t(common:terms.record.upper, {\"count\": 1})",
     "deleteRecordTitle": "Delete $t(common:terms.descent.lower, {\"count\": 1}) $t(common:terms.record.lower, {\"count\": 1})?",
@@ -33,7 +59,7 @@
     "createRecord": "Create $t(common:terms.record.upper, {\"count\": 1})",
     "descentInformation": "$t(common:terms.descent.upper, {\"count\": 1}) Information",
     "gearAndRope": "$t(common:terms.gear.upper, {\"count\": 1}) & $t(common:terms.rope.upper, {\"count\": 1}) Used",
-    "canyonLogCta": "Consider sharing your experience at {{name}} on $t(common:partners.canyonLog) to help the community."
+    "sourceCta": "Consider sharing your experience at {{name}} on {{ sourceName }} to help the community."
   },
   "canyon": {
     "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
@@ -59,7 +85,16 @@
     "canyonRequired": "A $t(common:terms.canyon.lower, {\"count\": 1}) must be selected",
     "createCanyon": "Create $t(common:terms.canyon.upper, {\"count\": 1})",
     "favourites": "Favourites",
-    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})"
+    "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
+    "selectGearSetBtn": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
+    "noGear": "You have no gear",
+    "formErrors": {
+      "maxDate": "Cannot be in the future",
+      "waterLevel": "Invalid water level",
+      "canyonRequired": "A $t(common:terms.canyon.lower, {\"count\": 1}) must be selected",
+      "teamSizeMin": "Team Size must be at least 1",
+      "teamSize": "Team Size is Required"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -77,11 +112,13 @@
     "deleteCanyonConfirm": "Are you sure you want to delete {{name}}?",
     "deleteCanyonWarning": "This $t(common:terms.canyon.lower, {\"count\": 1}) has {{count}} journal entries linked to it. They will be unlinked but not deleted.",
     "noCustomCanyons": "No custom $t(common:terms.canyon.lower, {\"count\": 2}) yet. Create one to get started.",
-    "tagsDescription": "Tags are created inline when logging a $t(common:terms.descent.lower, {\"count\": 1}). Deleting a tag removes it from all $t(common:terms.record.lower, {\"count\": 2}).",
-    "noTags": "No tags yet. Add tags when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
+    "tagsDescription": "Tags your $t(common:terms.descent.lower, {\"count\": 2}) to track related trips. Deleting a tag removes it from all $t(common:terms.record.lower, {\"count\": 2}).",
+    "noTags": "You don't have any tags. Create a tag now, or when logging a $t(common:terms.descent.lower, {\"count\": 1}).",
     "tagUsageCount": "Usage Count",
     "tagLastUsed": "Last Used",
     "deleteTag": "Delete Tag",
+    "tagName": "Tag Name",
+    "addTagModelTitle": "Create Tag",
     "deleteTagConfirm": "Delete {{name}}?",
     "deleteTagWarning": "This tag is used on {{count}} $t(common:terms.record.lower, {\"count\": 2}) and will be removed from all of them.",
     "cannotUndo": "$t(common:messages.cannotUndo)",
@@ -91,7 +128,7 @@
   "goals": {
     "title": "$t(common:terms.goal.upper, {\"count\": 2})",
     "noRequirements": "No $t(common:terms.goal.lower, {\"count\": 2}) set yet. Add a $t(common:terms.goal.lower, {\"count\": 1}) to start tracking your progress.",
-    "addRequirement": "Add $t(common:terms.goal.upper, {\"count\": 1})",
+    "addRequirement": "Create $t(common:terms.goal.upper, {\"count\": 1})",
     "editRequirement": "Edit $t(common:terms.goal.upper, {\"count\": 1})",
     "deleteRequirement": "Delete $t(common:terms.goal.upper, {\"count\": 1})",
     "deleteConfirm": "Delete this $t(common:terms.goal.lower, {\"count\": 1})?",
@@ -133,7 +170,7 @@
     "rollingDaysHelp": "e.g. 90 = last 90 days",
     "filtersSection": "Filters (optional)",
     "firstTimeDescription": "Only count trips to canyons not previously visited",
-    "descriptionText": "Define progress goals — useful for guide training or personal targets.",
+    "descriptionText": "Define progress goals - useful for guide training or personal targets.",
     "minRating": "Min. rating",
     "ruleMode": "Mode",
     "dateFrom": "from {{date}}",
@@ -155,8 +192,8 @@
     "ruleTypeMinStars": "$t(common:canyon.stars)",
     "ruleTypeTag": "Tag(s)",
     "ruleTypeFirstTime": "First time only",
-    "ruleInclude": "Include",
-    "ruleExclude": "Exclude",
+    "ruleInclude": "Is Included",
+    "ruleExclude": "Excluded",
     "trips": "$t(common:terms.descent.upper, {\"count\": 2})",
     "canyons": "$t(common:terms.canyon.upper, {\"count\": 2})"
   },
@@ -188,8 +225,11 @@
     "hideAdvancedMode": "Hide Additional Fields",
     "addServiceToolTip": "Add Service Record",
     "model": "Model",
+    "makeAndModel": "{{make}} {{model}}",
     "addRope": "Add $t(common:terms.rope.upper, {\"count\": 1})",
+    "addRopeText": "Add $t(common:terms.rope.upper, {\"count\": 2}) to track $t(common:terms.descent.lower, {\"count\": 2}) and service history",
     "addGear": "Add $t(common:terms.gear.upper, {\"count\": 1})",
+    "addGearText": "Add $t(common:terms.gear.upper, {\"count\": 2}) to track $t(common:terms.descent.lower, {\"count\": 2}) and service history",
     "length": "$t(common:fields.length) (m)",
     "diameter": "$t(common:fields.diameter) (mm)",
     "category": "$t(common:fields.category)",
@@ -206,34 +246,41 @@
     "identifier": "Identifier",
     "table": {
       "item": {
-        "title":"Item"
+        "title": "Item"
       },
       "rope_size": {
-        "title":"Size",
+        "title": "Size",
         "cell_metres": "{{length}} m ({{diameter}} mm)",
         "cell_feet": "{{length}} ft ({{diameter}} mm)"
       },
       "weight": {
-        "title":"Weight",
+        "title": "Weight",
         "cell": "{{weight}} g",
         "cellSubtext": "{{weightPerUnit}} g/m"
       },
       "notes": {
-        "title":"$t(common:fields.notes)"
+        "title": "$t(common:fields.notes)"
       },
       "date_acquired": {
-        "title":"$t(gear.inServiceDate)"
+        "title": "$t(gear.inServiceDate)"
       }
     },
     "serviceType_0": "Other",
     "serviceType_1": "Service",
     "serviceType_2": "Inspection",
+    "serviceStatus_0": "Note Only",
+    "serviceStatus_1": "Good",
+    "serviceStatus_2": "Watch",
+    "serviceStatus_3": "Bad Condition",
+    "serviceStatus_4": "Retired",
+    "serviceStatus": "No Service History",
     "serviceModal": {
       "title": "Add Service Record",
       "description": "Record a service or inspection for this $t(common:terms.gear.lower, {\"count\": 1}). This will update the Last Inspection and Last Service dates for this item.",
       "serviceDateLabel": "Date of Service",
       "notes": "$t(common:fields.notes) (optional)",
-      "serviceTypeLabel": "Service Type"
+      "serviceTypeLabel": "Service Type",
+      "statusLabel": "Status"
     },
     "itemPage": {
       "title_gear": "$t(common:terms.gear.upper, {\"count\": 1}) Details",
@@ -242,9 +289,54 @@
       "serviceHistoryTab": "Service History",
       "noHistory": "No history",
       "serviceType": "Service Type",
+      "status": "Status",
       "serviceDate": "Service Date",
       "notes": "Notes",
       "addServiceButton": "Add Service Record"
+    },
+    "filters": {
+      "searchLabel": "Search Gear",
+      "allCategories": "All Categories",
+      "serviceStatusLabel": "Service Status",
+      "allServiceStatuses": "All Statuses",
+      "lastServiceDateLabel": "Last Service Date",
+      "allServiceAges": "All Service Dates",
+      "lastServiceDate": {
+        "over3Months": "More than 3 months",
+        "over6Months": "More than 6 months",
+        "over1Year": "More than 1 year"
+      },
+      "orderByLabel": "Order By",
+      "orderBy": {
+        "category": "Category",
+        "name": "Name",
+        "lastServiceDate": "Last Service Date",
+        "weight": "Weight"
+      }
+    },
+    "tabs": {
+      "gear": "$t(common:terms.gear.upper, {\"count\": 1})",
+      "gearSet": "$t(common:terms.gearSet.upper, {\"count\": 1})",
+      "rope": "$t(common:terms.rope.upper, {\"count\": 1})"
+    },
+    "gearSet": {
+      "title": "$t(common:terms.gearSet.upper, {\"count\": 2})",
+      "modalTitle_create": "Create $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "modalTitle_edit": "Update $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "modalTitle_select": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
+      "setItems": "$t(common:terms.gearSet.upper, {\"count\": 1}) Items",
+      "emptyTable": "No $t(common:terms.gearSet.upper, {\"count\": 2}) - Click create to make a new set of $t(common:terms.gear.upper, {\"count\": 1})",
+      "confirmDeleteTitle": "Delete \"{{gearSet}}\" $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "confirmDeleteMessage": "Are you sure you want to delete the \"{{gearSet}}\" $t(common:terms.gearSet.upper, {\"count\": 1})",
+      "weight": "{{value}} g",
+      "totalWeight": "Gear Set Weight",
+      "weightNotIncluded": "{{count}} items missing",
+      "viewMoreItems": "Show {{count}} more items...",
+      "viewMoreItems_min": "Show less",
+      "modalErrors": {
+        "name": "Name is required",
+        "selectedGear": "You must select at least one piece of $t(common:terms.gear.upper,  {\"count\": 1})"
+      }
     }
   },
   "report": {
@@ -296,4 +388,3 @@
     }
   }
 }
-

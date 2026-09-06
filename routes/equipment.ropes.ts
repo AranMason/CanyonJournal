@@ -4,6 +4,7 @@ import { getUserIdByRequest } from "./helpers/user.helper";
 import { toNullableDate, toNullableString } from "./helpers/sql.helper";
 import { getRecordsByRopeId } from "./helpers/records.data";
 import { createRopeItem, deleteRopeItem, updateRopeItem } from "./helpers/rope.data";
+import { GearServiceStatus } from "../src/types/GearStatusType";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.post('/', async (req: Request, res: Response) => {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -32,12 +33,12 @@ router.put('/:id', async (req: Request, res: Response) => {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
     var ropeItem = await updateRopeItem(pool, userId, Number(req.params.id), req.body);
-   
+
     if (!ropeItem) return res.status(404).json({ error: 'Not found' });
     res.json(ropeItem);
   } catch (err) {
@@ -53,7 +54,7 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const userId = await getUserIdByRequest(req);
     const id = Number(req.params.id);
 
-    if(!userId) {
+    if (!userId) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
@@ -98,7 +99,7 @@ router.get('/:id/service', async (req: Request, res: Response) => {
     const historyRes = await pool.request()
       .input('userId', sql.Int, userId)
       .input('ropeId', sql.Int, ropeId)
-      .query('SELECT * FROM RopeServiceRecords WHERE RopeItemId = @ropeId AND UserId = @userId ORDER BY ServiceDate DESC');
+      .query('SELECT * FROM RopeServiceRecords WHERE RopeItemId = @ropeId AND UserId = @userId ORDER BY ServiceDate DESC, DateCreated DESC');
     res.json(historyRes.recordset);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch rope service history' });
@@ -109,28 +110,45 @@ router.post('/:id/service', async (req: Request, res: Response) => {
   try {
     const pool = await getPool();
     const userId = await getUserIdByRequest(req);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
     const ropeId = Number(req.params.id);
-    const { serviceType, serviceDate, notes } = req.body;
+    const { serviceType, statusCode, serviceDate, notes } = req.body;
+    const normalizedStatusCode = Number.isFinite(Number(statusCode)) ? Number(statusCode) : 1;
 
     await pool.request()
       .input('ropeId', sql.Int, ropeId)
       .input('userId', sql.Int, userId)
       .input('serviceType', sql.Int, serviceType)
+      .input('statusCode', sql.SmallInt, normalizedStatusCode)
       .input('serviceDate', sql.Date, toNullableDate(serviceDate))
       .input('notes', sql.NVarChar(500), toNullableString(notes))
       .query(`INSERT INTO RopeServiceRecords (
                 RopeItemId,
                 UserId,
                 ServiceType,
+                StatusCode,
                 ServiceDate,
-                Notes
+                Notes,
+                DateCreated
               ) VALUES (
                 @ropeId,
                 @userId,
                 @serviceType,
+                @statusCode,
                 @serviceDate,
-                @notes
-              )`);
+                @notes,
+                GETUTCDATE()
+              );
+
+              IF @statusCode = ${GearServiceStatus.Retired}
+              BEGIN
+                UPDATE RopeItems
+                SET IsRetired = 1,
+                    Updated = GETDATE()
+                WHERE Id = @ropeId AND UserId = @userId;
+              END`);
     res.status(201).json({ message: 'Service record added successfully' });
   } catch (err) {
     console.error(err);

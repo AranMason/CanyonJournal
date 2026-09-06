@@ -1,6 +1,6 @@
 import React from 'react';
 import PageTemplate from './PageTemplate';
-import RecordEditor from '../components/RecordEditor';
+import RecordEditor from '../components/records/RecordEditor';
 import { useSearchParams } from 'react-router-dom';
 import { WaterLevel } from '../types/CanyonRecord';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,8 @@ const RecordPage: React.FC = () => {
         UserCanyonId: userCanyonId ? parseInt(userCanyonId, 10) : undefined,
         WaterLevel: WaterLevel.Unknown
     } : undefined;
+
+    console.log(searchParams, canyonId, initialValues);
 
     return (
         <PageTemplate pageTitle={t('common:actions.recordDescent')} isAuthRequired>

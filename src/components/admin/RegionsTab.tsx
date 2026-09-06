@@ -8,8 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { apiFetch } from '../../utils/api';
 import { Region, RegionAdmin } from '../../types/Region';
-import RegionTreePicker from '../RegionTreePicker';
-import RegionTreeView from '../RegionTreeView';
+import RegionTreePicker from '../regions/RegionTreePicker';
+import RegionTreeView from '../regions/RegionTreeView';
 import * as RegionDataStore from '../../helpers/RegionDataStore';
 import AppModal from '../AppModal';
 
@@ -38,7 +38,7 @@ const RegionsTab: React.FC = () => {
 
   const load = () => {
     RegionDataStore.invalidate();
-    RegionDataStore.loadTree().then(setTree).catch(() => {});
+    RegionDataStore.loadTree().then(setTree).catch(() => { });
   };
 
   useEffect(() => { load(); }, []);

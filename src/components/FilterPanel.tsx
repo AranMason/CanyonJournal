@@ -4,7 +4,8 @@ import {
   MenuItem, Select, TextField, ToggleButton, ToggleButtonGroup,
 } from '@mui/material';
 import MultiSelectChipFilter from './MultiSelectChipFilter';
-import RegionTreePicker from './RegionTreePicker';
+import RegionTreePicker from './regions/RegionTreePicker';
+import { useSearchParams } from 'react-router-dom';
 
 export type TextFilterConfig = {
   type: 'text';
@@ -27,6 +28,8 @@ export type SingleSelectFilterConfig<V extends string | number = string | number
   labelId: string;
   /** Shown as the empty/all option. Defaults to "All {label}s" */
   placeholder?: string;
+  /** When false, omits the empty/all option. Default true. */
+  showEmptyOption?: boolean;
   options: { value: V; label: string }[];
 };
 
@@ -63,6 +66,60 @@ export type FilterConfig =
 
 export type FilterValues = Record<string, any>;
 
+const handlerByType: { [key in FilterConfig["type"]]: {
+  serialize: (val: any) => string,
+  deserialize: (val: string) => any
+} } = {
+  text: {
+    serialize: function (val: any): string {
+      return val;
+    },
+    deserialize: function (val: string) {
+      return val;
+    }
+  },
+  'multi-select': {
+    serialize: function (val: any): string {
+      return val.join(',')
+    },
+    deserialize: function (val: string) {
+      return val.split(',').map(i => Number(i));
+    }
+  },
+  'single-select': {
+    serialize: function (val: any): string {
+      return val;
+    },
+    deserialize: function (val: string) {
+      return val;
+    }
+  },
+  'exclusive-toggle': {
+    serialize: function (val: any): string {
+      return val;
+    },
+    deserialize: function (val: string) {
+      return val;
+    }
+  },
+  'async-multi-select': {
+    serialize: function (val: any): string {
+      return val.join(',')
+    },
+    deserialize: function (val: string) {
+      return val.split(',').map(i => Number(i));
+    }
+  },
+  'region-tree': {
+    serialize: function (val: any): string {
+      return val;
+    },
+    deserialize: function (val: string) {
+      return Number(val)
+    }
+  }
+}
+
 function getDefaultValue(config: FilterConfig): any {
   switch (config.type) {
     case 'text': return '';
@@ -84,15 +141,30 @@ interface FilterPanelProps<T> {
   items: T[];
   config: FilterConfig[];
   filterFn: (item: T, values: FilterValues) => boolean;
-  children: (filteredItems: T[]) => React.ReactNode;
+  children: (filteredItems: T[], values: FilterValues) => React.ReactNode;
   /** Pre-populate specific filter keys on first render (e.g. from URL search params). */
   initialValues?: Partial<FilterValues>;
 }
 
 function FilterPanel<T>({ items, config, filterFn, children, initialValues }: FilterPanelProps<T>) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [defaults] = useState(() => buildDefaults(config));
   const [values, setValues] = useState<FilterValues>(() => ({ ...defaults, ...initialValues }));
   const [asyncOptions, setAsyncOptions] = useState<Record<string, { value: number; label: string; group?: string }[]>>({});
+
+  useState(() => {
+    const newVals = { ...values };
+
+    config.forEach(c => {
+      const paramVal = searchParams.get(c.key);
+
+      if (!paramVal) return;
+
+      newVals[c.key] = handlerByType[c.type].deserialize(paramVal);
+    });
+    setValues(newVals)
+
+  })
 
   useEffect(() => {
     config.forEach(c => {
@@ -106,7 +178,18 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
 
   const setValue = useCallback((key: string, value: any) => {
     setValues(prev => ({ ...prev, [key]: value }));
-  }, []);
+
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      if (!value) {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+
+      return newParams;
+    })
+  }, [searchParams]);
 
   const filteredItems = useMemo(
     () => items.filter(item => filterFn(item, values)),
@@ -150,7 +233,9 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
               value={values[c.key]}
               onChange={e => setValue(c.key, e.target.value)}
             >
-              <MenuItem value="">{c.placeholder ?? `All ${c.label}s`}</MenuItem>
+              {(c.showEmptyOption ?? true) && (
+                <MenuItem value="">{c.placeholder ?? `All ${c.label}s`}</MenuItem>
+              )}
               {c.options.map(opt => (
                 <MenuItem key={String(opt.value)} value={opt.value}>{opt.label}</MenuItem>
               ))}
@@ -179,11 +264,11 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
         const hasGroups = options.some(o => o.group);
         const grouped = hasGroups
           ? options.reduce((acc, opt) => {
-              const g = opt.group ?? '';
-              acc[g] = acc[g] ?? [];
-              acc[g].push(opt);
-              return acc;
-            }, {} as Record<string, typeof options>)
+            const g = opt.group ?? '';
+            acc[g] = acc[g] ?? [];
+            acc[g].push(opt);
+            return acc;
+          }, {} as Record<string, typeof options>)
           : null;
 
         return (
@@ -208,14 +293,14 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
             >
               {grouped
                 ? Object.entries(grouped).flatMap(([group, groupItems]) => [
-                    group ? <ListSubheader key={`group-${group}`}>{group}</ListSubheader> : null,
-                    ...groupItems.map(opt => (
-                      <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                    )),
-                  ])
-                : options.map(opt => (
+                  group ? <ListSubheader key={`group-${group}`}>{group}</ListSubheader> : null,
+                  ...groupItems.map(opt => (
                     <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
-                  ))
+                  )),
+                ])
+                : options.map(opt => (
+                  <MenuItem key={opt.value} value={opt.value}>{opt.label}</MenuItem>
+                ))
               }
             </Select>
           </FormControl>
@@ -243,7 +328,7 @@ function FilterPanel<T>({ items, config, filterFn, children, initialValues }: Fi
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3, alignItems: 'center' }}>
         {config.map(c => renderControl(c))}
       </Box>
-      {children(filteredItems)}
+      {children(filteredItems, values)}
     </Box>
   );
 }

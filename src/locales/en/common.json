@@ -36,6 +36,12 @@
       "lower_one": "gear",
       "lower_other": "gear"
     },
+    "gearSet": {
+      "upper_one": "Gear Set",
+      "upper_other": "Gear Sets",
+      "lower_one": "gear set",
+      "lower_other": "gear sets"
+    },
     "journal": {
       "upper_one": "Journal",
       "upper_other": "Journals",
@@ -73,6 +79,7 @@
     "postReport": "Post Report",
     "recordDescent": "$t(common:terms.record.upper, {\"count\": 1}) $t(common:terms.descent.upper, {\"count\": 1})",
     "viewTrips": "View Trips",
+    "viewMore": "View more",
     "addFavourite": "Add to favourites",
     "removeFavourite": "Remove from favourites"
   },
@@ -96,7 +103,8 @@
     "diameter": "Diameter",
     "category": "Category",
     "unit": "Unit",
-    "progress": "Progress"
+    "progress": "Progress",
+    "isEnabled": "Is Enabled"
   },
   "canyon": {
     "sortBy": "Sort by",

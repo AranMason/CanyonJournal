@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest } from './helpers/user.helper';
-import { canyonKey,  userCanyonKey } from '../src/utils/canyonKey';
+import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
 import { GoalBuilder, GoalRuleField } from './helpers/goals.builder';
 import { mapRowToGoalRule } from './helpers/goals.helper';
 import { CanyonListEntry } from '../src/types/Canyon';
@@ -98,9 +98,9 @@ async function buildRuleConditions(
   const totalConditions: string[] = [];
   const bindings: { name: string; type: any; value: any }[] = [];
   let idx = paramOffset;
+  const pn = (suffix: string) => `rp${idx}_${suffix}`;
 
   for (const rule of rules) {
-    const pn = (suffix: string) => `rp${idx}_${suffix}`;
     const negate = rule.IsExclusion;
 
     function buildContainsCondition(field: string, inList: string, negate: boolean, bonusConditions: string[] = []): string {
@@ -278,31 +278,32 @@ async function getPotentialGoalCanyonsWithDescents(
 ): Promise<CanyonListEntry[]> {
 
   // If it's not a region-based goal, we don't need to find all the valid canyons.
-  if (!(goal.CountMode == 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
+  if (!(goal.CountMode === 'all_in_region' || rules.some(s => s.RuleType === 'first_time'))) return [];
 
   var goalBuilder = await buildGoalBuilder(pool, userId, goal, rules);
 
   var { query, bindings } = goalBuilder.buildQuery(
     [
       GoalRuleField.IsUserCanyon,
-      GoalRuleField.Id, 
-      GoalRuleField.CanyonId, 
-      GoalRuleField.Name, 
-      GoalRuleField.DetailsUrl, 
-      GoalRuleField.RegionId, 
-      GoalRuleField.RegionSlug, 
-      GoalRuleField.RegionSymbol, 
-      GoalRuleField.AquaticRating, 
-      GoalRuleField.VerticalRating, 
-      GoalRuleField.CommitmentRating, 
-      GoalRuleField.StarRating, 
-      GoalRuleField.IsUnrated, 
-      GoalRuleField.IsVerified, 
+      GoalRuleField.Id,
+      GoalRuleField.CanyonId,
+      GoalRuleField.Name,
+      GoalRuleField.DetailsUrl,
+      GoalRuleField.RegionId,
+      GoalRuleField.RegionSlug,
+      GoalRuleField.RegionSymbol,
+      GoalRuleField.AquaticRating,
+      GoalRuleField.VerticalRating,
+      GoalRuleField.CommitmentRating,
+      GoalRuleField.StarRating,
+      GoalRuleField.IsUnrated,
+      GoalRuleField.IsVerified,
       GoalRuleField.CanyonType,
       GoalRuleField.SourceId,
       GoalRuleField.SourceLogoUrl,
       GoalRuleField.SourceName,
       GoalRuleField.SourceWebsiteUrl,
+      GoalRuleField.Url
     ],
     [],
     [{
@@ -327,7 +328,7 @@ async function getPotentialGoalCanyonsWithDescents(
     Key: row.IsUserCanyon ? userCanyonKey(row.Id) : canyonKey(row.Id),
     DetailUrl: row.DetailsUrl,
     Name: row.Name,
-    Url: row.TopoUrl,
+    Url: row.Url,
     AquaticRating: row.AquaticRating,
     VerticalRating: row.VerticalRating,
     CommitmentRating: row.CommitmentRating,
@@ -363,10 +364,10 @@ async function getGoalTrips(
     [
       GoalRuleField.DescentId,
       // Canyon Info
-      GoalRuleField.CanyonId, 
+      GoalRuleField.CanyonId,
       GoalRuleField.UserCanyonId,
-      GoalRuleField.Name, 
-      GoalRuleField.DetailsUrl, 
+      GoalRuleField.Name,
+      GoalRuleField.DetailsUrl,
       GoalRuleField.TopoUrl,
 
       // Trip Info
@@ -375,8 +376,8 @@ async function getGoalTrips(
       GoalRuleField.TripRating,
       GoalRuleField.DescentDate,
       // Region Info
-      GoalRuleField.RegionId, 
-      GoalRuleField.RegionSlug, 
+      GoalRuleField.RegionId,
+      GoalRuleField.RegionSlug,
       GoalRuleField.RegionSymbol
     ],
     [`${GoalRuleField.DescentId} IS NOT NULL`],
@@ -421,8 +422,7 @@ async function getGoalTrips(
     RegionId: row.RegionId,
     RegionSlug: row.RegionSlug,
     RegionSymbol: row.RegionSymbol,
-    Date: row.DescentDate,
-    // TODO: Get GearIds and RopeIds for the descent. This will require secondary queries
+    Date: row.DescentDate
   }
 
   ));
@@ -602,7 +602,7 @@ goalsRouter.get('/:id/canyons', async (req: Request, res: Response): ApiReturnTy
       .then(r => r.recordset[0] as GoalRow | undefined);
     if (!goal) return res.status(404).json({ error: 'Not found' });
 
-    if (goal.RegionId == null) {
+    if (goal.RegionId === null) {
       return res.status(400).json({ error: 'Only regional completion goals are supported' });
     }
 

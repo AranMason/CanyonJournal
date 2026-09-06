@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useUser } from '../App';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
+import { Box, Button } from '@mui/material';
 
 const HomePage: React.FC = () => {
   const { user, loading } = useUser();
@@ -10,7 +11,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     if (!loading && user) {
       navigate('/dashboard'); // Redirect to Dashboard (home page)
-    } else if(!loading && !user) {
+    } else if (!loading && !user) {
       // If not logged in, redirect to login with Auth0
       window.location.href = '/login'
     }
@@ -18,7 +19,14 @@ const HomePage: React.FC = () => {
 
   return (
     <Loader isLoading={loading}>
-      <div>You will be redirected soon</div>
+      <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'} minHeight={'150px'} gap={2}>
+        <div>You will be redirected soon</div>
+        <Button
+          variant='contained'
+          onClick={() => {
+            window.location.href = '/login';
+          }}>Login</Button>
+      </Box>
     </Loader>
   );
 };

@@ -1,0 +1,100 @@
+import { Accordion, AccordionDetails, AccordionSummary, Box, Chip, Divider, IconButton, Typography } from "@mui/material";
+import React from "react";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import WaterLevelRating from "../WaterLevelRating";
+import { CanyonRecord, WaterLevel } from "../../types/CanyonRecord";
+import GroupsIcon from '@mui/icons-material/Groups';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from "react-router-dom";
+import CanyonRating from "../canyons/CanyonRating";
+import CanyonTypeDisplay from "../canyons/CanyonTypeDisplay";
+import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
+import { IBaseCanyon } from "../../types/Canyon";
+import LocationPinIcon from '@mui/icons-material/LocationPin';
+import StarIcon from '@mui/icons-material/Star';
+import IconDisplay from "../IconDisplay";
+import { useTranslation } from "react-i18next";
+import CanyonNameTableCell from "../table/CanyonNameCell";
+
+type CanyonRecordAccordionProps = {
+    record: CanyonRecord;
+    canyon: IBaseCanyon;
+    isOpen: boolean;
+    onChange: () => void;
+}
+
+const CanyonRecordAccordion: React.FC<CanyonRecordAccordionProps> = ({ record, canyon, isOpen, onChange }) => {
+    const navigate = useNavigate();
+    const { t } = useTranslation('common');
+
+    return <Accordion
+        expanded={isOpen}
+        onChange={onChange}
+        slotProps={{ transition: { unmountOnExit: true } }}
+        data-test={`journal-record-${record.Id}`}
+        sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+        <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            data-test={`journal-record-summary-${record.Id}`}
+        >
+            <Box width="100%" display="flex" flexDirection="row" mr={2} justifyContent={"space-between"}>
+
+                <Box display="flex" flexDirection="row" alignItems={"center"} sx={{ maxWidth: { xs: '100%', sm: '60%' } }} flex="1" justifyContent={"space-between"} mr={2} >
+                    <CanyonNameTableCell canyon={canyon} subtitle={new Date(record.Date).toLocaleDateString(undefined, { dateStyle: "medium" })}></CanyonNameTableCell>
+                </Box>
+                <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
+                    {record.TripRating
+                        ? <IconDisplay icon={StarIcon} value={record.TripRating} count={5} activeColor="secondary" />
+                        : <Typography variant="body2" color="text.secondary">-</Typography>}
+                </Box>
+                <Box width={90} className="hide-sm" display="flex" flexDirection="row" alignItems="center" justifyContent="center">
+                    <WaterLevelRating waterLevel={record.WaterLevel ?? WaterLevel.Unknown} />
+                </Box>
+                <Box sx={{ display: { xs: 'none', sm: 'flex' }, flexDirection: 'column', alignItems: 'flex-end', width: 180 }}>
+                    <Box display="flex" flexDirection="row" alignItems="center" gap={1} justifyContent="center" mb={0.5}>
+                        <GroupsIcon sx={{ height: "1rem", width: "1rem" }} />
+                        {record.TeamSize}
+                    </Box>
+                    <CanyonTypeDisplay type={canyon?.CanyonType ?? CanyonTypeEnum.Unknown} />
+                </Box>
+            </Box>
+        </AccordionSummary>
+        <AccordionDetails sx={{ borderBottom: 0 }}>
+            <Box display="flex" flexDirection="row" justifyContent="space-between" alignItems="center">
+                {canyon ? <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
+                    <CanyonRating isUnrated={canyon?.IsUnrated} verticalRating={canyon?.VerticalRating} aquaticRating={canyon?.AquaticRating} commitmentRating={canyon?.CommitmentRating} starRating={canyon?.StarRating} />
+
+                </Box> : <span>{t('noData')}</span>}
+                <Box sx={{ ml: "auto" }}>
+                    <IconButton
+                        size="small"
+                        disabled={!record.DetailUrl}
+                        onClick={() => { if (record.DetailUrl) navigate(record.DetailUrl); }}
+                        sx={{ p: { xs: 1.5, sm: 1 } }}
+                    ><LocationPinIcon /></IconButton>
+                    <IconButton
+                        size="small"
+                        onClick={() => navigate(`/journal/record/${record.Id}`)}
+                        sx={{ p: { xs: 1.5, sm: 1 } }}
+                        data-test={`journal-record-edit-${record.Id}`}>
+                        <EditIcon />
+                    </IconButton>
+                </Box>
+
+            </Box>
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="body2" whiteSpace={"pre-line"} fontStyle={"italic"} pl={2}>
+                {record.Comments ?? "-"}
+            </Typography>
+            {record.Tags && record.Tags.length > 0 && (
+                <Box display="flex" flexWrap="wrap" gap={0.5} mt={1} pl={2}>
+                    {record.Tags.map(tag => (
+                        <Chip key={tag.Id} label={tag.Name} size="small" variant="outlined" />
+                    ))}
+                </Box>
+            )}
+        </AccordionDetails>
+    </Accordion>
+}
+
+export default CanyonRecordAccordion;

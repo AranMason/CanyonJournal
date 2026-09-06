@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import SettingsGoalsTab from "../components/settings/SettingsGoalsTab"
+import GoalSettings from "../components/goals/GoalSettings"
 import PageTemplate from "./PageTemplate"
 
 const GoalSettingPage = () => {
@@ -8,7 +8,7 @@ const GoalSettingPage = () => {
 
     return (
         <PageTemplate pageTitle={t("goals.title")} isAuthRequired={true}>
-            <SettingsGoalsTab />
+            <GoalSettings />
         </PageTemplate>
     )
 }

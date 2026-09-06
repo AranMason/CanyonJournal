@@ -3,10 +3,10 @@ import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormContr
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { GearItem } from '../../types/types';
-import FormikTextField from '../FormikTextField';
+import FormikTextField from '../forms/FormikTextField';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
-import {load as loadEquipment} from '../../helpers/EquipmentDataStore';
+import { load as loadEquipment } from '../../helpers/EquipmentDataStore';
 
 interface GearModalProps {
   open: boolean;
@@ -79,34 +79,34 @@ const GearModal: React.FC<GearModalProps> = ({ open, onClose, onSubmit, initialV
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
                 <FormikTextField<typeof values> label={t('common:fields.name')} name="name" value={values.name} onChange={handleChange} onBlur={handleBlur} fullWidth required touched={touched} errors={errors} />
 
-                  <Autocomplete
-                    id="category-autocomplete"
-                    options={gearCategories} // Replace with your actual array of options (e.g., ['Tent', 'Backpack'])
-                    value={values.category || null} // Formik value (fallback to null so MUI doesn't complain about uncontrolled/controlled switching)
-                    freeSolo // Allow users to enter values not in the list
-                
-                    onInputChange={(event, newValue) => {
-                      // Manually update Formik's state when a user selects an option
-                      setFieldValue('category', newValue);
-                    }}
-                    onBlur={() => {
-                      // Manually mark the field as touched when the user leaves the component
-                      setFieldTouched('category', true);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label={t('gear.category')}
-                        name="category"
-                        fullWidth
-                        required
-                        // Connect Formik's error states directly to the input
-                        error={Boolean(touched.category && errors.category)}
-                        helperText={touched.category && errors.category}
-                      />
-                    )}
-                  />
-                
+                <Autocomplete
+                  id="category-autocomplete"
+                  options={gearCategories} // Replace with your actual array of options (e.g., ['Tent', 'Backpack'])
+                  value={values.category || null} // Formik value (fallback to null so MUI doesn't complain about uncontrolled/controlled switching)
+                  freeSolo // Allow users to enter values not in the list
+
+                  onInputChange={(event, newValue) => {
+                    // Manually update Formik's state when a user selects an option
+                    setFieldValue('category', newValue);
+                  }}
+                  onBlur={() => {
+                    // Manually mark the field as touched when the user leaves the component
+                    setFieldTouched('category', true);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t('gear.category')}
+                      name="category"
+                      fullWidth
+                      required
+                      // Connect Formik's error states directly to the input
+                      error={Boolean(touched.category && errors.category)}
+                      helperText={touched.category && errors.category}
+                    />
+                  )}
+                />
+
                 <FormikTextField<typeof values> label={t('gear.manufacturer')} name="manufacturer" value={values.manufacturer} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} />
                 <FormikTextField<typeof values> label={t('gear.model')} name="model" value={values.model} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} />
                 <FormikTextField<typeof values> label={t('gear.inServiceDate')} name="inServiceDate" type="date" value={values.inServiceDate} onChange={handleChange} onBlur={handleBlur} fullWidth touched={touched} errors={errors} InputLabelProps={{ shrink: true }} />

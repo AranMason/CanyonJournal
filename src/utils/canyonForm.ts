@@ -1,4 +1,4 @@
-import { CanyonModalFormValues } from '../components/AddCanyonModal';
+import { CanyonModalFormValues } from '../components/canyons/AddCanyonModal';
 
 export interface CanyonApiBody {
   Name: string;

@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 import { AuditTrip, enrichAuditTrips, EnrichedAuditTrip, Goal } from "../../types/Goal"
 import FilterPanel, { FilterConfig, FilterValues } from "../FilterPanel"
-import CanyonRecordAccordion from "../CanyonRecordAccordion/CanyonRecordAccordion"
+import CanyonRecordAccordion from "../canyons/CanyonRecordAccordion"
 import { Canyon } from "../../types/Canyon"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import * as RegionDataStore from "../../helpers/RegionDataStore"
@@ -12,13 +12,11 @@ import { apiFetch } from "../../utils/api"
 import * as CanyonDataStore from "../../helpers/CanyonDataStore"
 import * as UserCanyonDataStore from "../../helpers/UserCanyonDataStore"
 import { Region } from "../../types/Region"
-import { useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import Loader from "../Loader"
 
-const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
+const GoalTripsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
 
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [trips, setTrips] = useState<EnrichedAuditTrip[]>([]);
@@ -41,7 +39,6 @@ const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
         setUserCanyonsById(ucById);
         setFlatRegions(regions);
       })
-      .catch(() => navigate('/journal'))
       .finally(() => setIsLoading(false));
   }, [goal?.Id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -123,15 +120,18 @@ const GoalTripsTab: React.FC<{ goal: Goal | null}> = ({ goal }) => {
           </Typography>
           {filteredTrips.length === 0 ? (
             <Typography variant="body2" color="text.secondary">{t('goals.noMatchingTrips')}</Typography>
-          ) : filteredTrips.map(trip => (
-            <CanyonRecordAccordion
+          ) : filteredTrips.map(trip => {
+            const canyon = getCanyonForTrip(trip);
+            if (!canyon) return null;
+
+            return <CanyonRecordAccordion
               key={trip.Id}
               record={toRecord(trip)}
-              canyon={getCanyonForTrip(trip)}
+              canyon={canyon}
               isOpen={sectionOpen === trip.Id}
               onChange={() => setSectionOpen(prev => prev === trip.Id ? null : trip.Id)}
             />
-          ))}
+          })}
         </>
       )}
     </FilterPanel>

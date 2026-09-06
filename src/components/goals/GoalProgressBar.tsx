@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { Box, Chip, CircularProgress, IconButton, LinearProgress, Link, Tooltip, Typography } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { Goal } from '../../types/Goal';
-import CanyonRating from '../CanyonRating';
+import CanyonRating from '../canyons/CanyonRating';
 import { useTranslation } from 'react-i18next';
 import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
 
@@ -14,6 +14,7 @@ interface GoalProgressBarProps {
   regionNames?: Record<number, string>;
   onMarkComplete?: () => void;
   isCompleting?: boolean;
+  isAlwaysCompletable?: boolean;
   onTitleClick?: () => void;
 }
 
@@ -23,6 +24,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
   regionNames,
   onMarkComplete,
   isCompleting,
+  isAlwaysCompletable,
   onTitleClick,
 }) => {
   const { t } = useTranslation();
@@ -117,6 +119,7 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
             noWrap
             title={requirement.Label}
             sx={{ display: 'block', maxWidth: '100%', textAlign: 'left' }}
+            data-test={`goal-title-${requirement.Id}`}
           >
             {requirement.Label}
           </Link>
@@ -152,13 +155,14 @@ const GoalProgressBar: React.FC<GoalProgressBarProps> = ({
           sx={{ width: '100%', height: 8, borderRadius: 4 }}
           color={isComplete ? 'success' : 'info'}
         />
-        {onMarkComplete && isComplete && (
+        {onMarkComplete && (isComplete || isAlwaysCompletable) && (
           <Tooltip title={t('goals.markComplete')}>
             <IconButton
               size="small"
               color="success"
               onClick={onMarkComplete}
               disabled={isCompleting}
+              data-test={`goal-mark-complete-${requirement.Id}`}
               sx={{
                 position: 'absolute',
                 right: -14,

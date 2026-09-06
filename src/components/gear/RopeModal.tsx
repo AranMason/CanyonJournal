@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { DialogContent, DialogActions, Button, Box, Divider, Checkbox, FormControlLabel } from '@mui/material';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import FormikTextField from '../FormikTextField';
+import FormikTextField from '../forms/FormikTextField';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
 

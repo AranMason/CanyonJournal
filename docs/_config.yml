@@ -1,4 +1,42 @@
 title: Hand Linne
-description: Your personal canyoning journal.
+tagline: Your Canyoning Journal
+description: Your personal canyoning journal and log book.
 url: https://www.handlinne.co.uk
+appUrl: https://app.handlinne.co.uk/
 baseurl: ""
+navigation:
+  header:
+    - title: Home
+      url: '/'
+    - title: Contact
+      url: '/contact'
+    - title: Login
+      url: 'https://app.handlinne.co.uk/login'
+      css: 'nav-cta'
+  footer:
+    - title: Contact
+      url: '/contact'
+    - title: Privacy
+      url: /privacy
+features:
+  - icon: fa-solid fa-book-open
+    title: Log every descent
+    text: >
+      Record date, team size, water conditions, star rating, and personal notes for every trip you complete.
+
+  - icon: fa-solid fa-location-dot
+    title: Add private canyons
+    text: >
+      Log trips against our list of canyons from your favourite sources, or add your own.
+
+  - icon: fa-solid fa-wrench
+    title: Know your kit
+    text: >
+      Log your ropes and equipment, track usage, keep your gear list organised and track thier service history.
+
+  - icon: fa-solid fa-list-check
+    title: Set & track goals
+    text: >
+      Set targets for trips, regions, or guide training. Track your progress automatically as you log.
+
+

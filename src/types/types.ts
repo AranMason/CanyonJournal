@@ -1,3 +1,5 @@
+import { GearServiceStatus } from "./GearStatusType"
+
 export enum Unit {
   Metres = 'Metres',
   Feet = 'Feet',
@@ -7,6 +9,7 @@ export interface User {
   picture_url?: string;
   id: Number,
   isAdmin: boolean;
+  isNewUser: boolean;
 }
 
 export enum ServiceType {
@@ -20,6 +23,7 @@ export interface GearServiceHistoryItem {
   GearId: number;
   ServiceType: ServiceType;
   ServiceDate: string;
+  StatusCode: GearServiceStatus;
   Notes?: string;
 }
 
@@ -28,6 +32,7 @@ export interface RopeServiceHistoryItem {
   RopeId: number;
   ServiceType: ServiceType;
   ServiceDate: string;
+  StatusCode: GearServiceStatus;
   Notes?: string;
 }
 
@@ -35,6 +40,8 @@ export interface BaseItem {
   Id: number;
   Name: string;
   IsRetired: boolean;
+  LatestStatusCode?: GearServiceStatus;
+  LastServiceDate?: string;
   Manufacturer?: string;
   ManufactureDate?: string;
   InServiceDate?: string;
@@ -49,8 +56,6 @@ export interface BaseItem {
 
 export interface GearItem extends BaseItem {
   Category: string;
-  LastInspectionDate?: string;
-  LastServiceDate?: string;
 }
 
 export interface RopeItem extends BaseItem {
@@ -58,4 +63,10 @@ export interface RopeItem extends BaseItem {
   Length?: number;
   Unit: Unit;
   ParentRopeItemsId?: number;
+}
+
+export interface GearItemSet {
+  Id: number;
+  Name: string;
+  Items: number[]
 }

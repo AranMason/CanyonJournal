@@ -1,25 +1,15 @@
-import { CanyonTypeEnum } from './CanyonTypeEnum';
+import { IBaseCanyon } from './Canyon';
 
-export interface UserCanyon {
+export interface UserCanyon extends IBaseCanyon {
   Id: number;
   UserId?: number;
-  Name: string;
   Url?: string;
-  RegionId?: number | null;
-  RegionSlug?: string | null;
-  RegionSymbol?: string | null;
-  CanyonType?: CanyonTypeEnum | null;
-  AquaticRating: number;
-  VerticalRating: number;
-  CommitmentRating: number;
-  StarRating: number;
-  IsUnrated: boolean;
   Notes?: string;
   Created?: string;
   Updated?: string;
 }
 
-export interface UserCanyonWithDescents extends UserCanyon {
+export interface UserCanyonWithDescents extends UserCanyon, IBaseCanyon {
   Descents: number;
   LastDescentDate?: string | null;
 }

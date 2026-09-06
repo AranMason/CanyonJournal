@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, DialogActions, DialogContent,
+  Box, Button, Checkbox, DialogActions, DialogContent,
+  FormControlLabel,
   IconButton, Stack, Table, TableBody, TableCell, TableHead, TableRow,
   TextField, Typography,
 } from '@mui/material';
@@ -16,9 +17,10 @@ interface SourceFormValues {
   displayName: string;
   logoUrl: string;
   websiteUrl: string;
+  isEnabled: boolean;
 }
 
-const emptyForm: SourceFormValues = { displayName: '', logoUrl: '', websiteUrl: '' };
+const emptyForm: SourceFormValues = { displayName: '', logoUrl: '', websiteUrl: '', isEnabled: false };
 
 const SourcesTab: React.FC = () => {
   const [sources, setSources] = useState<CanyonSource[]>([]);
@@ -29,7 +31,7 @@ const SourcesTab: React.FC = () => {
   const { t } = useTranslation();
 
   const load = () =>
-    apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => {});
+    apiFetch<CanyonSource[]>('/api/sources').then(setSources).catch(() => { });
 
   useEffect(() => { load(); }, []);
 
@@ -42,7 +44,7 @@ const SourcesTab: React.FC = () => {
 
   function openEdit(s: CanyonSource) {
     setEditingId(s.Id);
-    setForm({ displayName: s.DisplayName, logoUrl: s.LogoUrl ?? '', websiteUrl: s.WebsiteUrl ?? '' });
+    setForm({ displayName: s.DisplayName, logoUrl: s.LogoUrl ?? '', websiteUrl: s.WebsiteUrl ?? '', isEnabled: s.IsEnabled });
     setError(null);
     setDialogOpen(true);
   }
@@ -65,6 +67,7 @@ const SourcesTab: React.FC = () => {
         displayName: form.displayName.trim(),
         logoUrl: form.logoUrl.trim() || null,
         websiteUrl: form.websiteUrl.trim() || null,
+        isEnabled: form.isEnabled || false
       });
       if (editingId !== null) {
         await apiFetch(`/api/sources/${editingId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body });
@@ -147,6 +150,18 @@ const SourcesTab: React.FC = () => {
               fullWidth
             />
             {error && <Typography color="error">{error}</Typography>}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={form.isEnabled}
+                  onChange={e =>
+                    setForm(f => ({ ...f, isEnabled: e.target.checked }))
+                  }
+                />
+              }
+              label={t('common:fields.isEnabled')}
+            />
+
           </Stack>
         </DialogContent>
         <DialogActions>

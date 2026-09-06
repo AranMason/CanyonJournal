@@ -1,7 +1,7 @@
 import { SxProps, TableCell, Theme } from "@mui/material";
 import React from "react";
 import { CanyonTypeEnum } from "../../types/CanyonTypeEnum";
-import CanyonTypeDisplay from "../CanyonTypeDisplay";
+import CanyonTypeDisplay from "../canyons/CanyonTypeDisplay";
 
 type CanyonTypeTableCellProps = {
     type: CanyonTypeEnum;
@@ -12,8 +12,7 @@ type CanyonTypeTableCellProps = {
 const CanyonTypeTableCell: React.FC<CanyonTypeTableCellProps> = ({ type, className, sx }) => {
 
     return <TableCell align="center" width={150} className={className} sx={sx}>
-        <CanyonTypeDisplay type={type}/>
-        
+        <CanyonTypeDisplay type={type} />
     </TableCell>
 }
 

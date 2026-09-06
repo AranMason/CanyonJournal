@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { Canyon } from '../types/Canyon';
 import PageTemplate from './PageTemplate';
 import { apiFetch } from '../utils/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { CanyonRecord } from '../types/CanyonRecord';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Breadcrumbs, Button, Link, Paper, Typography } from '@mui/material';
 import FlagIcon from '@mui/icons-material/Flag';
-import CanyonRecordAccordion from '../components/CanyonRecordAccordion/CanyonRecordAccordion';
-import CanyonPageHeader from '../components/CanyonPageHeader';
-import ReportIssueModal from '../components/ReportIssueModal';
+import CanyonRecordAccordion from '../components/canyons/CanyonRecordAccordion';
+import CanyonPageHeader from '../components/canyons/CanyonPageHeader';
+import ReportIssueModal from '../components/admin/ReportIssueModal';
 import { useFavourite } from '../hooks/useFavourite';
 import { useTranslation } from 'react-i18next';
+import EmptyCellCta from '../components/EmptyCellCta';
+import CreateIcon from '@mui/icons-material/Create';
 
 const CanyonOverviewPage: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const canyonId = id ? parseInt(id, 10) : undefined;
   const { t } = useTranslation();
 
@@ -39,6 +42,18 @@ const CanyonOverviewPage: React.FC = () => {
   }, [canyonId]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return <PageTemplate pageTitle={canyonData?.Name ?? t('common:terms.canyon.upper', { count: 1 })} isLoading={isLoading} isAuthRequired>
+    <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
+      <Link
+        component="button"
+        underline="hover"
+        color="primary"
+        onClick={() => navigate("/canyons")}
+        sx={{ cursor: 'pointer' }}
+      >
+        {t('nav.canyons')}
+      </Link>
+      <Typography sx={{ color: 'text.primary' }}>{canyonData?.Name}</Typography>
+    </Breadcrumbs>
     <CanyonPageHeader
       isFavourite={isFavourite}
       onToggleFavourite={toggleFavourite}
@@ -80,13 +95,17 @@ const CanyonOverviewPage: React.FC = () => {
         />
       </>
     )}
-    
+
     <Typography variant='h4' my={2} fontSize={24}>
       {`${t('canyon.yourDescents')} (${canyonRecords.length})`}
     </Typography>
-    {canyonRecords.length === 0 ? (<div>{t('journal.noRecords')}</div>) : (
+    {canyonRecords.length === 0 ? (<Paper sx={{ borderLeft: 2, borderColor: 'secondary.main' }}>
+      <EmptyCellCta
+        description={t('journal.noRecords')}
+        cta={t('common:actions.recordDescent')}
+        ctaIcon={<CreateIcon />} ctaAction={() => navigate(`/journal/record?canyonId=${canyonId}`)} /></Paper>) : (
       canyonRecords.map(rec => (
-        <CanyonRecordAccordion
+        canyonData && <CanyonRecordAccordion
           isOpen={sectionOpen === rec.Id}
           onChange={() => handleAccordionToggle(rec.Id ?? null)}
           record={rec}

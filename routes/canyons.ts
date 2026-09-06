@@ -4,7 +4,7 @@ import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
 import { } from '../src/types/express-session';
 import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
 import { canyonDetailUrl } from './helpers/urlHelper';
-import { 
+import {
   getBaseCanyonDataWithoutDescents,
   getAdminCanyonList,
   getBaseCanyonDataWithDescents,
@@ -140,7 +140,7 @@ router.get('/:id', async (req, res) => {
     // If withDescents=1, join with CanyonRecords for user-specific count
     const userId = await getUserIdByRequest(req);
     const canyonId = parseInt(req.params.id, 10);
-    
+
     if (req.query.withDescents === '1' && userId) {
       const result = await getSpecificCanyonWithDescents(pool, canyonId, userId);
       res.json(result);
@@ -181,7 +181,7 @@ router.post('/', async (req, res) => {
 
     if (await isAdmin(req) && req.body.id > 0) {
       request.input('id', sql.Int, req.body.id);
-      const result = await request.query(`UPDATE Canyons SET 
+      await request.query(`UPDATE Canyons SET 
               Name = @name,
               Url = @url,
               AquaticRating = @aquaticRating,
