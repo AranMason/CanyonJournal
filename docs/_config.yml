@@ -24,22 +24,17 @@ features:
     text: >
       Record date, team size, water conditions, star rating, and personal notes for every trip you complete.
 
-  - icon: fa-solid fa-map-pin
+  - icon: fa-solid fa-location-dot
     title: Add private canyons
     text: >
       Log trips against our list of canyons from your favourite sources, or add your own.
 
-  - icon: fa-solid fa-helmet-safety
+  - icon: fa-solid fa-wrench
     title: Know your kit
     text: >
       Log your ropes and equipment, track usage, keep your gear list organised and track thier service history.
 
-  - icon: fa-solid fa-tags
-    title: Tags & organisation
-    text: >
-      Organise your journal with custom tags. Filter past trips instantly to find exactly what you're looking for.
-
-  - icon: fa-solid fa-bullseye
+  - icon: fa-solid fa-list-check
     title: Set & track goals
     text: >
       Set targets for trips, regions, or guide training. Track your progress automatically as you log.
