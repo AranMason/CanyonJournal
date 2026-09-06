@@ -20,13 +20,16 @@ async function loadById() {
     return toDict(canyons, s => s.Id);
 }
 
-function toDict<T>(items: T[], getId: (item: T) => number): {[n: number]: T} {
-      const dict: {[n: number]: T} = {};
-      items.forEach(s => {
-        dict[getId(s)] = s;
-      })
-      return dict;
-  };
+function toDict<T>(items: T[], getId: (item: T) => number | null | undefined): { [n: number]: T } {
+    const dict: { [n: number]: T } = {};
+    items.forEach(s => {
+        const id = getId(s);
+        if (id) {
+            dict[id] = s;
+        }
+    })
+    return dict;
+};
 
 export {
     load,

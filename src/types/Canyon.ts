@@ -1,5 +1,13 @@
 import { CanyonTypeEnum } from "./CanyonTypeEnum";
 
+export type CanyonFilterOptions = {
+  page: number;
+  pageSize: number;
+  type?: CanyonTypeEnum[];
+  text?: string;
+  regions?: number[];
+}
+
 export interface CanyonSource {
   Id: number;
   DisplayName: string;
@@ -43,8 +51,8 @@ export interface CanyonWithDescents extends Canyon {
 
 export interface CanyonListEntry extends IBaseCanyon {
   Key: string;
-  DetailUrl: string;
   Url: string;
+  DetailUrl: string | null;
   IsVerified: boolean;
   CanyonType: CanyonTypeEnum | null;
   Descents: number;

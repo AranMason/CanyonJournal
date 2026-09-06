@@ -1,3 +1,5 @@
+import { CanyonFilterOptions } from "../../src/types/Canyon";
+import { CANYON_KEY_PREFIX, USERCANYON_KEY_PREFIX } from "../../src/utils/canyonKey";
 import { sql } from "../middleware/sqlserver";
 import { CanyonData, UserCanyonData } from "../types/Canyon.type";
 
@@ -38,59 +40,150 @@ export const getAdminCanyonList = async (pool: sql.ConnectionPool): Promise<Cany
     return res.recordset;
 };
 
-export const getBaseCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<CanyonData[]> => {
-    var res = await pool.request()
-        .input('userId', sql.Int, userId)
-        .query(`
-                SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
-                  c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
-                  c.SourceId, c.RegionId,
-                  rgn.Symbol AS RegionSymbol,
-                  rgn.Slug AS RegionSlug,
-                  cs.DisplayName AS SourceName,
-                  cs.LogoUrl AS SourceLogoUrl,
-                  cs.WebsiteUrl AS SourceWebsiteUrl,
-                  COUNT(cr.Id) AS Descents,
-                  MAX(cr.Date) AS LastDescentDate,
-                  CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
-                FROM Canyons c
+
+function buildSelectStatement(canyonTableName: string, canyonKeyPrefix: string): string {
+    return `${canyonTableName}.Id, 
+            CONCAT('${canyonKeyPrefix}', ${canyonTableName}.Id) AS [Key],
+            ${canyonTableName}.Name,
+            ${canyonTableName}.Url,
+            ${canyonTableName}.AquaticRating,
+            ${canyonTableName}.VerticalRating,
+            ${canyonTableName}.StarRating,
+            ${canyonTableName}.CommitmentRating,
+            ${canyonTableName}.IsUnrated,
+            ${canyonTableName}.CanyonType,
+            ${canyonTableName}.RegionId,
+            rgn.Symbol AS RegionSymbol,
+            rgn.Slug AS RegionSlug,
+            COUNT(cr.Id) AS Descents,
+            MAX(cr.Date) AS LastDescentDate,
+            CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite`
+}
+
+function buildGroupByStatement(canyonTableName: string, canyonKeyPrefix: string): string {
+    return `${canyonTableName}.Id, CONCAT('${canyonKeyPrefix}', ${canyonTableName}.Id), ${canyonTableName}.Name, ${canyonTableName}.Url, ${canyonTableName}.AquaticRating, ${canyonTableName}.VerticalRating, ${canyonTableName}.StarRating, ${canyonTableName}.CommitmentRating, ${canyonTableName}.IsUnrated, ${canyonTableName}.RegionId, ${canyonTableName}.CanyonType, cf.Id, rgn.Symbol, rgn.Slug`
+}
+
+function getBaseCanyonDataQuery() {
+    return `SELECT ${buildSelectStatement('c', CANYON_KEY_PREFIX)},
+                c.IsVerified,
+                c.IsDeleted,
+                c.SourceId,
+                cs.DisplayName AS SourceName,
+                cs.LogoUrl AS SourceLogoUrl,
+                cs.WebsiteUrl AS SourceWebsiteUrl
+            FROM Canyons c
                 LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
                 LEFT JOIN CanyonRecords cr ON cr.CanyonId = c.Id AND cr.UserId = @userId
                 LEFT JOIN CanyonFavourites cf ON cf.CanyonId = c.Id AND cf.UserId = @userId
                 LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
                 WHERE c.IsVerified = 1 AND cs.IsEnabled = 1
-                GROUP BY c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating, c.CommitmentRating, c.IsVerified, c.IsUnrated, c.RegionId, c.CanyonType, c.IsDeleted, c.SourceId, cf.Id, cs.DisplayName, cs.LogoUrl, cs.WebsiteUrl, rgn.Symbol, rgn.Slug
-              `);
-
-    return res.recordset;
+                GROUP BY ${buildGroupByStatement('c', CANYON_KEY_PREFIX)},
+                    c.IsVerified,
+                    c.IsDeleted,
+                    c.SourceId,
+                    cs.DisplayName,
+                    cs.LogoUrl,
+                    cs.WebsiteUrl`
 }
 
-export const getUserCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<UserCanyonData[]> => {
-
-    var res = await pool.request()
-        .input('userId', sql.Int, userId)
-        .query(`
-            SELECT uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
-                   rgn.Symbol AS RegionSymbol,
-                   rgn.Slug AS RegionSlug,
-                   uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                   uc.StarRating, uc.IsUnrated,
-                   COUNT(cr.Id) AS Descents,
-                   MAX(cr.Date) AS LastDescentDate,
-                   CAST(CASE WHEN cf.Id IS NOT NULL THEN 1 ELSE 0 END AS BIT) AS IsFavourite
+function getBaseUserCanyonDataQuery() {
+    return `SELECT ${buildSelectStatement('uc', USERCANYON_KEY_PREFIX)},
+            1 AS IsVerified,
+            0 AS IsDeleted,
+            NULL As SourceId,
+            NULL AS DisplayName,
+            NULL AS LogoUrl,
+            NULL AS SourceWebsiteUrl
             FROM UserCanyons uc
             LEFT JOIN CanyonRecords cr ON cr.UserCanyonId = uc.Id
             LEFT JOIN CanyonFavourites cf ON cf.UserCanyonId = uc.Id AND cf.UserId = @userId
             LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
             WHERE uc.UserId = @userId
-            GROUP BY uc.Id, uc.Name, uc.Url, uc.RegionId, uc.CanyonType,
-                     rgn.Symbol, rgn.Slug,
-                     uc.AquaticRating, uc.VerticalRating, uc.CommitmentRating,
-                     uc.StarRating, uc.IsUnrated, cf.Id
-            ORDER BY Descents DESC, uc.Name
-          `);
+            GROUP BY ${buildGroupByStatement('uc', USERCANYON_KEY_PREFIX)}
+            ORDER BY Descents DESC, uc.Name`
+}
 
-    return res.recordset;
+export async function getAllCanyonsMetaData(pool: sql.ConnectionPool, userId: number, filter: CanyonFilterOptions): Promise<{ totalPages: number, canyonCount: number }> {
+    const request = pool.request()
+        .input('userId', sql.Int, userId)
+        .input('offset', sql.Int, (filter.page - 1) * filter.pageSize)
+        .input('pageSize', sql.Int, filter.pageSize);
+
+    const baseQuery = `WITH Canyons AS (
+            ${getBaseCanyonDataQuery()}
+            UNION
+            ${getBaseUserCanyonDataQuery()}    
+        )`
+
+    const totalQueryString = `
+        ${baseQuery}
+        SELECT COUNT(*) As TotalCanyons, COUNT(*) / @pageSize AS PageCount FROM Canyons
+    `
+
+    const metaRes = await request.query(totalQueryString);
+
+    return {
+        canyonCount: metaRes.recordset[0].TotalCanyons,
+        totalPages: metaRes.recordset[0].PageCount
+    }
+}
+
+export async function getAllCanyonsWithFilters(pool: sql.ConnectionPool, userId: number, filter: CanyonFilterOptions): Promise<CanyonData[]> {
+
+    const request = pool.request()
+        .input('userId', sql.Int, userId)
+        .input('offset', sql.Int, (filter.page - 1) * filter.pageSize)
+        .input('pageSize', sql.Int, filter.pageSize);
+
+    const baseQuery = `WITH Canyons AS (
+            ${getBaseCanyonDataQuery()}
+            UNION ALL
+            ${getBaseUserCanyonDataQuery()}    
+        )`
+
+    const pageQueryString = `
+        ${baseQuery}
+        SELECT * FROM Canyons
+        ORDER BY Name, Key
+        OFFSET @offset ROWS
+        FETCH NEXT @pageSize ROWS ONLY
+    `
+
+    const pageRes = await request
+        .query(pageQueryString);
+
+    return pageRes.recordset;
+
+}
+
+export const getBaseCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<CanyonData[]> => {
+    const query = getBaseCanyonDataQuery();
+    try {
+        const res = await pool.request()
+            .input('userId', sql.Int, userId)
+            .query(query);
+
+        return res.recordset;
+    }
+    catch (e) {
+        console.error(query);
+        throw e;
+    }
+}
+
+export const getUserCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<UserCanyonData[]> => {
+    const query = getBaseUserCanyonDataQuery()
+    try {
+        var res = await pool.request()
+            .input('userId', sql.Int, userId)
+            .query(query);
+
+        return res.recordset;
+    } catch (e) {
+        console.error('USER CANYON QUERY:', query);
+        throw e;
+    }
 }
 
 export const getSpecificCanyon = async (pool: sql.ConnectionPool, canyonId: number): Promise<CanyonData> => {
