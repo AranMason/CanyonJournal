@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { apiFetch } from '../utils/api';
-import { CanyonListEntry } from '../types/Canyon';
+import { CanyonFilterOptions, CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
 import PageTemplate from './PageTemplate';
 import FilterPanel, { FilterValues } from '../components/FilterPanel';
@@ -91,9 +91,24 @@ const CanyonList: React.FC = () => {
 
   const refresh = () => {
     setIsLoading(true);
-    apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=1')
-      .then(setCanyons)
-      .finally(() => setIsLoading(false));
+    const searhConfig: CanyonFilterOptions = {
+      page: 1,
+      pageSize: 50,
+      aquaticRating: 2,
+      commitmentRating: 2,
+      regions: [8],
+      starRating: 2,
+      type: [2],
+      verticalRating: 2
+    }
+    apiFetch<CanyonListEntry[]>('/api/canyons/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(searhConfig)
+    }).then(setCanyons).finally(() => setIsLoading(false))
+    // apiFetch<CanyonListEntry[]>('/api/canyons?withDescents=1')
+    //   .then(setCanyons)
+    //   .finally(() => setIsLoading(false));
   };
 
   useEffect(() => {

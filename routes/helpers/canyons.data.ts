@@ -61,7 +61,7 @@ function buildSelectStatement(canyonTableName: string, canyonKeyPrefix: string):
 }
 
 function buildGroupByStatement(canyonTableName: string, canyonKeyPrefix: string): string {
-    return `${canyonTableName}.Id, CONCAT('${canyonKeyPrefix}', ${canyonTableName}.Id), ${canyonTableName}.Name, ${canyonTableName}.Url, ${canyonTableName}.AquaticRating, ${canyonTableName}.VerticalRating, ${canyonTableName}.StarRating, ${canyonTableName}.CommitmentRating, ${canyonTableName}.IsUnrated, ${canyonTableName}.RegionId, ${canyonTableName}.CanyonType, cf.Id, rgn.Symbol, rgn.Slug`
+    return `${canyonTableName}.Id, ${canyonTableName}.Name, ${canyonTableName}.Url, ${canyonTableName}.AquaticRating, ${canyonTableName}.VerticalRating, ${canyonTableName}.StarRating, ${canyonTableName}.CommitmentRating, ${canyonTableName}.IsUnrated, ${canyonTableName}.RegionId, ${canyonTableName}.CanyonType, cf.Id, rgn.Symbol, rgn.Slug`
 }
 
 function getBaseCanyonDataQuery() {
@@ -101,7 +101,7 @@ function getBaseUserCanyonDataQuery() {
             LEFT JOIN Regions rgn ON uc.RegionId = rgn.Id
             WHERE uc.UserId = @userId
             GROUP BY ${buildGroupByStatement('uc', USERCANYON_KEY_PREFIX)}
-            ORDER BY Descents DESC, uc.Name`
+            `
 }
 
 export async function getAllCanyonsMetaData(pool: sql.ConnectionPool, userId: number, filter: CanyonFilterOptions): Promise<{ totalPages: number, canyonCount: number }> {
@@ -128,37 +128,92 @@ export async function getAllCanyonsMetaData(pool: sql.ConnectionPool, userId: nu
         totalPages: metaRes.recordset[0].PageCount
     }
 }
+function buildFilters(tablePrefix: string, request: sql.Request, filter: CanyonFilterOptions): string[] {
+    const filters: string[] = [];
+
+    if (filter.aquaticRating) {
+        request.input('minAquaticRating', sql.Int, filter.aquaticRating);
+        filters.push(`[${tablePrefix}].AquaticRating >= @minAquaticRating`);
+    }
+
+    if (filter.verticalRating) {
+        request.input('minVerticalRating', sql.Int, filter.verticalRating);
+        filters.push(`[${tablePrefix}].VerticalRating >= @minVerticalRating`);
+    }
+
+    if (filter.commitmentRating) {
+        request.input('minCommitmentRating', sql.Int, filter.commitmentRating);
+        filters.push(`[${tablePrefix}].CommitmentRating >= @minCommitmentRating`);
+    }
+
+    if (filter.starRating) {
+        request.input('minStarRating', sql.Int, filter.starRating);
+        filters.push(`[${tablePrefix}].StarRating >= @minStarRating`);
+    }
+
+    if (filter.regions?.length) {
+        request.input('regions', sql.NVarChar, filter.regions.join(','));
+        filters.push(`[${tablePrefix}].RegionId IN (SELECT value FROM STRING_SPLIT(@regions, ','))`);
+    }
+
+    if (filter.type) {
+        request.input('type', sql.Int, filter.type);
+        filters.push(`[${tablePrefix}].CanyonType = @type`);
+    }
+
+    if (filter.text) {
+        request.input('text', sql.NVarChar, `%${filter.text}%`);
+        filters.push(`[${tablePrefix}].Name LIKE @text`);
+    }
+
+    return filters;
+}
+
 
 export async function getAllCanyonsWithFilters(pool: sql.ConnectionPool, userId: number, filter: CanyonFilterOptions): Promise<CanyonData[]> {
+
+    if (!filter.page || !filter.pageSize) {
+        throw new Error('Missing Page and/or Page Size arguments')
+    }
 
     const request = pool.request()
         .input('userId', sql.Int, userId)
         .input('offset', sql.Int, (filter.page - 1) * filter.pageSize)
         .input('pageSize', sql.Int, filter.pageSize);
 
-    const baseQuery = `WITH Canyons AS (
+    const baseQuery = `WITH AllCanyons AS (
             ${getBaseCanyonDataQuery()}
             UNION ALL
             ${getBaseUserCanyonDataQuery()}    
         )`
 
+    const filterSet: string[] = buildFilters('ac', request, filter);
+
+    const whereClause = filterSet.length > 0 ? `WHERE ${filterSet.join(' AND ')}` : ''
     const pageQueryString = `
         ${baseQuery}
-        SELECT * FROM Canyons
-        ORDER BY Name, Key
+        SELECT * FROM AllCanyons ac
+        ${whereClause}
+        ORDER BY ac.Name, ac.[Key]
         OFFSET @offset ROWS
         FETCH NEXT @pageSize ROWS ONLY
     `
 
-    const pageRes = await request
-        .query(pageQueryString);
+    try {
+        const pageRes = await request
+            .query(pageQueryString);
 
-    return pageRes.recordset;
+        // TODO: Add DetailUrl
+        return pageRes.recordset;
+    } catch (e) {
+        console.error(pageQueryString);
+        throw e;
+    }
 
 }
 
 export const getBaseCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<CanyonData[]> => {
-    const query = getBaseCanyonDataQuery();
+    const query = `${getBaseCanyonDataQuery()} ORDER BY Descents, c.Name, c.Id`;
     try {
         const res = await pool.request()
             .input('userId', sql.Int, userId)
@@ -173,7 +228,7 @@ export const getBaseCanyonDataWithDescents = async (pool: sql.ConnectionPool, us
 }
 
 export const getUserCanyonDataWithDescents = async (pool: sql.ConnectionPool, userId: number): Promise<UserCanyonData[]> => {
-    const query = getBaseUserCanyonDataQuery()
+    const query = `${getBaseUserCanyonDataQuery()} ORDER BY Descents, uc.Name`
     try {
         var res = await pool.request()
             .input('userId', sql.Int, userId)

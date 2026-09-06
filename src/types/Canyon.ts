@@ -6,6 +6,10 @@ export type CanyonFilterOptions = {
   type?: CanyonTypeEnum[];
   text?: string;
   regions?: number[];
+  verticalRating?: number
+  aquaticRating?: number,
+  starRating?: number,
+  commitmentRating?: number
 }
 
 export interface CanyonSource {

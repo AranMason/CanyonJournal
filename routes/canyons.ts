@@ -65,7 +65,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/canyons - return the list of canyons from SQL Server
-router.get('/search', async (req, res) => {
+router.post('/search', async (req, res) => {
   try {
     const userId = await getUserIdByRequest(req);
     if (!userId) {
@@ -75,7 +75,7 @@ router.get('/search', async (req, res) => {
     const query = req.body as CanyonFilterOptions;
     const pool = await getPool();
 
-    const queryResults = getAllCanyonsWithFilters(pool, userId, query);
+    const queryResults = await getAllCanyonsWithFilters(pool, userId, query);
 
     res.json(queryResults);
 
