@@ -1,6 +1,16 @@
 import { CanyonTypeEnum } from "./CanyonTypeEnum";
 
-export type CanyonFilterOptions = {
+export type CanyonFilterForm = {
+  text: string;
+  types: CanyonTypeEnum[];
+  region: number | null;
+  minVerticalRating?: number;
+  minAquaticRating?: number;
+  minStarRating?: number;
+  minCommitmentRating?: number;
+}
+
+export type CanyonFilterOptionsRequest = {
   page: number;
   pageSize: number;
   type?: CanyonTypeEnum[];
@@ -10,6 +20,13 @@ export type CanyonFilterOptions = {
   aquaticRating?: number,
   starRating?: number,
   commitmentRating?: number
+  orderBy: 'Descents'
+  | 'Name'
+  | 'LastDescent'
+  | 'VerticalRating'
+  | 'AquaticRating'
+  | 'StarRating'
+  | 'CommitmentRating'
 }
 
 export interface CanyonSource {

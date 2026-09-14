@@ -43,7 +43,9 @@ function flatten(nodes: Region[]): Region[] {
  * given ID itself). Used for hierarchical filter matching: selecting "United Kingdom"
  * should match canyons tagged Scotland, England, Wales, etc.
  */
-export function getDescendantIds(regionId: number, flat: Region[]): number[] {
+export async function getDescendantIds(regionId: number): number[] {
+  const flat = await load();
+
   const map = new Map<number, number[]>();
   flat.forEach(r => {
     if (r.ParentId != null) {

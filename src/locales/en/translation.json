@@ -62,6 +62,8 @@
     "sourceCta": "Consider sharing your experience at {{name}} on {{ sourceName }} to help the community."
   },
   "canyon": {
+    "pageNumber": "Page {{count}} of {{total}}",
+    "totalItems": "{{count}} canyons",
     "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
     "yourDescents": "Your $t(common:terms.descent.upper, {\"count\": 2})",
     "lastDescent": "Last $t(common:terms.descent.upper, {\"count\": 1})",
@@ -386,5 +388,16 @@
       "yes": "With $t(common:terms.descent.lower, {\"count\": 1})",
       "no": "Without $t(common:terms.descent.lower, {\"count\": 1})"
     }
+  },
+  "canyonFilterModal": {
+    "title": "Canyon Filter",
+    "canyonName": "Canyon Name",
+    "region": "Region",
+    "canyonTypes": "Canyon Type",
+    "canyonRating": "Filter By Minimum Rating",
+    "minVerticalRating": "Vertical Rating",
+    "minAquaticRating": "Aquatic Rating",
+    "minCommitmentRating": "Commitment Rating",
+    "minStarRating": "Star Rating"
   }
 }

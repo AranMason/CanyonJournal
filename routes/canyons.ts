@@ -14,7 +14,7 @@ import {
   deleteCanyonWithCascade,
   getAllCanyonsWithFilters
 } from './helpers/canyons.data';
-import { CanyonFilterOptions, CanyonListEntry } from '../src/types/Canyon';
+import { CanyonFilterOptionsRequest, CanyonListEntry } from '../src/types/Canyon';
 import { CanyonData } from './types/Canyon.type';
 import { canyonDetailUrl } from './helpers/urlHelper';
 
@@ -72,7 +72,7 @@ router.post('/search', async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const query = req.body as CanyonFilterOptions;
+    const query = req.body as CanyonFilterOptionsRequest;
     const pool = await getPool();
 
     const queryResults = await getAllCanyonsWithFilters(pool, userId, query);
