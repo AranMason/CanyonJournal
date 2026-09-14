@@ -6,7 +6,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { apiDelete, apiFetch } from '../../utils/api';
+import { apiFetch } from '../../utils/api';
 import { Region, RegionAdmin } from '../../types/Region';
 import RegionTreePicker from '../regions/RegionTreePicker';
 import RegionTreeView from '../regions/RegionTreeView';
