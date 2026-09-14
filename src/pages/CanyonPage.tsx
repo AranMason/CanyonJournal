@@ -8,12 +8,12 @@ import DateTableCell from '../components/table/DateTableCell';
 import CanyonNameTableCell from '../components/table/CanyonNameCell';
 import CanyonTypeTableCell from '../components/table/CanyonTypeCell';
 import { CanyonTypeEnum } from '../types/CanyonTypeEnum';
-import * as RegionDataStore from '../helpers/RegionDataStore';
+import * as RegionDataStore from '../helpers/data/RegionDataStore';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CanyonRating from '../components/canyons/CanyonRating';
-import { getCanyonPage } from '../helpers/CanyonDataStore';
+import { getCanyonPage } from '../helpers/data/CanyonDataStore';
 import Loader from '../components/Loader';
 import TuneIcon from '@mui/icons-material/Tune';
 import CanyonFilterModal from '../components/forms/CanyonFilterModal';
@@ -87,7 +87,8 @@ const CanyonList: React.FC = () => {
       aquaticRating: filterConfig.minAquaticRating,
       commitmentRating: filterConfig.minCommitmentRating,
       starRating: filterConfig.minStarRating,
-      type: filterConfig.types
+      type: filterConfig.types,
+      includeMetaData: true
     }
     getCanyonPage(searchConfig).then(({ totalCount, totalPages, results }) => {
       setTotalPages(totalPages);

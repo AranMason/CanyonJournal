@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Chip, MenuItem, Select, InputLabel, FormControl, Button, Typography, Card, CardContent, Tooltip } from '@mui/material';
 import { GearItem, GearItemSet, RopeItem } from '../../types/types';
-import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
+import * as EquipmentDataStore from '../../helpers/data/EquipmentDataStore';
 import { useTranslation } from 'react-i18next';
 import ServiceStatusIndicator from './ServiceStatusIndicator'
 import AddIcon from '@mui/icons-material/Add';

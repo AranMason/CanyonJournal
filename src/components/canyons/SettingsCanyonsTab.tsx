@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from '../../utils/api';
 import * as UserCanyonDataStore from '../../helpers/UserCanyonDataStore';
-import * as RegionDataStore from '../../helpers/RegionDataStore';
+import * as RegionDataStore from '../../helpers/data/RegionDataStore';
 import { UserCanyonWithDescents } from '../../types/UserCanyon';
 import { Region } from '../../types/Region';
 import CanyonRating from './CanyonRating';
@@ -55,7 +55,7 @@ const SettingsCanyonsTab: React.FC = () => {
 
     if (values.region != null) {
       if (canyon.RegionId == null) return false;
-      const ids = RegionDataStore.getDescendantIds(values.region as number, flatRegions);
+      const ids = RegionDataStore.getDescendantIds(values.region as number);
       if (!ids.includes(canyon.RegionId)) return false;
     }
 

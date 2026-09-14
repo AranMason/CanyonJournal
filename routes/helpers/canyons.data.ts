@@ -1,4 +1,3 @@
-import { query } from "express";
 import { CanyonFilterOptionsRequest } from "../../src/types/Canyon";
 import { CANYON_KEY_PREFIX, parseCanyonKey, USERCANYON_KEY_PREFIX } from "../../src/utils/canyonKey";
 import { sql } from "../middleware/sqlserver";

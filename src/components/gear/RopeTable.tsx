@@ -7,7 +7,7 @@ import RowActions from "../RowActions";
 import RopeModal from "./RopeModal";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SuccessSnackbar from "../SuccessSnackbar";
-import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import * as EquipmentDataStore from "../../helpers/data/EquipmentDataStore";
 import { RopeItem } from "../../types/types";
 import Loader from "../Loader";
 import ServiceStatusIndicator from "./ServiceStatusIndicator";

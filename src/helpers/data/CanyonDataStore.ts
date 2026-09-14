@@ -1,18 +1,11 @@
-import { Canyon, CanyonFilterOptionsRequest, CanyonListEntry } from "../types/Canyon"
-import { apiFetch } from "../utils/api"
+import { Canyon, CanyonFilterOptionsRequest, CanyonListEntry } from "../../types/Canyon"
+import { apiFetch, apiGet, apiPost } from "../../utils/api"
+import { LimitedAsyncCache } from "../caches/LimitedAsyncCache";
+import { PromiseCache } from "../caches/PromiseCache";
 
-var loadPromise: Promise<Canyon[]> | null = null;
+const allCanyonsPromiseCache = new PromiseCache(() => apiGet<Canyon[]>('/api/canyons'));
 
-async function load(): Promise<Canyon[]> {
-
-    loadPromise ??= new Promise<Canyon[]>(async (res, rej) => {
-        apiFetch<Canyon[]>('/api/canyons').then(s => {
-            res(s);
-        }).catch(() => rej());
-    });
-
-    return await loadPromise;
-}
+const load = async (): Promise<Canyon[]> => allCanyonsPromiseCache.get();
 
 const canyonCacheById: { [id: number]: Promise<CanyonListEntry> } = {}
 const userCanyonCacheById: { [id: number]: Promise<CanyonListEntry> } = {}
@@ -78,32 +71,16 @@ type CanyonSearchResult = {
     totalPages: number;
     results: CanyonListEntry[]
 }
-type CanyonsByFilterKey = {
-    [filter: string]: Promise<CanyonSearchResult>
-}
 
-
-let canyonFilterPageCache: CanyonsByFilterKey = {};
+// We only want to store at most 20 pages in memory at a time.
+const testCanyonFilterPageCache = new LimitedAsyncCache<string, CanyonSearchResult>(20);
 
 const getFilterKey = (filter: CanyonFilterOptionsRequest): string => JSON.stringify(filter)
 
 export async function getCanyonPage(filter: CanyonFilterOptionsRequest): Promise<CanyonSearchResult> {
-
     const key = getFilterKey(filter);
 
-    const data = canyonFilterPageCache[key];
-
-    if (data) {
-        return data;
-    }
-
-    const dataLoadPromise = apiFetch<CanyonSearchResult>('/api/canyons/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(filter)
+    return testCanyonFilterPageCache.getOrInsertAsync(key, () => {
+        return apiPost<CanyonSearchResult, CanyonFilterOptionsRequest>('/api/canyons/search', filter);
     });
-
-    canyonFilterPageCache[key] = dataLoadPromise;
-
-    return dataLoadPromise;
 }

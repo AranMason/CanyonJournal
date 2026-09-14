@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, CircularProgress, Divider, Paper, Typography,
+  Box, CircularProgress, Paper, Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Goal } from '../../types/Goal';
 import GoalCard from './GoalCard';
-import * as GoalsDataStore from '../../helpers/GoalsDataStore';
-import * as RegionDataStore from '../../helpers/RegionDataStore';
+import * as GoalsDataStore from '../../helpers/data/GoalsDataStore';
+import * as RegionDataStore from '../../helpers/data/RegionDataStore';
 import { Region } from '../../types/Region';
 import { useTranslation } from 'react-i18next';
 import ChecklistIcon from '@mui/icons-material/Checklist';

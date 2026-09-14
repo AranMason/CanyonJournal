@@ -7,7 +7,7 @@ import RegionTreePicker from '../regions/RegionTreePicker';
 import MultiSelectChipFilter from '../MultiSelectChipFilter';
 import { CanyonTypeList } from '../../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from '../../helpers/EnumMapper';
-import * as RegionDataStore from '../../helpers/RegionDataStore';
+import * as RegionDataStore from '../../helpers/data/RegionDataStore';
 
 type CanyonFilterModalProps = {
     isOpen: boolean;

@@ -8,7 +8,7 @@ import RegionIcon from "../regions/RegionIcon";
 import SourceIcon from "../SourceIcon";
 import EditIcon from '@mui/icons-material/Edit';
 import Loader from "../Loader";
-import * as CanyonDataStore from "../../helpers/CanyonDataStore";
+import * as CanyonDataStore from "../../helpers/data/CanyonDataStore";
 
 type RecordCanyonSelectorProps = {
     value: CanyonListEntry | null;

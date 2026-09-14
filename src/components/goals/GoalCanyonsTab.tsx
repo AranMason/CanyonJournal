@@ -15,7 +15,7 @@ import { getCanyonNameFilterConfig, getHasCanyonDescentsFilterConfig, getRegionF
 import { apiFetch } from "../../utils/api";
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Loader from "../Loader";
-import * as RegionDataStore from "../../helpers/RegionDataStore";
+import * as RegionDataStore from "../../helpers/data/RegionDataStore";
 import { Region } from "../../types/Region";
 
 const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
@@ -103,13 +103,13 @@ const GoalCanyonsTab: React.FC<{ goal: Goal | null }> = ({ goal }) => {
                 <TableRow key={canyon.Key}>
                   <TableCell>
                     <CanyonNameTableCell
-canyon={canyon} detailUrl={canyon.DetailUrl} subtitle={<CanyonRating
-                      aquaticRating={canyon.AquaticRating}
-                      verticalRating={canyon.VerticalRating}
-                      commitmentRating={canyon.CommitmentRating}
-                      starRating={canyon.StarRating}
-                      isUnrated={canyon.IsUnrated}
-                    />} />
+                      canyon={canyon} detailUrl={canyon.DetailUrl} subtitle={<CanyonRating
+                        aquaticRating={canyon.AquaticRating}
+                        verticalRating={canyon.VerticalRating}
+                        commitmentRating={canyon.CommitmentRating}
+                        starRating={canyon.StarRating}
+                        isUnrated={canyon.IsUnrated}
+                      />} />
                   </TableCell>
                   <TableCell className='hide-md'><RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />&nbsp;{GetRegionDisplayName(canyon.RegionSlug)}</TableCell>
                   <CanyonTypeTableCell type={canyon.CanyonType ?? CanyonTypeEnum.Unknown} className='hide-md' />

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loader from '../Loader';
 import { Box, Button, Chip, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material';
 import { GearItem, GearItemSet } from '../../types/types';
-import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import * as EquipmentDataStore from "../../helpers/data/EquipmentDataStore";
 import RowActions from '../RowActions';
 import GearSetModal from './GearSetModal';
 import { useTranslation } from 'react-i18next';

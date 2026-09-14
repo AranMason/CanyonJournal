@@ -5,7 +5,7 @@ import RowActions from "../RowActions";
 import GearModal from "./GearModal";
 import GearServiceModal from "./GearServiceModal";
 import { useNavigate } from "react-router-dom";
-import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import * as EquipmentDataStore from "../../helpers/data/EquipmentDataStore";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GearItem } from "../../types/types";
 import SuccessSnackbar from "../SuccessSnackbar";

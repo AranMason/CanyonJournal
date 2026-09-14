@@ -6,7 +6,7 @@ import { GearItem } from '../../types/types';
 import FormikTextField from '../forms/FormikTextField';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
-import { load as loadEquipment } from '../../helpers/EquipmentDataStore';
+import { load as loadEquipment } from '../../helpers/data/EquipmentDataStore';
 
 interface GearModalProps {
   open: boolean;

@@ -10,7 +10,7 @@ import { apiFetch } from '../../utils/api';
 import { Region, RegionAdmin } from '../../types/Region';
 import RegionTreePicker from '../regions/RegionTreePicker';
 import RegionTreeView from '../regions/RegionTreeView';
-import * as RegionDataStore from '../../helpers/RegionDataStore';
+import * as RegionDataStore from '../../helpers/data/RegionDataStore';
 import AppModal from '../AppModal';
 
 interface RegionFormValues {

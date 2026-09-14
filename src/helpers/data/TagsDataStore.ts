@@ -1,4 +1,5 @@
-import { apiFetch } from '../utils/api';
+import { apiFetch } from '../../utils/api';
+import { PromiseCache } from '../caches/PromiseCache';
 
 export interface Tag {
   Id: number;
@@ -7,18 +8,17 @@ export interface Tag {
   LastUsed?: string | null;
 }
 
-var loadPromise: Promise<Tag[]> | null = null;
+// Create a cache instance for loading tags
+const tagCache = new PromiseCache<Tag[]>(() =>
+  apiFetch<Tag[]>('/api/tags')
+);
 
 export function load(): Promise<Tag[]> {
-  loadPromise ??= apiFetch<Tag[]>('/api/tags').catch(err => {
-    loadPromise = null;
-    throw err;
-  });
-  return loadPromise;
+  return tagCache.get();
 }
 
 export function invalidate(): void {
-  loadPromise = null;
+  tagCache.reset();
 }
 
 export async function create(name: string): Promise<Tag> {
@@ -27,6 +27,9 @@ export async function create(name: string): Promise<Tag> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ Name: name }),
   });
+
+  // Invalidate so next load() fetches fresh data
   invalidate();
+
   return tag;
 }

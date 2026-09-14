@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { CanyonRecord } from '../types/CanyonRecord';
 import { Canyon } from '../types/Canyon';
 import { UserCanyon } from '../types/UserCanyon';
-import { loadById as loadBaseCanyonsById } from '../helpers/CanyonDataStore';
+import { loadById as loadBaseCanyonsById } from '../helpers/data/CanyonDataStore';
 import { loadById as loadUserCanyonsById } from '../helpers/UserCanyonDataStore';
 
 interface UseCanyonRecordsResult {

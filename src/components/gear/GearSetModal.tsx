@@ -4,7 +4,7 @@ import { Button, DialogActions, DialogContent, TextField } from '@mui/material';
 import Loader from '../Loader';
 import { useTranslation } from 'react-i18next';
 import AppModal from '../AppModal';
-import { load as loadGear } from '../../helpers/EquipmentDataStore';
+import { load as loadGear } from '../../helpers/data/EquipmentDataStore';
 import * as Yup from 'yup';
 import { Formik, Form } from 'formik';
 import GearSetItemSelector from './GearSetItemSelector';

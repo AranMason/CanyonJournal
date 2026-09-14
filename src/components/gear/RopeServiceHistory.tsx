@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { loadRopeHistory } from "../../helpers/EquipmentDataStore";
+import { loadRopeHistory } from "../../helpers/data/EquipmentDataStore";
 import { RopeServiceHistoryItem } from "../../types/types";
 import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { t } from "i18next";

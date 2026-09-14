@@ -1,9 +1,9 @@
 import { FilterConfig } from '../components/FilterPanel';
-import * as EquipmentDataStore from './EquipmentDataStore';
-import * as TagsDataStore from './TagsDataStore';
+import * as EquipmentDataStore from './data/EquipmentDataStore';
+import * as TagsDataStore from './data/TagsDataStore';
 import { CanyonTypeList } from '../types/CanyonTypeEnum';
 import { GetCanyonTypeDisplayName } from './EnumMapper';
-import { apiFetch } from '../utils/api';
+import { apiGet } from '../utils/api';
 import { DataSource } from '../types/DataSource';
 import i18n from '../i18n';
 import { COMMITMENT_RATINGS } from '../components/canyons/CanyonRating';
@@ -120,9 +120,7 @@ export function getDataSourceConfig(key = 'dataSource'): FilterConfig {
     key,
     label: i18n.t('filters.dataSource'),
     labelId: 'data-source-filter',
-    loadOptions: () => apiFetch<DataSource[]>('/api/sources', {
-      method: 'GET'
-    })
+    loadOptions: () => apiGet<DataSource[]>('/api/sources')
       .then(sources => sources.map(s => ({ value: s.Id, label: s.DisplayName }))),
   };
 }
