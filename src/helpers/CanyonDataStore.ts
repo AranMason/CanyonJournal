@@ -14,6 +14,37 @@ async function load(): Promise<Canyon[]> {
     return await loadPromise;
 }
 
+const canyonCacheById: { [id: number]: Promise<CanyonListEntry> } = {}
+const userCanyonCacheById: { [id: number]: Promise<CanyonListEntry> } = {}
+
+async function getCanyonById(id: number): Promise<CanyonListEntry> {
+    const cachedVal = canyonCacheById[id];
+
+    if (cachedVal) {
+        return cachedVal;
+    }
+
+    var promise = apiFetch<CanyonListEntry>(`/api/canyons/${id}?withDescents=1`, {
+        method: 'GET'
+    })
+    canyonCacheById[id] = promise;
+    return promise;
+}
+
+async function getUserCanyonById(id: number): Promise<CanyonListEntry> {
+    const cachedVal = userCanyonCacheById[id];
+
+    if (cachedVal) {
+        return cachedVal;
+    }
+
+    var promise = apiFetch<CanyonListEntry>(`/api/user-canyons/${id}?withDescents=1`, {
+        method: 'GET'
+    })
+    userCanyonCacheById[id] = promise;
+    return promise;
+}
+
 async function loadById() {
     var canyons = await load()
 
@@ -33,6 +64,8 @@ function toDict<T>(items: T[], getId: (item: T) => number | null | undefined): {
 
 export {
     load,
+    getCanyonById,
+    getUserCanyonById,
     loadById
 }
 

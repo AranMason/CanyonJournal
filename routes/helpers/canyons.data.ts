@@ -163,9 +163,13 @@ function buildFilters(tablePrefix: string, request: sql.Request, filter: CanyonF
     }
 
     // We have text, and it's not just white-space
-    if (filter.text && !filter.text.match(/^\w*$/)) {
-        request.input('text', sql.NVarChar, `%${filter.text}%`);
-        filters.push(`[${tablePrefix}].Name LIKE @text`);
+    if (filter.text && !filter.text.match(/^\s*$/)) {
+        const tokens = filter.text.split(' ').map(s => s.trim()).filter(s => s);
+        var queries = tokens.map((t, i) => {
+            request.input(`text_${i}`, sql.NVarChar, `%${t}%`);
+            return `[${tablePrefix}].Name LIKE @text_${i}`;
+        }).join(' AND ');
+        filters.push(`(${queries})`)
     }
 
     return filters;
@@ -239,7 +243,6 @@ export async function getAllCanyonsWithFilters(pool: sql.ConnectionPool, userId:
         const [pageRes, metaRes] = await Promise.all([pageResTask, metaResTask])
 
         const totalCount = metaRes.recordset[0].Total as number;
-        console.debug(pageQueryString)
 
         return {
             totalCount,

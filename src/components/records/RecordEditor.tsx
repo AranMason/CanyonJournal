@@ -11,7 +11,7 @@ import SuccessSnackbar from "../SuccessSnackbar";
 import React, { useEffect, useState } from "react";
 import { CanyonListEntry } from '../../types/Canyon';
 import { UserCanyon } from '../../types/UserCanyon';
-import { canyonKey, userCanyonKey } from '../../utils/canyonKey';
+import { parseCanyonKey } from '../../utils/canyonKey';
 import AddCanyonModal, { CanyonModalFormValues } from '../canyons/AddCanyonModal';
 import { mapCanyonFormToApiBody } from '../../utils/canyonForm';
 import * as Yup from 'yup';
@@ -36,45 +36,36 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
     const navigate = useNavigate();
     const { t } = useTranslation();
 
-    const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [isCanyonsLoading, setCanyonsLoading] = useState(false);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
     const [selectedTagNames, setSelectedTagNames] = useState<string[]>(initialValues?.Tags?.map(t => t.Name) || []);
     const [deleteOpen, setDeleteOpen] = useState(false);
+    const [selectedCanyon, setSelectedCanyon] = useState<CanyonListEntry | null>(null);
+
+    async function loadCanyon(canyonId?: number, userCanyonId?: number): Promise<CanyonListEntry | null> {
+        if (canyonId) {
+            return CanyonDataStore.getCanyonById(canyonId)
+        }
+        else if (userCanyonId) {
+            return CanyonDataStore.getUserCanyonById(userCanyonId);
+        }
+        return null;
+    }
 
     useEffect(() => {
         setCanyonsLoading(true);
 
+        const loadTagsPromise = TagsDataStore.load().then(tags => setAvailableTags(tags.map(t => t.Name)));
+        const loadCanyonPromise = loadCanyon(initialValues?.CanyonId, initialValues?.UserCanyonId)
+            .then(setSelectedCanyon)
+            .catch(() => setSelectedCanyon(null));
+
         Promise.all([
-            CanyonDataStore.load(),
-            UserCanyonDataStore.load(),
-            TagsDataStore.load()
-        ]).then(([baseCanyons, userCanyons, tags]) => {
-
-            setAvailableTags(tags.map(t => t.Name));
-
-            var canyonList: CanyonListEntry[] = [
-                ...baseCanyons.filter(c => c.IsVerified).map((c): CanyonListEntry => ({
-                    ...c,
-                    Key: canyonKey(c.Id ?? -1),
-                    DetailUrl: "",
-                    Descents: 0
-                })),
-                ...userCanyons.map((c): CanyonListEntry => ({
-                    ...c,
-                    IsVerified: true,
-                    Key: userCanyonKey(c.Id),
-                    DetailUrl: "",
-                    Url: c.Url ?? "",
-                    CanyonType: c.CanyonType ?? null,
-                    Descents: 0
-                }))
-            ]
-
-            setCanyons(canyonList);
-        }).finally(() => setCanyonsLoading(false));
+            loadTagsPromise,
+            loadCanyonPromise
+        ]).finally(() => setCanyonsLoading(false));
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const initialFormValues: CanyonRecord = initialValues || {
@@ -82,16 +73,6 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
         TeamSize: undefined, Comments: '', RopeIds: [], GearIds: [],
         CanyonId: undefined, UserCanyonId: undefined, WaterLevel: WaterLevel.Unknown
     };
-
-    function getCanyon(canyonId?: number, userCanyonId?: number): CanyonListEntry | undefined {
-
-        let key = canyonId ? canyonKey(canyonId) : undefined;
-        key ??= userCanyonId ? userCanyonKey(userCanyonId) : undefined;
-
-        if (!key) return undefined;
-
-        return canyons.find(s => s.Key === key);
-    }
 
     return <>
         <Box maxWidth={{ xs: '100%', sm: 480, md: 600 }} mx="auto" mt={4}>
@@ -163,11 +144,13 @@ const RecordEditor: React.FC<RecordEditorProps> = ({ isEdit, initialValues, subm
                             <Typography variant="h6" sx={{ mb: 1, pt: 2 }}>{t('common:terms.canyon.upper', { count: 1 })}</Typography>
 
                             <RecordCanyonSelector
-                                value={getCanyon(values.CanyonId, values.UserCanyonId)}
+                                value={selectedCanyon}
                                 isLoading={isCanyonsLoading}
-                                canyons={canyons}
                                 setCanyon={
-                                    (canyonId, userCanyonId) => {
+                                    (canyon: CanyonListEntry | null) => {
+                                        const { canyonId, userCanyonId } = parseCanyonKey(canyon?.Key ?? '');
+
+                                        setSelectedCanyon(canyon);
                                         setFieldValue('CanyonId', canyonId);
                                         setFieldValue('UserCanyonId', userCanyonId);
                                     }

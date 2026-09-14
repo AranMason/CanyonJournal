@@ -1,50 +1,58 @@
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CanyonListEntry } from "../../types/Canyon";
-import { Box, Button, List, ListItem, ListItemButton, ListItemText, ListSubheader, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, List, ListItem, ListItemButton, ListItemText, Paper, TextField, Typography } from "@mui/material";
 import { t } from "i18next";
-import { isUserCanyonKey, parseCanyonKey } from "../../utils/canyonKey";
+import { isUserCanyonKey } from "../../utils/canyonKey";
 import CanyonRating from "../canyons/CanyonRating";
 import RegionIcon from "../regions/RegionIcon";
 import SourceIcon from "../SourceIcon";
 import EditIcon from '@mui/icons-material/Edit';
 import Loader from "../Loader";
+import * as CanyonDataStore from "../../helpers/CanyonDataStore";
 
 type RecordCanyonSelectorProps = {
-    canyons: CanyonListEntry[];
-    value: CanyonListEntry | undefined;
-    setCanyon: (canyonId: number | undefined, userCanyonId: number | undefined) => void;
+    value: CanyonListEntry | null;
+    setCanyon: (canyon: CanyonListEntry | null) => void;
     canyonError?: boolean;
     isLoading?: boolean;
 }
 
+const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ value, setCanyon, canyonError, isLoading }) => {
 
-const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ canyons, value, setCanyon, canyonError, isLoading }) => {
-
+    const [isLoadingCanyons, setIsLoadingCanyons] = useState(false);
     const [searchFilter, setSearchFilter] = useState<string>('');
+    const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
 
-    const lowerFilter = useMemo(() => searchFilter.trim().toLowerCase(), [searchFilter]);
-    const matchesFilter = (name: string, url?: string) =>
-        !lowerFilter || name.toLowerCase().includes(lowerFilter) || (url || '').toLowerCase().includes(lowerFilter);
+    function loadCanyons() {
+        setIsLoadingCanyons(true);
+        CanyonDataStore.getCanyonPage({
+            page: 1,
+            pageSize: 20,
+            text: searchFilter,
+            orderBy: 'Name',
+        }).then(c => setCanyons(c.results))
+            .finally(() => setIsLoadingCanyons(false))
+    }
 
-
-    const favouriteCanyons = useMemo(() => canyons
-        .filter(c => c.IsFavourite && matchesFilter(c.Name, c.Url))
-        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' })), [canyons, lowerFilter]);
-
-    const otherCanyons = useMemo(() => canyons
-        .filter(c => !c.IsFavourite && (c.IsVerified) && matchesFilter(c.Name, c.Url))
-        .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { sensitivity: 'base' })), [canyons, lowerFilter]);
+    useEffect(() => {
+        // If we have a selected value, make sure we're not doing unnessessary searches
+        if (value) {
+            return;
+        }
+        const delayInputTimeoutId = setTimeout(() => {
+            loadCanyons();
+        }, 1000);
+        return () => clearTimeout(delayInputTimeoutId);
+    }, [value, searchFilter, 1000]);
 
     const handleCanyonSelect = (canyon: CanyonListEntry) => {
-        const { canyonId, userCanyonId } = parseCanyonKey(canyon.Key);
-        setCanyon(canyonId, userCanyonId);
-        setSearchFilter('');
+        setCanyon(canyon);
     };
 
     if (value) {
         return <>
             <Box border={1} borderColor="divider" borderRadius={1} p={2} mb={2} borderLeft={2} sx={{ borderLeftColor: 'secondary.main' }}>
-                <Loader isLoading={isLoading ?? false}>
+                <Loader isLoading={isLoading || isLoadingCanyons || false}>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Box display="flex" alignItems="center" gap={0.5}>
                             <RegionIcon regionSlug={value?.RegionSlug ?? ''} regionSymbol={value?.RegionSymbol} size={16} />
@@ -69,7 +77,7 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ canyons, va
             <Box display="flex" gap={1} mt={1}>
                 <Button
                     size="small" startIcon={<EditIcon />} onClick={() => {
-                        setCanyon(undefined, undefined);
+                        setCanyon(null);
                         setSearchFilter('');
                     }}>
                     {t('record.changeCanyon')}
@@ -96,36 +104,8 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ canyons, va
         />
         <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
             <Loader isLoading={isLoading ?? false}>
-                {favouriteCanyons.length > 0 && (
-                    <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.favourites')}</ListSubheader>
-                )}
-                {favouriteCanyons.map((canyon) => (
-                    <ListItem key={canyon.Key} disablePadding >
-                        <ListItemButton
-                            onClick={() => handleCanyonSelect(canyon)}
-                            data-test={`record-canyon-search--item-${canyon.Key}`}>
-                            <ListItemText
-                                primary={
-                                    <Box display="flex" justifyContent="space-between" alignItems="center">
-                                        <Box display="flex" alignItems="center" gap={0.5}>
-                                            <RegionIcon regionSlug={canyon.RegionSlug ?? ''} regionSymbol={canyon.RegionSymbol} size={16} />
-                                            <span>{canyon.Name}</span>
-                                        </Box>
 
-                                        <span><SourceIcon sourceLogoUrl={canyon.SourceLogoUrl} isUserCanyon={isUserCanyonKey(canyon.Key)} /></span>
-                                    </Box>
-                                }
-                                secondary={
-                                    <CanyonRating aquaticRating={canyon.AquaticRating} verticalRating={canyon.VerticalRating} commitmentRating={canyon.CommitmentRating} starRating={canyon.StarRating} isUnrated={canyon.IsUnrated} />
-                                }
-                            />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-                {otherCanyons.length > 0 && (
-                    <ListSubheader disableSticky sx={{ lineHeight: '36px', fontWeight: 600 }}>{t('record.allCanyons')}</ListSubheader>
-                )}
-                {otherCanyons.map(canyon => (
+                {canyons.map(canyon => (
                     <ListItem key={canyon.Key} disablePadding>
                         <ListItemButton
                             onClick={() => handleCanyonSelect(canyon)}
@@ -148,6 +128,9 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ canyons, va
                         </ListItemButton>
                     </ListItem>
                 ))}
+                {canyons.length === 0 && <Box height={200} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                    <Typography>No Canyons Found.</Typography>
+                </Box>}
             </Loader>
         </List>
     </Paper>

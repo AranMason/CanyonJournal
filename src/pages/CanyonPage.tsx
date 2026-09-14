@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel, Pagination, Typography, FormControl } from '@mui/material';
+import { Alert, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem, InputLabel, Pagination, Typography } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { CanyonFilterForm, CanyonFilterOptionsRequest, CanyonListEntry } from '../types/Canyon';
 import { useUser } from '../App';
@@ -62,7 +62,7 @@ const CanyonList: React.FC = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [page, setPage] = useState(1);
   const [totalCanyons, setTotalCanyons] = useState(0);
-  const [pageSize, _] = useState(25);
+  const [pageSize] = useState(25);
   const [orderBy, setOrderBy] = useState<OrderBy>('Descents');
   const [filterConfig, setFilterConfig] = useState<CanyonFilterForm>({
     text: '',
