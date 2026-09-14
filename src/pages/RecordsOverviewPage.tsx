@@ -12,11 +12,11 @@ import {
   getCanyonNameFilterConfig, getRegionFilterConfig,
   getRopeFilterConfig, getGearFilterConfig, getTagFilterConfig,
 } from '../helpers/filterConfigs';
-import * as RegionDataStore from '../helpers/RegionDataStore';
+import * as RegionDataStore from '../helpers/data/RegionDataStore';
 import { Region } from '../types/Region';
 import ReportCTAAlert from '../components/admin/ReportCTAAlert';
 import { useTranslation } from 'react-i18next';
-import { getRecords } from '../helpers/RecordDataStore';
+import { getRecords } from '../helpers/data/RecordDataStore';
 import EmptyCellCta from '../components/EmptyCellCta';
 
 const RecordsOverviewPage: React.FC = () => {

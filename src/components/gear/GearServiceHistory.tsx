@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { loadGearHistory } from "../../helpers/EquipmentDataStore";
+import { loadGearHistory } from "../../helpers/data/EquipmentDataStore";
 import { GearServiceHistoryItem } from "../../types/types";
 import { Table, TableContainer, Paper, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
 import { t } from "i18next";
@@ -32,35 +32,35 @@ const GearServiceHistory: React.FC<{ gearId: number }> = ({ gearId }) => {
 
 
     return <Loader isLoading={isLoading}>
-            <TableContainer component={Paper}>
-                <Table size="medium">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{t('gear.itemPage.serviceType')}</TableCell>
-                            <TableCell>{t('gear.itemPage.status')}</TableCell>
-                            <TableCell>{t('gear.itemPage.serviceDate')}</TableCell>
-                            <TableCell>{t('gear.itemPage.notes')}</TableCell>
+        <TableContainer component={Paper}>
+            <Table size="medium">
+                <TableHead>
+                    <TableRow>
+                        <TableCell>{t('gear.itemPage.serviceType')}</TableCell>
+                        <TableCell>{t('gear.itemPage.status')}</TableCell>
+                        <TableCell>{t('gear.itemPage.serviceDate')}</TableCell>
+                        <TableCell>{t('gear.itemPage.notes')}</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {serviceHistory.length > 0 ? serviceHistory.map((item) => (
+                        <TableRow key={item.Id}>
+                            <TableCell>{t('gear.serviceType', { context: item.ServiceType })}</TableCell>
+                            <TableCell><ServiceStatusIndicator statusCode={item.StatusCode} isRetired={false} size="medium" showText /></TableCell>
+                            <TableCell>{new Date(item.ServiceDate).toLocaleDateString()}</TableCell>
+                            <TableCell>{item.Notes}</TableCell>
                         </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {serviceHistory.length > 0 ? serviceHistory.map((item) => (
-                            <TableRow key={item.Id}>
-                                <TableCell>{t('gear.serviceType', { context: item.ServiceType })}</TableCell>
-                                 <TableCell><ServiceStatusIndicator statusCode={item.StatusCode} isRetired={false} size="medium" showText /></TableCell>
-                                <TableCell>{new Date(item.ServiceDate).toLocaleDateString()}</TableCell>
-                                <TableCell>{item.Notes}</TableCell>
-                            </TableRow>
-                        )) : (
-                            <TableRow>
-                                <TableCell colSpan={4} align="center">
-                                    {t('gear.itemPage.noHistory', 'No history')}
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </Loader>
+                    )) : (
+                        <TableRow>
+                            <TableCell colSpan={4} align="center">
+                                {t('gear.itemPage.noHistory', 'No history')}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    </Loader>
 
 };
 

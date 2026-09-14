@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiFetch } from '../utils/api';
-import * as FavouritesDataStore from '../helpers/FavouritesDataStore';
+import * as FavouritesDataStore from '../helpers/data/FavouritesDataStore';
 
 interface UseFavouriteOptions {
   canyonId?: number;

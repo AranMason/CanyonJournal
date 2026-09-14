@@ -5,7 +5,7 @@ import FormikTextField from "../forms/FormikTextField";
 import { useTranslation } from "react-i18next";
 import { ServiceType } from "../../types/types";
 import { apiFetch } from "../../utils/api";
-import * as EquipmentDataStore from "../../helpers/EquipmentDataStore";
+import * as EquipmentDataStore from "../../helpers/data/EquipmentDataStore";
 import { GearServiceStatus } from "../../types/GearStatusType";
 import ServiceStatusIndicator from "./ServiceStatusIndicator";
 

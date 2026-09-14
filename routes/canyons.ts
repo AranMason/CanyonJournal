@@ -2,8 +2,7 @@ import express from 'express';
 import { getPool, sql } from './middleware/sqlserver';
 import { getUserIdByRequest, isAdmin } from './helpers/user.helper';
 import { } from '../src/types/express-session';
-import { canyonKey, userCanyonKey } from '../src/utils/canyonKey';
-import { canyonDetailUrl } from './helpers/urlHelper';
+import { canyonKey } from '../src/utils/canyonKey';
 import {
   getBaseCanyonDataWithoutDescents,
   getAdminCanyonList,
@@ -12,10 +11,30 @@ import {
   getSpecificCanyon,
   getSpecificCanyonWithDescents,
   getCanyonRecordCount,
-  deleteCanyonWithCascade
+  deleteCanyonWithCascade,
+  getAllCanyonsWithFilters
 } from './helpers/canyons.data';
+import { CanyonFilterOptionsRequest, CanyonListEntry } from '../src/types/Canyon';
+import { CanyonData } from './types/Canyon.type';
+import { canyonDetailUrl } from './helpers/urlHelper';
 
 const router = express.Router();
+
+function mapUserCanyonTableToType(c: CanyonData): CanyonListEntry {
+  return {
+    ...c,
+    DetailUrl: canyonDetailUrl(null, c.Id),
+    Key: canyonKey(c.Id),
+  };
+}
+
+function mapCanyonTableToType(c: CanyonData): CanyonListEntry {
+  return {
+    ...c,
+    DetailUrl: canyonDetailUrl(c.Id, null),
+    Key: canyonKey(c.Id),
+  }
+}
 
 // GET /api/canyons - return the list of canyons from SQL Server
 router.get('/', async (req, res) => {
@@ -29,49 +48,9 @@ router.get('/', async (req, res) => {
         getUserCanyonDataWithDescents(pool, userId)
       ]);
 
-      const userCanyons = userCanyonsResult.map((uc) => ({
-        Key: userCanyonKey(uc.Id),
-        DetailUrl: canyonDetailUrl(null, uc.Id),
-        Name: uc.Name,
-        Url: uc.Url || '',
-        AquaticRating: uc.AquaticRating,
-        VerticalRating: uc.VerticalRating,
-        CommitmentRating: uc.CommitmentRating,
-        StarRating: uc.StarRating,
-        IsVerified: false,
-        IsUnrated: uc.IsUnrated,
-        RegionId: uc.RegionId ?? null,
-        RegionSlug: uc.RegionSlug ?? null,
-        RegionSymbol: uc.RegionSymbol ?? null,
-        CanyonType: uc.CanyonType ?? null,
-        Descents: uc.Descents,
-        LastDescentDate: uc.LastDescentDate,
-        IsFavourite: uc.IsFavourite ?? false,
-      }));
+      const userCanyons = userCanyonsResult.map(mapUserCanyonTableToType);
 
-      const officialCanyons = verifiedResult.map((c) => ({
-        Key: canyonKey(c.Id),
-        DetailUrl: canyonDetailUrl(c.Id),
-        Name: c.Name,
-        Url: c.Url || '',
-        AquaticRating: c.AquaticRating,
-        VerticalRating: c.VerticalRating,
-        CommitmentRating: c.CommitmentRating,
-        StarRating: c.StarRating,
-        IsVerified: c.IsVerified,
-        IsUnrated: c.IsUnrated,
-        RegionId: c.RegionId ?? null,
-        RegionSlug: c.RegionSlug ?? null,
-        RegionSymbol: c.RegionSymbol ?? null,
-        CanyonType: c.CanyonType,
-        Descents: c.Descents,
-        LastDescentDate: c.LastDescentDate,
-        IsFavourite: c.IsFavourite ?? false,
-        SourceId: c.SourceId ?? null,
-        SourceName: c.SourceName ?? null,
-        SourceLogoUrl: c.SourceLogoUrl ?? null,
-        SourceWebsiteUrl: c.SourceWebsiteUrl ?? null,
-      }));
+      const officialCanyons = verifiedResult.map(mapCanyonTableToType);
 
       res.json([...officialCanyons, ...userCanyons]);
     } else {
@@ -79,6 +58,27 @@ router.get('/', async (req, res) => {
       const result = await getBaseCanyonDataWithoutDescents(pool);
       res.json(result);
     }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch canyons' });
+  }
+});
+
+// GET /api/canyons - return the list of canyons from SQL Server
+router.post('/search', async (req, res) => {
+  try {
+    const userId = await getUserIdByRequest(req);
+    if (!userId) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const query = req.body as CanyonFilterOptionsRequest;
+    const pool = await getPool();
+
+    const queryResults = await getAllCanyonsWithFilters(pool, userId, query);
+
+    res.json(queryResults);
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to fetch canyons' });
@@ -139,6 +139,8 @@ router.get('/:id', async (req, res) => {
     const pool = await getPool();
     // If withDescents=1, join with CanyonRecords for user-specific count
     const userId = await getUserIdByRequest(req);
+
+
     const canyonId = parseInt(req.params.id, 10);
 
     if (req.query.withDescents === '1' && userId) {

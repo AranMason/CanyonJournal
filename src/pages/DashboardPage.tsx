@@ -9,7 +9,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import { useNavigate } from 'react-router-dom';
 import { useCanyonRecords } from '../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
-import { getRecordsForDashboard } from '../helpers/RecordDataStore';
+import { getRecordsForDashboard } from '../helpers/data/RecordDataStore';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import ChangeLogModal from '../components/ChangeLogModal';
 import DashboardGearServiceWidget from '../components/dashboard/DashboardGearServiceWidget ';

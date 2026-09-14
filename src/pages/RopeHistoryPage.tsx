@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Breadcrumbs, Button, Divider, Link, Paper, Stack, Tab, Tabs } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { load as loadRope } from "../helpers/EquipmentDataStore";
+import { load as loadRope } from "../helpers/data/EquipmentDataStore";
 import { RopeItem } from "../types/types";
 import RopeDescentHistory from "../components/gear/RopeDescentHistory";
 import RopeServiceHistory from "../components/gear/RopeServiceHistory";

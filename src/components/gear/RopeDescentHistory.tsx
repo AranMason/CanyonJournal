@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import CanyonRecordAccordion from '../canyons/CanyonRecordAccordion';
-import * as EquipmentDataStore from '../../helpers/EquipmentDataStore';
+import * as EquipmentDataStore from '../../helpers/data/EquipmentDataStore';
 import { useCanyonRecords } from '../../hooks/useCanyonRecords';
 import { useTranslation } from 'react-i18next';
 import Loader from '../Loader';

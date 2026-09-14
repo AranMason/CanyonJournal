@@ -1,5 +1,5 @@
-import { Goal } from '../types/Goal';
-import { apiFetch } from '../utils/api';
+import { Goal } from '../../types/Goal';
+import { apiFetch } from '../../utils/api';
 
 // TODO: This is additive, so we're loading the same information twice.
 const loadPromises = new Map<boolean, Promise<Goal[]>>();

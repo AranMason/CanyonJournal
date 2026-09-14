@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Region } from '../../types/Region';
-import * as RegionDataStore from '../../helpers/RegionDataStore';
+import * as RegionDataStore from '../../helpers/data/RegionDataStore';
 import { useTranslation } from 'react-i18next';
 import RegionTreeView from './RegionTreeView';
 import AppModal from '../AppModal';

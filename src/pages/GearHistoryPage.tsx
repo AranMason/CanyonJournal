@@ -8,7 +8,7 @@ import { Box, Breadcrumbs, Button, Divider, Link, Paper, Stack, Tab, Tabs } from
 import GearServiceModal from "../components/gear/GearServiceModal";
 import AddIcon from '@mui/icons-material/Add';
 import GearServiceDescents from "../components/gear/GearServiceDescents";
-import { load as loadGear, loadGearHistory } from "../helpers/EquipmentDataStore";
+import { load as loadGear, loadGearHistory } from "../helpers/data/EquipmentDataStore";
 import { GearItem } from "../types/types";
 import ServiceStatusIndicator from "../components/gear/ServiceStatusIndicator";
 

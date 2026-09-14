@@ -1,5 +1,35 @@
 import { CanyonTypeEnum } from "./CanyonTypeEnum";
 
+export type CanyonFilterForm = {
+  text: string;
+  types: CanyonTypeEnum[];
+  region: number | null;
+  minVerticalRating?: number;
+  minAquaticRating?: number;
+  minStarRating?: number;
+  minCommitmentRating?: number;
+}
+
+export type CanyonFilterOptionsRequest = {
+  page: number;
+  pageSize: number;
+  type?: CanyonTypeEnum[];
+  text?: string;
+  regions?: number[];
+  verticalRating?: number
+  aquaticRating?: number,
+  starRating?: number,
+  commitmentRating?: number,
+  orderBy: 'Descents'
+  | 'Name'
+  | 'LastDescent'
+  | 'VerticalRating'
+  | 'AquaticRating'
+  | 'StarRating'
+  | 'CommitmentRating',
+  includeMetaData?: boolean
+}
+
 export interface CanyonSource {
   Id: number;
   DisplayName: string;
@@ -43,8 +73,8 @@ export interface CanyonWithDescents extends Canyon {
 
 export interface CanyonListEntry extends IBaseCanyon {
   Key: string;
-  DetailUrl: string;
   Url: string;
+  DetailUrl: string | null;
   IsVerified: boolean;
   CanyonType: CanyonTypeEnum | null;
   Descents: number;

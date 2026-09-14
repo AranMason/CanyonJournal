@@ -1,5 +1,5 @@
-import { CanyonRecord } from "../types/CanyonRecord";
-import { apiFetch } from "../utils/api";
+import { CanyonRecord } from "../../types/CanyonRecord";
+import { apiFetch } from "../../utils/api";
 
 
 export const getRecords = async (): Promise<CanyonRecord[]> => {
