@@ -6,7 +6,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { apiFetch } from '../../utils/api';
+import { apiDelete, apiFetch } from '../../utils/api';
 import { Region, RegionAdmin } from '../../types/Region';
 import RegionTreePicker from '../regions/RegionTreePicker';
 import RegionTreeView from '../regions/RegionTreeView';
@@ -71,8 +71,7 @@ const RegionsTab: React.FC = () => {
   async function handleDelete(id: number, name: string) {
     if (!window.confirm(`Delete region "${name}"?`)) return;
     try {
-      await apiFetch(`/api/regions/${id}`, { method: 'DELETE' });
-      load();
+      await RegionDataStore.deleteRegion(id);
     } catch (e: any) {
       const body = e.responseBody;
       if (body?.children || body?.canyons || body?.userCanyons) {
@@ -86,18 +85,18 @@ const RegionsTab: React.FC = () => {
   async function handleSave() {
     if (!form.slug.trim()) { setError('Slug is required'); return; }
     setError(null);
-    const body = JSON.stringify({
+    const body = {
       parentId: form.parentId,
       slug: form.slug.trim(),
       symbol: form.symbol.trim() || null,
       sortOrder: form.sortOrder,
       isActive: form.isActive,
-    });
+    };
     try {
       if (editingId !== null) {
-        await apiFetch(`/api/regions/${editingId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body });
+        await RegionDataStore.updateRegion(editingId, body)
       } else {
-        await apiFetch('/api/regions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+        await RegionDataStore.createRegion(body);
       }
       setDialogOpen(false);
       load();

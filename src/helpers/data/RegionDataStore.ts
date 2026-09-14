@@ -1,4 +1,4 @@
-import { apiFetch } from '../../utils/api';
+import { apiDelete, apiFetch } from '../../utils/api';
 import { Region } from '../../types/Region';
 import { GetRegionDisplayName } from '../RegionHelper';
 
@@ -43,7 +43,7 @@ function flatten(nodes: Region[]): Region[] {
  * given ID itself). Used for hierarchical filter matching: selecting "United Kingdom"
  * should match canyons tagged Scotland, England, Wales, etc.
  */
-export async function getDescendantIds(regionId: number): number[] {
+export async function getDescendantIds(regionId: number): Promise<number[]> {
   const flat = await load();
 
   const map = new Map<number, number[]>();
@@ -66,4 +66,28 @@ export async function getDescendantIds(regionId: number): number[] {
 /** Invalidate cache (e.g. after admin edits a region). */
 export function invalidate(): void {
   cache = null;
+}
+
+export async function deleteRegion(id: number): Promise<void> {
+  await apiDelete(`/api/regions/${id}`)
+}
+
+type RegionRequest = {
+  parentId: number | null,
+  slug: string,
+  symbol: string | null,
+  sortOrder: number,
+  isActive: boolean,
+}
+
+export async function updateRegion(id: number, body: RegionRequest): Promise<void> {
+  await apiFetch(`/api/regions/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+}
+
+export async function createRegion(body: RegionRequest): Promise<void> {
+  await apiFetch('/api/regions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
 }
