@@ -1,3 +1,4 @@
+import { query } from "express";
 import { CanyonFilterOptionsRequest } from "../../src/types/Canyon";
 import { CANYON_KEY_PREFIX, parseCanyonKey, USERCANYON_KEY_PREFIX } from "../../src/utils/canyonKey";
 import { sql } from "../middleware/sqlserver";
@@ -228,25 +229,29 @@ export async function getAllCanyonsWithFilters(pool: sql.ConnectionPool, userId:
         FETCH NEXT @pageSize ROWS ONLY
     `
 
-    const metaQueryString = `
-        ${baseQuery}
-        SELECT COUNT(*) as [Total] FROM AllCanyons ac
-        ${whereClause}
-    `
 
     try {
         const pageResTask = request
             .query(pageQueryString);
 
-        const metaResTask = request.query(metaQueryString);
+        const promiseArray = [pageResTask];
 
-        const [pageRes, metaRes] = await Promise.all([pageResTask, metaResTask])
+        if (filter.includeMetaData) {
+            const metaQueryString = `
+                ${baseQuery}
+                SELECT COUNT(*) as [Total] FROM AllCanyons ac
+                ${whereClause}
+            `
+            const metaResTask = request.query(metaQueryString);
+            promiseArray.push(metaResTask);
+        }
 
-        const totalCount = metaRes.recordset[0].Total as number;
 
-        return {
-            totalCount,
-            totalPages: Math.ceil(totalCount / filter.pageSize),
+        const [pageRes, metaRes] = await Promise.all(promiseArray)
+
+        const baseResult = {
+            totalCount: 0,
+            totalPages: 0,
             results: pageRes.recordset.map(s => {
                 const { canyonId, userCanyonId } = parseCanyonKey(s.Key)
                 return {
@@ -256,6 +261,16 @@ export async function getAllCanyonsWithFilters(pool: sql.ConnectionPool, userId:
                 }
             })
         }
+
+        if (filter.includeMetaData) {
+            const totalCount = metaRes.recordset[0].Total as number;
+
+            baseResult.totalCount = totalCount;
+            baseResult.totalPages = Math.ceil(totalCount / filter.pageSize);
+        }
+
+
+        return baseResult;
     } catch (e) {
         console.error(pageQueryString);
         throw e;

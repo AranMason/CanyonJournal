@@ -21,7 +21,7 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ value, setC
 
     const [isLoadingCanyons, setIsLoadingCanyons] = useState(false);
     const [searchFilter, setSearchFilter] = useState<string>('');
-    const [canyons, setCanyons] = useState<CanyonListEntry[]>([]);
+    const [canyons, setCanyons] = useState<CanyonListEntry[] | null>(null);
 
     function loadCanyons() {
         setIsLoadingCanyons(true);
@@ -30,9 +30,17 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ value, setC
             pageSize: 20,
             text: searchFilter,
             orderBy: 'Name',
+            includeMetaData: false
         }).then(c => setCanyons(c.results))
             .finally(() => setIsLoadingCanyons(false))
     }
+
+    useEffect(() => {
+        if (value) {
+            return;
+        }
+        loadCanyons();
+    }, [])
 
     useEffect(() => {
         // If we have a selected value, make sure we're not doing unnessessary searches
@@ -103,9 +111,9 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ value, setC
             helperText={canyonError ? t('record.canyonRequired') : ''}
         />
         <List component={Paper} elevation={0} sx={{ maxHeight: 320, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, bgcolor: 'grey.50' }}>
-            <Loader isLoading={isLoading ?? false}>
+            <Loader isLoading={isLoading || isLoadingCanyons || canyons == null}>
 
-                {canyons.map(canyon => (
+                {canyons?.map(canyon => (
                     <ListItem key={canyon.Key} disablePadding>
                         <ListItemButton
                             onClick={() => handleCanyonSelect(canyon)}
@@ -128,8 +136,8 @@ const RecordCanyonSelector: React.FC<RecordCanyonSelectorProps> = ({ value, setC
                         </ListItemButton>
                     </ListItem>
                 ))}
-                {canyons.length === 0 && <Box height={200} display={'flex'} justifyContent={'center'} alignItems={'center'}>
-                    <Typography>No Canyons Found.</Typography>
+                {(canyons === null || canyons.length === 0) && <Box height={200} display={'flex'} justifyContent={'center'} alignItems={'center'}>
+                    <Typography>{t('record.noCanyonFound')}</Typography>
                 </Box>}
             </Loader>
         </List>

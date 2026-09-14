@@ -90,6 +90,7 @@
     "allCanyons": "All $t(common:terms.canyon.upper, {\"count\": 2})",
     "selectGearSetBtn": "Select $t(common:terms.gearSet.upper, {\"count\": 2})",
     "noGear": "You have no gear",
+    "noCanyonFound": "No $t(common:terms.canyon.lower, {\"count\": 1}) found",
     "formErrors": {
       "maxDate": "Cannot be in the future",
       "waterLevel": "Invalid water level",

@@ -19,14 +19,15 @@ export type CanyonFilterOptionsRequest = {
   verticalRating?: number
   aquaticRating?: number,
   starRating?: number,
-  commitmentRating?: number
+  commitmentRating?: number,
   orderBy: 'Descents'
   | 'Name'
   | 'LastDescent'
   | 'VerticalRating'
   | 'AquaticRating'
   | 'StarRating'
-  | 'CommitmentRating'
+  | 'CommitmentRating',
+  includeMetaData?: boolean
 }
 
 export interface CanyonSource {
