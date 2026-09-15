@@ -17,6 +17,7 @@ import {
 import { CanyonFilterOptionsRequest, CanyonListEntry } from '../src/types/Canyon';
 import { CanyonData } from './types/Canyon.type';
 import { canyonDetailUrl } from './helpers/urlHelper';
+import { AdminFilter } from '../src/types/Admin';
 
 const router = express.Router();
 
@@ -85,7 +86,7 @@ router.post('/search', async (req, res) => {
   }
 });
 
-router.get('/verify', async (req, res) => {
+router.post('/verify', async (req, res) => {
 
   // NOTE: This has to go before the :id route
   if (await isAdmin(req) === false) {
@@ -94,7 +95,7 @@ router.get('/verify', async (req, res) => {
 
   try {
     const pool = await getPool();
-    const result = await getAdminCanyonList(pool);
+    const result = await getAdminCanyonList(pool, req.body as AdminFilter);
     res.json(result);
   } catch (err) {
     console.log(err);
