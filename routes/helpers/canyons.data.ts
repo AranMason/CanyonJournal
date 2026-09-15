@@ -2,6 +2,7 @@ import { CanyonFilterOptionsRequest } from "../../src/types/Canyon";
 import { CANYON_KEY_PREFIX, parseCanyonKey, USERCANYON_KEY_PREFIX } from "../../src/utils/canyonKey";
 import { sql } from "../middleware/sqlserver";
 import { CanyonData, UserCanyonData } from "../types/Canyon.type";
+import { AdminFilter, AdminFilterResults } from "../../src/types/Admin";
 import { canyonDetailUrl } from "./urlHelper";
 
 export const getBaseCanyonDataWithoutDescents = async (pool: sql.ConnectionPool): Promise<CanyonData[]> => {
@@ -23,8 +24,39 @@ export const getBaseCanyonDataWithoutDescents = async (pool: sql.ConnectionPool)
     return res.recordset;
 };
 
-export const getAdminCanyonList = async (pool: sql.ConnectionPool): Promise<CanyonData[]> => {
-    const res = await pool.request().query(`
+export const getAdminCanyonList = async (pool: sql.ConnectionPool, filter: AdminFilter): Promise<AdminFilterResults> => {
+
+    const filters: string[] = []
+    const request = pool.request();
+
+    if (filter.isVerified !== null) {
+        filters.push('c.IsVerified = @verified');
+        request.input('verified', sql.Bit, filter.isVerified)
+    }
+    if (filter.text) {
+        const terms = filter.text.split(' ').map(s => s.trim()).filter(s => s);
+        terms.forEach((term, i) => {
+            filters.push(`c.Name LIKE @term_${i}`);
+            request.input(`term_${i}`, sql.NVarChar, `%${term}%`)
+        });
+    }
+    if (filter.dataSourceId) {
+        filters.push('c.SourceId = @sourceId');
+        request.input('sourceId', sql.Int, filter.dataSourceId)
+    }
+
+    const whereQuery = filters.length > 0 ? `WHERE ${filters.join(' AND ')}` : '';
+
+    const totalCanyonsQuery = `SELECT COUNT(*) As TotalCanyons FROM Canyons c ${whereQuery}`
+
+    const totalCanyons = (await request.query(totalCanyonsQuery))?.recordset[0].TotalCanyons;
+
+    const results = {
+        totalCanyons: totalCanyons,
+        totalPages: Math.ceil(totalCanyons / filter.pageSize)
+    }
+
+    const query = `
         SELECT c.Id, c.Name, c.Url, c.AquaticRating, c.VerticalRating, c.StarRating,
                c.CommitmentRating, c.IsVerified, c.IsUnrated, c.CanyonType, c.IsDeleted,
                c.SourceId, c.RegionId,
@@ -36,9 +68,23 @@ export const getAdminCanyonList = async (pool: sql.ConnectionPool): Promise<Cany
         FROM Canyons c
         LEFT JOIN Regions rgn ON c.RegionId = rgn.Id
         LEFT JOIN CanyonSources cs ON c.SourceId = cs.Id
+        ${whereQuery}
         ORDER BY c.Name
-    `);
-    return res.recordset;
+        OFFSET @offset ROWS
+        FETCH NEXT @pageSize ROWS ONLY
+    `
+
+    const res = await request
+        .input('offset', sql.Int, (filter.page - 1) * filter.pageSize)
+        .input('pageSize', sql.Int, filter.pageSize)
+        .query(query);
+
+    console.log(query);
+
+    return {
+        ...results,
+        results: res.recordset
+    };
 };
 
 

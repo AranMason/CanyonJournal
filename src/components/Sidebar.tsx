@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser } from '../App';
-import { List, Box,  Divider } from '@mui/material';
+import { List, Box, Divider } from '@mui/material';
 import SidebarItem from './SidebarItem';
 import HomeIcon from '@mui/icons-material/Home';
 import AddRecordIcon from '@mui/icons-material/Create';
@@ -11,7 +11,6 @@ import SidebarDrawer from './SidebarDrawer';
 import LoginIcon from '@mui/icons-material/Login';
 import LocationPinIcon from '@mui/icons-material/LocationPin';
 import SettingsIcon from '@mui/icons-material/Settings';
-import BugReportIcon from '@mui/icons-material/BugReport';
 import { useTranslation } from 'react-i18next';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import BuildIcon from '@mui/icons-material/Build';
@@ -21,14 +20,6 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
   const { t } = useTranslation();
 
   if (loading) return null;
-
-  const handleBugReport = () => {
-    const subject = encodeURIComponent(`Bug Report – ${t('common:app.name')}`);
-    const body = encodeURIComponent(
-      `Please describe the issue below:\n\n\n\n---\nPage: ${window.location.href}\nUser ID: ${user?.id ?? 'unknown'}`
-    );
-    window.open(`mailto:hello@handlinne.co.uk?subject=${subject}&body=${body}`);
-  };
 
   return <SidebarDrawer mobileOpen={mobileOpen} onMobileClose={onMobileClose}>{(isOpen) => <><Box>
     <List>
@@ -91,24 +82,17 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
         onClose={onMobileClose}
       />
       {user && user.isAdmin && <SidebarItem
-      isOpen={isOpen}
+        isOpen={isOpen}
         label={t('nav.admin')}
         icon={<AdminPanelSettingsIcon />}
         url='/admin'
         onClose={onMobileClose}
       />}
     </List>
-  </Box>    
+  </Box>
     <Box sx={{ py: 2, marginTop: "auto" }}>
       <List>
-        <SidebarItem
-          isOpen={isOpen}
-          label="Report a Bug"
-          icon={<BugReportIcon />}
-          onClick={handleBugReport}
-          onClose={onMobileClose}
-        />
-        {user  && <SidebarItem
+        {user && <SidebarItem
           isOpen={isOpen}
           label="Logout"
           icon={<LogoutIcon />}
@@ -118,7 +102,7 @@ const Sidebar: React.FC<{ mobileOpen?: boolean; onMobileClose?: () => void }> = 
           }}
           onClose={onMobileClose}
         />}
-        {!user  && <SidebarItem
+        {!user && <SidebarItem
           isOpen={isOpen}
           label="Login"
           icon={<LoginIcon />}
